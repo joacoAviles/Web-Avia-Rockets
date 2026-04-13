@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 760" role="img" aria-label="Logotipo oficial de Avia Rockets">
+  <defs>
+    <linearGradient id="starBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f9bf7" />
+      <stop offset="1" stop-color="#1d76cb" />
+    </linearGradient>
+    <linearGradient id="wordBlue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2ea4ff" />
+      <stop offset="1" stop-color="#2388dc" />
+    </linearGradient>
+  </defs>
+
+  <polygon
+    points="360,56 416,222 594,222 448,330 502,500 360,392 218,500 272,330 126,222 304,222"
+    fill="url(#starBlue)"
+  />
+
+  <path
+    d="M232 456 C238 394, 420 274, 592 178 C594 200, 575 226, 545 252 C520 274, 490 294, 456 312 C430 326, 404 342, 378 360 C316 402, 286 438, 281 465 C277 488, 299 500, 338 498 C316 514, 289 525, 257 528 C226 530, 206 514, 207 488 C209 476, 218 467, 232 456 Z"
+    fill="#4a6484"
+    opacity="0.96"
+  />
+
+  <path
+    d="M573 185 C610 158, 646 149, 673 152 C662 177, 647 199, 628 219 C613 235, 596 246, 580 251 C581 241, 579 233, 571 228 C563 222, 554 219, 542 219 C549 205, 558 194, 573 185 Z"
+    fill="#6d8097"
+  />
+
+  <path d="M567 220 L600 208 L590 253 L570 262 Z" fill="#6d8097" />
+  <path d="M509 256 L548 246 L563 262 L518 274 Z" fill="#6d8097" />
+
+  <text x="360" y="648" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="126" letter-spacing="6" fill="#f3f5fb" font-weight="700">AVIA</text>
+  <text x="360" y="732" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="74" letter-spacing="12" fill="url(#wordBlue)" font-weight="500">ROCKETS</text>
+</svg>

@@ -35,12 +35,12 @@ img {
 }
 
 .container {
-  width: min(1120px, 92%);
+  width: min(1160px, 92%);
   margin: 0 auto;
 }
 
 .section {
-  padding: 5rem 0;
+  padding: 5.8rem 0;
 }
 
 .section-alt {
@@ -166,18 +166,37 @@ p {
 .brand {
   text-decoration: none;
   color: var(--text);
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  display: grid;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
   line-height: 1;
 }
 
+.brand img {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.6rem;
+  object-fit: contain;
+  background: rgba(4, 12, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.12rem;
+}
+
+.brand span {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.brand strong {
+  font-size: 1.06rem;
+  letter-spacing: 0.07em;
+  color: #f3f7ff;
+}
+
 .brand small {
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
   color: var(--primary);
-  font-weight: 600;
-  letter-spacing: 0.25em;
-  font-size: 0.7rem;
-  margin-top: 0.2rem;
 }
 
 .nav-actions {
@@ -235,7 +254,7 @@ p {
 
 /* HERO */
 .hero {
-  padding: 4rem 0 2rem;
+  padding: 5.2rem 0 2.6rem;
 }
 
 .hero-grid {
@@ -245,13 +264,22 @@ p {
   align-items: center;
 }
 
+.hero-logo {
+  width: min(280px, 72%);
+  margin-bottom: 0.25rem;
+  filter: drop-shadow(0 8px 20px rgba(20, 120, 220, 0.28));
+}
+
 h1 {
-  font-size: clamp(2rem, 5vw, 3.3rem);
-  margin: 0 0 0.85rem;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  margin: 0 0 1rem;
+  max-width: 14ch;
 }
 
 .hero-copy > p {
   color: var(--muted);
+  max-width: 52ch;
+  font-size: 1.07rem;
 }
 
 .hero-actions {
@@ -267,6 +295,7 @@ h1 {
   overflow: hidden;
   background: #0c1530;
   box-shadow: var(--shadow);
+  transform: translateY(-8px);
 }
 
 .hero-shot img {
@@ -287,7 +316,7 @@ h1 {
   background: linear-gradient(170deg, rgba(20, 40, 84, 0.95), rgba(14, 28, 59, 0.95));
   border: 1px solid var(--border);
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 1.2rem;
   display: grid;
   gap: 0.9rem;
 }
@@ -329,7 +358,7 @@ h1 {
 
 .feature-item {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 300px 1fr;
   gap: 1rem;
   border: 1px solid var(--border);
   border-radius: 1rem;
@@ -417,7 +446,7 @@ h1 {
   background: var(--surface-card);
   color: var(--text-dark);
   border-radius: 1rem;
-  padding: 1.2rem;
+  padding: 1.35rem;
   border: 1px solid #dce4fb;
 }
 
@@ -514,6 +543,7 @@ textarea::placeholder {
 
 .section-final {
   background: linear-gradient(180deg, rgba(9, 17, 38, 0.9), rgba(7, 13, 30, 0.95));
+  border-top: 1px solid var(--border);
 }
 
 .final-cta {
@@ -598,6 +628,10 @@ textarea::placeholder {
 
   .section {
     padding: 3.6rem 0;
+  }
+
+  .hero-logo {
+    width: 180px;
   }
 
   .btn {

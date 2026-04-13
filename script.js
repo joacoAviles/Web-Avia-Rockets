@@ -96,7 +96,6 @@ const translations = {
 
 const langToggle = document.getElementById("lang-toggle");
 const translatableElements = document.querySelectorAll("[data-i18n]");
-const loader = document.getElementById("loader");
 
 const setLanguage = (language) => {
   const selected = translations[language] ? language : "es";
@@ -119,6 +118,3 @@ langToggle.addEventListener("click", () => {
 setLanguage(localStorage.getItem("avia-lang") || "es");
 document.getElementById("year").textContent = new Date().getFullYear();
 
-window.addEventListener("load", () => {
-  setTimeout(() => loader.classList.add("hidden"), 1250);
-});

@@ -37,7 +37,12 @@ const translations = {
     aboutTitle: "Construimos software útil para equipos que necesitan operar rápido y sin fricción.",
     aboutText:
       "Somos un equipo chileno enfocado en automatización para corredoras y empresas de servicios. Diseñamos tecnología simple, clara y orientada a resultados medibles.",
-    footerText: "Automatización de cobranza para corredoras en Chile."
+    footerText: "Automatización de cobranza para corredoras en Chile.",
+    loginSuccess: "Acceso correcto. Bienvenido al panel de borradores.",
+    loginError: "Credenciales inválidas. Usa correo admin y clave admin.",
+    rotatingRisk: "Probar AVIA RISK",
+    rotatingFleet: "Probar AVIA FLEET",
+    rotatingSystems: "Probar AVIA SYSTEMS"
   },
   en: {
     navPricing: "Pricing",
@@ -78,35 +83,128 @@ const translations = {
     aboutTitle: "We build practical software for teams that need to move fast with less friction.",
     aboutText:
       "We are a Chilean team specialized in automation for insurance brokers and service companies, focused on measurable outcomes.",
-    footerText: "Collections automation for insurance brokers in Chile."
+    footerText: "Collections automation for insurance brokers in Chile.",
+    loginSuccess: "Access granted. Welcome to the drafts panel.",
+    loginError: "Invalid credentials. Use admin as email and admin as password.",
+    rotatingRisk: "Try AVIA RISK",
+    rotatingFleet: "Try AVIA FLEET",
+    rotatingSystems: "Try AVIA SYSTEMS"
   }
 };
 
 const langToggle = document.getElementById("lang-toggle");
 const translatableElements = document.querySelectorAll("[data-i18n]");
 const loader = document.getElementById("loader");
+const yearNode = document.getElementById("year");
 
-const setLanguage = (language) => {
-  const selected = translations[language] ? language : "es";
+if (yearNode) {
+  yearNode.textContent = new Date().getFullYear();
+}
+
+function getCurrentLanguage() {
+  const saved = localStorage.getItem("avia-lang");
+  if (saved === "es" || saved === "en") return saved;
+  return document.documentElement.lang === "en" ? "en" : "es";
+}
+
+function setLanguage(lang) {
+  const selected = translations[lang] ? lang : "es";
+
   document.documentElement.lang = selected;
   localStorage.setItem("avia-lang", selected);
 
   translatableElements.forEach((node) => {
     const key = node.dataset.i18n;
-    if (translations[selected][key]) node.textContent = translations[selected][key];
+    if (key && translations[selected][key]) {
+      node.textContent = translations[selected][key];
+    }
   });
 
-  langToggle.textContent = selected === "es" ? "EN" : "ES";
-};
+  if (langToggle) {
+    langToggle.textContent = selected === "es" ? "EN" : "ES";
+  }
 
-langToggle.addEventListener("click", () => {
-  const nextLang = document.documentElement.lang === "es" ? "en" : "es";
-  setLanguage(nextLang);
-});
+  updateRotatingOptions(selected);
+}
 
-setLanguage(localStorage.getItem("avia-lang") || "es");
-document.getElementById("year").textContent = new Date().getFullYear();
+if (langToggle) {
+  langToggle.addEventListener("click", () => {
+    const nextLang = document.documentElement.lang === "es" ? "en" : "es";
+    setLanguage(nextLang);
+  });
+}
+
+const rotatingButtons = [
+  document.getElementById("rotate-cta"),
+  document.getElementById("rotate-cta-bottom")
+].filter(Boolean);
+
+let rotatingOptions = [];
+let optionIndex = 0;
+let rotationStarted = false;
+
+function updateRotatingOptions(lang) {
+  const t = translations[lang] || translations.es;
+
+  rotatingOptions = [
+    { label: t.rotatingRisk, href: "risk.html" },
+    { label: t.rotatingFleet, href: "fleet.html" },
+    { label: t.rotatingSystems, href: "systems.html" }
+  ];
+
+  optionIndex = 0;
+  applyRotatingOption();
+}
+
+function applyRotatingOption() {
+  if (!rotatingButtons.length || !rotatingOptions.length) return;
+
+  const option = rotatingOptions[optionIndex];
+
+  rotatingButtons.forEach((button) => {
+    button.textContent = option.label;
+    button.href = option.href;
+  });
+
+  optionIndex = (optionIndex + 1) % rotatingOptions.length;
+}
+
+function startRotation() {
+  if (!rotatingButtons.length || rotationStarted) return;
+  rotationStarted = true;
+  setInterval(applyRotatingOption, 2800);
+}
+
+const loginForm = document.getElementById("client-login");
+
+if (loginForm) {
+  const loginMsg = document.getElementById("login-msg");
+  const drafts = document.getElementById("drafts");
+
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email")?.value.trim();
+    const password = document.getElementById("password")?.value.trim();
+    const lang = getCurrentLanguage();
+    const t = translations[lang] || translations.es;
+
+    if (email === "admin" && password === "admin") {
+      if (loginMsg) loginMsg.textContent = t.loginSuccess;
+      drafts?.classList.remove("hidden");
+      return;
+    }
+
+    if (loginMsg) loginMsg.textContent = t.loginError;
+    drafts?.classList.add("hidden");
+  });
+}
+
+setLanguage(getCurrentLanguage());
+startRotation();
 
 window.addEventListener("load", () => {
-  setTimeout(() => loader.classList.add("hidden"), 1200);
+  if (loader) {
+    setTimeout(() => loader.classList.add("hidden"), 1200);
+  }
 });

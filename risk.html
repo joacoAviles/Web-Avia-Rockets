@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AVIA RISK | Evaluación de riesgo por RUT</title>
+    <meta name="description" content="Consulta RUT, revisa score de riesgo y recibe recomendación clara." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container section">
+      <a class="link-chip" href="index.html">← Volver</a>
+      <h1>AVIA RISK</h1>
+      <p>Evalúa riesgo antes de tomar decisiones.</p>
+
+      <section class="login-card">
+        <label for="rut">Ingresa RUT</label>
+        <input id="rut" placeholder="12.345.678-9" />
+        <button class="btn btn-primary" id="risk-demo">Evaluar RUT</button>
+        <div id="risk-result" class="small-msg"></div>
+      </section>
+
+      <section class="section">
+        <h2>¿Cómo calculamos el score?</h2>
+        <ul>
+          <li>Historial judicial y comercial.</li>
+          <li>Señales de comportamiento de pago.</li>
+          <li>Modelo de recomendación de riesgo.</li>
+        </ul>
+      </section>
+    </main>
+
+    <script>
+      document.getElementById("risk-demo").onclick = () => {
+        const rut = document.getElementById("rut").value.trim();
+        document.getElementById("risk-result").textContent = rut
+          ? `Resultado demo para ${rut}: Riesgo Medio (67/100).`
+          : "Ingresa un RUT para evaluar.";
+      };
+    </script>
+  </body>
+</html>

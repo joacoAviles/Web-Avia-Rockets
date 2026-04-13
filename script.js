@@ -1,110 +1,281 @@
 const translations = {
   es: {
-    navPricing: "Precios",
-    navDemo: "Ver demo",
-    heroTag: "Software operativo para negocios en movimiento",
-    heroTitle: "Tu operación se ve mejor, vende más y depende menos de planillas",
-    heroText: "Unifica métricas, alertas y automatizaciones en una experiencia clara, rápida y con identidad de marca.",
-    heroPrimary: "Probar gratis",
-    heroSecondary: "Ver demo",
-    featureTag: "Funcionalidades clave",
-    featureTitle: "Todo lo que tu equipo necesita para operar más rápido y vender con control",
-    f1Title: "Detecta deudores automáticamente",
-    f1Text: "Prioriza a quién cobrar hoy con alertas automáticas por vencimiento y riesgo.",
-    f2Title: "Genera informes en 1 click",
-    f2Text: "Entrega reportes claros para gerencia en minutos, no en horas.",
-    f3Title: "Integra con Excel y APIs",
-    f3Text: "Conecta tu operación actual sin romper procesos ni cambiar todo tu stack.",
-    f4Title: "Automatiza seguimiento comercial",
-    f4Text: "Programa correos y recordatorios por cartera para reducir morosidad mes a mes.",
-    pricingTag: "Pricing",
-    pricingTitle: "Planes claros, sin letras chicas",
-    perMonth: "/ mes",
-    popular: "Más elegido",
-    p1Title: "Starter",
-    p1f1: "Hasta 1.000 pólizas",
-    p1f2: "Recordatorios automáticos",
-    p1f3: "Reporte mensual",
-    p2Title: "Growth",
-    p2f1: "Hasta 5.000 pólizas",
-    p2f2: "Dashboards en tiempo real",
-    p2f3: "Exportación Excel + API",
-    p3Title: "Scale",
-    p3f1: "Pólizas ilimitadas",
-    p3f2: "Automatizaciones avanzadas",
-    p3f3: "Soporte prioritario",
-    aboutTag: "Sobre nosotros",
-    aboutTitle: "Construimos software útil para equipos que necesitan operar rápido y sin fricción.",
-    aboutText:
-      "Somos un equipo chileno enfocado en automatización para empresas de servicios y operaciones comerciales. Diseñamos tecnología simple, clara y orientada a resultados medibles.",
-    footerText: "Riesgo, activos y automatización en una sola plataforma.",
-    loginSuccess: "Acceso correcto. Bienvenido al panel de borradores.",
-    loginError: "Credenciales inválidas. Usa correo admin y clave admin.",
-    rotatingRisk: "Probar AVIA RISK",
-    rotatingFleet: "Probar AVIA FLEET",
-    rotatingSystems: "Probar AVIA SYSTEMS"
+    navSolutions: "Soluciones",
+    navWhy: "Por qué AVIA Rockets",
+    navIndustries: "Industrias",
+    navSecurity: "Seguridad",
+    navContact: "Contacto",
+    navCta: "Agendar demo",
+
+    heroTag: "SaaS seguro para aviación y operaciones críticas",
+    heroTitle: "Soluciones SaaS seguras para operaciones aeronáuticas y entornos críticos",
+    heroText: "Digitaliza procesos, integra datos operativos y mejora el control con software seguro, escalable y trazable.",
+    heroPrimary: "Agendar demo",
+    heroSecondary: "Ver soluciones",
+    heroMetric1: "Arquitectura moderna",
+    heroMetric2: "Trazabilidad operacional",
+    heroMetric3: "Seguridad por diseño",
+
+    visualLabel1: "Control operacional",
+    visualTitle1: "Visibilidad unificada sobre flujos críticos",
+    visualLabel2: "Postura de seguridad",
+    visualSecurity1: "Accesos por rol",
+    visualSecurity2: "Eventos trazables",
+    visualSecurity3: "Diseño orientado a disponibilidad",
+    visualLabel3: "Salud del sistema",
+    visualBadge: "Seguridad por diseño",
+    visualBadgeText: "Construido para claridad operacional y crecimiento controlado.",
+
+    trust1: "Seguro por diseño",
+    trust2: "Enfoque en aviación",
+    trust3: "Flujos trazables",
+    trust4: "Arquitectura escalable",
+    trust5: "Orientado a cumplimiento",
+
+    solutionsTag: "Soluciones",
+    solutionsTitle: "Capacidades SaaS diseñadas para operaciones de alta exigencia",
+    solutionsText: "Una base tecnológica pensada para digitalizar flujos, reducir fricción y entregar control real sobre la operación.",
+
+    s1Title: "Plataforma de Operaciones Digitales",
+    s1Text: "Centraliza procesos operativos, estados, eventos y visibilidad ejecutiva en una sola capa de control.",
+    s1f1: "Vista operacional unificada",
+    s1f2: "Visibilidad de estado en tiempo real",
+    s1f3: "Control estructurado de procesos",
+
+    s2Title: "Automatización Segura de Flujos",
+    s2Text: "Automatiza tareas críticas con reglas claras, trazabilidad y menor dependencia de procesos manuales.",
+    s2f1: "Automatización de procesos",
+    s2f2: "Ejecución basada en reglas",
+    s2f3: "Historial trazable para auditoría",
+
+    s3Title: "Analítica Operacional y Dashboards",
+    s3Text: "Convierte datos operativos en tableros claros para seguimiento, alertas y mejor toma de decisiones.",
+    s3f1: "Dashboards ejecutivos",
+    s3f2: "Alertas operacionales",
+    s3f3: "Visibilidad para decidir",
+
+    s4Title: "Control Documental y de Cumplimiento",
+    s4Text: "Ordena documentación, estados regulatorios y puntos de control dentro de una estructura trazable.",
+    s4f1: "Gobierno documental",
+    s4f2: "Seguimiento de estados",
+    s4f3: "Flujos orientados a cumplimiento",
+
+    s5Title: "Integración de Sistemas Críticos",
+    s5Text: "Conecta herramientas existentes, datos y servicios para evitar islas operativas y ganar continuidad digital.",
+    s5f1: "Integración API-first",
+    s5f2: "Conectividad compatible con legado",
+    s5f3: "Interoperabilidad controlada",
+
+    s6Title: "Seguridad de la Información desde el Diseño",
+    s6Text: "La seguridad no se agrega al final: se incorpora desde la arquitectura, los accesos y la operación.",
+    s6f1: "Gobierno de accesos",
+    s6f2: "Actividad trazable",
+    s6f3: "Diseño orientado a resiliencia",
+
+    whyTag: "Por qué AVIA Rockets",
+    whyTitle: "Tecnología seria para operaciones donde el desorden cuesta caro",
+    whyText: "Diseñamos plataformas con foco en continuidad operacional, claridad de datos, disciplina técnica y experiencia enterprise.",
+
+    w1Title: "Disciplina operacional",
+    w1Text: "Arquitectura y flujos pensados para reducir fricción, no para sumar complejidad visual.",
+    w2Title: "Mentalidad de seguridad",
+    w2Text: "Gobierno de accesos, trazabilidad y control como parte del núcleo del producto.",
+    w3Title: "Claridad enterprise",
+    w3Text: "Interfaces limpias, lectura rápida y estructura útil para operación y dirección.",
+    w4Title: "Base escalable",
+    w4Text: "Soluciones que pueden crecer con más procesos, más usuarios y más exigencia.",
+
+    industriesTag: "Industrias y casos de uso",
+    industriesTitle: "Aplicable a organizaciones donde la operación necesita orden, trazabilidad y disponibilidad",
+    i1Title: "Aerolíneas y operadores",
+    i1Text: "Mayor visibilidad sobre flujos operativos, estados críticos y coordinación digital.",
+    i2Title: "MRO y mantenimiento",
+    i2Text: "Control documental, seguimiento de estados y reducción de fricción entre equipos.",
+    i3Title: "Organizaciones de formación",
+    i3Text: "Gestión estructurada de procesos, trazabilidad y experiencia más clara para usuarios internos.",
+    i4Title: "Logística y soporte operacional",
+    i4Text: "Coordinación digital, visibilidad operacional y automatización de tareas repetitivas.",
+    i5Title: "Proveedores aeroespaciales",
+    i5Text: "Integración de datos, control de cumplimiento y plataformas más preparadas para crecer.",
+    i6Title: "Programas digitales críticos",
+    i6Text: "Modernización controlada de operaciones donde la continuidad y la seguridad importan.",
+
+    securityTag: "Seguridad",
+    securityTitle: "Seguridad operacional y de la información como parte del diseño del sistema",
+    securityText: "AVIA Rockets prioriza arquitectura segura, trazabilidad, control de accesos y continuidad operativa para entornos donde fallar no es trivial.",
+    sec1Title: "Control por roles",
+    sec1Text: "Permisos y niveles de acceso alineados con estructura operativa y gobernanza.",
+    sec2Title: "Acciones trazables",
+    sec2Text: "Registro claro de eventos, cambios y ejecución de flujos para mejor control interno.",
+    sec3Title: "Mentalidad de disponibilidad",
+    sec3Text: "Diseño orientado a continuidad, resiliencia y menor dependencia de tareas manuales frágiles.",
+    sec4Title: "Estructura preparada para gobernanza",
+    sec4Text: "Base útil para políticas, revisión de procesos y madurez operacional progresiva.",
+
+    ctaTag: "Siguiente paso",
+    ctaTitle: "Conversemos sobre tu operación y diseñemos una ruta digital más segura",
+    ctaButton: "Agendar demo",
+
+    contactTag: "Contacto",
+    contactTitle: "Solicita una conversación inicial",
+    contactText: "Cuéntanos tu contexto operacional y conversemos sobre automatización, visibilidad, seguridad y arquitectura.",
+    contactLocationLabel: "Base",
+    formName: "Nombre",
+    formCompany: "Empresa",
+    formEmail: "Correo corporativo",
+    formLanguage: "Idioma preferido",
+    formMessage: "Mensaje",
+    formButton: "Solicitar contacto",
+
+    footerText: "SaaS seguro para aviación, operaciones críticas y transformación digital.",
+    footerPrivacy: "Privacidad"
   },
+
   en: {
-    navPricing: "Pricing",
-    navDemo: "Book demo",
-    heroTag: "Operational software for businesses in motion",
-    heroTitle: "A better-looking operation that sells more and relies less on spreadsheets",
-    heroText:
-      "Unify metrics, alerts, and automations in a clear and faster experience that matches your brand identity.",
-    heroPrimary: "Start free",
-    heroSecondary: "View demo",
-    featureTag: "Key capabilities",
-    featureTitle: "Everything your team needs to run faster and sell with more control",
-    f1Title: "Automatically detect overdue clients",
-    f1Text: "Focus your team on high-priority debtors with smart risk and due-date alerts.",
-    f2Title: "Create reports in one click",
-    f2Text: "Deliver clear management-ready reports in minutes instead of hours.",
-    f3Title: "Integrates with Excel and APIs",
-    f3Text: "Connect current workflows without rebuilding your full stack.",
-    f4Title: "Automate commercial follow-ups",
-    f4Text: "Schedule reminders by portfolio and reduce delinquency month over month.",
-    pricingTag: "Pricing",
-    pricingTitle: "Simple plans with no surprises",
-    perMonth: "/ month",
-    popular: "Most popular",
-    p1Title: "Starter",
-    p1f1: "Up to 1,000 policies",
-    p1f2: "Automated reminders",
-    p1f3: "Monthly report",
-    p2Title: "Growth",
-    p2f1: "Up to 5,000 policies",
-    p2f2: "Real-time dashboards",
-    p2f3: "Excel export + API",
-    p3Title: "Scale",
-    p3f1: "Unlimited policies",
-    p3f2: "Advanced automations",
-    p3f3: "Priority support",
-    aboutTag: "About us",
-    aboutTitle: "We build practical software for teams that need to move fast with less friction.",
-    aboutText:
-      "We are a Chilean team specialized in automation for service and commercial operations, focused on measurable outcomes.",
-    footerText: "Risk, assets, and automation on one platform.",
-    loginSuccess: "Access granted. Welcome to the drafts panel.",
-    loginError: "Invalid credentials. Use admin as email and admin as password.",
-    rotatingRisk: "Try AVIA RISK",
-    rotatingFleet: "Try AVIA FLEET",
-    rotatingSystems: "Try AVIA SYSTEMS"
+    navSolutions: "Solutions",
+    navWhy: "Why AVIA Rockets",
+    navIndustries: "Industries",
+    navSecurity: "Security",
+    navContact: "Contact",
+    navCta: "Book a demo",
+
+    heroTag: "Secure SaaS for aviation and mission-critical operations",
+    heroTitle: "Secure SaaS solutions for aviation operations and mission-critical environments",
+    heroText: "Modernize workflows, unify operational data and improve control with secure, scalable and traceable software.",
+    heroPrimary: "Book a demo",
+    heroSecondary: "Explore solutions",
+    heroMetric1: "Modern architecture",
+    heroMetric2: "Operational traceability",
+    heroMetric3: "Security by design",
+
+    visualLabel1: "Operational control",
+    visualTitle1: "Unified visibility across critical workflows",
+    visualLabel2: "Security posture",
+    visualSecurity1: "Role-based access",
+    visualSecurity2: "Traceable events",
+    visualSecurity3: "Availability-first design",
+    visualLabel3: "System health",
+    visualBadge: "Secure by design",
+    visualBadgeText: "Built for operational clarity and controlled growth.",
+
+    trust1: "Secure by design",
+    trust2: "Aviation-focused",
+    trust3: "Traceable workflows",
+    trust4: "Scalable architecture",
+    trust5: "Compliance-minded",
+
+    solutionsTag: "Solutions",
+    solutionsTitle: "SaaS capabilities built for demanding operations",
+    solutionsText: "A technology foundation designed to digitize workflows, reduce friction and provide real operational control.",
+
+    s1Title: "Digital Operations Platform",
+    s1Text: "Centralize operational processes, statuses, events and executive visibility in a single control layer.",
+    s1f1: "Unified operational overview",
+    s1f2: "Real-time status visibility",
+    s1f3: "Structured process control",
+
+    s2Title: "Secure Workflow Automation",
+    s2Text: "Automate critical tasks with clear rules, traceability and reduced dependence on manual work.",
+    s2f1: "Process automation",
+    s2f2: "Rules-based execution",
+    s2f3: "Audit-ready workflow history",
+
+    s3Title: "Operational Analytics & Dashboards",
+    s3Text: "Turn operational data into clear dashboards for monitoring, alerts and better decision-making.",
+    s3f1: "Executive dashboards",
+    s3f2: "Operational alerts",
+    s3f3: "Decision-ready visibility",
+
+    s4Title: "Document & Compliance Control",
+    s4Text: "Structure documentation, regulatory statuses and control points inside a traceable framework.",
+    s4f1: "Document governance",
+    s4f2: "Status tracking",
+    s4f3: "Compliance-oriented flows",
+
+    s5Title: "Critical Systems Integration",
+    s5Text: "Connect existing tools, data and services to avoid operational silos and improve digital continuity.",
+    s5f1: "API-first integration",
+    s5f2: "Legacy-aware connectivity",
+    s5f3: "Controlled interoperability",
+
+    s6Title: "Information Security by Design",
+    s6Text: "Security is not added at the end. It is built into architecture, access and operations from the start.",
+    s6f1: "Access governance",
+    s6f2: "Traceable activity",
+    s6f3: "Resilience-oriented design",
+
+    whyTag: "Why AVIA Rockets",
+    whyTitle: "Serious technology for operations where disorder is expensive",
+    whyText: "We build platforms focused on operational continuity, data clarity, technical discipline and enterprise-grade experience.",
+
+    w1Title: "Operational discipline",
+    w1Text: "Architecture and workflows built to reduce friction, not add visual complexity.",
+    w2Title: "Security mindset",
+    w2Text: "Access governance, traceability and control are part of the product core.",
+    w3Title: "Enterprise clarity",
+    w3Text: "Clean interfaces, fast reading and structure that serves both operations and leadership.",
+    w4Title: "Scalable foundation",
+    w4Text: "Solutions that can grow with more processes, more users and more complexity.",
+
+    industriesTag: "Industries and use cases",
+    industriesTitle: "Relevant for organizations where operations require order, traceability and availability",
+    i1Title: "Airlines & operators",
+    i1Text: "Greater visibility across operational workflows, critical statuses and digital coordination.",
+    i2Title: "MRO & maintenance",
+    i2Text: "Document control, status tracking and lower friction between teams.",
+    i3Title: "Training organizations",
+    i3Text: "Structured process management, traceability and clearer internal user experiences.",
+    i4Title: "Logistics & support operations",
+    i4Text: "Digital coordination, operational visibility and automation of repetitive tasks.",
+    i5Title: "Aerospace suppliers",
+    i5Text: "Data integration, compliance control and platforms better prepared to scale.",
+    i6Title: "Critical digital programs",
+    i6Text: "Controlled modernization of operations where continuity and security matter.",
+
+    securityTag: "Security",
+    securityTitle: "Operational and information security as part of system design",
+    securityText: "AVIA Rockets prioritizes secure architecture, traceability, access control and operational continuity for environments where failure is not trivial.",
+    sec1Title: "Role-based control",
+    sec1Text: "Permissions and access levels aligned with operational structure and governance.",
+    sec2Title: "Traceable actions",
+    sec2Text: "Clear records of events, changes and workflow execution for stronger internal control.",
+    sec3Title: "Availability mindset",
+    sec3Text: "Design focused on continuity, resilience and lower dependence on fragile manual tasks.",
+    sec4Title: "Governance-ready structure",
+    sec4Text: "A useful foundation for policies, process review and progressive operational maturity.",
+
+    ctaTag: "Next step",
+    ctaTitle: "Let’s discuss your operation and design a more secure digital path",
+    ctaButton: "Book a demo",
+
+    contactTag: "Contact",
+    contactTitle: "Request an initial conversation",
+    contactText: "Tell us about your operational context and let’s discuss automation, visibility, security and architecture.",
+    contactLocationLabel: "Base",
+    formName: "Name",
+    formCompany: "Company",
+    formEmail: "Work email",
+    formLanguage: "Preferred language",
+    formMessage: "Message",
+    formButton: "Request contact",
+
+    footerText: "Secure SaaS for aviation, mission-critical operations and digital transformation.",
+    footerPrivacy: "Privacy"
   }
 };
 
 const langToggle = document.getElementById("lang-toggle");
-const translatableElements = document.querySelectorAll("[data-i18n]");
-const loader = document.getElementById("loader");
-const yearNode = document.getElementById("year");
+const navToggle = document.getElementById("nav-toggle");
+const navPanel = document.getElementById("nav-panel");
+const translatableNodes = document.querySelectorAll("[data-i18n]");
+const revealNodes = document.querySelectorAll(".reveal");
 
-if (yearNode) {
-  yearNode.textContent = new Date().getFullYear();
-}
-
-function getCurrentLanguage() {
+function detectInitialLanguage() {
   const saved = localStorage.getItem("avia-lang");
   if (saved === "es" || saved === "en") return saved;
-  return document.documentElement.lang === "en" ? "en" : "es";
+
+  const browserLang = navigator.language?.toLowerCase() || "es";
+  return browserLang.startsWith("es") ? "es" : "en";
 }
 
 function setLanguage(lang) {
@@ -113,7 +284,7 @@ function setLanguage(lang) {
   document.documentElement.lang = selected;
   localStorage.setItem("avia-lang", selected);
 
-  translatableElements.forEach((node) => {
+  translatableNodes.forEach((node) => {
     const key = node.dataset.i18n;
     if (key && translations[selected][key]) {
       node.textContent = translations[selected][key];
@@ -124,87 +295,49 @@ function setLanguage(lang) {
     langToggle.textContent = selected === "es" ? "EN" : "ES";
   }
 
-  updateRotatingOptions(selected);
+  const languageSelect = document.getElementById("language");
+  if (languageSelect && (selected === "es" || selected === "en")) {
+    languageSelect.value = selected;
+  }
 }
 
 if (langToggle) {
   langToggle.addEventListener("click", () => {
-    const nextLang = document.documentElement.lang === "es" ? "en" : "es";
-    setLanguage(nextLang);
+    const next = document.documentElement.lang === "es" ? "en" : "es";
+    setLanguage(next);
   });
 }
 
-const rotatingButtons = [
-  document.getElementById("rotate-cta"),
-  document.getElementById("rotate-cta-bottom")
-].filter(Boolean);
-
-let rotatingOptions = [];
-let optionIndex = 0;
-let rotationStarted = false;
-
-function updateRotatingOptions(lang) {
-  const t = translations[lang] || translations.es;
-
-  rotatingOptions = [
-    { label: t.rotatingRisk, href: "risk.html" },
-    { label: t.rotatingFleet, href: "fleet.html" },
-    { label: t.rotatingSystems, href: "systems.html" }
-  ];
-
-  optionIndex = 0;
-  applyRotatingOption();
-}
-
-function applyRotatingOption() {
-  if (!rotatingButtons.length || !rotatingOptions.length) return;
-
-  const option = rotatingOptions[optionIndex];
-
-  rotatingButtons.forEach((button) => {
-    button.textContent = option.label;
-    button.href = option.href;
+if (navToggle && navPanel) {
+  navToggle.addEventListener("click", () => {
+    const isOpen = navPanel.classList.toggle("is-open");
+    navToggle.setAttribute("aria-expanded", String(isOpen));
   });
 
-  optionIndex = (optionIndex + 1) % rotatingOptions.length;
-}
-
-function startRotation() {
-  if (!rotatingButtons.length || rotationStarted) return;
-  rotationStarted = true;
-  setInterval(applyRotatingOption, 2800);
-}
-
-const loginForm = document.getElementById("client-login");
-
-if (loginForm) {
-  const loginMsg = document.getElementById("login-msg");
-  const drafts = document.getElementById("drafts");
-
-  loginForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email")?.value.trim();
-    const password = document.getElementById("password")?.value.trim();
-    const lang = getCurrentLanguage();
-    const t = translations[lang] || translations.es;
-
-    if (email === "admin" && password === "admin") {
-      if (loginMsg) loginMsg.textContent = t.loginSuccess;
-      drafts?.classList.remove("hidden");
-      return;
-    }
-
-    if (loginMsg) loginMsg.textContent = t.loginError;
-    drafts?.classList.add("hidden");
+  navPanel.querySelectorAll("a, button").forEach((item) => {
+    item.addEventListener("click", () => {
+      if (window.innerWidth <= 760) {
+        navPanel.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      }
+    });
   });
 }
 
-setLanguage(getCurrentLanguage());
-startRotation();
-
-window.addEventListener("load", () => {
-  if (loader) {
-    setTimeout(() => loader.classList.add("hidden"), 1200);
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  {
+    threshold: 0.14
   }
-});
+);
+
+revealNodes.forEach((node) => revealObserver.observe(node));
+
+setLanguage(detectInitialLanguage());

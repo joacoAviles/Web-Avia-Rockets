@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Avia Rockets | Simplificamos y Aceleramos</title>
+    <title>Avia Rockets | Automatización de cobranza para corredoras</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,148 +13,166 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="language-gate" class="language-gate" role="dialog" aria-modal="true" aria-labelledby="language-title">
-      <div class="language-card">
-        <p class="eyebrow" data-i18n="languageTag">Selecciona tu idioma</p>
-        <h1 id="language-title" data-i18n="languageTitle">Bienvenido a Avia Rockets</h1>
-        <p class="language-copy" data-i18n="languageSubtitle">
-          Elige cómo quieres explorar nuestros servicios de automatización, desarrollo y optimización.
-        </p>
-        <div class="language-actions">
-          <button class="btn btn-primary" data-language="es">Español</button>
-          <button class="btn btn-secondary" data-language="en">English</button>
-        </div>
+    <div id="loader" class="loader" aria-live="polite" aria-label="Cargando sitio de Avia Rockets">
+      <div class="loader-stage">
+        <div class="logo-star"></div>
+        <div class="logo-orbit"></div>
+        <div class="logo-rocket"></div>
       </div>
+      <p>Cargando Avia Rockets...</p>
     </div>
 
     <header class="site-header">
       <nav class="navbar container">
-        <a href="#" class="brand">Avia Rockets</a>
+        <a href="#" class="brand">
+          <span>AVIA</span>
+          <small>ROCKETS</small>
+        </a>
         <div class="nav-actions">
-          <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma">ES</button>
-          <a href="#login" class="btn btn-outline" data-i18n="navLogin">Acceso clientes</a>
-          <a href="#contacto" class="btn btn-primary" data-i18n="navContact">Contáctanos</a>
+          <button class="lang-toggle" id="lang-toggle" aria-label="Switch language">EN</button>
+          <a href="#pricing" class="btn btn-outline" data-i18n="navPricing">Precios</a>
+          <a href="#demo" class="btn btn-primary" data-i18n="navDemo">Ver demo</a>
         </div>
       </nav>
     </header>
 
     <main>
-      <section class="hero">
+      <section class="hero" id="demo">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <p class="eyebrow" data-i18n="heroTag">Menos fricción. Más resultados.</p>
-            <h1 data-i18n="heroTitle">Quitamos procesos absurdos para que tu negocio despegue más rápido.</h1>
+            <p class="eyebrow" data-i18n="heroTag">Para corredoras de seguros en Chile</p>
+            <h1 data-i18n="heroTitle">Automatiza cobranza y reportes para corredoras en Chile en minutos</h1>
             <p data-i18n="heroText">
-              En Avia Rockets simplificamos operaciones, automatizamos tareas repetitivas y construimos tecnología útil para
-              crecer sin perder tiempo.
+              Detecta deudas pendientes, envía recordatorios automáticos y genera reportes ejecutivos sin planillas manuales.
             </p>
             <div class="hero-actions">
-              <a href="#servicios" class="btn btn-primary" data-i18n="heroPrimary">Ver servicios</a>
-              <a href="#contacto" class="btn btn-secondary" data-i18n="heroSecondary">Solicitar diagnóstico</a>
+              <a href="#pricing" class="btn btn-primary" data-i18n="heroPrimary">Probar gratis</a>
+              <a href="#features" class="btn btn-secondary" data-i18n="heroSecondary">Ver demo</a>
             </div>
           </div>
-          <div class="hero-panel" aria-hidden="true">
-            <div class="metric-card">
-              <span data-i18n="metricOneLabel">Tareas automatizadas</span>
-              <strong>+1200</strong>
-            </div>
-            <div class="metric-card">
-              <span data-i18n="metricTwoLabel">Horas recuperadas</span>
-              <strong>+4800</strong>
-            </div>
-            <div class="metric-card">
-              <span data-i18n="metricThreeLabel">Proyectos entregados</span>
-              <strong>+300</strong>
-            </div>
+          <div class="hero-shot">
+            <img
+              src="https://images.unsplash.com/photo-1551281044-8e8d8d3f5f4c?auto=format&fit=crop&w=1400&q=80"
+              alt="Captura de panel de cobranza y reportes"
+              loading="eager"
+            />
           </div>
         </div>
       </section>
 
-      <section id="servicios" class="section container">
+      <section id="features" class="section container">
         <div class="section-heading">
-          <p class="eyebrow" data-i18n="servicesTag">Servicios SaaS + Desarrollo</p>
-          <h2 data-i18n="servicesTitle">Soluciones diseñadas para eliminar cuellos de botella</h2>
+          <p class="eyebrow" data-i18n="featureTag">Funcionalidades clave</p>
+          <h2 data-i18n="featureTitle">Todo lo que tu equipo necesita para cobrar antes y reportar mejor</h2>
         </div>
-        <div class="cards-grid">
-          <article class="service-card">
-            <h3 data-i18n="service1Title">Correos automáticos de levantamiento de información</h3>
-            <p data-i18n="service1Text">Flujos de email inteligentes para capturar datos clave sin seguimiento manual.</p>
+
+        <div class="feature-list">
+          <article class="feature-item">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" alt="Listado de deudores" loading="lazy" />
+            <div>
+              <h3 data-i18n="f1Title">Detecta deudores automáticamente</h3>
+              <p data-i18n="f1Text">Prioriza a quién cobrar hoy con alertas automáticas por vencimiento y riesgo.</p>
+            </div>
           </article>
-          <article class="service-card">
-            <h3 data-i18n="service2Title">Informes ejecutivos automáticos</h3>
-            <p data-i18n="service2Text">Reportes claros con indicadores críticos y recomendaciones accionables.</p>
+          <article class="feature-item">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" alt="Reporte ejecutivo" loading="lazy" />
+            <div>
+              <h3 data-i18n="f2Title">Genera informes en 1 click</h3>
+              <p data-i18n="f2Text">Entrega reportes claros para gerencia en minutos, no en horas.</p>
+            </div>
           </article>
-          <article class="service-card">
-            <h3 data-i18n="service3Title">Asesorías técnicas para emprendimientos</h3>
-            <p data-i18n="service3Text">Acompañamiento especializado para validar arquitectura, procesos y escalabilidad.</p>
+          <article class="feature-item">
+            <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=80" alt="Integración con sistemas" loading="lazy" />
+            <div>
+              <h3 data-i18n="f3Title">Integra con Excel y APIs</h3>
+              <p data-i18n="f3Text">Conecta tu operación actual sin romper procesos ni cambiar todo tu stack.</p>
+            </div>
           </article>
-          <article class="service-card">
-            <h3 data-i18n="service4Title">Desarrollo de soluciones a medida</h3>
-            <p data-i18n="service4Text">Herramientas personalizadas conectadas a tu operación real, no al revés.</p>
-          </article>
-          <article class="service-card">
-            <h3 data-i18n="service5Title">Desarrollo de apps, web y APIs</h3>
-            <p data-i18n="service5Text">Desde prototipo hasta producción, con foco en velocidad, calidad y mantenimiento simple.</p>
-          </article>
-          <article class="service-card">
-            <h3 data-i18n="service6Title">Gestión de flota para clubes aéreos</h3>
-            <p data-i18n="service6Text">Plataforma estilo “comunidad feliz” adaptada a la operación aeronáutica.</p>
-          </article>
-          <article class="service-card">
-            <h3 data-i18n="service7Title">Paneles operativos en tiempo real</h3>
-            <p data-i18n="service7Text">Monitorea ventas, soporte y operaciones con tableros que priorizan decisiones rápidas.</p>
-          </article>
-          <article class="service-card">
-            <h3 data-i18n="service8Title">Automatización de onboarding de clientes</h3>
-            <p data-i18n="service8Text">Reduce tiempos de implementación con flujos guiados y checklist automatizados.</p>
+          <article class="feature-item">
+            <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?auto=format&fit=crop&w=1200&q=80" alt="Flujo de cobranza" loading="lazy" />
+            <div>
+              <h3 data-i18n="f4Title">Automatiza seguimiento de cobranza</h3>
+              <p data-i18n="f4Text">Programa correos y recordatorios por cartera para reducir morosidad mes a mes.</p>
+            </div>
           </article>
         </div>
       </section>
 
-      <section id="login" class="section section-alt">
-        <div class="container split-grid">
+      <section id="pricing" class="section section-alt">
+        <div class="container">
+          <div class="section-heading centered">
+            <p class="eyebrow" data-i18n="pricingTag">Pricing</p>
+            <h2 data-i18n="pricingTitle">Planes claros, sin letras chicas</h2>
+          </div>
+          <div class="pricing-grid">
+            <article class="price-card">
+              <h3 data-i18n="p1Title">Starter</h3>
+              <p class="price">$49.000 <span data-i18n="perMonth">/ mes</span></p>
+              <ul>
+                <li data-i18n="p1f1">Hasta 1.000 pólizas</li>
+                <li data-i18n="p1f2">Recordatorios automáticos</li>
+                <li data-i18n="p1f3">Reporte mensual</li>
+              </ul>
+            </article>
+            <article class="price-card featured">
+              <p class="badge" data-i18n="popular">Más elegido</p>
+              <h3 data-i18n="p2Title">Growth</h3>
+              <p class="price">$99.000 <span data-i18n="perMonth">/ mes</span></p>
+              <ul>
+                <li data-i18n="p2f1">Hasta 5.000 pólizas</li>
+                <li data-i18n="p2f2">Dashboards en tiempo real</li>
+                <li data-i18n="p2f3">Exportación Excel + API</li>
+              </ul>
+            </article>
+            <article class="price-card">
+              <h3 data-i18n="p3Title">Scale</h3>
+              <p class="price">$199.000 <span data-i18n="perMonth">/ mes</span></p>
+              <ul>
+                <li data-i18n="p3f1">Pólizas ilimitadas</li>
+                <li data-i18n="p3f2">Automatizaciones avanzadas</li>
+                <li data-i18n="p3f3">Soporte prioritario</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="contactTag">Contacto</p>
+          <h2 data-i18n="contactTitle">Habla con Aurora, nuestra agente de contacto</h2>
+        </div>
+        <article class="aurora-card">
+          <div class="aurora-avatar" aria-hidden="true">A</div>
           <div>
-            <p class="eyebrow" data-i18n="loginTag">Área de clientes</p>
-            <h2 data-i18n="loginTitle">Inicia sesión para gestionar tus proyectos y servicios</h2>
-            <p data-i18n="loginText">
-              Consulta avances, revisa reportes y haz seguimiento en un solo lugar. Tu operación, simplificada.
+            <h3 data-i18n="auroraName">Aurora · Agente Avia Rockets</h3>
+            <p data-i18n="auroraText">
+              Te ayuda a evaluar tu cartera, recomendar plan y coordinar la activación inicial en menos de 24 horas.
             </p>
+            <div class="aurora-actions">
+              <a class="btn btn-primary" href="mailto:aurora@aviarockets.cl" data-i18n="auroraMail">Escribir a Aurora</a>
+              <a class="btn btn-secondary" href="#demo" data-i18n="auroraDemo">Solicitar demo guiada</a>
+            </div>
           </div>
-          <form class="form-card" action="#" method="post">
-            <label for="email" data-i18n="labelEmail">Correo empresarial</label>
-            <input id="email" name="email" type="email" placeholder="equipo@empresa.com" required />
-            <label for="password" data-i18n="labelPassword">Contraseña</label>
-            <input id="password" name="password" type="password" placeholder="••••••••" required />
-            <button class="btn btn-primary" type="submit" data-i18n="loginButton">Entrar al portal</button>
-          </form>
-        </div>
+        </article>
       </section>
 
-      <section id="contacto" class="section container">
-        <div class="section-heading">
-          <p class="eyebrow" data-i18n="contactTag">Contáctanos</p>
-          <h2 data-i18n="contactTitle">Cuéntanos qué quieres optimizar y te ayudamos a despegar</h2>
+      <section class="section container about" id="about">
+        <div>
+          <p class="eyebrow" data-i18n="aboutTag">Sobre nosotros</p>
+          <h2 data-i18n="aboutTitle">Construimos software útil para equipos que necesitan operar rápido y sin fricción.</h2>
+          <p data-i18n="aboutText">
+            Somos un equipo chileno enfocado en automatización para corredoras y empresas de servicios. Diseñamos tecnología simple,
+            clara y orientada a resultados medibles.
+          </p>
         </div>
-        <form class="contact-grid" action="#" method="post">
-          <input type="text" name="name" placeholder="Nombre" required />
-          <input type="email" name="email" placeholder="Correo" required />
-          <input type="text" name="company" placeholder="Empresa" required />
-          <select name="service" required>
-            <option value="" data-i18n="contactSelect">Selecciona un servicio</option>
-            <option value="saas" data-i18n="contactOption1">Automatización SaaS</option>
-            <option value="custom" data-i18n="contactOption2">Desarrollo a medida</option>
-            <option value="advisory" data-i18n="contactOption3">Asesoría técnica</option>
-          </select>
-          <textarea name="message" placeholder="Describe tu reto principal" rows="5" required></textarea>
-          <button class="btn btn-primary" type="submit" data-i18n="contactButton">Enviar solicitud</button>
-        </form>
       </section>
     </main>
 
     <footer class="site-footer">
       <div class="container footer-wrap">
         <span>© <span id="year"></span> Avia Rockets</span>
-        <span data-i18n="footerText">Menos requisitos absurdos. Más velocidad.</span>
+        <span data-i18n="footerText">Automatización de cobranza para corredoras en Chile.</span>
       </div>
     </footer>
 

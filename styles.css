@@ -166,6 +166,7 @@ p {
 .brand {
   text-decoration: none;
   color: var(--text);
+ codex/redisenar-la-pagina-web-para-mejorar-apariencia-29und7
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
@@ -181,10 +182,14 @@ p {
   background: rgba(4, 12, 30, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 0.12rem;
+
+
+ main
 }
 
 .brand span {
   display: grid;
+ codex/redisenar-la-pagina-web-para-mejorar-apariencia-29und7
   gap: 0.1rem;
 }
 
@@ -198,6 +203,9 @@ p {
   font-size: 0.68rem;
   letter-spacing: 0.28em;
   color: var(--primary);
+
+ main
+
 }
 
 .nav-actions {
@@ -266,8 +274,12 @@ p {
 }
 
 .hero-logo {
+ codex/redisenar-la-pagina-web-para-mejorar-apariencia-29und7
   width: min(280px, 72%);
   margin-bottom: 0.25rem;
+
+
+ main
   filter: drop-shadow(0 8px 20px rgba(20, 120, 220, 0.28));
 }
 
@@ -632,7 +644,10 @@ textarea::placeholder {
   }
 
   .hero-logo {
+ codex/redisenar-la-pagina-web-para-mejorar-apariencia-29und7
     width: 180px;
+
+ main
   }
 
   .btn {

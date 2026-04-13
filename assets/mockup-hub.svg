@@ -1,0 +1,31 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1600" height="900" rx="40" fill="#071635"/>
+<rect x="64" y="64" width="1472" height="772" rx="26" fill="#0D234A" stroke="#275BA6"/>
+<rect x="106" y="108" width="320" height="42" rx="12" fill="#173766"/>
+<rect x="446" y="108" width="220" height="42" rx="12" fill="#2E6ED5"/>
+<rect x="686" y="108" width="220" height="42" rx="12" fill="#2456A8"/>
+<rect x="926" y="108" width="220" height="42" rx="12" fill="#2456A8"/>
+<rect x="1166" y="108" width="220" height="42" rx="12" fill="#2456A8"/>
+<rect x="106" y="188" width="548" height="280" rx="18" fill="#122F5C"/>
+<rect x="684" y="188" width="748" height="280" rx="18" fill="#0F2A52"/>
+<rect x="728" y="238" width="310" height="36" rx="10" fill="#2F6DD2"/>
+<rect x="728" y="294" width="660" height="24" rx="8" fill="#2458A9"/>
+<rect x="728" y="332" width="598" height="24" rx="8" fill="#2458A9"/>
+<rect x="728" y="370" width="540" height="24" rx="8" fill="#2458A9"/>
+<path d="M152 398C218 320 286 290 354 320C410 345 468 346 618 234" stroke="#5BCBFF" stroke-width="9" stroke-linecap="round"/>
+<circle cx="354" cy="320" r="14" fill="#82E2A3"/>
+<circle cx="618" cy="234" r="14" fill="#FFD57E"/>
+<rect x="106" y="500" width="430" height="296" rx="18" fill="#102B54"/>
+<rect x="566" y="500" width="430" height="296" rx="18" fill="#102B54"/>
+<rect x="1026" y="500" width="406" height="296" rx="18" fill="#102B54"/>
+<rect x="144" y="544" width="354" height="34" rx="10" fill="#1E4C96"/>
+<rect x="144" y="598" width="290" height="22" rx="8" fill="#2A66BF"/>
+<rect x="144" y="632" width="318" height="22" rx="8" fill="#2A66BF"/>
+<rect x="604" y="544" width="354" height="34" rx="10" fill="#1E4C96"/>
+<rect x="604" y="598" width="290" height="22" rx="8" fill="#2A66BF"/>
+<rect x="604" y="632" width="318" height="22" rx="8" fill="#2A66BF"/>
+<rect x="1062" y="544" width="330" height="34" rx="10" fill="#1E4C96"/>
+<rect x="1062" y="598" width="274" height="22" rx="8" fill="#2A66BF"/>
+<rect x="1062" y="632" width="296" height="22" rx="8" fill="#2A66BF"/>
+<text x="115" y="137" fill="#CCE2FF" font-family="Inter, Arial" font-size="22" font-weight="700">AVIA HUB · Vista unificada de productos</text>
+</svg>

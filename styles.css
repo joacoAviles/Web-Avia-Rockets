@@ -170,6 +170,7 @@ p {
   align-items: center;
   gap: 0.65rem;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .brand img {
@@ -265,7 +266,7 @@ p {
 }
 
 .hero-logo {
-  width: min(280px, 72%);
+  width: clamp(180px, 32vw, 280px);
   margin-bottom: 0.25rem;
   filter: drop-shadow(0 8px 20px rgba(20, 120, 220, 0.28));
 }

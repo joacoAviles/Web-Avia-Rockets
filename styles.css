@@ -166,6 +166,8 @@ p {
 .brand {
   text-decoration: none;
   color: var(--text);
+codex/redisenar-la-pagina-web-para-mejorar-apariencia-c8k6do
+
   font-weight: 800;
   letter-spacing: 0.05em;
   display: inline-flex;
@@ -184,14 +186,17 @@ p {
 
 .brand span {
   display: grid;
+ main
 }
 
-.brand small {
-  color: var(--primary);
-  font-weight: 600;
-  letter-spacing: 0.25em;
-  font-size: 0.7rem;
-  margin-top: 0.2rem;
+.brand img {
+  width: 54px;
+  height: 54px;
+  border-radius: 0.6rem;
+  object-fit: contain;
+  background: rgba(4, 12, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.2rem;
 }
 
 .nav-actions {
@@ -257,6 +262,12 @@ p {
   grid-template-columns: 1.05fr 0.95fr;
   gap: 2rem;
   align-items: center;
+}
+
+.hero-logo {
+  width: min(210px, 58%);
+  margin-bottom: 0.4rem;
+  filter: drop-shadow(0 8px 20px rgba(20, 120, 220, 0.28));
 }
 
 h1 {
@@ -617,6 +628,10 @@ textarea::placeholder {
 
   .section {
     padding: 3.6rem 0;
+  }
+
+  .hero-logo {
+    width: 148px;
   }
 
   .btn {

@@ -266,7 +266,7 @@ p {
 }
 
 .hero-logo {
-  width: clamp(180px, 32vw, 280px);
+  width: min(280px, 72%);
   margin-bottom: 0.25rem;
   filter: drop-shadow(0 8px 20px rgba(20, 120, 220, 0.28));
 }

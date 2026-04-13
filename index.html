@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avia Rockets | Simplificamos y Aceleramos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="language-gate" class="language-gate" role="dialog" aria-modal="true" aria-labelledby="language-title">
+      <div class="language-card">
+        <p class="eyebrow" data-i18n="languageTag">Selecciona tu idioma</p>
+        <h1 id="language-title" data-i18n="languageTitle">Bienvenido a Avia Rockets</h1>
+        <p class="language-copy" data-i18n="languageSubtitle">
+          Elige cómo quieres explorar nuestros servicios de automatización, desarrollo y optimización.
+        </p>
+        <div class="language-actions">
+          <button class="btn btn-primary" data-language="es">Español</button>
+          <button class="btn btn-secondary" data-language="en">English</button>
+        </div>
+      </div>
+    </div>
+
+    <header class="site-header">
+      <nav class="navbar container">
+        <a href="#" class="brand">Avia Rockets</a>
+        <div class="nav-actions">
+          <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma">ES</button>
+          <a href="#login" class="btn btn-outline" data-i18n="navLogin">Acceso clientes</a>
+          <a href="#contacto" class="btn btn-primary" data-i18n="navContact">Contáctanos</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" data-i18n="heroTag">Menos fricción. Más resultados.</p>
+            <h1 data-i18n="heroTitle">Quitamos procesos absurdos para que tu negocio despegue más rápido.</h1>
+            <p data-i18n="heroText">
+              En Avia Rockets simplificamos operaciones, automatizamos tareas repetitivas y construimos tecnología útil para
+              crecer sin perder tiempo.
+            </p>
+            <div class="hero-actions">
+              <a href="#servicios" class="btn btn-primary" data-i18n="heroPrimary">Ver servicios</a>
+              <a href="#contacto" class="btn btn-secondary" data-i18n="heroSecondary">Solicitar diagnóstico</a>
+            </div>
+          </div>
+          <div class="hero-panel" aria-hidden="true">
+            <div class="metric-card">
+              <span data-i18n="metricOneLabel">Tareas automatizadas</span>
+              <strong>+1200</strong>
+            </div>
+            <div class="metric-card">
+              <span data-i18n="metricTwoLabel">Horas recuperadas</span>
+              <strong>+4800</strong>
+            </div>
+            <div class="metric-card">
+              <span data-i18n="metricThreeLabel">Proyectos entregados</span>
+              <strong>+300</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="servicios" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="servicesTag">Servicios SaaS + Desarrollo</p>
+          <h2 data-i18n="servicesTitle">Soluciones diseñadas para eliminar cuellos de botella</h2>
+        </div>
+        <div class="cards-grid">
+          <article class="service-card">
+            <h3 data-i18n="service1Title">Correos automáticos de levantamiento de información</h3>
+            <p data-i18n="service1Text">Flujos de email inteligentes para capturar datos clave sin seguimiento manual.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service2Title">Informes ejecutivos automáticos</h3>
+            <p data-i18n="service2Text">Reportes claros con indicadores críticos y recomendaciones accionables.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service3Title">Asesorías técnicas para emprendimientos</h3>
+            <p data-i18n="service3Text">Acompañamiento especializado para validar arquitectura, procesos y escalabilidad.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service4Title">Desarrollo de soluciones a medida</h3>
+            <p data-i18n="service4Text">Herramientas personalizadas conectadas a tu operación real, no al revés.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service5Title">Desarrollo de apps, web y APIs</h3>
+            <p data-i18n="service5Text">Desde prototipo hasta producción, con foco en velocidad, calidad y mantenimiento simple.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service6Title">Gestión de flota para clubes aéreos</h3>
+            <p data-i18n="service6Text">Plataforma estilo “comunidad feliz” adaptada a la operación aeronáutica.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service7Title">Paneles operativos en tiempo real</h3>
+            <p data-i18n="service7Text">Monitorea ventas, soporte y operaciones con tableros que priorizan decisiones rápidas.</p>
+          </article>
+          <article class="service-card">
+            <h3 data-i18n="service8Title">Automatización de onboarding de clientes</h3>
+            <p data-i18n="service8Text">Reduce tiempos de implementación con flujos guiados y checklist automatizados.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="login" class="section section-alt">
+        <div class="container split-grid">
+          <div>
+            <p class="eyebrow" data-i18n="loginTag">Área de clientes</p>
+            <h2 data-i18n="loginTitle">Inicia sesión para gestionar tus proyectos y servicios</h2>
+            <p data-i18n="loginText">
+              Consulta avances, revisa reportes y haz seguimiento en un solo lugar. Tu operación, simplificada.
+            </p>
+          </div>
+          <form class="form-card" action="#" method="post">
+            <label for="email" data-i18n="labelEmail">Correo empresarial</label>
+            <input id="email" name="email" type="email" placeholder="equipo@empresa.com" required />
+            <label for="password" data-i18n="labelPassword">Contraseña</label>
+            <input id="password" name="password" type="password" placeholder="••••••••" required />
+            <button class="btn btn-primary" type="submit" data-i18n="loginButton">Entrar al portal</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="contacto" class="section container">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="contactTag">Contáctanos</p>
+          <h2 data-i18n="contactTitle">Cuéntanos qué quieres optimizar y te ayudamos a despegar</h2>
+        </div>
+        <form class="contact-grid" action="#" method="post">
+          <input type="text" name="name" placeholder="Nombre" required />
+          <input type="email" name="email" placeholder="Correo" required />
+          <input type="text" name="company" placeholder="Empresa" required />
+          <select name="service" required>
+            <option value="" data-i18n="contactSelect">Selecciona un servicio</option>
+            <option value="saas" data-i18n="contactOption1">Automatización SaaS</option>
+            <option value="custom" data-i18n="contactOption2">Desarrollo a medida</option>
+            <option value="advisory" data-i18n="contactOption3">Asesoría técnica</option>
+          </select>
+          <textarea name="message" placeholder="Describe tu reto principal" rows="5" required></textarea>
+          <button class="btn btn-primary" type="submit" data-i18n="contactButton">Enviar solicitud</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <span>© <span id="year"></span> Avia Rockets</span>
+        <span data-i18n="footerText">Menos requisitos absurdos. Más velocidad.</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

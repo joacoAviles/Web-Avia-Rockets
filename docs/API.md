@@ -1,13 +1,7 @@
-# AVIA Rockets API (Back-end agregado sin tocar el front actual)
+# AVIA Rockets API (SaaS Chile)
 
-## Objetivo
-Este backend habilita funcionalidades de negocio para la web actual sin modificar su UI existente:
-
-- Captura de leads/contactos (`/api/leads`)
-- Catálogo de planes (`/api/payments/plans`)
-- Flujo de pagos con modo **mock** o **Stripe real**
-- Gestión de suscripciones (`/api/subscriptions`)
-- Webhook de Stripe para eventos de pago
+Backend agregado sin tocar el front actual, orientado a SaaS en Chile:
+registro/login, suscripción mensual, pagos, webhook, control de acceso y base de facturación.
 
 ## Ejecutar localmente
 ```bash
@@ -16,48 +10,54 @@ cp .env.example .env
 npm run dev
 ```
 
-## Variables de entorno
-- `PORT`: puerto del API (default `8080`)
-- `FRONTEND_ORIGIN`: origen permitido por CORS
-- `ENABLE_STRIPE`: `true|false` (default `false`)
-- `STRIPE_SECRET_KEY`: clave secreta Stripe
-- `STRIPE_WEBHOOK_SECRET`: secreto de webhook
-- `DEFAULT_CURRENCY`: moneda por defecto (`usd`)
+## Endpoints
 
-## Endpoints principales
-
-### Salud
+## Salud
 - `GET /api/health`
 
-### Leads
+## Auth
+- `POST /api/auth/register`
+- `POST /api/auth/verify-email`
+- `POST /api/auth/login`
+- `POST /api/auth/recover-password`
+
+## Leads
 - `POST /api/leads`
 
-Payload ejemplo:
-```json
-{
-  "name": "Ana Pérez",
-  "company": "Fleet Chile",
-  "email": "ana@fleet.cl",
-  "interest": "fleet",
-  "preferredLanguage": "es",
-  "message": "Necesito control de vencimientos para 60 vehículos"
-}
-```
+## Perfil de facturación (Chile)
+- `POST /api/billing-profiles` (requiere `Authorization: Bearer <token>`)
+- `GET /api/billing-profiles/me` (requiere token)
 
-### Planes y pagos
+Campos: `customerType`, `legalName`, `rut`, `giro`, `address`, `district`, `city`, `country`.
+
+## Planes/Pagos
 - `GET /api/payments/plans`
-- `POST /api/payments/intents` (pago único)
-- `POST /api/payments/checkout-session` (suscripción)
+- `POST /api/payments/intents`
+- `POST /api/payments/checkout-session`
 - `POST /api/payments/webhook`
 
-### Suscripciones
-- `POST /api/subscriptions`
-- `GET /api/subscriptions/:id`
-- `POST /api/subscriptions/:id/cancel`
+`checkout-session` soporta `provider`: `mock | stripe | transbank_oneclick | mercadopago`.
 
-## Integración recomendada sin cambiar diseño
-Sin tocar componentes visuales existentes, puedes:
-1. Conectar el formulario de contacto actual a `/api/leads`.
-2. Agregar una nueva sección/landing de pricing que consulte `/api/payments/plans`.
-3. Al confirmar plan, invocar `/api/payments/checkout-session`.
-4. Para venta asistida, crear la suscripción con `/api/subscriptions` en estado `pending_payment`.
+## Suscripciones
+- `GET /api/subscriptions/statuses`
+- `POST /api/subscriptions` (requiere token)
+- `GET /api/subscriptions/me/current` (requiere token)
+- `POST /api/subscriptions/:id/change-plan` (requiere token)
+- `POST /api/subscriptions/:id/cancel` (requiere token)
+
+Estados: `incomplete`, `trialing`, `active`, `past_due`, `suspended`, `canceled`.
+
+## Acceso premium
+- `GET /api/access/entitlements` (requiere token)
+
+Responde si el usuario tiene acceso premium según estado de suscripción y período de gracia.
+
+## Cobro mensual (job mock)
+- `POST /api/billing/run-daily-cycle`
+
+Procesa suscripciones vencidas, registra intentos en `paymentAttempts` y actualiza estado.
+
+## Notas clave
+- El backend NO guarda datos sensibles de tarjeta.
+- El flujo de PSP real quedó preparado para integración productiva posterior.
+- Persistencia actual es file-based (`data/store.json`), recomendado migrar a PostgreSQL para producción.

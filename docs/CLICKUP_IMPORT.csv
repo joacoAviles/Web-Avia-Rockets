@@ -1,0 +1,7 @@
+Task Name,Status,Priority,Description
+Configurar PostgreSQL + migraciones,open,urgent,Reemplazar store JSON por DB relacional con índices
+Implementar sesiones seguras,open,high,JWT firmado con refresh token y revocación
+Conectar webhooks PSP reales,open,high,Validar firma y deduplicar eventos
+Portal cliente v1,in progress,high,Mostrar suscripción plan y pagos
+Panel admin v1,open,normal,Buscar usuarios por email RUT razón social
+Reportes MRR churn morosidad,open,normal,Crear métricas agregadas mensuales

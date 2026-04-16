@@ -1,0 +1,15 @@
+Task,Phase,Priority,Status,Owner,Notes
+Public website pages,Fase 2,Alta,Done,Equipo Web,Landing y páginas base existentes
+Registro/Login API,Fase 3,Alta,Done,Backend,Endpoints /api/auth/register /login /verify-email
+Planes CLP + IVA,Fase 5,Alta,Done,Backend,Monthly/Annual/Free/Trial
+Checkout provider selection,Fase 6,Alta,Done,Backend,Mock + Stripe + placeholders TBK/MP
+Webhook seguro + idempotencia,Fase 9,Alta,Done,Backend,Registro en webhookEvents
+Suscripciones estados SaaS,Fase 7,Alta,Done,Backend,incomplete/trialing/active/past_due/suspended/canceled
+Control de acceso premium,Fase 10,Alta,Done,Backend,/api/access/entitlements
+Job cobro mensual,Fase 8,Media,Done,Backend,/api/billing/run-daily-cycle
+Perfil de facturación + RUT,Fase 4,Alta,Done,Backend,/api/billing-profiles
+Portal cliente básico,Fase 13,Alta,Todo,Frontend,Dashboard y estado de suscripción
+Facturación electrónica DTE,Fase 11,Alta,Todo,Backend,Evaluar facturador externo
+Correos automáticos,Fase 12,Media,Todo,Backend,Proveedor SMTP/transaccional
+Panel de administración,Fase 14,Media,Todo,Fullstack,Listados, filtros y acciones manuales
+Métricas MRR churn,Fase 19,Media,Todo,Data,Dashboard negocio

@@ -7,6 +7,10 @@ import healthRoutes from './routes/health.js';
 import leadRoutes from './routes/leads.js';
 import paymentRoutes from './routes/payments.js';
 import subscriptionRoutes from './routes/subscriptions.js';
+import authRoutes from './routes/auth.js';
+import billingProfileRoutes from './routes/billing-profiles.js';
+import accessRoutes from './routes/access.js';
+import billingCycleRoutes from './routes/billing-cycle.js';
 
 const app = express();
 
@@ -29,14 +33,26 @@ app.get('/', (_req, res) => {
   res.json({
     service: 'AVIA Rockets API',
     docs: '/api/health',
-    features: ['lead capture', 'payments', 'subscriptions']
+    features: [
+      'lead capture',
+      'authentication',
+      'billing profiles (Chile)',
+      'payments',
+      'subscriptions',
+      'entitlements',
+      'billing cycle'
+    ]
   });
 });
 
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
+app.use('/api/billing-profiles', billingProfileRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/access', accessRoutes);
+app.use('/api/billing', billingCycleRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

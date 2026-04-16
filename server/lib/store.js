@@ -6,7 +6,14 @@ const dataPath = path.resolve('data/store.json');
 const defaultStore = {
   leads: [],
   customers: [],
+  users: [],
+  billingProfiles: [],
   subscriptions: [],
+  subscriptionChanges: [],
+  paymentMethods: [],
+  paymentAttempts: [],
+  webhookEvents: [],
+  invoicesLocal: [],
   payments: []
 };
 
@@ -15,7 +22,21 @@ function ensureStore() {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(dataPath)) {
     fs.writeFileSync(dataPath, JSON.stringify(defaultStore, null, 2));
+    return;
   }
+
+  // Auto-migrate: add missing collections if store already existed.
+  const current = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+  let changed = false;
+
+  Object.entries(defaultStore).forEach(([key, emptyValue]) => {
+    if (!(key in current)) {
+      current[key] = emptyValue;
+      changed = true;
+    }
+  });
+
+  if (changed) fs.writeFileSync(dataPath, JSON.stringify(current, null, 2));
 }
 
 export function readStore() {
@@ -47,4 +68,14 @@ export function updateRecord(section, id, updater) {
 export function findRecord(section, id) {
   const store = readStore();
   return store[section].find((x) => x.id === id) || null;
+}
+
+export function findBy(section, predicate) {
+  const store = readStore();
+  return store[section].find(predicate) || null;
+}
+
+export function listBy(section, predicate = () => true) {
+  const store = readStore();
+  return store[section].filter(predicate);
 }

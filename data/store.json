@@ -1,6 +1,13 @@
 {
   "leads": [],
   "customers": [],
+  "users": [],
+  "billingProfiles": [],
   "subscriptions": [],
+  "subscriptionChanges": [],
+  "paymentMethods": [],
+  "paymentAttempts": [],
+  "webhookEvents": [],
+  "invoicesLocal": [],
   "payments": []
 }

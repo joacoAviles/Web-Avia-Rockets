@@ -7,6 +7,6 @@ export const config = {
   frontendOrigin: process.env.FRONTEND_ORIGIN || '*',
   stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
-  defaultCurrency: (process.env.DEFAULT_CURRENCY || 'usd').toLowerCase(),
+  defaultCurrency: (process.env.DEFAULT_CURRENCY || 'clp').toLowerCase(),
   enableStripe: String(process.env.ENABLE_STRIPE || 'false').toLowerCase() === 'true'
 };

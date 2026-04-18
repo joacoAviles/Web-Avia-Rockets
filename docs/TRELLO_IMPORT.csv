@@ -1,0 +1,8 @@
+Name,Description,List
+Implementar portal cliente básico,"Dashboard con plan actual, estado, próxima fecha cobro e historial",Por hacer
+Integrar Transbank Oneclick real,"Crear inscripción de tarjeta y cobro recurrente en entorno integración",Por hacer
+Integrar Mercado Pago real,"Preapproval subscriptions con webhooks firmados",Por hacer
+Integrar facturación electrónica,"Emitir boleta/factura tras pago aprobado",Por hacer
+Conectar frontend formulario contacto,"Enviar a /api/leads",En proceso
+Conectar frontend pricing/checkout,"Consumir /api/payments/plans y /checkout-session",En proceso
+Validar permisos admin,"RBAC usuario/admin/soporte",Por hacer

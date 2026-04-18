@@ -61,3 +61,7 @@ Procesa suscripciones vencidas, registra intentos en `paymentAttempts` y actuali
 - El backend NO guarda datos sensibles de tarjeta.
 - El flujo de PSP real quedó preparado para integración productiva posterior.
 - Persistencia actual es file-based (`data/store.json`), recomendado migrar a PostgreSQL para producción.
+
+
+## Referencia extendida
+Para payloads completos, ejemplos cURL y flujo rápido de integración, ver `docs/API_REFERENCE.md`.

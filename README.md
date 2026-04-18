@@ -29,3 +29,8 @@ API base: `http://localhost:8080`
 - Import board Notion: `docs/BOARD_NOTION.csv`
 - Import board Trello: `docs/TRELLO_IMPORT.csv`
 - Import board ClickUp: `docs/CLICKUP_IMPORT.csv`
+
+- API Reference detallada: `docs/API_REFERENCE.md`
+- Setup DB: `docs/DB_SETUP.md`
+- APIs y claves requeridas: `docs/INTEGRATION_KEYS_REQUIRED.md`
+- Hoja de cambios del agente: `CHANGELOG_AGENT.md`

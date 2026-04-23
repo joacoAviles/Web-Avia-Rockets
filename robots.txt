@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://joacoaviles.github.io/Web-Avia-Rockets/sitemap.xml

@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Revisiones Automáticas | AVIA Rockets</title>
+    <meta
+      name="description"
+      content="RA Revisiones Automáticas de AVIA Rockets: plataforma para vigilar causas, detectar cambios y activar correos automáticos de seguimiento."
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta
+      name="keywords"
+      content="revisiones automáticas, causas judiciales, seguimiento de causas, alertas judiciales, AVIA Rockets, RA"
+    />
+    <meta property="og:title" content="Revisiones Automáticas | AVIA Rockets" />
+    <meta
+      property="og:description"
+      content="Administra causas, activa vigilancia automática, revisa historial y recibe avisos por correo cuando existan cambios."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ra.aviarockets.cl/" />
+    <meta property="og:image" content="assets/avia-rockets-logo.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg" />
+
+    <style>
+      :root {
+        --bg: #050a13;
+        --bg-2: #081224;
+        --card: rgba(15, 28, 54, 0.88);
+        --card-2: rgba(8, 18, 36, 0.94);
+        --text: #f0f5ff;
+        --muted: #9caecc;
+        --muted-2: #bfd0ec;
+        --line: rgba(156, 181, 230, 0.2);
+        --primary: #2fa8ff;
+        --primary-2: #74d0ff;
+        --danger: #ff6b6b;
+        --success: #55d98b;
+        --warning: #ffd166;
+        --container: 1180px;
+        --radius: 22px;
+        --shadow: 0 26px 70px rgba(0, 0, 0, 0.36);
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 0%, rgba(47, 168, 255, 0.18), transparent 32%),
+          radial-gradient(circle at 95% 12%, rgba(116, 208, 255, 0.1), transparent 28%),
+          linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 72%);
+        line-height: 1.6;
+      }
+
+      a { color: inherit; }
+      img { display: block; max-width: 100%; }
+      button, input, select { font: inherit; }
+
+      .container {
+        width: min(var(--container), 92%);
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid var(--line);
+        background: rgba(5, 10, 19, 0.78);
+        backdrop-filter: blur(16px);
+      }
+
+      .navbar {
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        text-decoration: none;
+      }
+
+      .brand img {
+        width: 48px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .brand span { display: grid; line-height: 1; }
+      .brand strong { letter-spacing: 0.08em; }
+      .brand small { margin-top: 0.2rem; color: var(--primary-2); letter-spacing: 0.26em; font-size: 0.66rem; }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--muted-2);
+        font-size: 0.95rem;
+      }
+
+      .btn {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        padding: 0.78rem 1.18rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        text-decoration: none;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        border-color: transparent;
+        color: #05111f;
+        background: linear-gradient(135deg, var(--primary-2), var(--primary));
+        box-shadow: 0 14px 34px rgba(47, 168, 255, 0.24);
+      }
+
+      .btn-secondary {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 6rem 0 4rem;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+          linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size: 34px 34px;
+        opacity: 0.08;
+        mask-image: linear-gradient(180deg, black, transparent 82%);
+      }
+
+      .hero-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(380px, 0.86fr);
+        gap: 2.2rem;
+        align-items: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 0.8rem;
+        color: var(--primary-2);
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.76rem;
+        font-weight: 800;
+      }
+
+      h1, h2, h3, p { margin: 0; }
+      h1, h2, h3 { line-height: 1.08; letter-spacing: -0.03em; }
+
+      .hero h1 {
+        max-width: 12ch;
+        font-size: clamp(2.6rem, 6vw, 5.1rem);
+      }
+
+      .hero-text {
+        max-width: 63ch;
+        margin-top: 1rem;
+        color: var(--muted);
+        font-size: 1.08rem;
+      }
+
+      .hero-actions {
+        margin-top: 1.7rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+      }
+
+      .status-row {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+      }
+
+      .pill {
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.035);
+        color: var(--muted-2);
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .app-card {
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.014)), var(--card-2);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .app-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .traffic { display: flex; gap: 0.45rem; }
+      .traffic span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.28); }
+      .app-title { color: var(--muted-2); font-weight: 800; font-size: 0.86rem; }
+
+      .dashboard {
+        padding: 1rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.7rem;
+      }
+
+      .summary-box, .case-row, .toggle-card {
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        background: rgba(255,255,255,0.03);
+        padding: 0.9rem;
+      }
+
+      .summary-box small, .case-row small, .toggle-card small { color: var(--muted); }
+      .summary-box strong { display: block; margin-top: 0.25rem; font-size: 1.5rem; }
+
+      .case-list { display: grid; gap: 0.7rem; }
+
+      .case-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 0.7rem;
+      }
+
+      .case-row strong { display: block; font-size: 0.97rem; }
+      .state {
+        padding: 0.35rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+      .state.ok { color: var(--success); background: rgba(85,217,139,0.1); }
+      .state.warn { color: var(--warning); background: rgba(255,209,102,0.1); }
+      .state.off { color: var(--muted-2); background: rgba(255,255,255,0.06); }
+
+      .toggle-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .switch {
+        width: 56px;
+        height: 32px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--primary-2), var(--primary));
+        padding: 4px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .switch span {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #06101f;
+      }
+
+      .section { padding: 5.4rem 0; }
+      .section-alt { background: rgba(255,255,255,0.025); }
+
+      .section-heading {
+        max-width: 760px;
+        margin-bottom: 2rem;
+      }
+
+      .section-heading.center { text-align: center; margin-left: auto; margin-right: auto; }
+      .section-heading h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0.8rem; }
+      .section-heading p { color: var(--muted); }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
+
+      .feature-card, .flow-card, .pricing-card, .notice-card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)), var(--card);
+        padding: 1.15rem;
+      }
+
+      .feature-card span, .flow-card span {
+        display: inline-flex;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        color: #05111f;
+        background: linear-gradient(135deg, var(--primary-2), var(--primary));
+        font-weight: 900;
+        margin-bottom: 0.9rem;
+      }
+
+      .feature-card h3, .flow-card h3, .pricing-card h3, .notice-card h3 { margin-bottom: 0.55rem; }
+      .feature-card p, .flow-card p, .pricing-card p, .notice-card p, .pricing-card li { color: var(--muted); }
+
+      .flow-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .architecture {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .diagram {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255,255,255,0.025);
+        padding: 1.2rem;
+        display: grid;
+        gap: 0.8rem;
+      }
+
+      .diagram-step {
+        padding: 0.85rem 1rem;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: var(--muted-2);
+        font-weight: 800;
+      }
+
+      .diagram-arrow { color: var(--primary-2); text-align: center; font-weight: 900; }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .pricing-card.featured {
+        border-color: rgba(116, 208, 255, 0.42);
+        box-shadow: 0 20px 50px rgba(47, 168, 255, 0.12);
+      }
+
+      .pricing-card ul { margin: 1rem 0 0; padding-left: 1.1rem; }
+      .pricing-card li + li { margin-top: 0.45rem; }
+
+      .contact-box {
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(19,37,71,0.96), rgba(7,15,31,0.96));
+        box-shadow: var(--shadow);
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .site-footer {
+        padding: 1.4rem 0;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .architecture,
+        .contact-box { grid-template-columns: 1fr; }
+        .feature-grid, .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+        .flow-grid { grid-template-columns: 1fr; }
+      }
+
+      @media (max-width: 680px) {
+        .nav-links a:not(.btn-secondary) { display: none; }
+        .hero { padding-top: 4.4rem; }
+        .summary-grid, .feature-grid, .pricing-grid { grid-template-columns: 1fr; }
+        .hero h1 { max-width: 100%; }
+        .hero-actions .btn, .contact-box .btn { width: 100%; }
+        .case-row { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container navbar">
+        <a class="brand" href="index.html" aria-label="Volver a AVIA Rockets">
+          <img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" />
+          <span>
+            <strong>RA</strong>
+            <small>AVIA ROCKETS</small>
+          </span>
+        </a>
+        <nav class="nav-links" aria-label="Navegación principal">
+          <a href="#producto">Producto</a>
+          <a href="#flujo">Flujo</a>
+          <a href="#arquitectura">Arquitectura</a>
+          <a href="#planes">Planes</a>
+          <a class="btn btn-secondary" href="#contacto">Solicitar acceso</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Revisiones Automáticas</p>
+            <h1>Vigila causas sin vivir pegado al portal.</h1>
+            <p class="hero-text">
+              RA es una plataforma de AVIA Rockets para administrar causas, activar o pausar vigilancia, revisar historial de cambios y recibir correos automáticos cuando exista movimiento relevante.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#contacto">Solicitar acceso beta</a>
+              <a class="btn btn-secondary" href="#arquitectura">Ver cómo funciona</a>
+            </div>
+            <div class="status-row" aria-label="Beneficios principales">
+              <span class="pill">Causas activas y pausadas</span>
+              <span class="pill">Historial trazable</span>
+              <span class="pill">Correo automático on/off</span>
+            </div>
+          </div>
+
+          <aside class="app-card" aria-label="Vista previa del dashboard RA">
+            <div class="app-topbar">
+              <div class="traffic"><span></span><span></span><span></span></div>
+              <div class="app-title">ra.aviarockets.cl</div>
+            </div>
+            <div class="dashboard">
+              <div class="summary-grid">
+                <div class="summary-box"><small>Activas</small><strong>18</strong></div>
+                <div class="summary-box"><small>Con cambios</small><strong>3</strong></div>
+                <div class="summary-box"><small>Pausadas</small><strong>5</strong></div>
+              </div>
+
+              <div class="case-list">
+                <div class="case-row">
+                  <div>
+                    <strong>C-1245-2024 · Civil</strong>
+                    <small>Última revisión: hoy 08:30</small>
+                  </div>
+                  <span class="state warn">Cambio</span>
+                </div>
+                <div class="case-row">
+                  <div>
+                    <strong>C-2301-2023 · Cobranza</strong>
+                    <small>Última revisión: hoy 08:27</small>
+                  </div>
+                  <span class="state ok">Sin cambios</span>
+                </div>
+                <div class="case-row">
+                  <div>
+                    <strong>O-808-2025 · Laboral</strong>
+                    <small>Vigilancia temporalmente detenida</small>
+                  </div>
+                  <span class="state off">Pausada</span>
+                </div>
+              </div>
+
+              <div class="toggle-card">
+                <div>
+                  <strong>Correo automático</strong><br />
+                  <small>Enviar resumen cuando existan cambios.</small>
+                </div>
+                <div class="switch" aria-hidden="true"><span></span></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="producto">
+        <div class="container">
+          <div class="section-heading center">
+            <p class="eyebrow">Producto</p>
+            <h2>Lo mínimo necesario para que sea útil desde el día uno</h2>
+            <p>No es un dashboard bonito sin función. La idea es administrar, consultar, comparar y notificar.</p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span>01</span>
+              <h3>Agregar causas</h3>
+              <p>Registro por competencia, tribunal, tipo, rol y año para dejar cada causa lista para seguimiento.</p>
+            </article>
+            <article class="feature-card">
+              <span>02</span>
+              <h3>Pausar o activar</h3>
+              <p>Control operativo simple: activa lo importante, pausa lo que no quieres revisar y elimina sin perder trazabilidad.</p>
+            </article>
+            <article class="feature-card">
+              <span>03</span>
+              <h3>Historial de revisiones</h3>
+              <p>Cada consulta queda registrada con fecha, estado, resultado normalizado y detección de cambios.</p>
+            </article>
+            <article class="feature-card">
+              <span>04</span>
+              <h3>Correo automático</h3>
+              <p>El usuario decide si quiere recibir avisos inmediatos o resúmenes periódicos por email.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="flujo">
+        <div class="container">
+          <div class="section-heading center">
+            <p class="eyebrow">Flujo</p>
+            <h2>La web administra. El worker vigila.</h2>
+            <p>Ese punto es clave. La página no debería depender de consultar en vivo cada vez que el usuario abre el dashboard.</p>
+          </div>
+
+          <div class="flow-grid">
+            <article class="flow-card">
+              <span>1</span>
+              <h3>Usuario configura</h3>
+              <p>Agrega causas, define estado, revisa historial y activa o desactiva notificaciones.</p>
+            </article>
+            <article class="flow-card">
+              <span>2</span>
+              <h3>Worker revisa</h3>
+              <p>Un proceso separado consulta las fuentes, normaliza resultados y compara contra la revisión anterior.</p>
+            </article>
+            <article class="flow-card">
+              <span>3</span>
+              <h3>Sistema notifica</h3>
+              <p>Si hay cambios y el correo está activo, RA registra el evento y envía el aviso correspondiente.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="arquitectura">
+        <div class="container architecture">
+          <div class="section-heading">
+            <p class="eyebrow">Arquitectura</p>
+            <h2>Base técnica propuesta</h2>
+            <p>
+              Para la versión real: frontend, API, base de datos, worker, scheduler, logs y sistema de correo. La landing es solo la puerta de entrada comercial.
+            </p>
+          </div>
+          <div class="diagram" aria-label="Diagrama de arquitectura">
+            <div class="diagram-step">Usuario en RA</div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-step">API propia con sesión y permisos</div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-step">Base PostgreSQL / Supabase</div>
+            <div class="diagram-arrow">↑</div>
+            <div class="diagram-step">Worker Python + scheduler</div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-step">Correo automático + logs</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="planes">
+        <div class="container">
+          <div class="section-heading center">
+            <p class="eyebrow">Planes beta</p>
+            <h2>Entrada simple para validar mercado</h2>
+            <p>Los precios finales deberían definirse después de medir costo técnico, frecuencia de revisión y valor para usuarios reales.</p>
+          </div>
+
+          <div class="pricing-grid">
+            <article class="pricing-card">
+              <h3>Beta personal</h3>
+              <p>Para validar uso individual y casos propios.</p>
+              <ul>
+                <li>Hasta 10 causas</li>
+                <li>Revisión manual o programada básica</li>
+                <li>Correo automático simple</li>
+              </ul>
+            </article>
+            <article class="pricing-card featured">
+              <h3>Profesional</h3>
+              <p>Para usuarios con cartera frecuente de causas.</p>
+              <ul>
+                <li>Más causas supervisadas</li>
+                <li>Historial y cambios detallados</li>
+                <li>Resumen periódico por email</li>
+              </ul>
+            </article>
+            <article class="pricing-card">
+              <h3>Equipo</h3>
+              <p>Para operación compartida y seguimiento interno.</p>
+              <ul>
+                <li>Múltiples usuarios</li>
+                <li>Roles y permisos</li>
+                <li>Reportes y soporte prioritario</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contacto">
+        <div class="container">
+          <div class="contact-box">
+            <div>
+              <p class="eyebrow">Acceso beta</p>
+              <h2>Solicita acceso a Revisiones Automáticas</h2>
+              <p class="hero-text">
+                Esta página queda lista como entrada comercial. El siguiente paso técnico es conectar login, base de datos, worker y correo real.
+              </p>
+            </div>
+            <a class="btn btn-primary" href="mailto:contact@aviarockets.com?subject=Acceso%20beta%20RA%20Revisiones%20Automaticas">Pedir acceso</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt">
+        <div class="container">
+          <article class="notice-card">
+            <h3>Nota técnica importante</h3>
+            <p>
+              RA debe operar con una base de datos propia. El dashboard lee datos guardados por tu sistema; el proceso automático de revisión corre por separado. Esa separación evita una plataforma lenta, frágil y dependiente de consultas en vivo cada vez que alguien entra.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>AVIA Rockets · Revisiones Automáticas · Santiago, Chile</p>
+      </div>
+    </footer>
+  </body>
+</html>

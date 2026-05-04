@@ -4,67 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AVIA Rockets | Sistemas, control y automatización</title>
-    <meta
-      name="description"
-      content="AVIA Rockets desarrolla soluciones para evaluación automática de personas, gestión de flotas y desarrollo personalizado de APIs, apps y asesorías."
-    />
+    <meta name="description" content="AVIA Rockets desarrolla soluciones para evaluación automática de personas, gestión de flotas y desarrollo personalizado de APIs, apps y asesorías." />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <meta
-      name="keywords"
-      content="PDLJU, informes de personas, gestión de flotas, revisiones técnicas, APIs, apps, automatización, AVIA Rockets"
-    />
+    <meta name="keywords" content="PDLJU, informes de personas, gestión de flotas, revisiones técnicas, APIs, apps, automatización, AVIA Rockets" />
     <meta property="og:title" content="AVIA Rockets | Sistemas, control y automatización" />
-    <meta
-      property="og:description"
-      content="Tres líneas de negocio: revisión automática de personas, gestión de flotas y desarrollo digital a medida."
-    />
+    <meta property="og:description" content="Tres líneas de negocio: revisión automática de personas, gestión de flotas y desarrollo digital a medida." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://joacoaviles.github.io/Web-Avia-Rockets/" />
-    <meta
-      property="og:image"
-      content="https://joacoaviles.github.io/Web-Avia-Rockets/assets/avia-rockets-logo.svg"
-    />
-
+    <meta property="og:image" content="https://joacoaviles.github.io/Web-Avia-Rockets/assets/avia-rockets-logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="dashboard.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container navbar">
         <a class="brand" href="#home" aria-label="AVIA Rockets home">
           <img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" />
-          <span>
-            <strong>AVIA</strong>
-            <small>ROCKETS</small>
-          </span>
+          <span><strong>AVIA</strong><small>ROCKETS</small></span>
         </a>
-
-        <button
-          class="nav-toggle"
-          id="nav-toggle"
-          aria-label="Open navigation"
-          aria-expanded="false"
-        >
-          <span></span>
-          <span></span>
-        </button>
-
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
         <nav class="nav-panel" id="nav-panel" aria-label="Primary navigation">
           <a href="#business-lines" data-i18n="navLines">Líneas de negocio</a>
           <a href="#process" data-i18n="navProcess">Cómo trabajamos</a>
-          <a href="#security" data-i18n="navSecurity">Seguridad</a>
+          <a href="#client-login">Login clientes</a>
           <a href="#contact" data-i18n="navContact">Contacto</a>
-          <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">
-            EN
-          </button>
-          <a class="btn btn-primary btn-nav" href="#contact" data-i18n="navCta">Agendar demo</a>
+          <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
+          <a class="btn btn-primary btn-nav" href="#client-login">Entrar</a>
         </nav>
       </div>
     </header>
@@ -76,335 +45,73 @@
           <div class="hero-copy reveal">
             <p class="eyebrow" data-i18n="heroTag">Control, automatización y desarrollo digital</p>
             <h1 data-i18n="heroTitle">Sistemas que ordenan operación, datos y seguimiento</h1>
-            <p class="hero-text" data-i18n="heroText">
-              Tres líneas de trabajo: revisión automática de personas, gestión de flotas y
-              desarrollo de soluciones a medida.
-            </p>
-
+            <p class="hero-text" data-i18n="heroText">Tres líneas de trabajo: revisión automática de personas, gestión de flotas y desarrollo de soluciones a medida.</p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#business-lines" data-i18n="heroPrimary"
-                >Ver soluciones</a
-              >
-              <a class="btn btn-secondary" href="#contact" data-i18n="heroSecondary"
-                >Agendar demo</a
-              >
+              <a class="btn btn-primary" href="#client-login">Entrar al dashboard</a>
+              <a class="btn btn-secondary" href="#contact" data-i18n="heroSecondary">Agendar demo</a>
             </div>
-
             <ul class="hero-metrics" aria-label="Core value points">
-              <li data-i18n="heroMetric1">Automatización útil</li>
-              <li data-i18n="heroMetric2">Control operacional</li>
-              <li data-i18n="heroMetric3">Implementación seria</li>
+              <li>Login con base de datos</li><li>Causas asignadas</li><li>Control por usuario</li>
             </ul>
           </div>
-
           <div class="hero-visual reveal reveal-delay">
             <div class="visual-shell">
-              <div class="visual-topbar">
-                <span></span><span></span><span></span>
-              </div>
-
+              <div class="visual-topbar"><span></span><span></span><span></span></div>
               <div class="visual-grid">
-                <article class="visual-panel panel-primary">
-                  <p class="panel-label" data-i18n="visualLabel1">Operational overview</p>
-                  <h2 data-i18n="visualTitle1">Control claro sobre procesos, estados y seguimiento</h2>
-                  <div class="visual-lines">
-                    <span></span><span></span><span></span>
-                  </div>
-                </article>
-
-                <article class="visual-panel">
-                  <p class="panel-label" data-i18n="visualLabel2">Workflow status</p>
-                  <div class="visual-lines visual-lines-secondary">
-                    <span></span><span></span><span></span>
-                  </div>
-                </article>
-
-                <article class="visual-panel panel-chart">
-                  <p class="panel-label" data-i18n="visualLabel3">System activity</p>
-                  <div class="chart-bars">
-                    <span></span><span></span><span></span><span></span>
-                  </div>
-                </article>
-
-                <article class="visual-panel panel-badge">
-                  <p class="badge-kicker" data-i18n="visualBadge">Execution mindset</p>
-                  <strong data-i18n="visualBadgeText"
-                    >Herramientas pensadas para operar mejor, no para decorar dashboards.</strong
-                  >
-                </article>
+                <article class="visual-panel panel-primary"><p class="panel-label">Dashboard clientes</p><h2>Causas, estados y usuarios asignados desde PostgreSQL</h2><div class="visual-lines"><span></span><span></span><span></span></div></article>
+                <article class="visual-panel"><p class="panel-label">Login</p><div class="visual-lines visual-lines-secondary"><span></span><span></span><span></span></div></article>
+                <article class="visual-panel panel-chart"><p class="panel-label">Actividad</p><div class="chart-bars"><span></span><span></span><span></span><span></span></div></article>
+                <article class="visual-panel panel-badge"><p class="badge-kicker">RA</p><strong>Revisión automática conectada a usuarios reales.</strong></article>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="trust-strip">
-        <div class="container trust-grid reveal">
-          <div class="trust-item" data-i18n="trust1">Automatización consistente</div>
-          <div class="trust-item" data-i18n="trust2">Control y seguimiento</div>
-          <div class="trust-item" data-i18n="trust3">Implementación a medida</div>
-          <div class="trust-item" data-i18n="trust4">Visibilidad operativa</div>
-          <div class="trust-item" data-i18n="trust5">Criterio técnico</div>
-        </div>
-      </section>
+      <section class="section client-section" id="client-login">
+        <div class="container client-shell">
+          <article class="login-card" id="login-card">
+            <p class="eyebrow">Acceso clientes</p>
+            <h2>Entrar al dashboard</h2>
+            <p class="dashboard-meta">Usa el correo y clave creados en <code>app.users</code>.</p>
+            <form id="login-form">
+              <label for="login-email">Correo</label>
+              <input id="login-email" type="email" autocomplete="email" required placeholder="cliente@empresa.cl" />
+              <label for="login-password">Clave</label>
+              <input id="login-password" type="password" autocomplete="current-password" required placeholder="Clave" />
+              <button class="btn btn-primary" type="submit" id="login-button">Ingresar</button>
+            </form>
+            <p class="login-status" id="login-status" hidden></p>
+          </article>
 
-      <section class="section" id="business-lines">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow" data-i18n="linesTag">Líneas de negocio</p>
-            <h2 data-i18n="linesTitle">Tres soluciones, tres formas claras de entrar</h2>
-            <p data-i18n="linesText">
-              Elige la línea que más se acerca a tu necesidad actual: evaluación, control de flota o
-              desarrollo personalizado.
-            </p>
-          </div>
-
-          <div class="business-grid">
-            <article class="business-card business-card-featured reveal">
-              <div class="card-icon">01</div>
-              <h3 data-i18n="b1Title">Revisión automática de personas</h3>
-              <p data-i18n="b1Text">
-                Soluciones enfocadas en PDLJU, revisión automática e informes estructurados de
-                personas para apoyar decisiones con mayor consistencia.
-              </p>
-              <ul>
-                <li data-i18n="b1f1">Revisión automática</li>
-                <li data-i18n="b1f2">Informes ordenados y trazables</li>
-                <li data-i18n="b1f3">Apoyo operativo para evaluación</li>
-              </ul>
-              <a class="btn btn-secondary" href="#contact" data-i18n="b1Cta">Solicitar evaluación</a>
-            </article>
-
-            <article class="business-card reveal reveal-delay">
-              <div class="card-icon">02</div>
-              <h3 data-i18n="b2Title">Gestión y mantención de flotas</h3>
-              <p data-i18n="b2Text">
-                Plataforma orientada al control de revisiones técnicas, vencimientos, estados de
-                flota y continuidad operacional.
-              </p>
-              <ul>
-                <li data-i18n="b2f1">Revisiones técnicas y alertas</li>
-                <li data-i18n="b2f2">Estado de flota centralizado</li>
-                <li data-i18n="b2f3">Seguimiento de vencimientos</li>
-              </ul>
-              <a class="btn btn-secondary" href="#contact" data-i18n="b2Cta">Ver plataforma</a>
-            </article>
-
-            <article class="business-card reveal reveal-delay-2">
-              <div class="card-icon">03</div>
-              <h3 data-i18n="b3Title">APIs, apps y asesoría a medida</h3>
-              <p data-i18n="b3Text">
-                Desarrollo personalizado de integraciones, aplicaciones, automatizaciones y asesoría
-                técnica según la operación de cada cliente.
-              </p>
-              <ul>
-                <li data-i18n="b3f1">APIs e integraciones</li>
-                <li data-i18n="b3f2">Apps y sistemas propios</li>
-                <li data-i18n="b3f3">Consultoría y definición técnica</li>
-              </ul>
-              <a class="btn btn-secondary" href="#contact" data-i18n="b3Cta">Conversar proyecto</a>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-alt" id="why">
-        <div class="container why-grid">
-          <div class="section-heading reveal">
-            <p class="eyebrow" data-i18n="whyTag">Por qué AVIA Rockets</p>
-            <h2 data-i18n="whyTitle">Tecnología con foco en operación, no en relleno visual</h2>
-            <p data-i18n="whyText">
-              Diseñamos herramientas que ayudan a ejecutar mejor, controlar mejor y depender menos de
-              procesos frágiles o manuales.
-            </p>
-          </div>
-
-          <div class="why-points reveal reveal-delay">
-            <article>
-              <h3 data-i18n="w1Title">Lectura rápida</h3>
-              <p data-i18n="w1Text">Interfaces pensadas para entender estados y tomar acción.</p>
-            </article>
-            <article>
-              <h3 data-i18n="w2Title">Automatización útil</h3>
-              <p data-i18n="w2Text">Menos tareas repetidas, más consistencia operativa.</p>
-            </article>
-            <article>
-              <h3 data-i18n="w3Title">Implementación seria</h3>
-              <p data-i18n="w3Text">No vendemos humo: definimos, construimos y aterrizamos.</p>
-            </article>
-            <article>
-              <h3 data-i18n="w4Title">Flexibilidad real</h3>
-              <p data-i18n="w4Text">Producto, servicio o desarrollo según el tipo de necesidad.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="process">
-        <div class="container">
-          <div class="section-heading centered reveal">
-            <p class="eyebrow" data-i18n="processTag">Cómo trabajamos</p>
-            <h2 data-i18n="processTitle">Una entrada clara según tu caso</h2>
-          </div>
-
-          <div class="process-grid">
-            <article class="process-card reveal">
-              <span>1</span>
-              <h3 data-i18n="p1Title">Cuéntanos tu necesidad</h3>
-              <p data-i18n="p1Text">
-                Identificamos si tu caso corresponde a evaluación automática, flota o desarrollo a
-                medida.
-              </p>
-            </article>
-
-            <article class="process-card reveal reveal-delay">
-              <span>2</span>
-              <h3 data-i18n="p2Title">Definimos la ruta</h3>
-              <p data-i18n="p2Text">
-                Te mostramos demo, evaluación o propuesta de implementación según la línea elegida.
-              </p>
-            </article>
-
-            <article class="process-card reveal reveal-delay-2">
-              <span>3</span>
-              <h3 data-i18n="p3Title">Implementamos o habilitamos acceso</h3>
-              <p data-i18n="p3Text">
-                El acceso al sistema o al servicio se habilita según el tipo de solución y alcance.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-security" id="security">
-        <div class="container security-grid">
-          <div class="security-copy reveal">
-            <p class="eyebrow" data-i18n="securityTag">Seguridad y criterio</p>
-            <h2 data-i18n="securityTitle">Control, trazabilidad y estructura para trabajar mejor</h2>
-            <p data-i18n="securityText">
-              Nuestras soluciones priorizan orden, seguimiento, estructura de datos e implementación
-              responsable para que la operación no dependa del caos.
-            </p>
-          </div>
-
-          <div class="security-cards reveal reveal-delay">
-            <article>
-              <h3 data-i18n="sec1Title">Trazabilidad</h3>
-              <p data-i18n="sec1Text">Registro claro de estados, revisiones y acciones relevantes.</p>
-            </article>
-            <article>
-              <h3 data-i18n="sec2Title">Estructura</h3>
-              <p data-i18n="sec2Text">Datos, reportes y procesos ordenados desde el diseño.</p>
-            </article>
-            <article>
-              <h3 data-i18n="sec3Title">Continuidad</h3>
-              <p data-i18n="sec3Text">Menor dependencia de seguimiento manual o recordatorios sueltos.</p>
-            </article>
-            <article>
-              <h3 data-i18n="sec4Title">Criterio técnico</h3>
-              <p data-i18n="sec4Text">Cada solución se adapta al contexto real del cliente.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section cta-section">
-        <div class="container cta-box reveal">
-          <div>
-            <p class="eyebrow" data-i18n="ctaTag">Siguiente paso</p>
-            <h2 data-i18n="ctaTitle">
-              Elige una línea de trabajo o conversemos tu caso directamente
-            </h2>
-          </div>
-          <a class="btn btn-primary" href="#contact" data-i18n="ctaButton">Agendar contacto</a>
-        </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="container contact-grid">
-          <div class="section-heading reveal">
-            <p class="eyebrow" data-i18n="contactTag">Contacto</p>
-            <h2 data-i18n="contactTitle">Cuéntanos qué necesitas resolver</h2>
-            <p data-i18n="contactText">
-              Escríbenos si necesitas una evaluación automática, una solución para tu flota o un
-              desarrollo digital a medida.
-            </p>
-
-            <div class="contact-meta">
-              <p><strong>Email:</strong> contact@aviarockets.com</p>
-              <p><strong data-i18n="contactLocationLabel">Base:</strong> Santiago, Chile</p>
-              <p><strong>LinkedIn:</strong> AVIA Rockets</p>
+          <article class="dashboard-card" id="dashboard-card" hidden>
+            <div class="dashboard-top">
+              <div>
+                <p class="eyebrow">Dashboard RA</p>
+                <h2 id="dashboard-title">Causas asignadas</h2>
+                <p class="dashboard-meta" id="dashboard-user"></p>
+              </div>
+              <button class="btn btn-secondary" type="button" id="logout-button">Cerrar sesión</button>
             </div>
-          </div>
-
-          <form class="contact-form reveal reveal-delay">
-            <label for="name" data-i18n="formName">Nombre</label>
-            <input id="name" name="name" type="text" autocomplete="name" placeholder="Joaquín Avilés" required minlength="2" />
-
-            <label for="company" data-i18n="formCompany">Empresa</label>
-            <input id="company" name="company" type="text" autocomplete="organization" placeholder="Nombre empresa" />
-
-            <label for="email" data-i18n="formEmail">Correo corporativo</label>
-            <input id="email" name="email" type="email" autocomplete="email" placeholder="name@company.com" required />
-
-            <label for="phone">Teléfono</label>
-            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+56 9 0000 0000" />
-
-            <label for="interest" data-i18n="formInterest">Línea de interés</label>
-            <select id="interest" name="interest">
-              <option value="pdlju" data-i18n="interest1">Revisión automática de personas</option>
-              <option value="fleet" data-i18n="interest2">Gestión y mantención de flotas</option>
-              <option value="custom" data-i18n="interest3">APIs, apps y asesoría</option>
-            </select>
-
-            <label for="language" data-i18n="formLanguage">Idioma preferido</label>
-            <select id="language" name="language">
-              <option value="es">Español</option>
-              <option value="en">English</option>
-            </select>
-
-            <label for="message" data-i18n="formMessage">Mensaje</label>
-            <textarea
-              id="message"
-              name="message"
-              rows="5"
-              placeholder="Describe tu necesidad, problema o idea."
-              required
-              minlength="5"
-            ></textarea>
-
-            <button class="btn btn-primary" type="submit" data-i18n="formButton">
-              Solicitar contacto
-            </button>
-          </form>
+            <p class="dashboard-status" id="dashboard-status">Cargando causas...</p>
+            <div class="dashboard-grid" id="causes-grid"></div>
+            <div class="dashboard-grid" id="admin-users-grid"></div>
+          </article>
         </div>
       </section>
+
+      <section class="trust-strip"><div class="container trust-grid reveal"><div class="trust-item">Automatización consistente</div><div class="trust-item">Control y seguimiento</div><div class="trust-item">Implementación a medida</div><div class="trust-item">Visibilidad operativa</div><div class="trust-item">Criterio técnico</div></div></section>
+
+      <section class="section" id="business-lines"><div class="container"><div class="section-heading reveal"><p class="eyebrow">Líneas de negocio</p><h2>Tres soluciones, tres formas claras de entrar</h2><p>Elige la línea que más se acerca a tu necesidad actual: evaluación, control de flota o desarrollo personalizado.</p></div><div class="business-grid"><article class="business-card business-card-featured reveal"><div class="card-icon">01</div><h3>Revisión automática de personas</h3><p>Soluciones enfocadas en PDLJU, revisión automática e informes estructurados de personas para apoyar decisiones con mayor consistencia.</p><ul><li>Revisión automática</li><li>Informes ordenados y trazables</li><li>Apoyo operativo para evaluación</li></ul><a class="btn btn-secondary" href="#contact">Solicitar evaluación</a></article><article class="business-card reveal reveal-delay"><div class="card-icon">02</div><h3>Gestión y mantención de flotas</h3><p>Plataforma orientada al control de revisiones técnicas, vencimientos, estados de flota y continuidad operacional.</p><ul><li>Revisiones técnicas y alertas</li><li>Estado de flota centralizado</li><li>Seguimiento de vencimientos</li></ul><a class="btn btn-secondary" href="#contact">Ver plataforma</a></article><article class="business-card reveal reveal-delay-2"><div class="card-icon">03</div><h3>APIs, apps y asesoría a medida</h3><p>Desarrollo personalizado de integraciones, aplicaciones, automatizaciones y asesoría técnica según la operación de cada cliente.</p><ul><li>APIs e integraciones</li><li>Apps y sistemas propios</li><li>Consultoría y definición técnica</li></ul><a class="btn btn-secondary" href="#contact">Conversar proyecto</a></article></div></div></section>
+
+      <section class="section section-alt" id="why"><div class="container why-grid"><div class="section-heading reveal"><p class="eyebrow">Por qué AVIA Rockets</p><h2>Tecnología con foco en operación, no en relleno visual</h2><p>Diseñamos herramientas que ayudan a ejecutar mejor, controlar mejor y depender menos de procesos frágiles o manuales.</p></div><div class="why-points reveal reveal-delay"><article><h3>Lectura rápida</h3><p>Interfaces pensadas para entender estados y tomar acción.</p></article><article><h3>Automatización útil</h3><p>Menos tareas repetidas, más consistencia operativa.</p></article><article><h3>Implementación seria</h3><p>No vendemos humo: definimos, construimos y aterrizamos.</p></article><article><h3>Flexibilidad real</h3><p>Producto, servicio o desarrollo según el tipo de necesidad.</p></article></div></div></section>
+
+      <section class="section" id="process"><div class="container"><div class="section-heading centered reveal"><p class="eyebrow">Cómo trabajamos</p><h2>Una entrada clara según tu caso</h2></div><div class="process-grid"><article class="process-card reveal"><span>1</span><h3>Cuéntanos tu necesidad</h3><p>Identificamos si tu caso corresponde a evaluación automática, flota o desarrollo a medida.</p></article><article class="process-card reveal reveal-delay"><span>2</span><h3>Definimos la ruta</h3><p>Te mostramos demo, evaluación o propuesta de implementación según la línea elegida.</p></article><article class="process-card reveal reveal-delay-2"><span>3</span><h3>Implementamos o habilitamos acceso</h3><p>El acceso al sistema o al servicio se habilita según el tipo de solución y alcance.</p></article></div></div></section>
+
+      <section class="section" id="contact"><div class="container contact-grid"><div class="section-heading reveal"><p class="eyebrow">Contacto</p><h2>Cuéntanos qué necesitas resolver</h2><p>Escríbenos si necesitas una evaluación automática, una solución para tu flota o un desarrollo digital a medida.</p><div class="contact-meta"><p><strong>Email:</strong> contact@aviarockets.com</p><p><strong>Base:</strong> Santiago, Chile</p><p><strong>LinkedIn:</strong> AVIA Rockets</p></div></div><form class="contact-form reveal reveal-delay"><label for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required minlength="2" /><label for="company">Empresa</label><input id="company" name="company" type="text" autocomplete="organization" /><label for="email">Correo corporativo</label><input id="email" name="email" type="email" autocomplete="email" required /><label for="phone">Teléfono</label><input id="phone" name="phone" type="tel" autocomplete="tel" /><label for="interest">Línea de interés</label><select id="interest" name="interest"><option value="pdlju">Revisión automática de personas</option><option value="fleet">Gestión y mantención de flotas</option><option value="custom">APIs, apps y asesoría</option></select><label for="language">Idioma preferido</label><select id="language" name="language"><option value="es">Español</option><option value="en">English</option></select><label for="message">Mensaje</label><textarea id="message" name="message" rows="5" required minlength="5"></textarea><button class="btn btn-primary" type="submit">Solicitar contacto</button></form></div></section>
     </main>
 
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <a class="brand footer-brand" href="#home">
-            <img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" />
-            <span>
-              <strong>AVIA</strong>
-              <small>ROCKETS</small>
-            </span>
-          </a>
-          <p data-i18n="footerText">
-            Revisión automática, control operacional y desarrollo digital a medida.
-          </p>
-        </div>
-
-        <div class="footer-links">
-          <a href="#business-lines" data-i18n="navLines">Líneas de negocio</a>
-          <a href="#process" data-i18n="navProcess">Cómo trabajamos</a>
-          <a href="#contact" data-i18n="navContact">Contacto</a>
-          <a href="#" data-i18n="footerPrivacy">Privacidad</a>
-        </div>
-      </div>
-    </footer>
-
+    <footer class="site-footer"><div class="container footer-grid"><div><a class="brand footer-brand" href="#home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><p>Revisión automática, control operacional y desarrollo digital a medida.</p></div><div class="footer-links"><a href="#business-lines">Líneas de negocio</a><a href="#process">Cómo trabajamos</a><a href="#client-login">Login</a><a href="#contact">Contacto</a></div></div></footer>
     <script src="script.js"></script>
   </body>
 </html>

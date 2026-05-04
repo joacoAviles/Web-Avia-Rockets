@@ -339,23 +339,26 @@
 
           <form class="contact-form reveal reveal-delay">
             <label for="name" data-i18n="formName">Nombre</label>
-            <input id="name" type="text" placeholder="Joaquín Avilés" />
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Joaquín Avilés" required minlength="2" />
 
             <label for="company" data-i18n="formCompany">Empresa</label>
-            <input id="company" type="text" placeholder="Nombre empresa" />
+            <input id="company" name="company" type="text" autocomplete="organization" placeholder="Nombre empresa" />
 
             <label for="email" data-i18n="formEmail">Correo corporativo</label>
-            <input id="email" type="email" placeholder="name@company.com" />
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="name@company.com" required />
+
+            <label for="phone">Teléfono</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+56 9 0000 0000" />
 
             <label for="interest" data-i18n="formInterest">Línea de interés</label>
-            <select id="interest">
+            <select id="interest" name="interest">
               <option value="pdlju" data-i18n="interest1">Revisión automática de personas</option>
               <option value="fleet" data-i18n="interest2">Gestión y mantención de flotas</option>
               <option value="custom" data-i18n="interest3">APIs, apps y asesoría</option>
             </select>
 
             <label for="language" data-i18n="formLanguage">Idioma preferido</label>
-            <select id="language">
+            <select id="language" name="language">
               <option value="es">Español</option>
               <option value="en">English</option>
             </select>
@@ -363,11 +366,14 @@
             <label for="message" data-i18n="formMessage">Mensaje</label>
             <textarea
               id="message"
+              name="message"
               rows="5"
               placeholder="Describe tu necesidad, problema o idea."
+              required
+              minlength="5"
             ></textarea>
 
-            <button class="btn btn-primary" type="button" data-i18n="formButton">
+            <button class="btn btn-primary" type="submit" data-i18n="formButton">
               Solicitar contacto
             </button>
           </form>

@@ -8,8 +8,7 @@ const heroText = {
     kpiReviewed: "Revisadas", kpiChanges: "Con cambios", kpiNew: "Nuevas", kpiErrors: "Errores",
     slide1Title: "Causas, estados y usuarios asignados desde PostgreSQL", case1Small: "Nuevo escrito registrado", case2Small: "Folio principal actualizado", case3Small: "Primera revisión guardada",
     statusChange: "Cambio", statusChange2: "Cambio", statusNew: "Nueva", activity: "Actividad",
-    fleetActive: "Activos", fleetDue: "Por vencer", fleetOk: "Al día", fleetAlerts: "Alertas", slide2Title: "Estado de flota centralizado", slide3Title: "Desarrollo personalizado de integraciones", deployment: "Deploy",
-    clientAccess: "Acceso clientes", clientDashboard: "Entrar al dashboard", emailLabel: "Correo", passwordLabel: "Clave", loginButton: "Ingresar"
+    fleetActive: "Activos", fleetDue: "Por vencer", fleetOk: "Al día", fleetAlerts: "Alertas", slide2Title: "Estado de flota centralizado", slide3Title: "Desarrollo personalizado de integraciones", deployment: "Deploy"
   },
   en: {
     navLines: "Business lines", navProcess: "How we work", navLogin: "Client login", navContact: "Contact", navEnter: "Enter",
@@ -20,8 +19,7 @@ const heroText = {
     kpiReviewed: "Reviewed", kpiChanges: "Changed", kpiNew: "New", kpiErrors: "Errors",
     slide1Title: "Cases, statuses and assigned users from PostgreSQL", case1Small: "New filing registered", case2Small: "Main folio updated", case3Small: "First review saved",
     statusChange: "Change", statusChange2: "Change", statusNew: "New", activity: "Activity",
-    fleetActive: "Active", fleetDue: "Due soon", fleetOk: "Up to date", fleetAlerts: "Alerts", slide2Title: "Centralized fleet status", slide3Title: "Custom integration development", deployment: "Deploy",
-    clientAccess: "Client access", clientDashboard: "Enter dashboard", emailLabel: "Email", passwordLabel: "Password", loginButton: "Sign in"
+    fleetActive: "Active", fleetDue: "Due soon", fleetOk: "Up to date", fleetAlerts: "Alerts", slide2Title: "Centralized fleet status", slide3Title: "Custom integration development", deployment: "Deploy"
   }
 };
 
@@ -69,6 +67,14 @@ function setupHero() {
   showHeroSlide(0);
   startHeroTimer();
 }
-if (langToggle) langToggle.addEventListener("click", () => applyHeroLanguage(document.documentElement.lang === "es" ? "en" : "es"));
+
+if (langToggle) {
+  langToggle.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    applyHeroLanguage(document.documentElement.lang === "es" ? "en" : "es");
+  }, true);
+}
+
 applyHeroLanguage(localStorage.getItem("avia-lang") || document.documentElement.lang || "es");
 setupHero();

@@ -1,25 +1,25 @@
 const heroText = {
   es: {
     navLines: "Líneas de negocio", navProcess: "Cómo trabajamos", navLogin: "Login clientes", navContact: "Contacto", navEnter: "Entrar",
-    heroPill: "Sistema operativo conectado", heroTag: "Avia OPS · Avia Intelligence · Avia Labs", heroTitle: "Tres líneas para ordenar operación, riesgo y desarrollo digital", heroText: "Avia OPS automatiza la operación. Avia Intelligence convierte riesgo y datos en decisión. Avia Labs construye APIs y apps a medida.", heroPrimary: "Entrar al dashboard", heroSecondary: "Agendar demo",
-    metricLogin: "Automatización operacional", metricCauses: "Riesgo y datos", metricControl: "APIs y apps",
+    heroPill: "Suite de productos Avia Rockets", heroTag: "Avia OPS · Avia Intelligence · Avia Labs", heroTitle: "Dashboards vivos para vender, operar y decidir mejor", heroText: "Una landing pensada para clientes: tres productos, tres dashboards claros y beneficios visibles desde el primer pantallazo.", heroPrimary: "Ver productos", heroSecondary: "Agendar demo",
+    metricLogin: "Menos trabajo manual", metricCauses: "Más visibilidad", metricControl: "Mejor decisión",
     line1Tab: "Avia OPS", line2Tab: "Avia Intelligence", line3Tab: "Avia Labs",
     slide1Small: "Automatización operacional", slide2Small: "Riesgo y datos", slide3Small: "APIs y apps",
-    kpiReviewed: "Procesos", kpiChanges: "Alertas", kpiNew: "Flujos", kpiErrors: "Errores",
-    slide1Title: "Flujos, estados y usuarios operando desde una base conectada", case1Small: "Nuevo evento operacional", case2Small: "Proceso actualizado", case3Small: "Primera ejecución guardada",
-    statusChange: "Cambio", statusChange2: "Cambio", statusNew: "Nuevo", activity: "Actividad",
-    fleetActive: "Fuentes", fleetDue: "Riesgos", fleetOk: "Modelos", fleetAlerts: "Alertas", slide2Title: "Riesgo, datos y señales accionables", slide3Title: "Desarrollo personalizado de APIs, apps e integraciones", deployment: "Deploy"
+    kpiReviewed: "Ahorro", kpiChanges: "Alertas", kpiNew: "Flujos", kpiErrors: "Control",
+    slide1Title: "Automatiza seguimiento, alertas y reportes diarios sin perseguir planillas", case1Small: "Tareas repetitivas automatizadas", case2Small: "Alertas listas para revisar", case3Small: "Reporte ejecutivo generado",
+    statusChange: "Activo", statusChange2: "Listo", statusNew: "Nuevo", activity: "Beneficio",
+    fleetActive: "Fuentes", fleetDue: "Riesgos", fleetOk: "Modelos", fleetAlerts: "Alertas", slide2Title: "Convierte datos dispersos en señales simples para decidir", slide3Title: "Construye APIs, apps y paneles conectados a tu operación", deployment: "Entrega"
   },
   en: {
     navLines: "Business lines", navProcess: "How we work", navLogin: "Client login", navContact: "Contact", navEnter: "Enter",
-    heroPill: "Connected operating system", heroTag: "Avia OPS · Avia Intelligence · Avia Labs", heroTitle: "Three lines to organize operations, risk and digital development", heroText: "Avia OPS automates operations. Avia Intelligence turns risk and data into decisions. Avia Labs builds custom APIs and apps.", heroPrimary: "Enter dashboard", heroSecondary: "Schedule demo",
-    metricLogin: "Operational automation", metricCauses: "Risk and data", metricControl: "APIs and apps",
+    heroPill: "Avia Rockets product suite", heroTag: "Avia OPS · Avia Intelligence · Avia Labs", heroTitle: "Live dashboards to sell, operate and decide better", heroText: "A client-facing landing: three products, three clear dashboards and visible benefits from the first screen.", heroPrimary: "View products", heroSecondary: "Schedule demo",
+    metricLogin: "Less manual work", metricCauses: "More visibility", metricControl: "Better decisions",
     line1Tab: "Avia OPS", line2Tab: "Avia Intelligence", line3Tab: "Avia Labs",
     slide1Small: "Operational automation", slide2Small: "Risk and data", slide3Small: "APIs and apps",
-    kpiReviewed: "Processes", kpiChanges: "Alerts", kpiNew: "Flows", kpiErrors: "Errors",
-    slide1Title: "Flows, statuses and users operating from a connected database", case1Small: "New operational event", case2Small: "Updated process", case3Small: "First run saved",
-    statusChange: "Change", statusChange2: "Change", statusNew: "New", activity: "Activity",
-    fleetActive: "Sources", fleetDue: "Risks", fleetOk: "Models", fleetAlerts: "Alerts", slide2Title: "Risk, data and actionable signals", slide3Title: "Custom API, app and integration development", deployment: "Deploy"
+    kpiReviewed: "Savings", kpiChanges: "Alerts", kpiNew: "Flows", kpiErrors: "Control",
+    slide1Title: "Automate tracking, alerts and daily reports without chasing spreadsheets", case1Small: "Repetitive tasks automated", case2Small: "Alerts ready to review", case3Small: "Executive report generated",
+    statusChange: "Active", statusChange2: "Ready", statusNew: "New", activity: "Benefit",
+    fleetActive: "Sources", fleetDue: "Risks", fleetOk: "Models", fleetAlerts: "Alerts", slide2Title: "Turn scattered data into simple signals for decisions", slide3Title: "Build APIs, apps and panels connected to your operation", deployment: "Delivery"
   }
 };
 
@@ -27,30 +27,64 @@ const businessCopy = {
   es: {
     headingEyebrow: "Líneas de negocio",
     headingTitle: "Avia OPS, Avia Intelligence y Avia Labs",
-    headingText: "Tres líneas claras: automatización operacional, riesgo y datos, y desarrollo de APIs y apps.",
+    headingText: "Tres productos claros para mostrar valor a clientes finales: automatización operacional, inteligencia de riesgo y desarrollo digital.",
     cards: [
-      { title: "Avia OPS", text: "Automatización operacional para ordenar flujos, seguimiento, alertas, tareas repetitivas y control diario de procesos.", items: ["Automatización operacional", "Flujos, alertas y seguimiento", "Control por usuario y proceso"], cta: "Ver OPS", href: "ops.html" },
-      { title: "Avia Intelligence", text: "Riesgo y datos para transformar información dispersa en señales, reportes, tableros y criterios de decisión accionables.", items: ["Riesgo y datos", "Reportes y tableros", "Señales accionables"], cta: "Ver inteligencia", href: "avia-intelligence.html" },
-      { title: "Avia Labs", text: "APIs, apps e integraciones a medida para construir herramientas digitales conectadas a la operación real del cliente.", items: ["APIs e integraciones", "Apps y sistemas propios", "Desarrollo a medida"], cta: "Construir solución", href: "avia-labs.html" }
+      { title: "Avia OPS", text: "Automatización operacional para reducir trabajo manual, ordenar flujos, generar alertas y entregar reportes diarios con lectura simple.", items: ["Menos trabajo repetitivo", "Alertas y seguimiento", "Reportes para clientes"], cta: "Ver OPS", href: "ops.html" },
+      { title: "Avia Intelligence", text: "Riesgo y datos transformados en señales visuales para priorizar decisiones sin perderse en tablas, planillas o información dispersa.", items: ["Riesgo y datos", "Señales claras", "Dashboards ejecutivos"], cta: "Ver inteligencia", href: "avia-intelligence.html" },
+      { title: "Avia Labs", text: "APIs, apps y paneles a medida para crear productos digitales conectados a la operación real del negocio.", items: ["APIs e integraciones", "Apps internas", "Productos digitales"], cta: "Construir solución", href: "avia-labs.html" }
     ],
-    trust: ["Automatización operacional", "Riesgo y datos", "APIs y apps", "Visibilidad ejecutiva", "Criterio técnico"],
-    contactText: "Escríbenos si necesitas automatización operacional, inteligencia de riesgo y datos, o desarrollo de APIs y apps a medida.",
+    trust: ["Menos trabajo manual", "Dashboards claros", "Riesgo visible", "Productos digitales", "Experiencia premium"],
+    contactText: "Escríbenos si necesitas automatizar operación, ordenar datos de riesgo o construir un producto digital para tus clientes.",
     interests: ["Avia OPS", "Avia Intelligence", "Avia Labs"]
   },
   en: {
     headingEyebrow: "Business lines",
     headingTitle: "Avia OPS, Avia Intelligence and Avia Labs",
-    headingText: "Three clear lines: operational automation, risk and data, and API and app development.",
+    headingText: "Three clear products to show value to end clients: operational automation, risk intelligence and digital development.",
     cards: [
-      { title: "Avia OPS", text: "Operational automation to organize workflows, tracking, alerts, repetitive tasks and daily process control.", items: ["Operational automation", "Workflows, alerts and tracking", "User and process control"], cta: "View OPS", href: "ops.html" },
-      { title: "Avia Intelligence", text: "Risk and data to turn scattered information into signals, reports, dashboards and actionable decision criteria.", items: ["Risk and data", "Reports and dashboards", "Actionable signals"], cta: "View intelligence", href: "avia-intelligence.html" },
-      { title: "Avia Labs", text: "Custom APIs, apps and integrations to build digital tools connected to the client’s real operation.", items: ["APIs and integrations", "Custom apps and systems", "Tailored development"], cta: "Build solution", href: "avia-labs.html" }
+      { title: "Avia OPS", text: "Operational automation to reduce manual work, organize flows, generate alerts and deliver daily reports with simple reading.", items: ["Less repetitive work", "Alerts and tracking", "Client-ready reports"], cta: "View OPS", href: "ops.html" },
+      { title: "Avia Intelligence", text: "Risk and data turned into visual signals to prioritize decisions without getting lost in tables, spreadsheets or scattered information.", items: ["Risk and data", "Clear signals", "Executive dashboards"], cta: "View intelligence", href: "avia-intelligence.html" },
+      { title: "Avia Labs", text: "Custom APIs, apps and panels to create digital products connected to the business’s real operation.", items: ["APIs and integrations", "Internal apps", "Digital products"], cta: "Build solution", href: "avia-labs.html" }
     ],
-    trust: ["Operational automation", "Risk and data", "APIs and apps", "Executive visibility", "Technical judgment"],
-    contactText: "Write to us if you need operational automation, risk and data intelligence, or custom API and app development.",
+    trust: ["Less manual work", "Clear dashboards", "Visible risk", "Digital products", "Premium experience"],
+    contactText: "Write to us if you need to automate operations, organize risk data or build a digital product for your clients.",
     interests: ["Avia OPS", "Avia Intelligence", "Avia Labs"]
   }
 };
+
+function applyHeroMarketingCopy(lang) {
+  const selected = lang === "en" ? "en" : "es";
+  const slideCopy = {
+    es: [
+      { title: "AVIA OPS", left: ["65%", "menos tareas manuales"], right: ["Reportes", "listos para cliente"] },
+      { title: "AVIA INTELLIGENCE", left: ["Riesgo", "visible en segundos"], right: ["Decisión", "con señales claras"] },
+      { title: "AVIA LABS", left: ["API", "producto conectado"], right: ["App", "lista para operar"] }
+    ],
+    en: [
+      { title: "AVIA OPS", left: ["65%", "less manual work"], right: ["Reports", "client-ready"] },
+      { title: "AVIA INTELLIGENCE", left: ["Risk", "visible in seconds"], right: ["Decision", "with clear signals"] },
+      { title: "AVIA LABS", left: ["API", "connected product"], right: ["App", "ready to operate"] }
+    ]
+  }[selected];
+  document.querySelectorAll("[data-slide-panel]").forEach((slide, index) => {
+    const copy = slideCopy[index];
+    if (!copy) return;
+    const title = slide.querySelector(".dash-titlebar strong");
+    const leftStrong = slide.querySelector(".hero-float-card.left strong");
+    const leftSmall = slide.querySelector(".hero-float-card.left small");
+    const rightStrong = slide.querySelector(".hero-float-card.right strong");
+    const rightSmall = slide.querySelector(".hero-float-card.right small");
+    if (title) title.textContent = copy.title;
+    if (leftStrong) leftStrong.textContent = copy.left[0];
+    if (leftSmall) leftSmall.textContent = copy.left[1];
+    if (rightStrong) rightStrong.textContent = copy.right[0];
+    if (rightSmall) rightSmall.textContent = copy.right[1];
+  });
+  const firstCaseTitles = document.querySelectorAll(".hero-slide:first-child .case-row strong");
+  if (firstCaseTitles[0]) firstCaseTitles[0].textContent = selected === "en" ? "Automated workflow" : "Flujo automatizado";
+  if (firstCaseTitles[1]) firstCaseTitles[1].textContent = selected === "en" ? "Smart alert" : "Alerta inteligente";
+  if (firstCaseTitles[2]) firstCaseTitles[2].textContent = selected === "en" ? "Client report" : "Reporte para cliente";
+}
 
 function applyBusinessCopy(lang) {
   const selected = lang === "en" ? "en" : "es";
@@ -96,6 +130,7 @@ function applyHeroLanguage(lang) {
   const languageSelect = document.getElementById("language");
   if (languageSelect) languageSelect.value = selected;
   applyBusinessCopy(selected);
+  applyHeroMarketingCopy(selected);
 }
 
 let heroIndex = 0;

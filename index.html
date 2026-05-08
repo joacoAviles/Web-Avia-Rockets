@@ -31,10 +31,10 @@
         <nav class="nav-panel" id="nav-panel" aria-label="Primary navigation">
           <a href="#business-lines" data-i18n="navLines">Líneas de negocio</a>
           <a href="#process" data-i18n="navProcess">Cómo trabajamos</a>
-          <a href="#client-login">Login clientes</a>
+          <a href="#client-login" data-i18n="navLogin">Login clientes</a>
           <a href="#contact" data-i18n="navContact">Contacto</a>
           <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
-          <a class="btn btn-primary btn-nav" href="#client-login">Entrar</a>
+          <a class="btn btn-primary btn-nav" href="#client-login" data-i18n="navEnter">Entrar</a>
         </nav>
       </div>
     </header>
@@ -44,54 +44,72 @@
         <div class="hero-bg"></div>
         <div class="container hero-grid">
           <div class="hero-copy reveal">
-            <div class="hero-status-pill"><span></span> Sistema operativo conectado</div>
+            <div class="hero-status-pill"><span></span><em data-i18n="heroPill">Sistema operativo conectado</em></div>
             <p class="eyebrow" data-i18n="heroTag">Control, automatización y desarrollo digital</p>
             <h1 data-i18n="heroTitle">Sistemas que ordenan operación, datos y seguimiento</h1>
             <p class="hero-text" data-i18n="heroText">Tres líneas de trabajo: revisión automática de personas, gestión de flotas y desarrollo de soluciones a medida.</p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#client-login">Entrar al dashboard</a>
+              <a class="btn btn-primary" href="#client-login" data-i18n="heroPrimary">Entrar al dashboard</a>
               <a class="btn btn-secondary" href="#contact" data-i18n="heroSecondary">Agendar demo</a>
             </div>
             <ul class="hero-metrics" aria-label="Core value points">
-              <li>Login con base de datos</li><li>Causas asignadas</li><li>Control por usuario</li>
+              <li data-i18n="metricLogin">Login con base de datos</li><li data-i18n="metricCauses">Causas asignadas</li><li data-i18n="metricControl">Control por usuario</li>
             </ul>
+            <div class="hero-line-selector" aria-label="Líneas de negocio destacadas">
+              <button class="line-tab is-active" type="button" data-slide="0"><span>01</span><strong data-i18n="line1Tab">Personas</strong></button>
+              <button class="line-tab" type="button" data-slide="1"><span>02</span><strong data-i18n="line2Tab">Flotas</strong></button>
+              <button class="line-tab" type="button" data-slide="2"><span>03</span><strong data-i18n="line3Tab">Soluciones</strong></button>
+            </div>
           </div>
+
           <div class="hero-visual reveal reveal-delay">
-            <div class="hero-product-stage" aria-label="Vista visual del sistema AVIA Rockets">
+            <div class="hero-product-stage" aria-label="Carrusel visual de líneas de negocio AVIA Rockets">
               <div class="hero-orbit"></div>
               <span class="hero-node"></span><span class="hero-node"></span><span class="hero-node"></span>
-              <div class="hero-float-card left"><strong>2 cambios</strong><small>detectados hoy</small></div>
-              <div class="hero-float-card right"><strong>0 errores</strong><small>ejecución estable</small></div>
-              <div class="hero-dashboard">
-                <div class="scan-line"></div>
-                <div class="dash-window-bar">
-                  <div class="dash-dots"><span></span><span></span><span></span></div>
-                  <div class="dash-titlebar">
-                    <img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" />
-                    <div><strong>AVIA ROCKETS</strong><small>Dashboard clientes</small></div>
-                  </div>
-                  <span class="dash-action-dot"></span>
-                </div>
-                <div class="dash-body">
-                  <div class="dash-kpis">
-                    <div class="dash-kpi"><span>Revisadas</span><strong>18</strong></div>
-                    <div class="dash-kpi"><span>Con cambios</span><strong>2</strong></div>
-                    <div class="dash-kpi"><span>Nuevas</span><strong>1</strong></div>
-                    <div class="dash-kpi"><span>Errores</span><strong>0</strong></div>
-                  </div>
-                  <div class="dash-main-grid">
-                    <div class="dash-card">
-                      <p class="dash-card-title">Causas, estados y usuarios asignados desde PostgreSQL</p>
-                      <div class="case-row"><span class="case-icon">C</span><div><strong>Rol C-1234-2024</strong><small>Nuevo escrito registrado</small></div><span class="case-status">Cambio</span></div>
-                      <div class="case-row"><span class="case-icon">F</span><div><strong>Rol C-5678-2023</strong><small>Folio principal actualizado</small></div><span class="case-status">Cambio</span></div>
-                      <div class="case-row"><span class="case-icon">N</span><div><strong>Rol C-9012-2025</strong><small>Primera revisión guardada</small></div><span class="case-status blue">Nueva</span></div>
+
+              <div class="hero-carousel" id="hero-carousel">
+                <button class="carousel-control prev" type="button" data-carousel-prev aria-label="Slide anterior">‹</button>
+                <button class="carousel-control next" type="button" data-carousel-next aria-label="Slide siguiente">›</button>
+                <div class="carousel-track">
+                  <article class="hero-slide is-active" data-slide-panel="0">
+                    <div class="hero-float-card left"><strong>2 cambios</strong><small>detectados hoy</small></div>
+                    <div class="hero-float-card right"><strong>0 errores</strong><small>ejecución estable</small></div>
+                    <div class="hero-dashboard">
+                      <div class="scan-line"></div>
+                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>REVISIÓN AUTOMÁTICA</strong><small data-i18n="slide1Small">Personas y causas</small></div></div><span class="dash-action-dot"></span></div>
+                      <div class="dash-body">
+                        <div class="dash-kpis"><div class="dash-kpi"><span data-i18n="kpiReviewed">Revisadas</span><strong>18</strong></div><div class="dash-kpi"><span data-i18n="kpiChanges">Con cambios</span><strong>2</strong></div><div class="dash-kpi"><span data-i18n="kpiNew">Nuevas</span><strong>1</strong></div><div class="dash-kpi"><span data-i18n="kpiErrors">Errores</span><strong>0</strong></div></div>
+                        <div class="dash-main-grid"><div class="dash-card"><p class="dash-card-title" data-i18n="slide1Title">Causas, estados y usuarios asignados desde PostgreSQL</p><div class="case-row"><span class="case-icon">C</span><div><strong>Rol C-1234-2024</strong><small data-i18n="case1Small">Nuevo escrito registrado</small></div><span class="case-status" data-i18n="statusChange">Cambio</span></div><div class="case-row"><span class="case-icon">F</span><div><strong>Rol C-5678-2023</strong><small data-i18n="case2Small">Folio principal actualizado</small></div><span class="case-status" data-i18n="statusChange2">Cambio</span></div><div class="case-row"><span class="case-icon">N</span><div><strong>Rol C-9012-2025</strong><small data-i18n="case3Small">Primera revisión guardada</small></div><span class="case-status blue" data-i18n="statusNew">Nueva</span></div></div><div class="dash-card dash-report"><p class="dash-card-title" data-i18n="activity">Actividad</p><div class="report-ring"></div><div class="report-bars"><span></span><span></span><span></span></div></div></div>
+                      </div>
                     </div>
-                    <div class="dash-card dash-report">
-                      <p class="dash-card-title">Actividad</p>
-                      <div class="report-ring"></div>
-                      <div class="report-bars"><span></span><span></span><span></span></div>
+                  </article>
+
+                  <article class="hero-slide" data-slide-panel="1">
+                    <div class="hero-float-card left"><strong>5 vencimientos</strong><small>monitoreados</small></div>
+                    <div class="hero-float-card right"><strong>100%</strong><small>flota visible</small></div>
+                    <div class="hero-dashboard fleet-dashboard">
+                      <div class="scan-line"></div>
+                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>GESTIÓN DE FLOTAS</strong><small data-i18n="slide2Small">Revisiones y vencimientos</small></div></div><span class="dash-action-dot"></span></div>
+                      <div class="dash-body">
+                        <div class="fleet-map"><span></span><span></span><span></span><span></span><div class="fleet-route"></div></div>
+                        <div class="dash-kpis"><div class="dash-kpi"><span data-i18n="fleetActive">Activos</span><strong>42</strong></div><div class="dash-kpi"><span data-i18n="fleetDue">Por vencer</span><strong>5</strong></div><div class="dash-kpi"><span data-i18n="fleetOk">Al día</span><strong>37</strong></div><div class="dash-kpi"><span data-i18n="fleetAlerts">Alertas</span><strong>3</strong></div></div>
+                        <div class="dash-card"><p class="dash-card-title" data-i18n="slide2Title">Estado de flota centralizado</p><div class="fleet-list"><span></span><span></span><span></span></div></div>
+                      </div>
                     </div>
-                  </div>
+                  </article>
+
+                  <article class="hero-slide" data-slide-panel="2">
+                    <div class="hero-float-card left"><strong>API</strong><small>conectada</small></div>
+                    <div class="hero-float-card right"><strong>Apps</strong><small>a medida</small></div>
+                    <div class="hero-dashboard custom-dashboard">
+                      <div class="scan-line"></div>
+                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>APIS, APPS Y ASESORÍA</strong><small data-i18n="slide3Small">Integraciones y operación</small></div></div><span class="dash-action-dot"></span></div>
+                      <div class="dash-body">
+                        <div class="integration-board"><div class="integration-node main">AVIA</div><div class="integration-node">API</div><div class="integration-node">DB</div><div class="integration-node">APP</div><div class="integration-node">BI</div></div>
+                        <div class="dash-main-grid"><div class="dash-card"><p class="dash-card-title" data-i18n="slide3Title">Desarrollo personalizado de integraciones</p><div class="code-lines"><span></span><span></span><span></span><span></span></div></div><div class="dash-card dash-report"><p class="dash-card-title" data-i18n="deployment">Deploy</p><div class="deploy-pulse"></div><div class="report-bars"><span></span><span></span><span></span></div></div></div>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </div>
             </div>
@@ -102,15 +120,15 @@
       <section class="section client-section" id="client-login">
         <div class="container client-shell">
           <article class="login-card" id="login-card">
-            <p class="eyebrow">Acceso clientes</p>
-            <h2>Entrar al dashboard</h2>
+            <p class="eyebrow" data-i18n="clientAccess">Acceso clientes</p>
+            <h2 data-i18n="clientDashboard">Entrar al dashboard</h2>
             <p class="dashboard-meta">Usa el correo y clave creados en <code>app.users</code>.</p>
             <form id="login-form">
-              <label for="login-email">Correo</label>
+              <label for="login-email" data-i18n="emailLabel">Correo</label>
               <input id="login-email" type="email" autocomplete="email" required placeholder="cliente@empresa.cl" />
-              <label for="login-password">Clave</label>
+              <label for="login-password" data-i18n="passwordLabel">Clave</label>
               <input id="login-password" type="password" autocomplete="current-password" required placeholder="Clave" />
-              <button class="btn btn-primary" type="submit" id="login-button">Ingresar</button>
+              <button class="btn btn-primary" type="submit" id="login-button" data-i18n="loginButton">Ingresar</button>
             </form>
             <p class="login-status" id="login-status" hidden></p>
           </article>
@@ -144,5 +162,6 @@
 
     <footer class="site-footer"><div class="container footer-grid"><div><a class="brand footer-brand" href="#home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><p>Revisión automática, control operacional y desarrollo digital a medida.</p></div><div class="footer-links"><a href="#business-lines">Líneas de negocio</a><a href="#process">Cómo trabajamos</a><a href="#client-login">Login</a><a href="#contact">Contacto</a></div></div></footer>
     <script src="script.js"></script>
+    <script src="hero-carousel.js"></script>
   </body>
 </html>

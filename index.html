@@ -18,6 +18,7 @@
     <link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="hero.css" />
   </head>
   <body>
     <header class="site-header">
@@ -43,6 +44,7 @@
         <div class="hero-bg"></div>
         <div class="container hero-grid">
           <div class="hero-copy reveal">
+            <div class="hero-status-pill"><span></span> Sistema operativo conectado</div>
             <p class="eyebrow" data-i18n="heroTag">Control, automatización y desarrollo digital</p>
             <h1 data-i18n="heroTitle">Sistemas que ordenan operación, datos y seguimiento</h1>
             <p class="hero-text" data-i18n="heroText">Tres líneas de trabajo: revisión automática de personas, gestión de flotas y desarrollo de soluciones a medida.</p>
@@ -55,13 +57,42 @@
             </ul>
           </div>
           <div class="hero-visual reveal reveal-delay">
-            <div class="visual-shell">
-              <div class="visual-topbar"><span></span><span></span><span></span></div>
-              <div class="visual-grid">
-                <article class="visual-panel panel-primary"><p class="panel-label">Dashboard clientes</p><h2>Causas, estados y usuarios asignados desde PostgreSQL</h2><div class="visual-lines"><span></span><span></span><span></span></div></article>
-                <article class="visual-panel"><p class="panel-label">Login</p><div class="visual-lines visual-lines-secondary"><span></span><span></span><span></span></div></article>
-                <article class="visual-panel panel-chart"><p class="panel-label">Actividad</p><div class="chart-bars"><span></span><span></span><span></span><span></span></div></article>
-                <article class="visual-panel panel-badge"><p class="badge-kicker">RA</p><strong>Revisión automática conectada a usuarios reales.</strong></article>
+            <div class="hero-product-stage" aria-label="Vista visual del sistema AVIA Rockets">
+              <div class="hero-orbit"></div>
+              <span class="hero-node"></span><span class="hero-node"></span><span class="hero-node"></span>
+              <div class="hero-float-card left"><strong>2 cambios</strong><small>detectados hoy</small></div>
+              <div class="hero-float-card right"><strong>0 errores</strong><small>ejecución estable</small></div>
+              <div class="hero-dashboard">
+                <div class="scan-line"></div>
+                <div class="dash-window-bar">
+                  <div class="dash-dots"><span></span><span></span><span></span></div>
+                  <div class="dash-titlebar">
+                    <img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" />
+                    <div><strong>AVIA ROCKETS</strong><small>Dashboard clientes</small></div>
+                  </div>
+                  <span class="dash-action-dot"></span>
+                </div>
+                <div class="dash-body">
+                  <div class="dash-kpis">
+                    <div class="dash-kpi"><span>Revisadas</span><strong>18</strong></div>
+                    <div class="dash-kpi"><span>Con cambios</span><strong>2</strong></div>
+                    <div class="dash-kpi"><span>Nuevas</span><strong>1</strong></div>
+                    <div class="dash-kpi"><span>Errores</span><strong>0</strong></div>
+                  </div>
+                  <div class="dash-main-grid">
+                    <div class="dash-card">
+                      <p class="dash-card-title">Causas, estados y usuarios asignados desde PostgreSQL</p>
+                      <div class="case-row"><span class="case-icon">C</span><div><strong>Rol C-1234-2024</strong><small>Nuevo escrito registrado</small></div><span class="case-status">Cambio</span></div>
+                      <div class="case-row"><span class="case-icon">F</span><div><strong>Rol C-5678-2023</strong><small>Folio principal actualizado</small></div><span class="case-status">Cambio</span></div>
+                      <div class="case-row"><span class="case-icon">N</span><div><strong>Rol C-9012-2025</strong><small>Primera revisión guardada</small></div><span class="case-status blue">Nueva</span></div>
+                    </div>
+                    <div class="dash-card dash-report">
+                      <p class="dash-card-title">Actividad</p>
+                      <div class="report-ring"></div>
+                      <div class="report-bars"><span></span><span></span><span></span></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

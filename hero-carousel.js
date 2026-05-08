@@ -29,7 +29,7 @@ const businessCopy = {
     headingTitle: "Avia OPS, Avia Intelligence y Avia Labs",
     headingText: "Tres líneas claras: automatización operacional, riesgo y datos, y desarrollo de APIs y apps.",
     cards: [
-      { title: "Avia OPS", text: "Automatización operacional para ordenar flujos, seguimiento, alertas, tareas repetitivas y control diario de procesos.", items: ["Automatización operacional", "Flujos, alertas y seguimiento", "Control por usuario y proceso"], cta: "Ver RA", href: "ra.html" },
+      { title: "Avia OPS", text: "Automatización operacional para ordenar flujos, seguimiento, alertas, tareas repetitivas y control diario de procesos.", items: ["Automatización operacional", "Flujos, alertas y seguimiento", "Control por usuario y proceso"], cta: "Ver OPS", href: "ops.html" },
       { title: "Avia Intelligence", text: "Riesgo y datos para transformar información dispersa en señales, reportes, tableros y criterios de decisión accionables.", items: ["Riesgo y datos", "Reportes y tableros", "Señales accionables"], cta: "Ver inteligencia", href: "avia-intelligence.html" },
       { title: "Avia Labs", text: "APIs, apps e integraciones a medida para construir herramientas digitales conectadas a la operación real del cliente.", items: ["APIs e integraciones", "Apps y sistemas propios", "Desarrollo a medida"], cta: "Construir solución", href: "avia-labs.html" }
     ],
@@ -42,7 +42,7 @@ const businessCopy = {
     headingTitle: "Avia OPS, Avia Intelligence and Avia Labs",
     headingText: "Three clear lines: operational automation, risk and data, and API and app development.",
     cards: [
-      { title: "Avia OPS", text: "Operational automation to organize workflows, tracking, alerts, repetitive tasks and daily process control.", items: ["Operational automation", "Workflows, alerts and tracking", "User and process control"], cta: "View RA", href: "ra.html" },
+      { title: "Avia OPS", text: "Operational automation to organize workflows, tracking, alerts, repetitive tasks and daily process control.", items: ["Operational automation", "Workflows, alerts and tracking", "User and process control"], cta: "View OPS", href: "ops.html" },
       { title: "Avia Intelligence", text: "Risk and data to turn scattered information into signals, reports, dashboards and actionable decision criteria.", items: ["Risk and data", "Reports and dashboards", "Actionable signals"], cta: "View intelligence", href: "avia-intelligence.html" },
       { title: "Avia Labs", text: "Custom APIs, apps and integrations to build digital tools connected to the client’s real operation.", items: ["APIs and integrations", "Custom apps and systems", "Tailored development"], cta: "Build solution", href: "avia-labs.html" }
     ],
@@ -117,7 +117,7 @@ function setupHero() {
     tab.addEventListener("click", () => { showHeroSlide(Number(tab.dataset.slide || 0)); startHeroTimer(); });
     tab.addEventListener("dblclick", () => {
       const index = Number(tab.dataset.slide || 0);
-      if (index === 0) window.location.href = "ra.html";
+      if (index === 0) window.location.href = "ops.html";
       if (index === 1) window.location.href = "avia-intelligence.html";
       if (index === 2) window.location.href = "avia-labs.html";
     });

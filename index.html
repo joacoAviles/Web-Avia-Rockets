@@ -4,11 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AVIA Rockets | Sistemas, control y automatización</title>
-    <meta name="description" content="AVIA Rockets desarrolla soluciones para evaluación automática de personas, gestión de flotas y desarrollo personalizado de APIs, apps y asesorías." />
+    <meta name="description" content="AVIA Rockets desarrolla soluciones para automatización operacional, inteligencia de riesgo y datos, APIs y apps." />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <meta name="keywords" content="PDLJU, informes de personas, gestión de flotas, revisiones técnicas, APIs, apps, automatización, AVIA Rockets" />
     <meta property="og:title" content="AVIA Rockets | Sistemas, control y automatización" />
-    <meta property="og:description" content="Tres líneas de negocio: revisión automática de personas, gestión de flotas y desarrollo digital a medida." />
+    <meta property="og:description" content="Avia OPS, Avia Intelligence y Avia Labs: dashboards, automatización y productos digitales." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://joacoaviles.github.io/Web-Avia-Rockets/" />
     <meta property="og:image" content="https://joacoaviles.github.io/Web-Avia-Rockets/assets/avia-rockets-logo.svg" />
@@ -19,8 +18,9 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="dashboard.css" />
     <link rel="stylesheet" href="hero.css" />
+    <link rel="stylesheet" href="home-marketing.css" />
   </head>
-  <body>
+  <body data-page="home">
     <header class="site-header">
       <div class="container navbar">
         <a class="brand" href="#home" aria-label="AVIA Rockets home">
@@ -30,83 +30,83 @@
         <button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
         <nav class="nav-panel" id="nav-panel" aria-label="Primary navigation">
           <a href="#business-lines" data-i18n="navLines">Líneas de negocio</a>
-          <a href="#process" data-i18n="navProcess">Cómo trabajamos</a>
-          <a href="#client-login" data-i18n="navLogin">Login clientes</a>
+          <a href="#product-showcase">Dashboards</a>
+          <a href="#reviews">Reseñas</a>
           <a href="#contact" data-i18n="navContact">Contacto</a>
           <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
-          <a class="btn btn-primary btn-nav" href="#client-login" data-i18n="navEnter">Entrar</a>
+          <a class="btn btn-primary btn-nav" href="login.html" data-i18n="navEnter">Entrar</a>
         </nav>
       </div>
     </header>
 
     <main id="home">
-      <section class="hero">
+      <section class="hero hero-marketing">
         <div class="hero-bg"></div>
         <div class="container hero-grid">
           <div class="hero-copy reveal">
-            <div class="hero-status-pill"><span></span><em data-i18n="heroPill">Sistema operativo conectado</em></div>
-            <p class="eyebrow" data-i18n="heroTag">Control, automatización y desarrollo digital</p>
-            <h1 data-i18n="heroTitle">Sistemas que ordenan operación, datos y seguimiento</h1>
-            <p class="hero-text" data-i18n="heroText">Tres líneas de trabajo: revisión automática de personas, gestión de flotas y desarrollo de soluciones a medida.</p>
+            <div class="hero-status-pill"><span></span><em data-i18n="heroPill">Suite de productos Avia Rockets</em></div>
+            <p class="eyebrow" data-i18n="heroTag">Avia OPS · Avia Intelligence · Avia Labs</p>
+            <h1 data-i18n="heroTitle">Dashboards vivos para vender, operar y decidir mejor</h1>
+            <p class="hero-text" data-i18n="heroText">Una landing pensada para clientes: tres productos, tres dashboards claros y beneficios visibles desde el primer pantallazo.</p>
+            <div class="offer-banner">
+              <span>Oferta lanzamiento</span>
+              <strong>Diagnóstico inicial + maqueta de dashboard sin costo para los primeros clientes.</strong>
+            </div>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#client-login" data-i18n="heroPrimary">Entrar al dashboard</a>
+              <a class="btn btn-primary" href="#business-lines" data-i18n="heroPrimary">Ver productos</a>
               <a class="btn btn-secondary" href="#contact" data-i18n="heroSecondary">Agendar demo</a>
             </div>
             <ul class="hero-metrics" aria-label="Core value points">
-              <li data-i18n="metricLogin">Login con base de datos</li><li data-i18n="metricCauses">Causas asignadas</li><li data-i18n="metricControl">Control por usuario</li>
+              <li data-i18n="metricLogin">Menos trabajo manual</li><li data-i18n="metricCauses">Más visibilidad</li><li data-i18n="metricControl">Mejor decisión</li>
             </ul>
             <div class="hero-line-selector" aria-label="Líneas de negocio destacadas">
-              <button class="line-tab is-active" type="button" data-slide="0"><span>01</span><strong data-i18n="line1Tab">Personas</strong></button>
-              <button class="line-tab" type="button" data-slide="1"><span>02</span><strong data-i18n="line2Tab">Flotas</strong></button>
-              <button class="line-tab" type="button" data-slide="2"><span>03</span><strong data-i18n="line3Tab">Soluciones</strong></button>
+              <button class="line-tab is-active" type="button" data-slide="0"><span>OPS</span><strong data-i18n="line1Tab">Avia OPS</strong></button>
+              <button class="line-tab" type="button" data-slide="1"><span>INT</span><strong data-i18n="line2Tab">Avia Intelligence</strong></button>
+              <button class="line-tab" type="button" data-slide="2"><span>LAB</span><strong data-i18n="line3Tab">Avia Labs</strong></button>
             </div>
           </div>
 
           <div class="hero-visual reveal reveal-delay">
-            <div class="hero-product-stage" aria-label="Carrusel visual de líneas de negocio AVIA Rockets">
+            <div class="hero-product-stage" aria-label="Carrusel visual de productos AVIA Rockets">
               <div class="hero-orbit"></div>
               <span class="hero-node"></span><span class="hero-node"></span><span class="hero-node"></span>
-
               <div class="hero-carousel" id="hero-carousel">
                 <button class="carousel-control prev" type="button" data-carousel-prev aria-label="Slide anterior">‹</button>
                 <button class="carousel-control next" type="button" data-carousel-next aria-label="Slide siguiente">›</button>
                 <div class="carousel-track">
                   <article class="hero-slide is-active" data-slide-panel="0">
-                    <div class="hero-float-card left"><strong>2 cambios</strong><small>detectados hoy</small></div>
-                    <div class="hero-float-card right"><strong>0 errores</strong><small>ejecución estable</small></div>
+                    <div class="hero-float-card left"><strong>65%</strong><small>menos tareas manuales</small></div>
+                    <div class="hero-float-card right"><strong>Reportes</strong><small>listos para cliente</small></div>
                     <div class="hero-dashboard">
-                      <div class="scan-line"></div>
-                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>REVISIÓN AUTOMÁTICA</strong><small data-i18n="slide1Small">Personas y causas</small></div></div><span class="dash-action-dot"></span></div>
+                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>AVIA OPS</strong><small data-i18n="slide1Small">Automatización operacional</small></div></div><span class="dash-action-dot"></span></div>
                       <div class="dash-body">
-                        <div class="dash-kpis"><div class="dash-kpi"><span data-i18n="kpiReviewed">Revisadas</span><strong>18</strong></div><div class="dash-kpi"><span data-i18n="kpiChanges">Con cambios</span><strong>2</strong></div><div class="dash-kpi"><span data-i18n="kpiNew">Nuevas</span><strong>1</strong></div><div class="dash-kpi"><span data-i18n="kpiErrors">Errores</span><strong>0</strong></div></div>
-                        <div class="dash-main-grid"><div class="dash-card"><p class="dash-card-title" data-i18n="slide1Title">Causas, estados y usuarios asignados desde PostgreSQL</p><div class="case-row"><span class="case-icon">C</span><div><strong>Rol C-1234-2024</strong><small data-i18n="case1Small">Nuevo escrito registrado</small></div><span class="case-status" data-i18n="statusChange">Cambio</span></div><div class="case-row"><span class="case-icon">F</span><div><strong>Rol C-5678-2023</strong><small data-i18n="case2Small">Folio principal actualizado</small></div><span class="case-status" data-i18n="statusChange2">Cambio</span></div><div class="case-row"><span class="case-icon">N</span><div><strong>Rol C-9012-2025</strong><small data-i18n="case3Small">Primera revisión guardada</small></div><span class="case-status blue" data-i18n="statusNew">Nueva</span></div></div><div class="dash-card dash-report"><p class="dash-card-title" data-i18n="activity">Actividad</p><div class="report-ring"></div><div class="report-bars"><span></span><span></span><span></span></div></div></div>
+                        <div class="dash-kpis"><div class="dash-kpi"><span data-i18n="kpiReviewed">Ahorro</span><strong>65%</strong></div><div class="dash-kpi"><span data-i18n="kpiChanges">Alertas</span><strong>24</strong></div><div class="dash-kpi"><span data-i18n="kpiNew">Flujos</span><strong>8</strong></div><div class="dash-kpi"><span data-i18n="kpiErrors">Control</span><strong>100</strong></div></div>
+                        <div class="dash-main-grid"><div class="dash-card"><p class="dash-card-title" data-i18n="slide1Title">Automatiza seguimiento, alertas y reportes diarios sin perseguir planillas</p><div class="case-row"><span class="case-icon">A</span><div><strong>Flujo automatizado</strong><small data-i18n="case1Small">Tareas repetitivas automatizadas</small></div><span class="case-status" data-i18n="statusChange">Activo</span></div><div class="case-row"><span class="case-icon">R</span><div><strong>Alerta inteligente</strong><small data-i18n="case2Small">Alertas listas para revisar</small></div><span class="case-status" data-i18n="statusChange2">Listo</span></div><div class="case-row"><span class="case-icon">E</span><div><strong>Reporte para cliente</strong><small data-i18n="case3Small">Reporte ejecutivo generado</small></div><span class="case-status blue" data-i18n="statusNew">Nuevo</span></div></div><div class="dash-card dash-report"><p class="dash-card-title" data-i18n="activity">Beneficio</p><div class="report-ring"></div><div class="report-bars"><span></span><span></span><span></span></div></div></div>
                       </div>
                     </div>
                   </article>
 
                   <article class="hero-slide" data-slide-panel="1">
-                    <div class="hero-float-card left"><strong>5 vencimientos</strong><small>monitoreados</small></div>
-                    <div class="hero-float-card right"><strong>100%</strong><small>flota visible</small></div>
+                    <div class="hero-float-card left"><strong>Riesgo</strong><small>visible en segundos</small></div>
+                    <div class="hero-float-card right"><strong>Decisión</strong><small>con señales claras</small></div>
                     <div class="hero-dashboard fleet-dashboard">
-                      <div class="scan-line"></div>
-                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>GESTIÓN DE FLOTAS</strong><small data-i18n="slide2Small">Revisiones y vencimientos</small></div></div><span class="dash-action-dot"></span></div>
+                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>AVIA INTELLIGENCE</strong><small data-i18n="slide2Small">Riesgo y datos</small></div></div><span class="dash-action-dot"></span></div>
                       <div class="dash-body">
                         <div class="fleet-map"><span></span><span></span><span></span><span></span><div class="fleet-route"></div></div>
-                        <div class="dash-kpis"><div class="dash-kpi"><span data-i18n="fleetActive">Activos</span><strong>42</strong></div><div class="dash-kpi"><span data-i18n="fleetDue">Por vencer</span><strong>5</strong></div><div class="dash-kpi"><span data-i18n="fleetOk">Al día</span><strong>37</strong></div><div class="dash-kpi"><span data-i18n="fleetAlerts">Alertas</span><strong>3</strong></div></div>
-                        <div class="dash-card"><p class="dash-card-title" data-i18n="slide2Title">Estado de flota centralizado</p><div class="fleet-list"><span></span><span></span><span></span></div></div>
+                        <div class="dash-kpis"><div class="dash-kpi"><span data-i18n="fleetActive">Fuentes</span><strong>12</strong></div><div class="dash-kpi"><span data-i18n="fleetDue">Riesgos</span><strong>34</strong></div><div class="dash-kpi"><span data-i18n="fleetOk">Modelos</span><strong>5</strong></div><div class="dash-kpi"><span data-i18n="fleetAlerts">Alertas</span><strong>7</strong></div></div>
+                        <div class="dash-card"><p class="dash-card-title" data-i18n="slide2Title">Convierte datos dispersos en señales simples para decidir</p><div class="fleet-list"><span></span><span></span><span></span></div></div>
                       </div>
                     </div>
                   </article>
 
                   <article class="hero-slide" data-slide-panel="2">
-                    <div class="hero-float-card left"><strong>API</strong><small>conectada</small></div>
-                    <div class="hero-float-card right"><strong>Apps</strong><small>a medida</small></div>
+                    <div class="hero-float-card left"><strong>API</strong><small>producto conectado</small></div>
+                    <div class="hero-float-card right"><strong>App</strong><small>lista para operar</small></div>
                     <div class="hero-dashboard custom-dashboard">
-                      <div class="scan-line"></div>
-                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>APIS, APPS Y ASESORÍA</strong><small data-i18n="slide3Small">Integraciones y operación</small></div></div><span class="dash-action-dot"></span></div>
+                      <div class="dash-window-bar"><div class="dash-dots"><span></span><span></span><span></span></div><div class="dash-titlebar"><img class="dash-logo-mini" src="assets/avia-rockets-logo.svg" alt="" /><div><strong>AVIA LABS</strong><small data-i18n="slide3Small">APIs y apps</small></div></div><span class="dash-action-dot"></span></div>
                       <div class="dash-body">
                         <div class="integration-board"><div class="integration-node main">AVIA</div><div class="integration-node">API</div><div class="integration-node">DB</div><div class="integration-node">APP</div><div class="integration-node">BI</div></div>
-                        <div class="dash-main-grid"><div class="dash-card"><p class="dash-card-title" data-i18n="slide3Title">Desarrollo personalizado de integraciones</p><div class="code-lines"><span></span><span></span><span></span><span></span></div></div><div class="dash-card dash-report"><p class="dash-card-title" data-i18n="deployment">Deploy</p><div class="deploy-pulse"></div><div class="report-bars"><span></span><span></span><span></span></div></div></div>
+                        <div class="dash-main-grid"><div class="dash-card"><p class="dash-card-title" data-i18n="slide3Title">Construye APIs, apps y paneles conectados a tu operación</p><div class="code-lines"><span></span><span></span><span></span><span></span></div></div><div class="dash-card dash-report"><p class="dash-card-title" data-i18n="deployment">Entrega</p><div class="deploy-pulse"></div><div class="report-bars"><span></span><span></span><span></span></div></div></div>
                       </div>
                     </div>
                   </article>
@@ -117,50 +117,20 @@
         </div>
       </section>
 
-      <section class="section client-section" id="client-login">
-        <div class="container client-shell">
-          <article class="login-card" id="login-card">
-            <p class="eyebrow" data-i18n="clientAccess">Acceso clientes</p>
-            <h2 data-i18n="clientDashboard">Entrar al dashboard</h2>
-            <p class="dashboard-meta">Usa el correo y clave creados en <code>app.users</code>.</p>
-            <form id="login-form">
-              <label for="login-email" data-i18n="emailLabel">Correo</label>
-              <input id="login-email" type="email" autocomplete="email" required placeholder="cliente@empresa.cl" />
-              <label for="login-password" data-i18n="passwordLabel">Clave</label>
-              <input id="login-password" type="password" autocomplete="current-password" required placeholder="Clave" />
-              <button class="btn btn-primary" type="submit" id="login-button" data-i18n="loginButton">Ingresar</button>
-            </form>
-            <p class="login-status" id="login-status" hidden></p>
-          </article>
+      <section class="trust-strip"><div class="container trust-grid reveal"><div class="trust-item">Menos trabajo manual</div><div class="trust-item">Dashboards claros</div><div class="trust-item">Riesgo visible</div><div class="trust-item">Productos digitales</div><div class="trust-item">Experiencia premium</div></div></section>
 
-          <article class="dashboard-card" id="dashboard-card" hidden>
-            <div class="dashboard-top">
-              <div>
-                <p class="eyebrow">Dashboard RA</p>
-                <h2 id="dashboard-title">Causas asignadas</h2>
-                <p class="dashboard-meta" id="dashboard-user"></p>
-              </div>
-              <button class="btn btn-secondary" type="button" id="logout-button">Cerrar sesión</button>
-            </div>
-            <p class="dashboard-status" id="dashboard-status">Cargando causas...</p>
-            <div class="dashboard-grid" id="causes-grid"></div>
-            <div class="dashboard-grid" id="admin-users-grid"></div>
-          </article>
-        </div>
-      </section>
+      <section class="section product-tiles" id="business-lines"><div class="container"><div class="section-heading reveal"><p class="eyebrow">Líneas de negocio</p><h2>Elige el producto que mueve tu operación</h2><p>Tres caminos simples: automatizar, decidir mejor o construir una herramienta propia.</p></div><div class="business-grid"><article class="business-card business-card-featured reveal"><div class="card-icon logo-variant"><img src="assets/avia-rockets-logo.svg" alt="" /></div><h3>Avia OPS</h3><p>Automatización operacional para reducir trabajo manual, ordenar flujos, generar alertas y entregar reportes diarios con lectura simple.</p><ul><li>Menos trabajo repetitivo</li><li>Alertas y seguimiento</li><li>Reportes para clientes</li></ul><a class="btn btn-secondary" href="ops.html">Ver OPS</a></article><article class="business-card reveal reveal-delay"><div class="card-icon logo-variant logo-variant-int"><img src="assets/avia-rockets-logo.svg" alt="" /></div><h3>Avia Intelligence</h3><p>Riesgo y datos transformados en señales visuales para priorizar decisiones sin perderse en tablas, planillas o información dispersa.</p><ul><li>Riesgo y datos</li><li>Señales claras</li><li>Dashboards ejecutivos</li></ul><a class="btn btn-secondary" href="avia-intelligence.html">Ver inteligencia</a></article><article class="business-card reveal reveal-delay-2"><div class="card-icon logo-variant logo-variant-labs"><img src="assets/avia-rockets-logo.svg" alt="" /></div><h3>Avia Labs</h3><p>APIs, apps y paneles a medida para crear productos digitales conectados a la operación real del negocio.</p><ul><li>APIs e integraciones</li><li>Apps internas</li><li>Productos digitales</li></ul><a class="btn btn-secondary" href="avia-labs.html">Construir solución</a></article></div></div></section>
 
-      <section class="trust-strip"><div class="container trust-grid reveal"><div class="trust-item">Automatización consistente</div><div class="trust-item">Control y seguimiento</div><div class="trust-item">Implementación a medida</div><div class="trust-item">Visibilidad operativa</div><div class="trust-item">Criterio técnico</div></div></section>
+      <section class="section section-alt" id="product-showcase"><div class="container"><div class="section-heading centered reveal"><p class="eyebrow">Producto en uso</p><h2>Dashboards que el cliente entiende rápido</h2><p>El valor no está en ver más datos. Está en ver qué pasó, cuánto ahorraste y qué hacer después.</p></div><div class="showcase-grid"><article class="showcase-card reveal"><div class="showcase-screen ops-screen"><span></span><span></span><span></span></div><h3>Avia OPS en operación</h3><p>Automatiza seguimiento y reportes. Ideal para tareas repetitivas, carteras, revisiones y alertas.</p><strong>Hasta 65% menos tiempo operativo manual.</strong></article><article class="showcase-card reveal reveal-delay"><div class="showcase-screen intelligence-screen"><span></span><span></span><span></span></div><h3>Avia Intelligence en decisión</h3><p>Resume riesgo, datos y señales críticas para priorizar acciones sin depender de planillas sueltas.</p><strong>Decisiones más rápidas y visibles.</strong></article><article class="showcase-card reveal reveal-delay-2"><div class="showcase-screen labs-screen"><span></span><span></span><span></span></div><h3>Avia Labs construyendo producto</h3><p>Convierte procesos internos en APIs, apps y paneles que el equipo o los clientes pueden usar.</p><strong>Menos fricción entre idea y sistema usable.</strong></article></div></div></section>
 
-      <section class="section" id="business-lines"><div class="container"><div class="section-heading reveal"><p class="eyebrow">Líneas de negocio</p><h2>Tres soluciones, tres formas claras de entrar</h2><p>Elige la línea que más se acerca a tu necesidad actual: evaluación, control de flota o desarrollo personalizado.</p></div><div class="business-grid"><article class="business-card business-card-featured reveal"><div class="card-icon">01</div><h3>Revisión automática de personas</h3><p>Soluciones enfocadas en PDLJU, revisión automática e informes estructurados de personas para apoyar decisiones con mayor consistencia.</p><ul><li>Revisión automática</li><li>Informes ordenados y trazables</li><li>Apoyo operativo para evaluación</li></ul><a class="btn btn-secondary" href="#contact">Solicitar evaluación</a></article><article class="business-card reveal reveal-delay"><div class="card-icon">02</div><h3>Gestión y mantención de flotas</h3><p>Plataforma orientada al control de revisiones técnicas, vencimientos, estados de flota y continuidad operacional.</p><ul><li>Revisiones técnicas y alertas</li><li>Estado de flota centralizado</li><li>Seguimiento de vencimientos</li></ul><a class="btn btn-secondary" href="#contact">Ver plataforma</a></article><article class="business-card reveal reveal-delay-2"><div class="card-icon">03</div><h3>APIs, apps y asesoría a medida</h3><p>Desarrollo personalizado de integraciones, aplicaciones, automatizaciones y asesoría técnica según la operación de cada cliente.</p><ul><li>APIs e integraciones</li><li>Apps y sistemas propios</li><li>Consultoría y definición técnica</li></ul><a class="btn btn-secondary" href="#contact">Conversar proyecto</a></article></div></div></section>
+      <section class="section" id="reviews"><div class="container"><div class="section-heading reveal"><p class="eyebrow">Reseñas</p><h2>Espacio para prueba social</h2><p>Cuando tengas clientes reales, esta sección debe vender confianza. Por ahora queda lista para completar.</p></div><div class="reviews-grid"><article class="review-card reveal"><p>“Automatizamos reportes que antes tomaban horas y ahora llegan listos para revisión.”</p><strong>Cliente piloto · Operaciones</strong></article><article class="review-card reveal reveal-delay"><p>“El dashboard permite explicar el estado de la cartera sin entrar a diez planillas distintas.”</p><strong>Cliente piloto · Datos</strong></article><article class="review-card reveal reveal-delay-2"><p>“Pasamos de una idea desordenada a una herramienta interna usable por el equipo.”</p><strong>Cliente piloto · Producto</strong></article></div></div></section>
 
-      <section class="section section-alt" id="why"><div class="container why-grid"><div class="section-heading reveal"><p class="eyebrow">Por qué AVIA Rockets</p><h2>Tecnología con foco en operación, no en relleno visual</h2><p>Diseñamos herramientas que ayudan a ejecutar mejor, controlar mejor y depender menos de procesos frágiles o manuales.</p></div><div class="why-points reveal reveal-delay"><article><h3>Lectura rápida</h3><p>Interfaces pensadas para entender estados y tomar acción.</p></article><article><h3>Automatización útil</h3><p>Menos tareas repetidas, más consistencia operativa.</p></article><article><h3>Implementación seria</h3><p>No vendemos humo: definimos, construimos y aterrizamos.</p></article><article><h3>Flexibilidad real</h3><p>Producto, servicio o desarrollo según el tipo de necesidad.</p></article></div></div></section>
-
-      <section class="section" id="process"><div class="container"><div class="section-heading centered reveal"><p class="eyebrow">Cómo trabajamos</p><h2>Una entrada clara según tu caso</h2></div><div class="process-grid"><article class="process-card reveal"><span>1</span><h3>Cuéntanos tu necesidad</h3><p>Identificamos si tu caso corresponde a evaluación automática, flota o desarrollo a medida.</p></article><article class="process-card reveal reveal-delay"><span>2</span><h3>Definimos la ruta</h3><p>Te mostramos demo, evaluación o propuesta de implementación según la línea elegida.</p></article><article class="process-card reveal reveal-delay-2"><span>3</span><h3>Implementamos o habilitamos acceso</h3><p>El acceso al sistema o al servicio se habilita según el tipo de solución y alcance.</p></article></div></div></section>
-
-      <section class="section" id="contact"><div class="container contact-grid"><div class="section-heading reveal"><p class="eyebrow">Contacto</p><h2>Cuéntanos qué necesitas resolver</h2><p>Escríbenos si necesitas una evaluación automática, una solución para tu flota o un desarrollo digital a medida.</p><div class="contact-meta"><p><strong>Email:</strong> contact@aviarockets.com</p><p><strong>Base:</strong> Santiago, Chile</p><p><strong>LinkedIn:</strong> AVIA Rockets</p></div></div><form class="contact-form reveal reveal-delay"><label for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required minlength="2" /><label for="company">Empresa</label><input id="company" name="company" type="text" autocomplete="organization" /><label for="email">Correo corporativo</label><input id="email" name="email" type="email" autocomplete="email" required /><label for="phone">Teléfono</label><input id="phone" name="phone" type="tel" autocomplete="tel" /><label for="interest">Línea de interés</label><select id="interest" name="interest"><option value="pdlju">Revisión automática de personas</option><option value="fleet">Gestión y mantención de flotas</option><option value="custom">APIs, apps y asesoría</option></select><label for="language">Idioma preferido</label><select id="language" name="language"><option value="es">Español</option><option value="en">English</option></select><label for="message">Mensaje</label><textarea id="message" name="message" rows="5" required minlength="5"></textarea><button class="btn btn-primary" type="submit">Solicitar contacto</button></form></div></section>
+      <section class="section" id="contact"><div class="container contact-grid"><div class="section-heading reveal"><p class="eyebrow">Contacto</p><h2>Cuéntanos qué necesitas resolver</h2><p>Escríbenos si necesitas automatizar operación, ordenar datos de riesgo o construir un producto digital para tus clientes.</p><div class="contact-meta"><p><strong>Email:</strong> contact@aviarockets.com</p><p><strong>Base:</strong> Santiago, Chile</p><p><strong>LinkedIn:</strong> AVIA Rockets</p></div></div><form class="contact-form reveal reveal-delay"><label for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required minlength="2" /><label for="company">Empresa</label><input id="company" name="company" type="text" autocomplete="organization" /><label for="email">Correo corporativo</label><input id="email" name="email" type="email" autocomplete="email" required /><label for="phone">Teléfono</label><input id="phone" name="phone" type="tel" autocomplete="tel" /><label for="interest">Línea de interés</label><select id="interest" name="interest"><option value="ops">Avia OPS</option><option value="intelligence">Avia Intelligence</option><option value="labs">Avia Labs</option></select><label for="language">Idioma preferido</label><select id="language" name="language"><option value="es">Español</option><option value="en">English</option></select><label for="message">Mensaje</label><textarea id="message" name="message" rows="5" required minlength="5"></textarea><button class="btn btn-primary" type="submit">Solicitar contacto</button></form></div></section>
     </main>
 
-    <footer class="site-footer"><div class="container footer-grid"><div><a class="brand footer-brand" href="#home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><p>Revisión automática, control operacional y desarrollo digital a medida.</p></div><div class="footer-links"><a href="#business-lines">Líneas de negocio</a><a href="#process">Cómo trabajamos</a><a href="#client-login">Login</a><a href="#contact">Contacto</a></div></div></footer>
+    <a class="whatsapp-float" href="https://wa.me/56900000000?text=Hola%20Avia%20Rockets,%20quiero%20conocer%20sus%20productos" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"><span>WhatsApp</span><strong>Hablemos</strong></a>
+
+    <footer class="site-footer"><div class="container footer-grid"><div><a class="brand footer-brand" href="#home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><p>Avia OPS, Avia Intelligence y Avia Labs.</p></div><div class="footer-links"><a href="#business-lines">Productos</a><a href="#product-showcase">Dashboards</a><a href="#reviews">Reseñas</a><a href="#contact">Contacto</a><a href="login.html">Login</a></div></div></footer>
     <script src="script.js"></script>
     <script src="hero-carousel.js"></script>
   </body>

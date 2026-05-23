@@ -1,5 +1,64 @@
 <!doctype html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AVIA Rockets</title></head>
-<body><h1>AVIA Rockets</h1></body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AVIA Rockets | Operacion, inteligencia y sistemas digitales</title>
+<meta name="description" content="AVIA Rockets ordena operaciones criticas, convierte datos en decision y construye sistemas digitales a medida." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon-rect.svg" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="home-marketing.css" />
+<link rel="stylesheet" href="beta-products.css" />
+</head>
+<body data-page="home">
+<header class="site-header">
+  <div class="container navbar">
+    <a class="brand" href="#home" aria-label="AVIA Rockets home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button><a class="btn btn-primary btn-nav" href="login.html">Log In</a></nav>
+  </div>
+</header>
+<main id="home">
+<section class="hero hero-marketing home-hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-grid">
+    <div class="hero-copy reveal">
+      <p class="hero-status-pill"><span></span><em>Productos beta conectados a la plataforma</em></p>
+      <h1>Prueba una operacion digital antes de construirla.</h1>
+      <p class="hero-text">Legal, Flota, Intelligence, API y Lab comparten una base comun para reducir trabajo manual, mejorar trazabilidad y ordenar la accion siguiente.</p>
+      <div class="home-product-selector" id="home-product-selector"></div>
+      <div class="hero-actions"><a class="btn btn-primary" href="login.html">Registrate e inicia gratis de por vida</a><a class="btn btn-secondary" href="#guided-demo">Ver test guiado</a></div>
+    </div>
+    <div class="hero-visual reveal reveal-delay"><div class="home-product-stage" id="home-product-stage" aria-label="Demo del producto seleccionado"></div></div>
+  </div>
+</section>
+<section class="section guided-demo-section" id="guided-demo">
+  <div class="container beta-guide-grid">
+    <div class="section-heading reveal"><p class="eyebrow">Test guiado</p><h2 id="guided-product-title">OPS Legal</h2><p id="guided-product-text">Al hacer scroll entras en una version guiada del producto. Si no eliges uno, parte en Legal.</p><div class="guided-actions"><a class="btn btn-primary" href="app-beta.html">Probar otro producto</a><a class="btn btn-secondary" href="contacto.html">Hablar con AVIA</a></div></div>
+    <ol class="guided-steps reveal reveal-delay" id="guided-product-steps"></ol>
+  </div>
+</section>
+<section class="section use-cases-section">
+  <div class="container">
+    <div class="section-heading reveal"><p class="eyebrow">Ejemplos de uso</p><h2>Casos donde AVIA empieza a ahorrar tiempo.</h2><p>Seguimiento, control, datos y construccion de software con foco operativo.</p></div>
+    <div class="showcase-grid"><article class="showcase-card reveal"><div class="showcase-screen"><span></span><span></span><span></span></div><h3>Seguimiento legal diario</h3><p>Una cartera de causas se revisa, compara y clasifica sin abrir manualmente cada consulta.</p><strong>Salida: alerta, historial y panel.</strong></article><article class="showcase-card reveal reveal-delay"><div class="showcase-screen"><span></span><span></span><span></span></div><h3>Flota y vencimientos</h3><p>Vehiculos, permisos, revisiones y mantenciones quedan priorizados por urgencia operativa.</p><strong>Salida: tareas ordenadas por riesgo.</strong></article><article class="showcase-card reveal reveal-delay-2"><div class="showcase-screen"><span></span><span></span><span></span></div><h3>Datos para decidir</h3><p>Fuentes dispersas se transforman en scores, senales y reportes accionables.</p><strong>Salida: decision con evidencia.</strong></article></div>
+  </div>
+</section>
+<section class="section product-tiles" id="business-lines">
+  <div class="container">
+    <div class="section-heading reveal"><p class="eyebrow">Soluciones</p><h2>Elige por funcion, no por moda tecnologica</h2><p>Si necesitas monitorear y actuar, es OPS. Si necesitas analizar y decidir, es Intelligence. Si necesitas construir o integrar, es Labs.</p></div>
+    <div class="business-grid"><article class="business-card business-card-featured reveal"><div class="card-icon logo-variant"><img src="assets/avia-rockets-logo.svg" alt="" /></div><h3>Avia OPS</h3><p>Centro operacional para seguimiento de causas, gestion de flotas, control de estados, alertas e informes de operacion.</p><ul><li><a href="ops-legal.html">OPS Legal: revision automatica de causas</a></li><li><a href="ops-flota.html">OPS Flota: mantenimiento e incidencias</a></li><li>Alertas por panel y reporte operativo</li></ul><a class="btn btn-secondary" href="ops.html">Elegir Avia OPS</a></article><article class="business-card reveal reveal-delay"><div class="card-icon logo-variant"><img src="assets/avia-rockets-logo.svg" alt="" /></div><h3>Avia Intelligence</h3><p>Analisis de datos, riesgo, scoring, tableros ejecutivos e informes para tomar mejores decisiones.</p><ul><li>Modelos de riesgo</li><li>Dashboards ejecutivos</li><li>Proyecciones en tiempo real</li></ul><a class="btn btn-secondary" href="avia-intelligence.html">Elegir Avia Intelligence</a></article><article class="business-card reveal reveal-delay-2"><div class="card-icon logo-variant"><img src="assets/avia-rockets-logo.svg" alt="" /></div><h3>Avia Labs</h3><p>Construccion de APIs, apps internas, automatizaciones e integraciones a medida.</p><ul><li>APIs e integraciones</li><li>Apps y paneles internos</li><li>Productos digitales conectados</li></ul><a class="btn btn-secondary" href="avia-labs.html">Elegir Avia Labs</a></article></div>
+  </div>
+</section>
+<section class="section company-strip-section"><div class="container"><p class="eyebrow">Empresas que trabajan con nosotros</p><div class="company-logo-strip" id="company-logo-strip"><span>Norte Capital</span><span>Andes Fleet</span><span>LexData</span><span>Puerto Labs</span><span>Cumbre Ops</span></div></div></section>
+<section class="section cta-section"><div class="container"><div class="cta-box"><div><p class="eyebrow">Empieza ahora</p><h2>Registrate e inicia gratis de por vida.</h2><p>Parte con una beta simple, valida el flujo y escala cuando el producto demuestre valor real.</p></div><a class="btn btn-primary" href="login.html">Crear cuenta gratis</a></div></div></section>
+</main>
+<footer class="site-footer footer-clean"><div class="container footer-grid"><a class="brand footer-brand" href="#home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><div class="footer-links"><a href="#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><a href="app-beta.html">Beta</a><a href="login.html">Log In</a></div></div></footer>
+<script src="product-data.js"></script>
+<script src="home-experience.js"></script>
+<script src="script.js"></script>
+</body>
 </html>

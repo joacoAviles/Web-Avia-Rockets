@@ -1,16 +1,11 @@
 function aviaApplyStandardFavicon(){
-  var page = document.body ? document.body.dataset.product : '';
-  var href = '/Web-Avia-Rockets/assets/favicon-rect.svg';
-  if (page === 'labs') href = '/Web-Avia-Rockets/assets/favicon-labs.svg';
-  if (page === 'intelligence') href = '/Web-Avia-Rockets/assets/favicon-intelligence.svg';
-
-  var icons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
-  icons.forEach(function(node){ node.parentNode.removeChild(node); });
-
+  document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(function(node){
+    node.parentNode.removeChild(node);
+  });
   var favicon = document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/svg+xml';
-  favicon.href = href;
+  favicon.href = 'assets/favicon-rect.svg?v=2026-avia-rect';
   document.head.appendChild(favicon);
 }
 

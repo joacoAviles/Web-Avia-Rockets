@@ -1,3 +1,10 @@
+function aviaLoadStandardHeaderFromFooter(){
+  if (document.querySelector('script[src="header-standard.js"]')) return;
+  var script = document.createElement('script');
+  script.src = 'header-standard.js';
+  document.body.appendChild(script);
+}
+
 function aviaApplyStandardFooter(){
   var footer = document.querySelector('footer.site-footer');
   if (!footer) {
@@ -14,8 +21,13 @@ function aviaApplyStandardFooter(){
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', aviaApplyStandardFooter);
-} else {
+function aviaApplyStandardLayout(){
+  aviaLoadStandardHeaderFromFooter();
   aviaApplyStandardFooter();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', aviaApplyStandardLayout);
+} else {
+  aviaApplyStandardLayout();
 }

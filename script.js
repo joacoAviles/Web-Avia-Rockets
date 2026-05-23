@@ -139,12 +139,6 @@ function renderServices(services) {
 
 function renderSiteSettings(settings) {
   if (!settings || typeof settings !== "object") return;
-  const contactMeta = document.querySelector(".contact-meta");
-  if (!contactMeta) return;
-  const email = settings.contact_email || "contact@aviarockets.com";
-  const location = settings.base_location || "Santiago, Chile";
-  const linkedin = settings.linkedin_label || "AVIA Rockets";
-  contactMeta.innerHTML = `<p><strong>Email:</strong> ${email}</p><p><strong>Base:</strong> ${location}</p><p><strong>LinkedIn:</strong> ${linkedin}</p>`;
 }
 
 async function loadSiteData() {
@@ -202,7 +196,7 @@ function setupContactForm() {
       status.className = "form-status form-status-error";
     } finally {
       button.disabled = false;
-      button.textContent = "Solicitar contacto";
+      button.textContent = "Enviar solicitud";
     }
   });
 }

@@ -5,7 +5,7 @@ function aviaApplyStandardFavicon(){
   var favicon = document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/svg+xml';
-  favicon.href = 'assets/favicon-rect.svg?v=2026-avia-rect';
+  favicon.href = 'assets/favicon-rect.svg?v=2026-avia-rect-2';
   document.head.appendChild(favicon);
 }
 

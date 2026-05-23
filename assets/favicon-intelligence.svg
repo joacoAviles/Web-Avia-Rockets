@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120" role="img" aria-label="AVIA Rockets Intelligence favicon">
+  <rect width="220" height="120" rx="24" fill="#071426"/>
+  <rect x="10" y="10" width="200" height="100" rx="18" fill="#0B172D" stroke="#244263" stroke-width="4"/>
+  <rect x="28" y="78" width="68" height="8" rx="4" fill="#0A6CFF"/>
+  <text x="28" y="66" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" letter-spacing="8">AVIA</text>
+  <text x="122" y="88" fill="#47A3FF" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="3">INTEL</text>
+</svg>

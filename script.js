@@ -329,8 +329,16 @@ function setupLogin() {
   });
 }
 
+function loadStandardFooterFromGlobalScript() {
+  if (document.querySelector('script[src="footer-standard.js"]')) return;
+  const script = document.createElement("script");
+  script.src = "footer-standard.js";
+  document.body.appendChild(script);
+}
+
 setPreferredLanguage(detectInitialLanguage());
 loadSiteData();
 setupContactForm();
 setupLogin();
 if (getToken()) loadDashboard();
+loadStandardFooterFromGlobalScript();

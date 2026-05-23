@@ -1,12 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120" role="img" aria-label="AVIA Rockets favicon rectangular">
-  <rect width="220" height="120" rx="28" fill="#071426"/>
-  <g transform="translate(18 18) scale(.7)">
-    <path d="M27 91H18V31C18 23.8 23.8 18 31 18H91V27H31C28.8 27 27 28.8 27 31V91Z" fill="#FFFFFF"/>
-    <path d="M93 29H102V89C102 96.2 96.2 102 89 102H29V93H89C91.2 93 93 91.2 93 89V29Z" fill="#FFFFFF"/>
-    <path d="M29 89C42.4 68.1 59.8 50.7 91 30" fill="none" stroke="#0A6CFF" stroke-width="9" stroke-linecap="round"/>
-    <circle cx="28" cy="91" r="10" fill="#0A6CFF"/>
-    <circle cx="93" cy="29" r="10" fill="#0A6CFF"/>
-  </g>
-  <text x="104" y="54" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="2">AVIA</text>
-  <text x="104" y="82" fill="#47A3FF" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" letter-spacing="4">ROCKETS</text>
+  <rect width="220" height="120" rx="24" fill="#071426"/>
+  <rect x="10" y="10" width="200" height="100" rx="18" fill="#0B172D" stroke="#244263" stroke-width="4"/>
+  <rect x="28" y="78" width="68" height="8" rx="4" fill="#0A6CFF"/>
+  <text x="28" y="66" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" letter-spacing="8">AVIA</text>
+  <text x="130" y="88" fill="#47A3FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="900" letter-spacing="5">ROCKETS</text>
 </svg>

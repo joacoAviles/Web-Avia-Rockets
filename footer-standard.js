@@ -13,6 +13,14 @@ function aviaLoadCleanForecast(){
   document.body.appendChild(script);
 }
 
+function aviaLoadUseCaseLinks(){
+  if (!document.querySelector('.use-cases-section .showcase-card')) return;
+  if (document.querySelector('script[src="use-case-links.js"]')) return;
+  var script = document.createElement('script');
+  script.src = 'use-case-links.js';
+  document.body.appendChild(script);
+}
+
 function aviaApplyStandardFooter(){
   var footer = document.querySelector('footer.site-footer');
   if (!footer) {
@@ -33,6 +41,7 @@ function aviaApplyStandardLayout(){
   aviaLoadStandardHeaderFromFooter();
   aviaApplyStandardFooter();
   aviaLoadCleanForecast();
+  aviaLoadUseCaseLinks();
 }
 
 if (document.readyState === 'loading') {

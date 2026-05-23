@@ -329,10 +329,10 @@ function setupLogin() {
   });
 }
 
-function loadStandardFooterFromGlobalScript() {
-  if (document.querySelector('script[src="footer-standard.js"]')) return;
+function loadStandardScript(src) {
+  if (document.querySelector(`script[src="${src}"]`)) return;
   const script = document.createElement("script");
-  script.src = "footer-standard.js";
+  script.src = src;
   document.body.appendChild(script);
 }
 
@@ -341,4 +341,5 @@ loadSiteData();
 setupContactForm();
 setupLogin();
 if (getToken()) loadDashboard();
-loadStandardFooterFromGlobalScript();
+loadStandardScript("header-standard.js");
+loadStandardScript("footer-standard.js");

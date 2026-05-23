@@ -5,6 +5,13 @@ function aviaLoadStandardHeaderFromFooter(){
   document.body.appendChild(script);
 }
 
+function aviaLoadI18n(){
+  if (document.querySelector('script[src="avia-i18n.js"]')) return;
+  var script = document.createElement('script');
+  script.src = 'avia-i18n.js';
+  document.body.appendChild(script);
+}
+
 function aviaApplyStandardFooter(){
   var footer = document.querySelector('footer.site-footer');
   if (!footer) {
@@ -24,6 +31,7 @@ function aviaApplyStandardFooter(){
 function aviaApplyStandardLayout(){
   aviaLoadStandardHeaderFromFooter();
   aviaApplyStandardFooter();
+  aviaLoadI18n();
 }
 
 if (document.readyState === 'loading') {

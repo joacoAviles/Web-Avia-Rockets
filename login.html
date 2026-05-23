@@ -18,43 +18,13 @@
 </head>
 <body data-page="auth">
 <header class="site-header"></header>
-<main>
-<section class="auth-hero">
-<div class="container auth-grid">
-<div class="auth-copy">
-<p class="eyebrow">Acceso AVIA Rockets</p>
-<h1>Ingresa o crea una cuenta gratis.</h1>
-<p>Centraliza pruebas de Legal, Flota, Intelligence, API y Lab desde una sola puerta de entrada. La cuenta gratis sirve para validar flujo antes de escalar.</p>
-<div class="auth-benefits"><span>Prueba productos beta desde una vista común.</span><span>Guarda datos mínimos de contacto y línea de interés.</span><span>Cuando el backend esté activo, esta misma página puede conectarse a autenticación real.</span></div>
-</div>
-<div class="auth-card">
-<div class="auth-tabs"><button class="auth-tab is-active" type="button" data-auth-tab="login">Log In</button><button class="auth-tab" type="button" data-auth-tab="register">Crear cuenta</button></div>
-<form class="auth-form" id="login-form">
-<label for="login-email">Correo</label><input id="login-email" type="email" autocomplete="email" required />
-<label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required />
-<button class="btn btn-primary" id="login-button" type="submit">Ingresar</button>
-<p class="auth-status" id="login-status" aria-live="polite"></p>
-<small>Acceso para usuarios existentes de AVIA Rockets.</small>
-</form>
-<form class="auth-form" id="register-form" hidden>
-<label for="register-name">Nombre</label><input id="register-name" type="text" autocomplete="name" required />
-<label for="register-email">Correo</label><input id="register-email" type="email" autocomplete="email" required />
-<label for="register-interest">Producto de interés</label><select id="register-interest"><option>Legal</option><option>Flota</option><option>Intelligence</option><option>API</option><option>Lab</option></select>
-<label for="register-password">Contraseña</label><input id="register-password" type="password" autocomplete="new-password" required />
-<button class="btn btn-primary" type="submit">Crear cuenta gratis</button>
-<p class="auth-status" id="register-status" aria-live="polite"></p>
-<small>Registro preliminar. Si no hay backend conectado, se guardará como solicitud local de prueba.</small>
-</form>
-<p class="auth-note">No se publica ningún correo de contacto en esta página.</p>
-</div>
-</div>
-</section>
-</main>
+<main><section class="auth-hero"><div class="container auth-grid"><div class="auth-copy"><p class="eyebrow">Acceso AVIA Rockets</p><h1>Ingresa o crea una cuenta gratis.</h1><p>Centraliza pruebas de Legal, Flota, Intelligence, API y Lab desde una sola puerta de entrada. La cuenta gratis sirve para validar flujo antes de escalar.</p><div class="auth-benefits"><span>Prueba productos beta desde una vista común.</span><span>Guarda datos mínimos de contacto y línea de interés.</span><span>Cuando el backend esté activo, esta misma página puede conectarse a autenticación real.</span></div></div><div class="auth-card"><div class="auth-tabs"><button class="auth-tab is-active" type="button" data-auth-tab="login">Log In</button><button class="auth-tab" type="button" data-auth-tab="register">Crear cuenta</button></div><form class="auth-form" id="login-form"><label for="login-email">Correo</label><input id="login-email" type="email" autocomplete="email" required /><label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required /><button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p><small>Acceso para usuarios existentes de AVIA Rockets.</small></form><form class="auth-form" id="register-form" hidden><label for="register-name">Nombre</label><input id="register-name" type="text" autocomplete="name" required /><label for="register-email">Correo</label><input id="register-email" type="email" autocomplete="email" required /><label for="register-interest">Producto de interés</label><select id="register-interest"><option>Legal</option><option>Flota</option><option>Intelligence</option><option>API</option><option>Lab</option></select><label for="register-password">Contraseña</label><input id="register-password" type="password" autocomplete="new-password" required /><button class="btn btn-primary" type="submit">Crear cuenta gratis</button><p class="auth-status" id="register-status" aria-live="polite"></p><small>Registro preliminar. Si no hay backend conectado, se guardará como solicitud local de prueba.</small></form><p class="auth-note">No se publica ningún correo de contacto en esta página.</p></div></div></section></main>
 <footer class="site-footer footer-clean"></footer>
 <script src="header-standard.js"></script>
 <script src="footer-standard.js"></script>
 <script>
-const tabs=document.querySelectorAll('[data-auth-tab]');const loginForm=document.getElementById('login-form');const registerForm=document.getElementById('register-form');tabs.forEach((tab)=>tab.addEventListener('click',()=>{tabs.forEach((item)=>item.classList.toggle('is-active',item===tab));const mode=tab.dataset.authTab;loginForm.hidden=mode!=='login';registerForm.hidden=mode!=='register';}));
+const tabs=document.querySelectorAll('[data-auth-tab]');const loginForm=document.getElementById('login-form');const registerForm=document.getElementById('register-form');function setAuthMode(mode){const normalized=mode==='register'||mode==='registro'||mode==='crear-cuenta'?'register':'login';tabs.forEach((item)=>item.classList.toggle('is-active',item.dataset.authTab===normalized));loginForm.hidden=normalized!=='login';registerForm.hidden=normalized!=='register';}tabs.forEach((tab)=>tab.addEventListener('click',()=>{setAuthMode(tab.dataset.authTab);history.replaceState(null,'',tab.dataset.authTab==='register'?'#registro':'#login');}));window.addEventListener('hashchange',()=>setAuthMode(location.hash.replace('#','')));setAuthMode(location.hash.replace('#',''));
+loginForm.addEventListener('submit',(event)=>{event.preventDefault();const status=document.getElementById('login-status');status.textContent='Login listo visualmente. Falta conectar backend real de autenticación.';status.className='auth-status form-status-ok';});
 registerForm.addEventListener('submit',(event)=>{event.preventDefault();const status=document.getElementById('register-status');status.textContent='Solicitud de cuenta creada. Próximo paso: conectar backend real de registro.';status.className='auth-status form-status-ok';});
 </script>
 </body>

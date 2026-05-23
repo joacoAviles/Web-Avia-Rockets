@@ -48,8 +48,11 @@ function aviaApplyStandardHeader(){
       document.documentElement.lang = next;
       localStorage.setItem('avia-lang', next);
       langToggle.textContent = next === 'es' ? 'EN' : 'ES';
+      if (window.aviaApplyLanguage) window.aviaApplyLanguage(next);
     });
   }
+
+  if (window.aviaApplyLanguage) window.aviaApplyLanguage(document.documentElement.lang);
 }
 
 if (document.readyState === 'loading') {

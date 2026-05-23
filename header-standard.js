@@ -1,9 +1,16 @@
-function aviaApplyStandardHeader(){
-  var favicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
+function aviaApplyStandardFavicon(){
+  document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(function(node){
+    node.parentNode.removeChild(node);
+  });
+  var favicon = document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/svg+xml';
-  favicon.href = 'assets/favicon-rect.svg';
-  if (!favicon.parentNode) document.head.appendChild(favicon);
+  favicon.href = 'assets/favicon-rect.svg?v=2026-avia-rect';
+  document.head.appendChild(favicon);
+}
+
+function aviaApplyStandardHeader(){
+  aviaApplyStandardFavicon();
 
   var header = document.querySelector('header.site-header');
   if (!header) {

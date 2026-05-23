@@ -44,6 +44,14 @@ function applyProductLang(lang) {
   if (btn) btn.textContent = selected === "es" ? "EN" : "ES";
 }
 
+function loadStandardFooterForProductPages() {
+  if (document.querySelector('script[src="footer-standard.js"]')) return;
+  const script = document.createElement("script");
+  script.src = "footer-standard.js";
+  document.body.appendChild(script);
+}
+
 const productLangButton = document.getElementById("product-lang-toggle");
 if (productLangButton) productLangButton.addEventListener("click", () => applyProductLang(document.documentElement.lang === "es" ? "en" : "es"));
 applyProductLang(localStorage.getItem("avia-lang") || document.documentElement.lang || "es");
+loadStandardFooterForProductPages();

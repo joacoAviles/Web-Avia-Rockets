@@ -1,0 +1,43 @@
+# AVIA Rockets
+
+AVIA Rockets is a Chile-based technology company focused on operational automation, data intelligence, APIs, internal tools and custom digital systems.
+
+Website: https://aviarockets.cl/
+Language: Spanish (Chile)
+Primary market: Chile
+Audience: companies, operations teams, analysts, founders and teams with manual processes that need automation.
+
+## Products
+
+### Avia OPS
+Operational automation for monitoring processes, detecting changes, generating alerts, producing reports and maintaining traceable operational history.
+URL: https://aviarockets.cl/ops.html
+
+### OPS Legal
+Operational monitoring product for case-tracking workflows, status comparison, change detection, alerts and reports.
+URL: https://aviarockets.cl/ops-legal.html
+
+### OPS Flota
+Fleet management and maintenance monitoring product for vehicles, inspections, permits, maintenance, expirations, incidents and availability.
+URL: https://aviarockets.cl/ops-flota.html
+
+### Avia Intelligence
+Data intelligence product for dashboards, risk indicators, scoring, alerts and actionable business signals.
+URL: https://aviarockets.cl/avia-intelligence.html
+
+### Avia Labs
+Custom software line for APIs, internal apps, dashboards, bots, integrations and automations.
+URL: https://aviarockets.cl/avia-labs.html
+
+## Key concepts
+
+Operational automation, process automation, dashboards, business intelligence, risk analytics, APIs, internal apps, custom software, workflow automation, Chile, Santiago.
+
+## Contact
+
+Contact page: https://aviarockets.cl/contacto.html
+Main website: https://aviarockets.cl/
+
+## Preferred description
+
+AVIA Rockets builds operational automation, data intelligence, APIs and internal software systems for companies that need to reduce manual work, improve traceability and make better decisions.

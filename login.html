@@ -23,10 +23,116 @@
 <script src="header-standard.js"></script>
 <script src="footer-standard.js"></script>
 <script>
-const tabs=document.querySelectorAll('[data-auth-tab]');const loginForm=document.getElementById('login-form');const registerForm=document.getElementById('register-form');function setAuthMode(mode){const normalized=mode==='register'||mode==='registro'||mode==='crear-cuenta'?'register':'login';tabs.forEach((item)=>item.classList.toggle('is-active',item.dataset.authTab===normalized));loginForm.hidden=normalized!=='login';registerForm.hidden=normalized!=='register';}tabs.forEach((tab)=>tab.addEventListener('click',()=>{setAuthMode(tab.dataset.authTab);history.replaceState(null,'',tab.dataset.authTab==='register'?'#registro':'#login');}));window.addEventListener('hashchange',()=>setAuthMode(location.hash.replace('#','')));setAuthMode(location.hash.replace('#',''));
-loginForm.addEventListener('submit',(event)=>{event.preventDefault();const status=document.getElementById('login-status');status.textContent='Revisando acceso...';status.className='auth-status form-status-ok';});
-registerForm.addEventListener('submit',(event)=>{event.preventDefault();const status=document.getElementById('register-status');status.textContent='Cuenta creada. Revisa tu correo para continuar.';status.className='auth-status form-status-ok';});
-document.getElementById('google-login').addEventListener('click',()=>{const visibleStatus=registerForm.hidden?document.getElementById('login-status'):document.getElementById('register-status');visibleStatus.textContent='Abriendo acceso con Google...';visibleStatus.className='auth-status form-status-ok';});
+const API_BASE_URL = (() => {
+  if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
+  const host = window.location.hostname;
+  if (host === "localhost" || host === "127.0.0.1" || host === "192.168.68.52") return "http://192.168.68.52:18000";
+  return "https://api.aviarockets.cl";
+})();
+
+const TOKEN_KEY = "avia_auth_token";
+const USER_KEY = "avia_auth_user";
+const DEFAULT_AFTER_LOGIN = "app-beta.html";
+
+const tabs = document.querySelectorAll("[data-auth-tab]");
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
+const loginButton = document.getElementById("login-button");
+const loginStatus = document.getElementById("login-status");
+const registerStatus = document.getElementById("register-status");
+
+function setAuthMode(mode) {
+  const normalized = mode === "register" || mode === "registro" || mode === "crear-cuenta" ? "register" : "login";
+  tabs.forEach((item) => item.classList.toggle("is-active", item.dataset.authTab === normalized));
+  loginForm.hidden = normalized !== "login";
+  registerForm.hidden = normalized !== "register";
+}
+
+function setStatus(element, message, type = "") {
+  if (!element) return;
+  element.hidden = false;
+  element.textContent = message;
+  element.className = `auth-status ${type}`.trim();
+}
+
+function getRedirectTarget() {
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get("next");
+  if (next && !next.startsWith("http") && !next.startsWith("//")) return next;
+  return DEFAULT_AFTER_LOGIN;
+}
+
+async function apiRequest(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+  let data = null;
+  try { data = await response.json(); } catch (_) { data = null; }
+  if (!response.ok) {
+    throw new Error(data?.detail || data?.message || `Error API ${response.status}`);
+  }
+  return data;
+}
+
+function saveSession(data) {
+  localStorage.setItem(TOKEN_KEY, data.token);
+  localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+}
+
+tabs.forEach((tab) => tab.addEventListener("click", () => {
+  setAuthMode(tab.dataset.authTab);
+  history.replaceState(null, "", tab.dataset.authTab === "register" ? "#registro" : "#login");
+}));
+
+window.addEventListener("hashchange", () => setAuthMode(location.hash.replace("#", "")));
+setAuthMode(location.hash.replace("#", ""));
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+
+  if (!email || !password) {
+    setStatus(loginStatus, "Ingresa correo y contraseña.", "form-status-error");
+    return;
+  }
+
+  loginButton.disabled = true;
+  loginButton.textContent = "Entrando...";
+  setStatus(loginStatus, "Validando usuario contra la API...", "");
+
+  try {
+    const data = await apiRequest("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password })
+    });
+    saveSession(data);
+    setStatus(loginStatus, "Ingreso correcto. Redirigiendo...", "form-status-ok");
+    window.location.href = getRedirectTarget();
+  } catch (error) {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    setStatus(loginStatus, error.message || "No se pudo iniciar sesión.", "form-status-error");
+  } finally {
+    loginButton.disabled = false;
+    loginButton.textContent = "Ingresar";
+  }
+});
+
+registerForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  setStatus(registerStatus, "El registro público todavía no está habilitado. Crea usuarios desde el panel admin o SQL.", "form-status-error");
+});
+
+document.getElementById("google-login").addEventListener("click", () => {
+  const visibleStatus = registerForm.hidden ? loginStatus : registerStatus;
+  setStatus(visibleStatus, "Google Login todavía no está conectado. Usa correo y contraseña.", "form-status-error");
+});
 </script>
 </body>
 </html>

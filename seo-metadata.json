@@ -1,0 +1,97 @@
+{
+  "site": {
+    "name": "AVIA Rockets",
+    "url": "https://aviarockets.cl/",
+    "language": "es-CL",
+    "description": "AVIA Rockets construye automatización operacional, inteligencia de datos, APIs y sistemas internos para empresas que necesitan reducir trabajo manual, mejorar trazabilidad y tomar mejores decisiones.",
+    "location": "Santiago, Chile",
+    "keywords": [
+      "automatización operacional",
+      "automatización de procesos",
+      "dashboards",
+      "business intelligence",
+      "APIs",
+      "apps internas",
+      "software a medida",
+      "gestión de flotas",
+      "seguimiento legal",
+      "Chile"
+    ]
+  },
+  "pages": [
+    {
+      "path": "/",
+      "title": "AVIA Rockets | Automatización operacional, datos, APIs y apps internas en Chile",
+      "description": "AVIA Rockets construye automatización operacional, dashboards, APIs, apps internas y sistemas digitales para reducir trabajo manual, ordenar procesos y mejorar decisiones en empresas de Chile.",
+      "canonical": "https://aviarockets.cl/",
+      "type": "website"
+    },
+    {
+      "path": "/ops.html",
+      "title": "Avia OPS | Automatización operacional, alertas y reportes automáticos",
+      "description": "Avia OPS automatiza procesos operativos, seguimiento de estados, alertas, reportes e historial trazable para reducir revisión manual en equipos legales, flotas y operaciones internas.",
+      "canonical": "https://aviarockets.cl/ops.html",
+      "type": "service"
+    },
+    {
+      "path": "/ops-legal.html",
+      "title": "OPS Legal | Revisión automática de causas judiciales en Chile",
+      "description": "OPS Legal automatiza la revisión diaria de causas judiciales, detecta cambios en folios, escritos, notificaciones y estados, y genera alertas e informes operativos.",
+      "canonical": "https://aviarockets.cl/ops-legal.html",
+      "type": "software"
+    },
+    {
+      "path": "/ops-flota.html",
+      "title": "OPS Flota | Gestión de flotas, mantenciones y vencimientos",
+      "description": "OPS Flota centraliza vehículos, revisiones técnicas, permisos, mantenciones, vencimientos, alertas e incidencias para controlar la continuidad operacional de una flota.",
+      "canonical": "https://aviarockets.cl/ops-flota.html",
+      "type": "software"
+    },
+    {
+      "path": "/avia-intelligence.html",
+      "title": "Avia Intelligence | Dashboards, riesgo, datos y señales accionables",
+      "description": "Avia Intelligence transforma datos dispersos en dashboards, scoring, modelos de riesgo, alertas y señales accionables para apoyar decisiones operativas y financieras.",
+      "canonical": "https://aviarockets.cl/avia-intelligence.html",
+      "type": "service"
+    },
+    {
+      "path": "/avia-labs.html",
+      "title": "Avia Labs | Desarrollo de APIs, apps internas e integraciones",
+      "description": "Avia Labs diseña y construye APIs, apps internas, dashboards, bots, automatizaciones e integraciones a medida para convertir procesos manuales en software.",
+      "canonical": "https://aviarockets.cl/avia-labs.html",
+      "type": "service"
+    },
+    {
+      "path": "/contacto.html",
+      "title": "Contacto | AVIA Rockets",
+      "description": "Contacta a AVIA Rockets para evaluar automatización operacional, dashboards, APIs, apps internas e integraciones a medida para tu empresa.",
+      "canonical": "https://aviarockets.cl/contacto.html",
+      "type": "contact"
+    },
+    {
+      "path": "/login.html",
+      "title": "Log In y registro | AVIA Rockets",
+      "description": "Ingresa a AVIA Rockets para administrar productos, paneles y pruebas de automatización operacional, datos, APIs y apps internas.",
+      "canonical": "https://aviarockets.cl/login.html",
+      "type": "login"
+    }
+  ],
+  "schema": {
+    "organization": {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AVIA Rockets",
+      "url": "https://aviarockets.cl/",
+      "logo": "https://aviarockets.cl/assets/avia-rockets-logo.svg",
+      "description": "AVIA Rockets desarrolla automatización operacional, dashboards, APIs, apps internas e integraciones para empresas en Chile.",
+      "areaServed": "Chile"
+    },
+    "website": {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "AVIA Rockets",
+      "url": "https://aviarockets.cl/",
+      "inLanguage": "es-CL"
+    }
+  }
+}

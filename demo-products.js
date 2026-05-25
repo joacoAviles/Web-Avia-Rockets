@@ -2,6 +2,10 @@ function getProducts() {
   return Array.isArray(window.AVIA_PRODUCTS) ? window.AVIA_PRODUCTS : [];
 }
 
+function setProducts(products) {
+  if (Array.isArray(products) && products.length) window.AVIA_PRODUCTS = products;
+}
+
 function renderDemoSelector(products, activeId) {
   return products.map((product) => `<button class="demo-product-tab ${product.id === activeId ? "is-active" : ""}" type="button" data-product-id="${product.id}"><span>${product.label}</span><small>${product.short}</small></button>`).join("");
 }
@@ -21,7 +25,11 @@ function renderProduct(product) {
   if (text) text.textContent = product.description;
 }
 
-function setupDemoProducts() {
+async function setupDemoProducts() {
+  if (window.aviaLoadProducts) {
+    const apiProducts = await window.aviaLoadProducts();
+    setProducts(apiProducts);
+  }
   const products = getProducts();
   if (!products.length) return;
   const selector = document.getElementById("beta-product-selector");

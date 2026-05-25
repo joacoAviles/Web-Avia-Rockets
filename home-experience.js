@@ -2,6 +2,10 @@ function aviaHomeProducts(){ return Array.isArray(window.AVIA_PRODUCTS) ? window
 
 function aviaClear(node){ while(node && node.firstChild) node.removeChild(node.firstChild); }
 
+function aviaSetHomeProducts(products){
+  if (Array.isArray(products) && products.length) window.AVIA_PRODUCTS = products;
+}
+
 function aviaHomeSelect(productId){
   var products = aviaHomeProducts();
   var product = products.find(function(item){ return item.id === productId; }) || products[0];
@@ -32,7 +36,7 @@ function aviaHomeSelect(productId){
   }
 }
 
-function aviaHomeSetup(){
+function aviaHomeRenderSelector(){
   var products = aviaHomeProducts();
   var selector = document.getElementById('home-product-selector');
   if (!products.length || !selector) return;
@@ -51,6 +55,15 @@ function aviaHomeSetup(){
     button.addEventListener('click', function(){ aviaHomeSelect(product.id); });
     selector.appendChild(button);
   });
+  aviaHomeSelect(products[0].id);
+}
+
+async function aviaHomeSetup(){
+  if (window.aviaLoadProducts) {
+    var apiProducts = await window.aviaLoadProducts();
+    aviaSetHomeProducts(apiProducts);
+  }
+  aviaHomeRenderSelector();
   var logos = document.getElementById('company-logo-strip');
   if (logos && Array.isArray(window.AVIA_COMPANY_LOGOS)) {
     aviaClear(logos);
@@ -60,7 +73,6 @@ function aviaHomeSetup(){
       logos.appendChild(span);
     });
   }
-  aviaHomeSelect(products[0].id);
 }
 
 function aviaParseNumber(text){

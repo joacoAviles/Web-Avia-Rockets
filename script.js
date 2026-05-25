@@ -1,8 +1,6 @@
 const API_BASE_URL = (() => {
   if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
-  const host = window.location.hostname;
-  if (host === "localhost" || host === "127.0.0.1" || host === "192.168.68.52") return "http://192.168.68.52:18000";
-  return "https://api.aviarockets.cl";
+  return "https://aviarockets.cl";
 })();
 
 const TOKEN_KEY = "avia_auth_token";

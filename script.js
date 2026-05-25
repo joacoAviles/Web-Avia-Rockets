@@ -86,7 +86,21 @@ function clearSession() {
   localStorage.removeItem(USER_KEY);
 }
 
+async function logoutSession() {
+  if (window.aviaLogout) {
+    await window.aviaLogout();
+    return;
+  }
+  try {
+    await apiFetch("/api/auth/logout", { method: "POST" });
+  } catch (_) {
+  } finally {
+    clearSession();
+  }
+}
+
 async function apiFetch(path, options = {}) {
+  if (window.aviaApiFetch) return window.aviaApiFetch(path, options);
   const headers = new Headers(options.headers || {});
   headers.set("Accept", "application/json");
   if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
@@ -295,8 +309,8 @@ function setupLogin() {
   const logoutButton = document.getElementById("logout-button");
 
   if (logoutButton) {
-    logoutButton.addEventListener("click", () => {
-      clearSession();
+    logoutButton.addEventListener("click", async () => {
+      await logoutSession();
       showLogin();
       const grid = document.getElementById("causes-grid");
       if (grid) grid.innerHTML = "";

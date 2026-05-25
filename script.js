@@ -104,15 +104,31 @@ async function apiFetch(path, options = {}) {
 }
 
 function normalizeServiceSlug(slug) {
-  const map = { pdlju: "pdlju", fleet: "fleet", custom: "custom", automatizacion: "custom", datos: "custom", "web-saas": "custom", "integraciones-api": "custom" };
+  const map = {
+    ops: "ops",
+    legal: "legal",
+    flota: "flota",
+    fleet: "flota",
+    intelligence: "intelligence",
+    labs: "labs",
+    lab: "labs",
+    api: "api",
+    custom: "labs",
+    pdlju: "legal",
+    automatizacion: "ops",
+    datos: "intelligence",
+    "web-saas": "labs",
+    "integraciones-api": "api"
+  };
   return map[slug] || slug;
 }
 
 function renderServices(services) {
   if (!Array.isArray(services) || services.length === 0) return;
-  const primary = ["pdlju", "fleet", "custom"];
-  const selected = primary.map((slug) => services.find((service) => service.slug === slug)).filter(Boolean);
-  const fallback = selected.length >= 3 ? selected : services.slice(0, 3);
+  const normalizedServices = services.map((service) => ({ ...service, normalizedSlug: normalizeServiceSlug(service.slug) }));
+  const primary = ["ops", "intelligence", "labs"];
+  const selected = primary.map((slug) => normalizedServices.find((service) => service.normalizedSlug === slug)).filter(Boolean);
+  const fallback = selected.length >= 3 ? selected : normalizedServices.slice(0, 3);
   const cards = document.querySelectorAll(".business-card");
   fallback.slice(0, cards.length).forEach((service, index) => {
     const card = cards[index];
@@ -121,14 +137,14 @@ function renderServices(services) {
     const cta = card.querySelector("a.btn");
     if (title) title.textContent = service.name || title.textContent;
     if (text) text.textContent = service.full_description || service.short_description || text.textContent;
-    if (cta) cta.dataset.serviceSlug = normalizeServiceSlug(service.slug);
+    if (cta) cta.dataset.serviceSlug = service.normalizedSlug;
   });
   const interestSelect = document.getElementById("interest");
   if (interestSelect) {
     interestSelect.innerHTML = "";
-    fallback.forEach((service) => {
+    normalizedServices.forEach((service) => {
       const option = document.createElement("option");
-      option.value = normalizeServiceSlug(service.slug);
+      option.value = service.normalizedSlug;
       option.textContent = service.name;
       interestSelect.appendChild(option);
     });

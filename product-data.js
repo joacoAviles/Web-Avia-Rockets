@@ -101,3 +101,78 @@ window.renderAviaProductPanel = function renderAviaProductPanel(product, options
       </div>
     </article>`;
 };
+
+window.AVIA_API_BASE_URL_RESOLVED = (() => {
+  if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
+  return "https://aviarockets.cl";
+})();
+
+window.aviaNormalizeProductSlug = function aviaNormalizeProductSlug(slug) {
+  const map = {
+    ops: "legal",
+    legal: "legal",
+    "ops-legal": "legal",
+    pdlju: "legal",
+    flota: "flota",
+    fleet: "flota",
+    intelligence: "intelligence",
+    datos: "intelligence",
+    labs: "lab",
+    lab: "lab",
+    custom: "lab",
+    api: "api",
+    "integraciones-api": "api"
+  };
+  return map[slug] || slug;
+};
+
+window.aviaApiFetch = async function aviaApiFetch(path, options = {}) {
+  const headers = new Headers(options.headers || {});
+  headers.set("Accept", "application/json");
+  if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  const token = localStorage.getItem("avia_auth_token");
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const response = await fetch(`${window.AVIA_API_BASE_URL_RESOLVED}${path}`, { ...options, headers });
+  let data = null;
+  try { data = await response.json(); } catch (_) { data = null; }
+  if (!response.ok) throw new Error(data?.detail || data?.message || `Error API ${response.status}`);
+  return data;
+};
+
+window.aviaLoadProducts = async function aviaLoadProducts() {
+  try {
+    const services = await window.aviaApiFetch("/api/products");
+    if (!Array.isArray(services) || !services.length) return window.AVIA_PRODUCTS;
+    const products = services.map((service) => {
+      const id = window.aviaNormalizeProductSlug(service.slug);
+      const fallback = window.AVIA_PRODUCTS.find((product) => product.id === id) || window.AVIA_PRODUCTS[0];
+      return {
+        ...fallback,
+        id,
+        label: service.name || fallback.label,
+        short: service.short_description || fallback.short,
+        title: service.name || fallback.title,
+        headline: service.short_description || fallback.headline,
+        description: service.full_description || service.short_description || fallback.description,
+        apiServiceId: service.id,
+        apiSlug: service.slug,
+        isActive: service.is_active
+      };
+    });
+    window.AVIA_PRODUCTS_FROM_API = products;
+    return products;
+  } catch (error) {
+    console.warn("No se pudieron cargar productos desde la API", error);
+    return window.AVIA_PRODUCTS;
+  }
+};
+
+window.aviaLogout = async function aviaLogout() {
+  try {
+    await window.aviaApiFetch("/api/auth/logout", { method: "POST" });
+  } catch (_) {
+  } finally {
+    localStorage.removeItem("avia_auth_token");
+    localStorage.removeItem("avia_auth_user");
+  }
+};

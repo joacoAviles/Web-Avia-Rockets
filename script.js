@@ -1,6 +1,6 @@
 const API_BASE_URL = (() => {
   if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
-  return "https://aviarockets.cl";
+  return "https://api.aviarockets.cl";
 })();
 
 const TOKEN_KEY = "avia_auth_token";
@@ -87,10 +87,6 @@ function clearSession() {
 }
 
 async function logoutSession() {
-  if (window.aviaLogout) {
-    await window.aviaLogout();
-    return;
-  }
   try {
     await apiFetch("/api/auth/logout", { method: "POST" });
   } catch (_) {
@@ -100,7 +96,6 @@ async function logoutSession() {
 }
 
 async function apiFetch(path, options = {}) {
-  if (window.aviaApiFetch) return window.aviaApiFetch(path, options);
   const headers = new Headers(options.headers || {});
   headers.set("Accept", "application/json");
   if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");

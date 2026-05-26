@@ -1,28 +1,53 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AVIA Rockets | Beta productos</title>
-    <meta name="description" content="Versiones beta internas de Legal, Flota, Intelligence, API y Lab." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon-rect.svg?v=2026-avia-rect" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="beta-products.css" />
-  </head>
-  <body data-page="beta-products">
-    <header class="site-header"><div class="container navbar"><a class="brand" href="index.html"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button><nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="index.html#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><button class="lang-toggle" id="lang-toggle" type="button">EN</button><a class="btn btn-primary btn-nav" href="login.html">Log In</a></nav></div></header>
-    <main>
-      <section class="beta-hero"><div class="container beta-grid"><div><p class="eyebrow">Beta interna</p><h1>Productos reales antes de mostrarlos en el home.</h1><p>Esta zona centraliza las versiones beta de Legal, Flota, Intelligence, API y Lab. El home usa la misma definición visual para que sus demostraciones no queden desalineadas.</p><div class="beta-selector" id="beta-product-selector"></div></div><div id="beta-product-view"></div></div></section>
-      <section class="section beta-guide-section"><div class="container beta-guide-grid"><div><p class="eyebrow">Test guiado</p><h2 id="beta-product-title">Producto</h2><p id="beta-product-text">Selecciona un producto para revisar su flujo beta.</p></div><ol class="guided-steps" id="beta-guided-steps"></ol></div></section>
-    </main>
-    <footer class="site-footer footer-clean"></footer>
-    <script src="api-config.js"></script>
-    <script src="product-data.js"></script>
-    <script src="demo-products.js"></script>
-    <script src="script.js"></script>
-    <script src="footer-standard.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AVIA Rockets | Home productos</title>
+<meta name="description" content="Home de productos contratados AVIA Rockets con configuración y pruebas API para usuarios admin." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon-rect.svg?v=2026-avia-rect" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="beta-products.css" />
+<style>
+.app-shell{min-height:100vh;padding:6rem 0 3rem;background:radial-gradient(circle at 10% 10%,rgba(10,108,255,.18),transparent 28%),rgba(3,10,22,.98)}
+.app-layout{display:grid;grid-template-columns:310px 1fr;gap:1rem;align-items:start}.app-sidebar,.app-main-card,.app-admin-card{border:1px solid rgba(134,176,255,.18);border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));box-shadow:0 24px 70px rgba(0,0,0,.28)}.app-sidebar{padding:1rem;position:sticky;top:6rem}.app-user-box{display:grid;gap:.35rem;padding:.9rem;border-radius:18px;background:rgba(255,255,255,.045);margin-bottom:1rem}.app-user-box small,.app-stat small,.app-config-row span{color:var(--muted)}.app-user-box strong{word-break:break-all}.app-product-menu{display:grid;gap:.65rem}.app-product-button{width:100%;border:1px solid rgba(134,176,255,.14);border-radius:18px;background:rgba(255,255,255,.035);color:var(--text);text-align:left;padding:.8rem;display:grid;grid-template-columns:44px 1fr;gap:.1rem .7rem;cursor:pointer}.app-product-button strong{grid-row:1/3;display:grid;place-items:center;border-radius:14px;background:rgba(10,108,255,.18);color:#dfeaff}.app-product-button span{font-weight:800}.app-product-button small{color:var(--muted);line-height:1.25}.app-product-button.is-active{border-color:rgba(71,163,255,.75);background:rgba(10,108,255,.14)}.app-main-card,.app-admin-card{padding:1.2rem}.app-topline{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem}.app-topline h1{margin:.25rem 0;font-size:clamp(2rem,4vw,3.6rem)}.app-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin:1rem 0}.app-stat{border:1px solid rgba(134,176,255,.14);border-radius:18px;background:rgba(255,255,255,.035);padding:.9rem}.app-stat strong{display:block;font-size:1.45rem}.app-product-meta{display:flex;gap:.55rem;flex-wrap:wrap;margin:.85rem 0}.app-product-meta span{border:1px solid rgba(134,176,255,.18);border-radius:999px;padding:.4rem .7rem;color:var(--muted-2);background:rgba(255,255,255,.035)}.app-config-grid{display:grid;gap:.55rem;margin-top:1rem}.app-config-row{display:flex;justify-content:space-between;gap:1rem;border:1px solid rgba(134,176,255,.12);border-radius:14px;padding:.75rem;background:rgba(255,255,255,.025)}.app-admin-card{margin-top:1rem}.app-admin-form{display:grid;grid-template-columns:220px 1fr auto;gap:.7rem;align-items:center}.app-admin-form select,.app-admin-form input{border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.78rem}.app-query-output{white-space:pre-wrap;overflow:auto;max-height:340px;margin-top:1rem;border:1px solid rgba(134,176,255,.14);border-radius:16px;background:rgba(0,0,0,.22);padding:1rem;color:#d8e6ff}.app-error{border:1px solid rgba(255,90,90,.45);border-radius:16px;padding:1rem;background:rgba(255,90,90,.08);color:#ffd2d2;margin-bottom:1rem}@media(max-width:900px){.app-layout{grid-template-columns:1fr}.app-sidebar{position:static}.app-admin-form{grid-template-columns:1fr}.app-stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="app-home">
+<header class="site-header"></header>
+<main class="app-shell">
+<div class="container">
+<div id="app-error" class="app-error" hidden></div>
+<div class="app-layout">
+<aside class="app-sidebar">
+<div class="app-user-box"><small>Usuario loggeado</small><strong id="app-user-email">Cargando...</strong><small>Rol: <span id="app-user-role">-</span></small><button class="btn btn-secondary" id="app-logout-button" type="button">Cerrar sesión</button></div>
+<p class="eyebrow">Productos contratados</p>
+<div class="app-product-menu" id="app-product-menu"></div>
+</aside>
+<section>
+<article class="app-main-card">
+<div class="app-topline"><div><p class="eyebrow">Home de productos</p><h1 id="app-product-title">Cargando producto</h1><p id="app-product-description">Preparando configuración.</p></div><a class="btn btn-secondary" href="index.html">Volver al sitio</a></div>
+<div class="app-stats"><div class="app-stat"><small>Productos</small><strong id="app-products-count">0</strong></div><div class="app-stat"><small>Causas</small><strong id="app-causes-count">0</strong></div><div class="app-stat"><small>Estado</small><strong id="app-product-status">-</strong></div></div>
+<div class="app-product-meta"><span>Slug: <strong id="app-product-slug">-</strong></span><span>Rol: <strong id="app-product-role">-</strong></span></div>
+<h2>Configuración</h2>
+<div class="app-config-grid" id="app-product-config"></div>
+</article>
+<article class="app-admin-card" id="app-admin-panel" hidden>
+<p class="eyebrow">Admin product query</p><h2>Testear producto desde la web</h2><p>Queries permitidas: <strong>status</strong>, <strong>counts</strong>, <strong>users</strong>, <strong>contacts</strong>, <strong>leads</strong>.</p>
+<div class="app-admin-form"><select id="admin-query-product"></select><input id="admin-query-text" type="text" value="status" placeholder="status, counts, users, contacts, leads" /><button class="btn btn-primary" id="admin-query-button" type="button">Ejecutar</button></div>
+<pre class="app-query-output" id="admin-query-output">Resultado pendiente.</pre>
+</article>
+</section>
+</div>
+</div>
+</main>
+<footer class="site-footer footer-clean"></footer>
+<script src="api-config.js"></script>
+<script src="header-standard.js"></script>
+<script src="app-home.js"></script>
+<script src="footer-standard.js"></script>
+</body>
 </html>

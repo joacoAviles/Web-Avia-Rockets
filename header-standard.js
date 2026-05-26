@@ -9,6 +9,17 @@ function aviaApplyStandardFavicon(){
   document.head.appendChild(favicon);
 }
 
+function aviaGetLoggedUserLabel(){
+  try {
+    var raw = localStorage.getItem('avia_auth_user');
+    if (!raw) return null;
+    var user = JSON.parse(raw);
+    return user && (user.email || user.full_name) ? (user.email || user.full_name) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 function aviaApplyStandardHeader(){
   aviaApplyStandardFavicon();
 
@@ -18,7 +29,10 @@ function aviaApplyStandardHeader(){
     document.body.insertBefore(header, document.body.firstChild);
   }
   header.className = 'site-header';
-  header.innerHTML = '<div class="container navbar"><a class="brand" href="index.html" aria-label="AVIA Rockets home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button><nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="index.html#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button><a class="btn btn-primary btn-nav" href="login.html">Log In</a></nav></div>';
+  var userLabel = aviaGetLoggedUserLabel();
+  var loginLabel = userLabel || 'Log In';
+  var loginHref = userLabel ? 'app-beta.html' : 'login.html';
+  header.innerHTML = '<div class="container navbar"><a class="brand" href="index.html" aria-label="AVIA Rockets home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button><nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="index.html#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button><a class="btn btn-primary btn-nav" href="'+ loginHref +'" title="'+ loginLabel +'">'+ loginLabel +'</a></nav></div>';
 
   var navToggle = header.querySelector('#nav-toggle');
   var navPanel = header.querySelector('#nav-panel');

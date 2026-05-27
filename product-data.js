@@ -104,7 +104,7 @@ window.renderAviaProductPanel = function renderAviaProductPanel(product, options
 
 window.AVIA_API_BASE_URL_RESOLVED = (() => {
   if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
-  return "https://aviarockets.cl";
+  return "https://api.aviarockets.cl";
 })();
 
 window.aviaNormalizeProductSlug = function aviaNormalizeProductSlug(slug) {

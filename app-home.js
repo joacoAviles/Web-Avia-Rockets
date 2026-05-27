@@ -1,9 +1,18 @@
-const AVIA_APP_API = "https://api.aviarockets.cl";
+const AVIA_APP_API = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || "https://api.aviarockets.cl").replace(/\/$/, "");
 const AVIA_TOKEN_KEY = "avia_auth_token";
 const AVIA_USER_KEY = "avia_auth_user";
 
 function appGetToken() {
   return localStorage.getItem(AVIA_TOKEN_KEY);
+}
+
+function appGetStoredUser() {
+  try {
+    const raw = localStorage.getItem(AVIA_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    return null;
+  }
 }
 
 function appClearSession() {
@@ -26,82 +35,119 @@ async function appFetch(path, options = {}) {
 
 function appSetText(id, value) {
   const node = document.getElementById(id);
-  if (node) node.textContent = value;
+  if (node) node.textContent = value ?? "-";
 }
 
 function appNormalizeSlug(slug) {
+  if (window.aviaNormalizeProductSlug) return window.aviaNormalizeProductSlug(slug);
   const map = {
-    automatizacion: "ops",
+    automatizacion: "legal",
+    ops: "legal",
     datos: "intelligence",
-    "web-saas": "labs",
+    "web-saas": "lab",
+    labs: "lab",
     "integraciones-api": "api",
     pdlju: "legal",
     fleet: "flota",
-    custom: "labs"
+    custom: "lab"
   };
   return map[slug] || slug;
 }
 
 function appProductIcon(slug) {
   const normalized = appNormalizeSlug(slug);
-  const map = { legal: "LG", flota: "FL", intelligence: "IN", api: "AP", labs: "LB", ops: "OP" };
-  return map[normalized] || slug.slice(0, 2).toUpperCase();
+  const map = { legal: "LG", flota: "FL", intelligence: "IN", api: "AP", lab: "LB", labs: "LB", ops: "OP" };
+  return map[normalized] || String(slug || "--").slice(0, 2).toUpperCase();
 }
 
-function appProductConfig(product) {
+function appProductName(product) {
+  return product.name || product.title || product.label || "Producto AVIA";
+}
+
+function appProductDescription(product) {
+  return product.full_description || product.description || product.short_description || product.headline || "Producto activo.";
+}
+
+function appProductSlug(product) {
+  return product.slug || product.apiSlug || product.id;
+}
+
+function appProductConfig(product, user) {
   return [
-    ["Producto", product.name],
-    ["Slug", product.slug],
-    ["Estado", product.is_active ? "Activo" : "Inactivo"],
-    ["Descripción corta", product.short_description || "Sin descripción"],
-    ["ID API", String(product.id)]
+    ["Producto", appProductName(product)],
+    ["Slug", appProductSlug(product)],
+    ["Estado", product.is_active === false ? "Inactivo" : "Activo / disponible"],
+    ["Descripción corta", product.short_description || product.short || product.headline || "Sin descripción"],
+    ["Usuario", user?.name || user?.full_name || user?.email || "Usuario"],
+    ["Fuente visual", "product-data.js / Home"]
   ];
+}
+
+function appMenuProductTemplate(product, selectedSlug) {
+  const slug = appProductSlug(product);
+  const active = slug === selectedSlug ? " is-active" : "";
+  return `<button class="app-product-button${active}" type="button" data-product-slug="${slug}"><strong>${appProductIcon(slug)}</strong><span>${appProductName(product)}</span><small>${product.short || product.short_description || "Producto AVIA"}</small></button>`;
 }
 
 function appRenderProductMenu(products, selectedSlug) {
   const menu = document.getElementById("app-product-menu");
   if (!menu) return;
-  menu.innerHTML = products.map((product) => {
-    const active = product.slug === selectedSlug ? " is-active" : "";
-    return `<button class="app-product-button${active}" type="button" data-product-slug="${product.slug}"><strong>${appProductIcon(product.slug)}</strong><span>${product.name}</span><small>${product.short_description || "Producto contratado"}</small></button>`;
-  }).join("");
+  menu.innerHTML = products.map((product) => appMenuProductTemplate(product, selectedSlug)).join("");
 }
 
 function appRenderProductDetail(product, user) {
   if (!product) return;
-  appSetText("app-product-title", product.name);
-  appSetText("app-product-description", product.full_description || product.short_description || "Producto activo.");
-  appSetText("app-product-status", product.is_active ? "Activo" : "Inactivo");
-  appSetText("app-product-slug", product.slug);
-  appSetText("app-product-role", user.role);
+  const slug = appProductSlug(product);
+  appSetText("app-view-label", slug === "config" ? "Configuración" : "Producto seleccionado");
+  appSetText("app-product-title", appProductName(product));
+  appSetText("app-product-description", appProductDescription(product));
+  appSetText("app-product-status", product.is_active === false ? "Inactivo" : "Activo");
+  appSetText("app-product-slug", slug);
+  appSetText("app-product-role", user?.role || "user");
+
+  const demo = document.getElementById("app-product-demo");
+  if (demo) {
+    if (window.renderAviaProductPanel && slug !== "config") {
+      demo.hidden = false;
+      demo.innerHTML = window.renderAviaProductPanel(product, { compact: false });
+    } else {
+      demo.hidden = true;
+      demo.innerHTML = "";
+    }
+  }
 
   const config = document.getElementById("app-product-config");
   if (config) {
-    config.innerHTML = appProductConfig(product).map(([label, value]) => `<div class="app-config-row"><span>${label}</span><strong>${value}</strong></div>`).join("");
+    config.innerHTML = appProductConfig(product, user).map(([label, value]) => `<div class="app-config-row"><span>${label}</span><strong>${value}</strong></div>`).join("");
   }
 
   const queryProduct = document.getElementById("admin-query-product");
-  if (queryProduct) queryProduct.value = product.slug;
+  if (queryProduct && slug !== "config") queryProduct.value = slug;
 }
 
-function appRenderStats(data) {
-  appSetText("app-user-email", data.user.email);
-  appSetText("app-products-count", String(data.stats.products_count || data.products.length));
-  appSetText("app-causes-count", String(data.stats.causes_count || 0));
-  appSetText("app-user-role", data.user.role);
+function appRenderUser(user) {
+  const name = user?.name || user?.full_name || user?.email || "Usuario";
+  appSetText("app-user-name", name);
+  appSetText("app-user-email", user?.email || "Sesión local");
+  appSetText("app-user-role", user?.role || "user");
+}
+
+function appRenderStats(products) {
+  appSetText("app-products-count", String(products.length));
+  appSetText("app-demo-source", "Home");
 }
 
 function appRenderAdminPanel(user, products) {
   const panel = document.getElementById("app-admin-panel");
   if (!panel) return;
-  if (user.role !== "admin") {
+  if ((user?.role || "user") !== "admin") {
     panel.hidden = true;
     return;
   }
   panel.hidden = false;
   const select = document.getElementById("admin-query-product");
   if (select) {
-    select.innerHTML = products.map((product) => `<option value="${product.slug}">${product.name}</option>`).join("");
+    select.innerHTML = products.map((product) => `<option value="${appProductSlug(product)}">${appProductName(product)}</option>`).join("");
   }
 }
 
@@ -135,42 +181,97 @@ async function appLogout() {
   }
 }
 
+function appGetFallbackProducts() {
+  return Array.isArray(window.AVIA_PRODUCTS) ? window.AVIA_PRODUCTS : [];
+}
+
+async function appLoadCatalogProducts() {
+  if (window.aviaLoadProducts) {
+    const fromLoader = await window.aviaLoadProducts();
+    if (Array.isArray(fromLoader) && fromLoader.length) return fromLoader;
+  }
+  return appGetFallbackProducts();
+}
+
+async function appLoadDashboardSafely() {
+  try {
+    return await appFetch("/api/dashboard");
+  } catch (error) {
+    console.warn("No se pudo cargar /api/dashboard. Se usará catálogo local.", error);
+    return null;
+  }
+}
+
+function appSetupSidebarToggle() {
+  const layout = document.getElementById("app-layout");
+  const toggle = document.getElementById("app-sidebar-toggle");
+  if (!layout || !toggle) return;
+  toggle.addEventListener("click", () => {
+    const compact = layout.classList.toggle("is-compact");
+    toggle.textContent = compact ? "›" : "‹";
+    toggle.setAttribute("aria-label", compact ? "Expandir menú" : "Compactar menú");
+  });
+}
+
 async function appInit() {
   if (!appGetToken()) {
     window.location.href = "login.html?next=app-beta.html";
     return;
   }
 
-  try {
-    const data = await appFetch("/api/dashboard");
-    const products = Array.isArray(data.products) ? data.products : [];
-    if (!products.length) throw new Error("No hay productos activos asociados.");
-    appRenderStats(data);
-    appRenderAdminPanel(data.user, products);
-    let selected = products[0];
-    appRenderProductMenu(products, selected.slug);
-    appRenderProductDetail(selected, data.user);
+  const storedUser = appGetStoredUser() || { name: "Usuario", email: "", role: "user" };
+  appRenderUser(storedUser);
+  appSetupSidebarToggle();
 
-    document.getElementById("app-product-menu")?.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-product-slug]");
-      if (!button) return;
-      const next = products.find((product) => product.slug === button.dataset.productSlug);
-      if (!next) return;
-      selected = next;
-      appRenderProductMenu(products, selected.slug);
-      appRenderProductDetail(selected, data.user);
-    });
+  const dashboard = await appLoadDashboardSafely();
+  const apiProducts = Array.isArray(dashboard?.products) ? dashboard.products : [];
+  const catalogProducts = await appLoadCatalogProducts();
+  const products = catalogProducts.length ? catalogProducts : apiProducts;
 
-    document.getElementById("admin-query-button")?.addEventListener("click", appRunAdminQuery);
-    document.getElementById("app-logout-button")?.addEventListener("click", appLogout);
-  } catch (error) {
-    appClearSession();
+  if (!products.length) {
     const root = document.getElementById("app-error");
     if (root) {
       root.hidden = false;
-      root.textContent = error.message || "No se pudo cargar el home de productos.";
+      root.textContent = "No hay productos disponibles para mostrar.";
     }
+    return;
   }
+
+  const user = dashboard?.user || storedUser;
+  appRenderUser(user);
+  appRenderStats(products);
+  appRenderAdminPanel(user, products);
+
+  let selected = products[0];
+  appRenderProductMenu(products, appProductSlug(selected));
+  appRenderProductDetail(selected, user);
+
+  document.getElementById("app-product-menu")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-product-slug]");
+    if (!button) return;
+    const next = products.find((product) => appProductSlug(product) === button.dataset.productSlug);
+    if (!next) return;
+    selected = next;
+    appRenderProductMenu(products, appProductSlug(selected));
+    appRenderProductDetail(selected, user);
+  });
+
+  document.getElementById("app-config-button")?.addEventListener("click", () => {
+    const configProduct = {
+      id: "config",
+      slug: "config",
+      name: "Configuración",
+      title: "Configuración",
+      description: "Preferencias básicas de la cuenta, sesión y visualización del panel.",
+      short: "Cuenta y preferencias",
+      is_active: true
+    };
+    appRenderProductMenu(products, "");
+    appRenderProductDetail(configProduct, user);
+  });
+
+  document.getElementById("admin-query-button")?.addEventListener("click", appRunAdminQuery);
+  document.getElementById("app-logout-button")?.addEventListener("click", appLogout);
 }
 
 appInit();

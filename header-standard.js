@@ -9,15 +9,19 @@ function aviaApplyStandardFavicon(){
   document.head.appendChild(favicon);
 }
 
-function aviaGetLoggedUserLabel(){
+function aviaGetLoggedUser(){
   try {
     var raw = localStorage.getItem('avia_auth_user');
     if (!raw) return null;
-    var user = JSON.parse(raw);
-    return user && (user.email || user.full_name) ? (user.email || user.full_name) : null;
+    return JSON.parse(raw);
   } catch (_) {
     return null;
   }
+}
+
+function aviaClearSession(){
+  localStorage.removeItem('avia_auth_token');
+  localStorage.removeItem('avia_auth_user');
 }
 
 function aviaApplyStandardHeader(){
@@ -29,17 +33,28 @@ function aviaApplyStandardHeader(){
     document.body.insertBefore(header, document.body.firstChild);
   }
   header.className = 'site-header';
-  var userLabel = aviaGetLoggedUserLabel();
-  var loginLabel = userLabel || 'Log In';
-  var loginHref = userLabel ? 'app-beta.html' : 'login.html';
-  header.innerHTML = '<div class="container navbar"><a class="brand" href="index.html" aria-label="AVIA Rockets home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button><nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="index.html#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button><a class="btn btn-primary btn-nav" href="'+ loginHref +'" title="'+ loginLabel +'">'+ loginLabel +'</a></nav></div>';
+  var user = aviaGetLoggedUser();
+  var isLogged = Boolean(user);
+  var loginLabel = isLogged ? 'Cerrar sesión' : 'Log In';
+  var loginHref = isLogged ? 'login.html' : 'login.html';
+  var loginAction = isLogged ? ' data-avia-logout="true"' : '';
+  header.innerHTML = '<div class="container navbar"><a class="brand" href="index.html" aria-label="AVIA Rockets home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button><nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="index.html#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button><a class="btn btn-primary btn-nav" href="'+ loginHref +'" title="'+ loginLabel +'"'+ loginAction +'>'+ loginLabel +'</a></nav></div>';
 
   var navToggle = header.querySelector('#nav-toggle');
   var navPanel = header.querySelector('#nav-panel');
   var langToggle = header.querySelector('#lang-toggle');
+  var logoutLink = header.querySelector('[data-avia-logout="true"]');
   var currentLang = localStorage.getItem('avia-lang') || document.documentElement.lang || 'es';
   document.documentElement.lang = currentLang === 'en' ? 'en' : 'es';
   if (langToggle) langToggle.textContent = document.documentElement.lang === 'es' ? 'EN' : 'ES';
+
+  if (logoutLink) {
+    logoutLink.addEventListener('click', function(event){
+      event.preventDefault();
+      aviaClearSession();
+      window.location.href = 'login.html';
+    });
+  }
 
   if (navToggle && navPanel) {
     navToggle.addEventListener('click', function(){

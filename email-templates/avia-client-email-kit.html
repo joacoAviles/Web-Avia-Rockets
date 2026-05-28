@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVIA Rockets | Email templates</title>
+  <style>
+    body{margin:0;background:#071426;color:#eaf1ff;font-family:Inter,Arial,sans-serif;padding:32px}.preview-wrap{max-width:980px;margin:0 auto}.preview-title{margin:0 0 10px;font-size:34px}.preview-note{color:#9fb0c9;line-height:1.6;margin:0 0 28px}.preview-card{margin:0 0 28px;border:1px solid rgba(134,176,255,.18);border-radius:24px;overflow:hidden;background:#0b1a30}.preview-label{padding:14px 18px;background:#0f213c;color:#9fc4ff;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px}.email-frame{background:#eef3fb;padding:28px 12px}.email-frame table{font-family:Arial,sans-serif}
+  </style>
+</head>
+<body>
+<div class="preview-wrap">
+  <h1 class="preview-title">AVIA Rockets · kit de correos HTML</h1>
+  <p class="preview-note">Plantillas transaccionales con estructura conservadora para Gmail, Outlook y móviles. Para producción, reemplazar variables tipo <strong>{{customer_name}}</strong>, <strong>{{cta_url}}</strong> y <strong>{{product_name}}</strong>.</p>
+
+  <section class="preview-card">
+    <div class="preview-label">1. Bienvenida / cuenta creada</div>
+    <div class="email-frame">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#eef3fb;margin:0;padding:0;">
+        <tr><td align="center" style="padding:28px 12px;">
+          <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background:#071426;border-radius:24px;overflow:hidden;color:#eaf1ff;">
+            <tr><td style="padding:28px 30px 18px;background:#08182d;border-bottom:1px solid #1b355d;">
+              <table role="presentation" width="100%"><tr><td style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:.04em;">AVIA <span style="color:#47a3ff;">ROCKETS</span></td><td align="right" style="font-size:12px;color:#9fb0c9;">Cuenta creada</td></tr></table>
+            </td></tr>
+            <tr><td style="padding:34px 30px 12px;">
+              <p style="margin:0 0 12px;color:#47a3ff;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Bienvenido</p>
+              <h1 style="margin:0 0 14px;font-size:32px;line-height:1.08;color:#ffffff;">{{customer_name}}, tu operación digital ya tiene base.</h1>
+              <p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#b8c7dc;">Creamos tu cuenta en AVIA Rockets. Desde ahora podrás revisar productos, configurar accesos y probar automatizaciones operacionales desde el panel.</p>
+              <table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#0a6cff" style="border-radius:14px;"><a href="{{cta_url}}" style="display:inline-block;padding:14px 22px;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;">Entrar al panel</a></td></tr></table>
+            </td></tr>
+            <tr><td style="padding:18px 30px 30px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d203a;border:1px solid #1f3b64;border-radius:18px;"><tr><td style="padding:18px;color:#dbe8ff;font-size:14px;line-height:1.55;">Producto inicial: <strong>{{product_name}}</strong><br>Correo de acceso: <strong>{{customer_email}}</strong><br>Estado: <strong>Activo</strong></td></tr></table>
+            </td></tr>
+            <tr><td style="padding:20px 30px;background:#061120;color:#7f91aa;font-size:12px;line-height:1.55;">AVIA Rockets · Automatización, datos y sistemas internos. Si no solicitaste esta cuenta, responde este correo o escribe a {{support_email}}.</td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="preview-card">
+    <div class="preview-label">2. Verificación de correo</div>
+    <div class="email-frame">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#eef3fb;margin:0;padding:0;"><tr><td align="center" style="padding:28px 12px;">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background:#ffffff;border-radius:24px;overflow:hidden;color:#0b1728;">
+          <tr><td style="padding:28px 30px;border-bottom:1px solid #e6edf6;"><strong style="font-size:22px;color:#071426;">AVIA <span style="color:#0a6cff;">ROCKETS</span></strong></td></tr>
+          <tr><td style="padding:34px 30px 10px;"><p style="margin:0 0 10px;color:#0a6cff;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Verificación</p><h1 style="margin:0 0 14px;font-size:30px;line-height:1.12;color:#071426;">Confirma tu correo para activar la cuenta.</h1><p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#44546a;">Necesitamos verificar que este correo pertenece a ti antes de activar accesos y notificaciones operacionales.</p><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#0a6cff" style="border-radius:14px;"><a href="{{verification_url}}" style="display:inline-block;padding:14px 22px;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;">Verificar correo</a></td></tr></table></td></tr>
+          <tr><td style="padding:20px 30px 34px;"><p style="margin:0;color:#738197;font-size:13px;line-height:1.55;">El enlace expira en {{expiration_minutes}} minutos. Si el botón no funciona, copia este enlace: <br><span style="color:#0a6cff;word-break:break-all;">{{verification_url}}</span></p></td></tr>
+          <tr><td style="padding:18px 30px;background:#f5f8fc;color:#7a8798;font-size:12px;line-height:1.55;">AVIA Rockets · Seguridad de cuenta</td></tr>
+        </table>
+      </td></tr></table>
+    </div>
+  </section>
+
+  <section class="preview-card">
+    <div class="preview-label">3. Acceso a producto</div>
+    <div class="email-frame">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#eef3fb;margin:0;padding:0;"><tr><td align="center" style="padding:28px 12px;">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background:#071426;border-radius:24px;overflow:hidden;color:#eaf1ff;">
+          <tr><td style="padding:28px 30px 18px;background:#08182d;border-bottom:1px solid #1b355d;"><strong style="font-size:22px;color:#ffffff;">AVIA <span style="color:#47a3ff;">ROCKETS</span></strong></td></tr>
+          <tr><td style="padding:34px 30px 6px;"><p style="margin:0 0 10px;color:#52d983;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Producto habilitado</p><h1 style="margin:0 0 14px;font-size:31px;line-height:1.12;color:#ffffff;">Ya tienes acceso a {{product_name}}.</h1><p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#b8c7dc;">El producto quedó disponible en tu panel. Puedes abrirlo desde el menú lateral, revisar configuración y ejecutar pruebas permitidas según tu rol.</p></td></tr>
+          <tr><td style="padding:0 30px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:16px;background:#0d203a;border:1px solid #1f3b64;border-radius:18px;color:#dbe8ff;font-size:14px;line-height:1.6;">Producto: <strong>{{product_name}}</strong><br>Rol: <strong>{{user_role}}</strong><br>Estado: <strong>Disponible</strong></td></tr></table></td></tr>
+          <tr><td style="padding:0 30px 34px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#0a6cff" style="border-radius:14px;"><a href="{{product_url}}" style="display:inline-block;padding:14px 22px;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;">Abrir producto</a></td></tr></table></td></tr>
+          <tr><td style="padding:18px 30px;background:#061120;color:#7f91aa;font-size:12px;line-height:1.55;">Este acceso puede cambiar según permisos, suscripción o configuración del administrador.</td></tr>
+        </table>
+      </td></tr></table>
+    </div>
+  </section>
+
+  <section class="preview-card">
+    <div class="preview-label">4. Reporte operativo diario</div>
+    <div class="email-frame">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#eef3fb;margin:0;padding:0;"><tr><td align="center" style="padding:28px 12px;">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background:#ffffff;border-radius:24px;overflow:hidden;color:#0b1728;">
+          <tr><td style="padding:28px 30px;background:#071426;"><table role="presentation" width="100%"><tr><td><strong style="font-size:22px;color:#ffffff;">AVIA <span style="color:#47a3ff;">ROCKETS</span></strong></td><td align="right" style="font-size:12px;color:#9fb0c9;">{{report_date}}</td></tr></table></td></tr>
+          <tr><td style="padding:32px 30px 10px;"><p style="margin:0 0 10px;color:#0a6cff;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Resumen operacional</p><h1 style="margin:0 0 14px;font-size:30px;line-height:1.12;color:#071426;">{{report_title}}</h1><p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#44546a;">Resumen automático de cambios, pendientes y alertas priorizadas.</p></td></tr>
+          <tr><td style="padding:0 30px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td width="33.33%" style="padding:12px;background:#f5f8fc;border:1px solid #e6edf6;"><span style="font-size:12px;color:#738197;">Revisadas</span><br><strong style="font-size:24px;color:#071426;">{{checked_count}}</strong></td><td width="33.33%" style="padding:12px;background:#f5f8fc;border:1px solid #e6edf6;"><span style="font-size:12px;color:#738197;">Cambios</span><br><strong style="font-size:24px;color:#071426;">{{changes_count}}</strong></td><td width="33.33%" style="padding:12px;background:#f5f8fc;border:1px solid #e6edf6;"><span style="font-size:12px;color:#738197;">Alertas</span><br><strong style="font-size:24px;color:#071426;">{{alerts_count}}</strong></td></tr></table></td></tr>
+          <tr><td style="padding:0 30px 24px;"><div style="font-family:Consolas,Monaco,monospace;background:#071426;color:#dbe8ff;border-radius:18px;padding:18px;font-size:13px;line-height:1.65;white-space:pre-wrap;">{{report_body}}</div></td></tr>
+          <tr><td style="padding:0 30px 34px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#0a6cff" style="border-radius:14px;"><a href="{{dashboard_url}}" style="display:inline-block;padding:14px 22px;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;">Ver dashboard</a></td></tr></table></td></tr>
+          <tr><td style="padding:18px 30px;background:#f5f8fc;color:#7a8798;font-size:12px;line-height:1.55;">Reporte automático generado por AVIA Rockets. Revisa fuentes críticas antes de tomar decisiones legales, financieras u operacionales.</td></tr>
+        </table>
+      </td></tr></table>
+    </div>
+  </section>
+
+  <section class="preview-card">
+    <div class="preview-label">5. Pago / suscripción</div>
+    <div class="email-frame">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#eef3fb;margin:0;padding:0;"><tr><td align="center" style="padding:28px 12px;">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background:#ffffff;border-radius:24px;overflow:hidden;color:#0b1728;">
+          <tr><td style="padding:28px 30px;border-bottom:1px solid #e6edf6;"><strong style="font-size:22px;color:#071426;">AVIA <span style="color:#0a6cff;">ROCKETS</span></strong></td></tr>
+          <tr><td style="padding:34px 30px 10px;"><p style="margin:0 0 10px;color:#0a6cff;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">Facturación</p><h1 style="margin:0 0 14px;font-size:30px;line-height:1.12;color:#071426;">{{billing_title}}</h1><p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#44546a;">Detalle de tu plan, estado de pago y próxima acción requerida.</p></td></tr>
+          <tr><td style="padding:0 30px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;"><tr><td style="padding:12px;border-bottom:1px solid #e6edf6;color:#738197;">Plan</td><td align="right" style="padding:12px;border-bottom:1px solid #e6edf6;"><strong>{{plan_name}}</strong></td></tr><tr><td style="padding:12px;border-bottom:1px solid #e6edf6;color:#738197;">Monto</td><td align="right" style="padding:12px;border-bottom:1px solid #e6edf6;"><strong>{{amount}}</strong></td></tr><tr><td style="padding:12px;border-bottom:1px solid #e6edf6;color:#738197;">Estado</td><td align="right" style="padding:12px;border-bottom:1px solid #e6edf6;"><strong>{{payment_status}}</strong></td></tr></table></td></tr>
+          <tr><td style="padding:0 30px 34px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#0a6cff" style="border-radius:14px;"><a href="{{billing_url}}" style="display:inline-block;padding:14px 22px;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;">Ver facturación</a></td></tr></table></td></tr>
+          <tr><td style="padding:18px 30px;background:#f5f8fc;color:#7a8798;font-size:12px;line-height:1.55;">AVIA Rockets · Facturación y suscripciones. Si tienes dudas, escribe a {{support_email}}.</td></tr>
+        </table>
+      </td></tr></table>
+    </div>
+  </section>
+</div>
+</body>
+</html>

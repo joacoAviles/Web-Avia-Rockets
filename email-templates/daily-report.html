@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVIA Rockets | Reporte operativo</title>
+</head>
+<body style="margin:0;padding:0;background:#F3F6FA;font-family:'Space Grotesk','Inter',Arial,sans-serif;color:#071426;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">Reporte operativo AVIA Rockets: cambios, alertas y estado de ejecución.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#F3F6FA;margin:0;padding:0;">
+    <tr><td align="center" style="padding:36px 16px;">
+      <table role="presentation" width="680" cellpadding="0" cellspacing="0" style="width:100%;max-width:680px;background:#FFFFFF;border:1px solid rgba(7,20,38,0.10);border-radius:22px;overflow:hidden;">
+        <tr><td style="padding:28px 32px;background:#071426;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td><img src="https://aviarockets.cl/assets/avia-rockets-logo.svg" width="42" height="42" alt="AVIA Rockets" style="display:inline-block;vertical-align:middle;border:0;border-radius:10px;margin-right:12px;"><span style="display:inline-block;vertical-align:middle;font-size:18px;line-height:1;font-weight:700;letter-spacing:.02em;color:#FFFFFF;">AVIA ROCKETS</span></td>
+            <td align="right" style="font-size:12px;line-height:1.4;color:#8A95A6;text-transform:uppercase;letter-spacing:.12em;font-weight:700;">{{report_date}}</td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="padding:34px 32px 8px;">
+          <p style="margin:0 0 12px;font-size:12px;line-height:1.4;color:#0A6CFF;text-transform:uppercase;letter-spacing:.14em;font-weight:700;">Operational clarity</p>
+          <h1 style="margin:0 0 16px;font-size:32px;line-height:1.1;font-weight:700;color:#071426;letter-spacing:-.02em;">{{report_title}}</h1>
+          <p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:#4E5C6F;">Resumen automático de ejecución, cambios detectados y alertas que requieren revisión.</p>
+        </td></tr>
+        <tr><td style="padding:0 32px 24px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0 0;">
+            <tr>
+              <td width="33.33%" style="padding:16px;background:#F7F9FC;border:1px solid rgba(7,20,38,0.10);border-radius:18px 0 0 18px;"><span style="display:block;font-size:12px;color:#8A95A6;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Revisadas</span><strong style="display:block;margin-top:6px;font-size:26px;color:#071426;">{{checked_count}}</strong></td>
+              <td width="33.33%" style="padding:16px;background:#F7F9FC;border-top:1px solid rgba(7,20,38,0.10);border-bottom:1px solid rgba(7,20,38,0.10);"><span style="display:block;font-size:12px;color:#8A95A6;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Cambios</span><strong style="display:block;margin-top:6px;font-size:26px;color:#071426;">{{changes_count}}</strong></td>
+              <td width="33.33%" style="padding:16px;background:#F7F9FC;border:1px solid rgba(7,20,38,0.10);border-radius:0 18px 18px 0;"><span style="display:block;font-size:12px;color:#8A95A6;text-transform:uppercase;letter-spacing:.08em;font-weight:700;">Alertas</span><strong style="display:block;margin-top:6px;font-size:26px;color:#071426;">{{alerts_count}}</strong></td>
+            </tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:0 32px 26px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#071426;border-radius:18px;border:1px solid rgba(255,255,255,0.10);">
+            <tr><td style="padding:18px 20px;font-family:Consolas,Monaco,'Courier New',monospace;font-size:13px;line-height:1.7;color:#D8E1EF;white-space:pre-wrap;">{{report_body}}</td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:0 32px 34px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#0A6CFF" style="border-radius:14px;"><a href="{{dashboard_url}}" style="display:inline-block;padding:14px 22px;font-size:15px;line-height:1;color:#FFFFFF;text-decoration:none;font-weight:700;">Ver dashboard</a></td></tr></table></td></tr>
+        <tr><td style="padding:20px 32px;background:#F7F9FC;border-top:1px solid rgba(7,20,38,0.10);font-size:12px;line-height:1.6;color:#8A95A6;">Reporte automático generado por AVIA Rockets. Revisa fuentes críticas antes de tomar decisiones legales, financieras u operacionales.</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

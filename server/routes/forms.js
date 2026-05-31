@@ -18,7 +18,7 @@ const DESTINATIONS = {
     title: 'Nueva postulacion desde AVIA Rockets'
   },
   joaquin_contact: {
-    to: process.env.FORM_TO_JOAQUIN_CONTACT || 'joaquin@aviles.cl',
+    to: process.env.FORM_TO_JOAQUIN_CONTACT || 'keanuavia@gmail.com',
     subject: 'Nuevo contacto desde joaquin.aviles.cl',
     title: 'Nuevo contacto desde joaquin.aviles.cl'
   }

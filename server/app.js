@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { config } from './config.js';
 import healthRoutes from './routes/health.js';
 import leadRoutes from './routes/leads.js';
+import formRoutes from './routes/forms.js';
 import paymentRoutes from './routes/payments.js';
 import subscriptionRoutes from './routes/subscriptions.js';
 import authRoutes from './routes/auth.js';
@@ -35,6 +36,7 @@ app.get('/', (_req, res) => {
     docs: '/api/health',
     features: [
       'lead capture',
+      'form email delivery',
       'authentication',
       'billing profiles (Chile)',
       'payments',
@@ -48,6 +50,7 @@ app.get('/', (_req, res) => {
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
+app.use('/api/forms', formRoutes);
 app.use('/api/billing-profiles', billingProfileRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);

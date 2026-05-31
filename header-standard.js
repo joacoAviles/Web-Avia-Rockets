@@ -5,7 +5,7 @@ function aviaApplyStandardFavicon(){
   var favicon = document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/svg+xml';
-  favicon.href = 'assets/avia-rockets-logo.svg?v=2026-avia-icon';
+  favicon.href = 'assets/avia-rockets-logo.svg';
   document.head.appendChild(favicon);
   var themeColor = document.querySelector('meta[name="theme-color"]');
   if (!themeColor) {

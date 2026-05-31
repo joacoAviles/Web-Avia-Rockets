@@ -30,11 +30,8 @@
 <h1>Trabaja con nosotros</h1>
 <p>Buscamos personas que puedan construir, automatizar, analizar y operar sistemas reales.</p>
 </div>
-<form class="contact-form reveal is-visible" action="https://formsubmit.co/trabajo@aviarockets.cl" method="POST">
-<input type="hidden" name="_captcha" value="false" />
-<input type="hidden" name="_subject" value="Nueva postulación desde AVIA Rockets" />
-<input type="hidden" name="_template" value="table" />
-<input type="hidden" name="_next" value="https://aviarockets.cl/trabaja-con-nosotros.html?enviado=1" />
+<form class="contact-form reveal is-visible" data-api-form data-success-url="/trabaja-con-nosotros.html?enviado=1">
+<input type="hidden" name="form" value="avia_jobs" />
 <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
 <label for="name">Nombre</label>
 <input id="name" name="name" type="text" autocomplete="name" minlength="2" required />
@@ -76,5 +73,6 @@
 <footer class="site-footer footer-clean"></footer>
 <script src="script.js"></script>
 <script src="footer-standard.js"></script>
+<script src="forms-api.js"></script>
 </body>
 </html>

@@ -5,8 +5,15 @@ function aviaApplyStandardFavicon(){
   var favicon = document.createElement('link');
   favicon.rel = 'icon';
   favicon.type = 'image/svg+xml';
-  favicon.href = 'assets/favicon-rect.svg?v=2026-avia-rect';
+  favicon.href = 'assets/avia-rockets-logo.svg?v=2026-avia-icon';
   document.head.appendChild(favicon);
+  var themeColor = document.querySelector('meta[name="theme-color"]');
+  if (!themeColor) {
+    themeColor = document.createElement('meta');
+    themeColor.name = 'theme-color';
+    document.head.appendChild(themeColor);
+  }
+  themeColor.content = '#071426';
 }
 
 function aviaGetLoggedUser(){

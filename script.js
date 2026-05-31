@@ -67,6 +67,22 @@ function createStatus(parent, selector, className) {
   return status;
 }
 
+function showReturnedFormStatus() {
+  const form = document.querySelector(".contact-form");
+  if (!form) return;
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("enviado") !== "1") return;
+  const status = createStatus(form, ".form-status", "form-status form-status-ok");
+  const isJobApplication = window.location.pathname.includes("trabaja-con-nosotros");
+  status.hidden = false;
+  status.textContent = isJobApplication
+    ? "Postulación enviada. Revisaremos tus datos y te contactaremos pronto."
+    : "Solicitud enviada. Te contactaremos pronto.";
+  if (window.history?.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}
+
 function getFormValue(id) {
   const element = document.getElementById(id);
   return element ? element.value.trim() : "";
@@ -174,54 +190,10 @@ async function loadSiteData() {
   }
 }
 
-function validateContactPayload(payload) {
-  if (payload.name.length < 2) return "Ingresa un nombre válido.";
-  if (!payload.email.includes("@") || payload.email.length < 5) return "Ingresa un correo válido.";
-  if (payload.message.length < 5) return "Escribe un mensaje un poco más completo.";
-  return null;
-}
-
-function setupContactForm() {
+function setupContactForms() {
   const form = document.querySelector(".contact-form");
   if (!form) return;
-  const button = form.querySelector("button");
-  const status = createStatus(form, ".form-status", "form-status");
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const payload = {
-      name: getFormValue("name"),
-      email: getFormValue("email"),
-      phone: getFormValue("phone") || null,
-      company: getFormValue("company") || null,
-      service_interest: getFormValue("interest") || null,
-      preferred_language: getFormValue("language") || document.documentElement.lang || "es",
-      message: getFormValue("message")
-    };
-    const validationError = validateContactPayload(payload);
-    if (validationError) {
-      status.textContent = validationError;
-      status.className = "form-status form-status-error";
-      return;
-    }
-    button.disabled = true;
-    button.textContent = "Enviando...";
-    status.hidden = false;
-    status.textContent = "Enviando solicitud...";
-    status.className = "form-status";
-    try {
-      await apiFetch("/api/contact", { method: "POST", body: JSON.stringify(payload) });
-      status.textContent = "Solicitud enviada. Te contactaremos pronto.";
-      status.className = "form-status form-status-ok";
-      form.reset();
-    } catch (error) {
-      status.textContent = error.message || "No se pudo enviar.";
-      status.className = "form-status form-status-error";
-    } finally {
-      button.disabled = false;
-      button.textContent = "Enviar solicitud";
-    }
-  });
+  showReturnedFormStatus();
 }
 
 function renderCauses(causes) {
@@ -361,7 +333,7 @@ function loadStandardScript(src) {
 
 setPreferredLanguage(detectInitialLanguage());
 loadSiteData();
-setupContactForm();
+setupContactForms();
 setupLogin();
 if (getToken()) loadDashboard();
 loadStandardScript("header-standard.js");

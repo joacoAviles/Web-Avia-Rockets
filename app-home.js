@@ -2,6 +2,15 @@ const AVIA_APP_API = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_
 const AVIA_TOKEN_KEY = "avia_auth_token";
 const AVIA_USER_KEY = "avia_auth_user";
 
+let appState = {
+  dashboard: null,
+  user: null,
+  account: null,
+  causes: [],
+  statusFilter: "all",
+  search: ""
+};
+
 function appGetToken() {
   return localStorage.getItem(AVIA_TOKEN_KEY);
 }
@@ -38,91 +47,26 @@ function appSetText(id, value) {
   if (node) node.textContent = value ?? "-";
 }
 
-function appNormalizeSlug(slug) {
-  if (window.aviaNormalizeProductSlug) return window.aviaNormalizeProductSlug(slug);
-  const map = {
-    automatizacion: "legal",
-    ops: "legal",
-    datos: "intelligence",
-    "web-saas": "lab",
-    labs: "lab",
-    "integraciones-api": "api",
-    pdlju: "legal",
-    fleet: "flota",
-    custom: "lab"
-  };
-  return map[slug] || slug;
+function appEscape(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-function appProductIcon(slug) {
-  const normalized = appNormalizeSlug(slug);
-  const map = { legal: "LG", flota: "FL", intelligence: "IN", api: "AP", lab: "LB", labs: "LB", ops: "OP" };
-  return map[normalized] || String(slug || "--").slice(0, 2).toUpperCase();
+function appBoolLabel(value) {
+  return value ? "Activado" : "Desactivado";
 }
 
-function appProductName(product) {
-  return product.name || product.title || product.label || "Producto AVIA";
+function appStatusLabel(value) {
+  const map = { active: "Activa", inactive: "Pausada", all: "Todas" };
+  return map[value] || value || "-";
 }
 
-function appProductDescription(product) {
-  return product.full_description || product.description || product.short_description || product.headline || "Producto activo.";
-}
-
-function appProductSlug(product) {
-  return product.slug || product.apiSlug || product.id;
-}
-
-function appProductConfig(product, user) {
-  return [
-    ["Producto", appProductName(product)],
-    ["Slug", appProductSlug(product)],
-    ["Estado", product.is_active === false ? "Inactivo" : "Activo / disponible"],
-    ["Descripción corta", product.short_description || product.short || product.headline || "Sin descripción"],
-    ["Usuario", user?.name || user?.full_name || user?.email || "Usuario"],
-    ["Fuente visual", "product-data.js / Home"]
-  ];
-}
-
-function appMenuProductTemplate(product, selectedSlug) {
-  const slug = appProductSlug(product);
-  const active = slug === selectedSlug ? " is-active" : "";
-  return `<button class="app-product-button${active}" type="button" data-product-slug="${slug}"><strong>${appProductIcon(slug)}</strong><span>${appProductName(product)}</span><small>${product.short || product.short_description || "Producto AVIA"}</small></button>`;
-}
-
-function appRenderProductMenu(products, selectedSlug) {
-  const menu = document.getElementById("app-product-menu");
-  if (!menu) return;
-  menu.innerHTML = products.map((product) => appMenuProductTemplate(product, selectedSlug)).join("");
-}
-
-function appRenderProductDetail(product, user) {
-  if (!product) return;
-  const slug = appProductSlug(product);
-  appSetText("app-view-label", slug === "config" ? "Configuración" : "Producto seleccionado");
-  appSetText("app-product-title", appProductName(product));
-  appSetText("app-product-description", appProductDescription(product));
-  appSetText("app-product-status", product.is_active === false ? "Inactivo" : "Activo");
-  appSetText("app-product-slug", slug);
-  appSetText("app-product-role", user?.role || "user");
-
-  const demo = document.getElementById("app-product-demo");
-  if (demo) {
-    if (window.renderAviaProductPanel && slug !== "config") {
-      demo.hidden = false;
-      demo.innerHTML = window.renderAviaProductPanel(product, { compact: false });
-    } else {
-      demo.hidden = true;
-      demo.innerHTML = "";
-    }
-  }
-
-  const config = document.getElementById("app-product-config");
-  if (config) {
-    config.innerHTML = appProductConfig(product, user).map(([label, value]) => `<div class="app-config-row"><span>${label}</span><strong>${value}</strong></div>`).join("");
-  }
-
-  const queryProduct = document.getElementById("admin-query-product");
-  if (queryProduct && slug !== "config") queryProduct.value = slug;
+function appPaidLabel(account) {
+  return account?.subscription?.is_paid ? "Pagado" : "No pagado";
 }
 
 function appRenderUser(user) {
@@ -132,74 +76,230 @@ function appRenderUser(user) {
   appSetText("app-user-role", user?.role || "user");
 }
 
-function appRenderStats(products) {
-  appSetText("app-products-count", String(products.length));
-  appSetText("app-demo-source", "Home");
+function appSetStatCard(index, label, value) {
+  const cards = document.querySelectorAll(".app-stat");
+  const card = cards[index];
+  if (!card) return;
+  const small = card.querySelector("small");
+  const strong = card.querySelector("strong");
+  if (small) small.textContent = label;
+  if (strong) strong.textContent = value;
 }
 
-function appRenderAdminPanel(user, products) {
-  const panel = document.getElementById("app-admin-panel");
-  if (!panel) return;
-  if ((user?.role || "user") !== "admin") {
-    panel.hidden = true;
-    return;
-  }
-  panel.hidden = false;
-  const select = document.getElementById("admin-query-product");
-  if (select) {
-    select.innerHTML = products.map((product) => `<option value="${appProductSlug(product)}">${appProductName(product)}</option>`).join("");
-  }
+function appRenderStats() {
+  const stats = appState.dashboard?.stats || {};
+  appSetStatCard(0, "Causas activas", String(stats.active_causes_count ?? 0));
+  appSetStatCard(1, "Causas pausadas", String(stats.inactive_causes_count ?? 0));
+  appSetStatCard(2, "Correo resumen", appBoolLabel(stats.daily_summary_email_enabled));
 }
 
-async function appRunAdminQuery() {
-  const product = document.getElementById("admin-query-product")?.value;
-  const query = document.getElementById("admin-query-text")?.value.trim();
-  const output = document.getElementById("admin-query-output");
-  if (!product || !query) {
-    if (output) output.textContent = "Selecciona producto y escribe una query de prueba.";
-    return;
+function appRenderSidebar() {
+  const menu = document.getElementById("app-product-menu");
+  if (!menu) return;
+  const items = [
+    ["all", "Todas", `${appState.causes.length} causas`],
+    ["active", "Activas", `${appState.causes.filter((cause) => cause.user_status === "active").length} activas`],
+    ["inactive", "Pausadas", `${appState.causes.filter((cause) => cause.user_status === "inactive").length} pausadas`]
+  ];
+  menu.innerHTML = items.map(([status, label, meta]) => {
+    const active = appState.statusFilter === status ? " is-active" : "";
+    return `<button class="app-product-button${active}" type="button" data-cause-filter="${status}"><strong>${label.slice(0, 2).toUpperCase()}</strong><span>${label}</span><small>${meta}</small></button>`;
+  }).join("");
+}
+
+function appRenderCauseSummary() {
+  const account = appState.account;
+  const stats = appState.dashboard?.stats || {};
+  const summaryEmail = stats.daily_summary_email_enabled;
+  return `
+    <div class="app-config-grid">
+      <div class="app-config-row"><span>Plan de pago</span><strong>${appEscape(appPaidLabel(account))}</strong></div>
+      <div class="app-config-row"><span>Plan</span><strong>${appEscape(account?.subscription?.plan_slug || "free")}</strong></div>
+      <div class="app-config-row"><span>Causas activas</span><strong>${appEscape(stats.active_causes_count ?? 0)}</strong></div>
+      <div class="app-config-row"><span>Causas pausadas</span><strong>${appEscape(stats.inactive_causes_count ?? 0)}</strong></div>
+      <div class="app-config-row"><span>Correo resumen</span><strong>${appEscape(appBoolLabel(summaryEmail))}</strong></div>
+      <div class="app-config-row"><span>Términos y condiciones</span><strong>Versión ${appEscape(account?.terms?.version || "1.102")}</strong></div>
+    </div>
+  `;
+}
+
+function appFilteredCauses() {
+  const query = appState.search.trim().toLowerCase();
+  return appState.causes.filter((cause) => {
+    const statusOk = appState.statusFilter === "all" || cause.user_status === appState.statusFilter;
+    if (!statusOk) return false;
+    if (!query) return true;
+    return [cause.code, cause.title, cause.court].some((value) => String(value || "").toLowerCase().includes(query));
+  });
+}
+
+function appRenderCauseRows() {
+  const causes = appFilteredCauses();
+  if (!causes.length) {
+    return `<div class="app-config-row"><span>Sin resultados</span><strong>No hay causas para este filtro.</strong></div>`;
   }
-  if (output) output.textContent = "Ejecutando query...";
-  try {
-    const data = await appFetch("/api/admin/product-query", {
-      method: "POST",
-      body: JSON.stringify({ product_slug: product, query })
+  return causes.map((cause) => {
+    const nextStatus = cause.user_status === "active" ? "inactive" : "active";
+    const actionLabel = cause.user_status === "active" ? "Pausar" : "Reactivar";
+    return `
+      <div class="app-config-row" data-cause-row="${cause.id}">
+        <span>
+          <strong>${appEscape(cause.code)}</strong><br>
+          ${appEscape(cause.court || "Tribunal no informado")}<br>
+          <small>${appEscape(cause.title || "Causa sin título")}</small>
+        </span>
+        <strong>
+          ${appEscape(appStatusLabel(cause.user_status))}<br>
+          <button class="btn btn-secondary" type="button" data-cause-status="${cause.id}" data-next-status="${nextStatus}">${actionLabel}</button>
+        </strong>
+      </div>
+    `;
+  }).join("");
+}
+
+function appRenderCausePanel() {
+  appSetText("app-view-label", "Resumen de causas");
+  appSetText("app-product-title", "Mis causas");
+  appSetText("app-product-description", "Agrega, pausa, reactiva, busca y carga causas para el seguimiento automático.");
+  appSetText("app-product-status", appPaidLabel(appState.account));
+  appSetText("app-product-slug", "causas");
+  appSetText("app-product-role", appState.user?.role || "user");
+
+  const demo = document.getElementById("app-product-demo");
+  if (demo) {
+    demo.hidden = false;
+    demo.innerHTML = appRenderCauseSummary();
+  }
+
+  const configTitle = document.getElementById("app-config-title");
+  if (configTitle) configTitle.textContent = "Listado de causas";
+
+  const config = document.getElementById("app-product-config");
+  if (!config) return;
+  config.innerHTML = `
+    <div class="app-config-row">
+      <span>Buscar causa</span>
+      <strong><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Rol, tribunal o título" style="width:100%;min-width:220px;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:inherit;padding:.78rem" /></strong>
+    </div>
+    <div class="app-config-row">
+      <span>Filtros</span>
+      <strong>
+        <button class="btn btn-secondary" type="button" data-cause-filter="all">Todas</button>
+        <button class="btn btn-secondary" type="button" data-cause-filter="active">Activas</button>
+        <button class="btn btn-secondary" type="button" data-cause-filter="inactive">Pausadas</button>
+      </strong>
+    </div>
+    <form class="app-config-row" id="cause-add-form">
+      <span>Agregar causa</span>
+      <strong>
+        <input name="code" required placeholder="C-5351-2026" style="width:150px;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:inherit;padding:.78rem" />
+        <input name="court" placeholder="Tribunal" style="width:220px;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:inherit;padding:.78rem" />
+        <button class="btn btn-primary" type="submit">Agregar</button>
+      </strong>
+    </form>
+    <details class="app-config-row">
+      <summary><strong>Carga masiva</strong></summary>
+      <form id="cause-bulk-form" style="display:grid;gap:.75rem;width:100%;margin-top:.75rem">
+        <textarea name="bulk" rows="6" placeholder="Una causa por línea. Ejemplo: C-5351-2026 | 29º Juzgado Civil de Santiago" style="width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:inherit;padding:.78rem"></textarea>
+        <button class="btn btn-primary" type="submit">Cargar causas</button>
+      </form>
+    </details>
+    <div id="cause-action-output" class="app-query-output" style="display:none"></div>
+    <div id="cause-list-rows">${appRenderCauseRows()}</div>
+  `;
+  appBindCauseControls();
+}
+
+function appShowOutput(message, isError = false) {
+  const output = document.getElementById("cause-action-output");
+  if (!output) return;
+  output.style.display = "block";
+  output.textContent = message;
+  output.style.color = isError ? "#ffd2d2" : "#d8e6ff";
+}
+
+async function appReloadDashboard() {
+  appState.dashboard = await appFetch("/api/dashboard");
+  appState.user = appState.dashboard?.user || appState.user;
+  appState.account = appState.dashboard?.account || null;
+  appState.causes = Array.isArray(appState.dashboard?.causes) ? appState.dashboard.causes : [];
+  appRenderUser(appState.user);
+  appRenderStats();
+  appRenderSidebar();
+  appRenderCausePanel();
+}
+
+function appBindCauseControls() {
+  document.querySelectorAll("[data-cause-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      appState.statusFilter = button.dataset.causeFilter || "all";
+      appRenderSidebar();
+      appRenderCausePanel();
     });
-    if (output) output.textContent = JSON.stringify(data, null, 2);
-  } catch (error) {
-    if (output) output.textContent = error.message || "Error ejecutando query.";
-  }
+  });
+
+  document.getElementById("cause-search-input")?.addEventListener("input", (event) => {
+    appState.search = event.target.value || "";
+    const rows = document.getElementById("cause-list-rows");
+    if (rows) rows.innerHTML = appRenderCauseRows();
+    appBindRowActions();
+  });
+
+  document.getElementById("cause-add-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    try {
+      await appFetch("/api/causes", {
+        method: "POST",
+        body: JSON.stringify({
+          code: String(form.get("code") || "").trim(),
+          court: String(form.get("court") || "").trim() || null
+        })
+      });
+      appShowOutput("Causa agregada correctamente.");
+      await appReloadDashboard();
+    } catch (error) {
+      appShowOutput(error.message || "Error agregando causa.", true);
+    }
+  });
+
+  document.getElementById("cause-bulk-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const lines = String(form.get("bulk") || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    const causes = lines.map((line) => {
+      const [code, court] = line.split("|").map((part) => part.trim());
+      return { code, court: court || null };
+    }).filter((cause) => cause.code);
+    if (!causes.length) {
+      appShowOutput("No hay causas válidas para cargar.", true);
+      return;
+    }
+    try {
+      const result = await appFetch("/api/causes/bulk", { method: "POST", body: JSON.stringify({ causes }) });
+      appShowOutput(`Carga masiva terminada. Registros procesados: ${result.created_or_updated || 0}.`);
+      await appReloadDashboard();
+    } catch (error) {
+      appShowOutput(error.message || "Error en carga masiva.", true);
+    }
+  });
+
+  appBindRowActions();
 }
 
-async function appLogout() {
-  try {
-    await appFetch("/api/auth/logout", { method: "POST" });
-  } catch (_) {
-  } finally {
-    appClearSession();
-    window.location.href = "login.html";
-  }
-}
-
-function appGetFallbackProducts() {
-  return Array.isArray(window.AVIA_PRODUCTS) ? window.AVIA_PRODUCTS : [];
-}
-
-async function appLoadCatalogProducts() {
-  if (window.aviaLoadProducts) {
-    const fromLoader = await window.aviaLoadProducts();
-    if (Array.isArray(fromLoader) && fromLoader.length) return fromLoader;
-  }
-  return appGetFallbackProducts();
-}
-
-async function appLoadDashboardSafely() {
-  try {
-    return await appFetch("/api/dashboard");
-  } catch (error) {
-    console.warn("No se pudo cargar /api/dashboard. Se usará catálogo local.", error);
-    return null;
-  }
+function appBindRowActions() {
+  document.querySelectorAll("[data-cause-status]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const causeId = button.dataset.causeStatus;
+      const status = button.dataset.nextStatus;
+      try {
+        await appFetch(`/api/causes/${causeId}/status`, { method: "PATCH", body: JSON.stringify({ status }) });
+        await appReloadDashboard();
+      } catch (error) {
+        appShowOutput(error.message || "Error actualizando causa.", true);
+      }
+    });
+  });
 }
 
 function appSetupSidebarToggle() {
@@ -213,6 +313,16 @@ function appSetupSidebarToggle() {
   });
 }
 
+async function appLogout() {
+  try {
+    await appFetch("/api/auth/logout", { method: "POST" });
+  } catch (_) {
+  } finally {
+    appClearSession();
+    window.location.href = "login.html";
+  }
+}
+
 async function appInit() {
   if (!appGetToken()) {
     window.location.href = "login.html?next=app-beta.html";
@@ -220,57 +330,27 @@ async function appInit() {
   }
 
   const storedUser = appGetStoredUser() || { name: "Usuario", email: "", role: "user" };
+  appState.user = storedUser;
   appRenderUser(storedUser);
   appSetupSidebarToggle();
 
-  const dashboard = await appLoadDashboardSafely();
-  const apiProducts = Array.isArray(dashboard?.products) ? dashboard.products : [];
-  const catalogProducts = await appLoadCatalogProducts();
-  const products = catalogProducts.length ? catalogProducts : apiProducts;
-
-  if (!products.length) {
+  try {
+    await appReloadDashboard();
+  } catch (error) {
     const root = document.getElementById("app-error");
     if (root) {
       root.hidden = false;
-      root.textContent = "No hay productos disponibles para mostrar.";
+      root.textContent = error.message || "No se pudo cargar el panel de causas.";
     }
     return;
   }
 
-  const user = dashboard?.user || storedUser;
-  appRenderUser(user);
-  appRenderStats(products);
-  appRenderAdminPanel(user, products);
-
-  let selected = products[0];
-  appRenderProductMenu(products, appProductSlug(selected));
-  appRenderProductDetail(selected, user);
-
-  document.getElementById("app-product-menu")?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-product-slug]");
-    if (!button) return;
-    const next = products.find((product) => appProductSlug(product) === button.dataset.productSlug);
-    if (!next) return;
-    selected = next;
-    appRenderProductMenu(products, appProductSlug(selected));
-    appRenderProductDetail(selected, user);
-  });
-
   document.getElementById("app-config-button")?.addEventListener("click", () => {
-    const configProduct = {
-      id: "config",
-      slug: "config",
-      name: "Configuración",
-      title: "Configuración",
-      description: "Preferencias básicas de la cuenta, sesión y visualización del panel.",
-      short: "Cuenta y preferencias",
-      is_active: true
-    };
-    appRenderProductMenu(products, "");
-    appRenderProductDetail(configProduct, user);
+    appState.statusFilter = "all";
+    appRenderSidebar();
+    appRenderCausePanel();
   });
 
-  document.getElementById("admin-query-button")?.addEventListener("click", appRunAdminQuery);
   document.getElementById("app-logout-button")?.addEventListener("click", appLogout);
 }
 

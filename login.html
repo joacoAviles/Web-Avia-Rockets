@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Log In | AVIA Rockets</title>
-<meta name="description" content="Ingresa a AVIA Rockets para administrar productos, paneles y pruebas de automatización operacional, datos, APIs y apps internas." />
+<meta name="description" content="Ingresa a AVIA Rockets para administrar productos, paneles y automatización operacional, datos, APIs y apps internas." />
 <link rel="canonical" href="https://aviarockets.cl/login.html" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,7 +20,7 @@
 </head>
 <body data-page="auth">
 <header class="site-header"></header>
-<main><section class="auth-hero"><div class="container auth-grid"><div class="auth-copy"><p class="eyebrow">Acceso AVIA Rockets</p><h1>Ingresa a tu cuenta.</h1><p>Administra Legal, Flota, Intelligence, API y Lab desde una sola entrada.</p></div><div class="auth-card"><form class="auth-form" id="login-form"><label for="login-email">Correo</label><input id="login-email" type="email" autocomplete="email" required /><label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required /><div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label><a href="contacto.html">Necesito ayuda</a></div><button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p></form></div></div></section></main>
+<main><section class="auth-hero"><div class="container auth-grid"><div class="auth-copy"><p class="eyebrow">Acceso AVIA Rockets</p><h1>Ingresa a tu cuenta.</h1><p>Administra Legal, Flota, Intelligence, API y Lab desde una sola entrada productiva.</p></div><div class="auth-card"><form class="auth-form" id="login-form"><label for="login-email">Correo</label><input id="login-email" type="email" autocomplete="email" required /><label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required /><div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label><a href="contacto.html">Necesito ayuda</a></div><button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p></form></div></div></section></main>
 <footer class="site-footer footer-clean"></footer>
 <script src="header-standard.js"></script>
 <script src="footer-standard.js"></script>
@@ -28,15 +28,15 @@
 const API_BASE_URL = "https://api.aviarockets.cl";
 const TOKEN_KEY = "avia_auth_token";
 const USER_KEY = "avia_auth_user";
-const DEFAULT_AFTER_LOGIN = "app-beta.html";
+const DEFAULT_AFTER_LOGIN = "app.html";
 const loginForm = document.getElementById("login-form");
 const loginButton = document.getElementById("login-button");
 const loginStatus = document.getElementById("login-status");
 function setStatus(message, type = "") { loginStatus.hidden = false; loginStatus.textContent = message; loginStatus.className = `auth-status ${type}`.trim(); }
-function getRedirectTarget() { const params = new URLSearchParams(window.location.search); const next = params.get("next"); return next && !next.startsWith("http") && !next.startsWith("//") ? next : DEFAULT_AFTER_LOGIN; }
+function getRedirectTarget() { const params = new URLSearchParams(window.location.search); const next = params.get("next"); return next && !next.startsWith("http") && !next.startsWith("//") ? next.replace("app-beta.html", "app.html") : DEFAULT_AFTER_LOGIN; }
 async function apiRequest(path, options = {}) { const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers: { Accept: "application/json", "Content-Type": "application/json", ...(options.headers || {}) } }); let data = null; try { data = await response.json(); } catch (_) { data = null; } if (!response.ok) throw new Error(data?.detail || data?.message || `Error API ${response.status}`); return data; }
 function saveSession(data) { localStorage.setItem(TOKEN_KEY, data.token); localStorage.setItem(USER_KEY, JSON.stringify(data.user)); }
-loginForm.addEventListener("submit", async (event) => { event.preventDefault(); const email = document.getElementById("login-email").value.trim(); const password = document.getElementById("login-password").value; if (!email || !password) { setStatus("Ingresa correo y contraseña.", "form-status-error"); return; } loginButton.disabled = true; loginButton.textContent = "Entrando..."; setStatus("Validando usuario contra la API..."); try { const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }); saveSession(data); setStatus("Ingreso correcto. Redirigiendo...", "form-status-ok"); window.location.href = getRedirectTarget(); } catch (error) { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); setStatus(error.message || "No se pudo iniciar sesión.", "form-status-error"); } finally { loginButton.disabled = false; loginButton.textContent = "Ingresar"; } });
+loginForm.addEventListener("submit", async (event) => { event.preventDefault(); const email = document.getElementById("login-email").value.trim(); const password = document.getElementById("login-password").value; if (!email || !password) { setStatus("Ingresa correo y contraseña.", "form-status-error"); return; } loginButton.disabled = true; loginButton.textContent = "Entrando..."; setStatus("Validando usuario contra la API..."); try { const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }); saveSession(data); setStatus("Ingreso correcto. Redirigiendo a producción...", "form-status-ok"); window.location.href = getRedirectTarget(); } catch (error) { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); setStatus(error.message || "No se pudo iniciar sesión.", "form-status-error"); } finally { loginButton.disabled = false; loginButton.textContent = "Ingresar"; } });
 </script>
 </body>
 </html>

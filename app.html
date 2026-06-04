@@ -1,1 +1,82 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>AVIA Rockets | Home</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="beta-products.css"></head><body data-page="app-home"><header class="site-header"></header><main class="app-shell"><div class="container"><div id="app-error" class="app-error" hidden></div><div class="app-layout" id="app-layout"><aside class="app-sidebar"><div class="app-sidebar-head"><strong>AVIA Home</strong><button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button">‹</button></div><div class="app-user-box"><strong id="app-user-name">Cargando...</strong><small id="app-user-email">-</small><small>Rol: <span id="app-user-role">-</span></small></div><button class="app-side-link" id="app-config-button" type="button"><span>CF</span><span>Configuración</span></button><div class="app-product-menu" id="app-product-menu"></div></aside><section><article class="app-main-card"><p class="eyebrow" id="app-view-label">Home productivo</p><h1 id="app-product-title">Cargando</h1><p id="app-product-description">Preparando información.</p><div class="app-product-demo" id="app-product-demo"></div><div class="app-stats"><div class="app-stat"><small>Causas activas</small><strong id="app-products-count">0</strong></div><div class="app-stat"><small>Causas pausadas</small><strong id="app-demo-source">0</strong></div><div class="app-stat"><small>Correo resumen</small><strong id="app-product-status">-</strong></div></div><span>Vista: <strong id="app-product-slug">causas</strong></span><span>Rol: <strong id="app-product-role">-</strong></span><h2 id="app-config-title">Listado de causas</h2><div class="app-config-grid" id="app-product-config"></div></article><article id="app-admin-panel" hidden><select id="admin-query-product"></select><input id="admin-query-text" value="status"><button id="admin-query-button" type="button">Ejecutar</button><pre id="admin-query-output">Resultado pendiente.</pre></article></section></div></div></main><footer class="site-footer footer-clean"></footer><script src="api-config.js"></script><script src="product-data.js"></script><script src="header-standard.js"></script><script src="app-home.js?v=production-home-20260603"></script><script src="footer-standard.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AVIA Rockets | Home</title>
+  <meta name="description" content="Home interno de AVIA Rockets para administrar causas, usuario, plan, correo resumen y configuración." />
+  <link rel="canonical" href="https://aviarockets.cl/app.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="beta-products.css" />
+  <link rel="stylesheet" href="app-home.css" />
+</head>
+<body data-page="app-home">
+  <header class="site-header"></header>
+
+  <main class="app-shell">
+    <div class="container app-container">
+      <div id="app-error" class="app-error" hidden></div>
+
+      <div class="app-layout" id="app-layout">
+        <aside class="app-sidebar">
+          <div class="app-sidebar-head">
+            <strong>AVIA Home</strong>
+            <button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button" aria-label="Contraer menú">‹</button>
+          </div>
+
+          <div class="app-user-box">
+            <strong id="app-user-name">Cargando...</strong>
+            <small id="app-user-email">-</small>
+            <small>Rol: <span id="app-user-role">-</span></small>
+          </div>
+
+          <button class="app-side-link is-active" id="app-causes-button" type="button">
+            <span>LG</span>
+            <span>Legal / Causas</span>
+          </button>
+          <button class="app-side-link" id="app-config-button" type="button">
+            <span>CF</span>
+            <span>Configuración</span>
+          </button>
+          <button class="app-side-link" id="app-logout-button" type="button">
+            <span>SA</span>
+            <span>Salir</span>
+          </button>
+
+          <div class="app-product-menu" id="app-product-menu"></div>
+        </aside>
+
+        <section class="app-content">
+          <article class="app-main-card">
+            <p class="eyebrow" id="app-view-label">Home productivo</p>
+            <h1 id="app-product-title">Cargando</h1>
+            <p id="app-product-description">Preparando información.</p>
+
+            <div class="app-product-demo" id="app-product-demo"></div>
+
+            <div class="app-stats">
+              <div class="app-stat"><small>Causas activas</small><strong id="app-products-count">0</strong></div>
+              <div class="app-stat"><small>Causas pausadas</small><strong id="app-demo-source">0</strong></div>
+              <div class="app-stat"><small>Correo resumen</small><strong id="app-product-status">-</strong></div>
+            </div>
+
+            <div class="app-meta-line">
+              <span>Vista: <strong id="app-product-slug">causas</strong></span>
+              <span>Rol: <strong id="app-product-role">-</strong></span>
+            </div>
+
+            <h2 id="app-config-title">Listado de causas</h2>
+            <div class="app-config-grid" id="app-product-config"></div>
+          </article>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer footer-clean"></footer>
+  <script src="api-config.js"></script>
+  <script src="header-standard.js"></script>
+  <script src="app-home.js?v=production-home-20260604"></script>
+  <script src="footer-standard.js"></script>
+</body>
+</html>

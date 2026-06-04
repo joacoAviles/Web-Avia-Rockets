@@ -2,7 +2,15 @@ const AVIA_APP_API = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_
 const AVIA_TOKEN_KEY = "avia_auth_token";
 const AVIA_USER_KEY = "avia_auth_user";
 
-const appState = { dashboard: null, user: null, account: null, causes: [], statusFilter: "all", search: "" };
+const appState = {
+  dashboard: null,
+  user: null,
+  account: null,
+  causes: [],
+  statusFilter: "all",
+  search: "",
+  view: "causes",
+};
 
 function appGetToken(){ return localStorage.getItem(AVIA_TOKEN_KEY); }
 function appClearSession(){ localStorage.removeItem(AVIA_TOKEN_KEY); localStorage.removeItem(AVIA_USER_KEY); }
@@ -22,6 +30,11 @@ async function appFetch(path, options = {}){
   const response = await fetch(`${AVIA_APP_API}${path}`, { ...options, headers });
   let data = null;
   try { data = await response.json(); } catch (_) { data = null; }
+  if (response.status === 401) {
+    appClearSession();
+    window.location.href = "login.html?next=app.html";
+    throw new Error("Sesión expirada o inválida");
+  }
   if (!response.ok) throw new Error(data?.detail || data?.message || `Error API ${response.status}`);
   return data;
 }
@@ -30,8 +43,8 @@ function appRenderUser(){
   const user = appState.user || {};
   appSetText("app-user-name", user.full_name || user.name || user.email || "Usuario");
   appSetText("app-user-email", user.email || "-");
-  appSetText("app-user-role", user.role || "user");
-  appSetText("app-product-role", user.role || "user");
+  appSetText("app-user-role", user.role || "client");
+  appSetText("app-product-role", user.role || "client");
 }
 
 function appRenderStats(){
@@ -42,6 +55,8 @@ function appRenderStats(){
 }
 
 function appRenderSidebar(){
+  document.getElementById("app-causes-button")?.classList.toggle("is-active", appState.view === "causes");
+  document.getElementById("app-config-button")?.classList.toggle("is-active", appState.view === "settings");
   const menu = document.getElementById("app-product-menu");
   if (!menu) return;
   const active = appState.causes.filter((cause) => cause.user_status === "active").length;
@@ -82,8 +97,8 @@ function appCauseRows(){
   }).join("");
 }
 
-function appRenderPanel(){
-  appSetText("app-view-label", "Home productivo");
+function appRenderCausesPanel(){
+  appSetText("app-view-label", "Legal / Usuario");
   appSetText("app-product-title", "Mis causas");
   appSetText("app-product-description", "Agrega, pausa, reactiva, busca y carga causas para el seguimiento automático.");
   appSetText("app-product-status", appBool(appState.dashboard?.stats?.daily_summary_email_enabled));
@@ -93,25 +108,62 @@ function appRenderPanel(){
   appSetText("app-config-title", "Listado de causas");
   const config = document.getElementById("app-product-config");
   if (!config) return;
-  config.innerHTML = `<div class="app-config-row"><span>Buscar causa</span><strong><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Rol, tribunal o título" /></strong></div><div class="app-config-row"><span>Filtros</span><strong><button class="btn btn-secondary" type="button" data-cause-filter="all">Todas</button> <button class="btn btn-secondary" type="button" data-cause-filter="active">Activas</button> <button class="btn btn-secondary" type="button" data-cause-filter="inactive">Pausadas</button></strong></div><form class="app-config-row" id="cause-add-form"><span>Agregar causa</span><strong><input name="code" required placeholder="C-5351-2026" /> <input name="court" placeholder="Tribunal" /> <button class="btn btn-primary" type="submit">Agregar</button></strong></form><details class="app-config-row"><summary><strong>Carga masiva</strong></summary><form id="cause-bulk-form"><textarea name="bulk" rows="6" placeholder="Una causa por línea. Ejemplo: C-5351-2026 | 29º Juzgado Civil de Santiago"></textarea><br><button class="btn btn-primary" type="submit">Cargar causas</button></form></details><div id="cause-action-output" class="app-query-output" style="display:none"></div><div id="cause-list-rows">${appCauseRows()}</div>`;
+  config.innerHTML = `<div class="app-config-row"><span>Buscar causa</span><strong><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Rol, tribunal o título" /></strong></div>
+    <div class="app-config-row"><span>Filtros</span><strong class="app-row-actions"><button class="btn btn-secondary" type="button" data-cause-filter="all">Todas</button><button class="btn btn-secondary" type="button" data-cause-filter="active">Activas</button><button class="btn btn-secondary" type="button" data-cause-filter="inactive">Pausadas</button></strong></div>
+    <form class="app-config-row" id="cause-add-form"><span>Agregar causa</span><strong class="app-form-inline"><input name="code" required placeholder="C-5351-2026" /><input name="court" placeholder="Tribunal" /><button class="btn btn-primary" type="submit">Agregar</button></strong></form>
+    <details class="app-config-row"><summary><strong>Carga masiva</strong></summary><form id="cause-bulk-form"><textarea name="bulk" rows="6" placeholder="Una causa por línea. Ejemplo: C-5351-2026 | 29º Juzgado Civil de Santiago"></textarea><br><button class="btn btn-primary" type="submit">Cargar causas</button></form></details>
+    <div id="cause-action-output" class="app-query-output" style="display:none"></div><div id="cause-list-rows">${appCauseRows()}</div>`;
   appBindControls();
 }
 
-function appShow(message, isError = false){ const out = document.getElementById("cause-action-output"); if (out) { out.style.display = "block"; out.textContent = message; out.style.color = isError ? "#ffd2d2" : "#d8e6ff"; } }
+function appRenderSettingsPanel(){
+  const account = appState.account || {};
+  const settings = account.settings || {};
+  const subscription = account.subscription || {};
+  appSetText("app-view-label", "Configuración de usuario");
+  appSetText("app-product-title", "Mi cuenta");
+  appSetText("app-product-description", "Datos personales, suscripción, correo resumen, tema, forma de pago, términos y eliminación de cuenta.");
+  appSetText("app-product-slug", "configuración");
+  const demo = document.getElementById("app-product-demo");
+  if (demo) demo.innerHTML = appSummaryHtml();
+  appSetText("app-config-title", "Configuración conectada");
+  const config = document.getElementById("app-product-config");
+  if (!config) return;
+  config.innerHTML = `<div class="app-config-row"><span>Datos personales</span><strong>${appEscape(account.personal_data?.full_name || appState.user?.full_name || "Usuario")}<br><small>${appEscape(account.email || appState.user?.email || "-")}</small></strong></div>
+    <div class="app-config-row"><span>Suscripción</span><strong>${appEscape(subscription.plan_slug || "free")} / ${appEscape(subscription.status || "unpaid")}<br><small>${subscription.is_paid ? "Plan pagado activo" : "Plan no pagado"}</small></strong></div>
+    <form class="app-config-row" id="account-settings-form"><span>Preferencias</span><strong class="app-form-inline"><select name="ui_theme_preference"><option value="dark" ${settings.ui_theme_preference === "dark" ? "selected" : ""}>Oscuro</option><option value="light" ${settings.ui_theme_preference === "light" ? "selected" : ""}>Claro</option></select><select name="default_payment_method"><option value="manual" ${settings.default_payment_method === "manual" ? "selected" : ""}>Manual</option><option value="card" ${settings.default_payment_method === "card" ? "selected" : ""}>Tarjeta</option><option value="wire" ${settings.default_payment_method === "wire" ? "selected" : ""}>Transferencia</option><option value="transbank_oneclick" ${settings.default_payment_method === "transbank_oneclick" ? "selected" : ""}>Transbank Oneclick</option><option value="mercadopago" ${settings.default_payment_method === "mercadopago" ? "selected" : ""}>Mercado Pago</option></select><button class="btn btn-primary" type="submit">Guardar</button><label><input type="checkbox" name="daily_summary_email_enabled" ${settings.daily_summary_email_enabled ? "checked" : ""} /> Correo resumen</label></strong></form>
+    <div class="app-config-row"><span>Términos y condiciones</span><strong>Versión ${appEscape(account.terms?.version || "1.102")}<br><small>${account.terms?.accepted ? "Aceptados" : "Pendiente"}</small></strong></div>
+    <div class="app-config-row"><span>Eliminar cuenta</span><strong><button class="btn btn-secondary" id="account-delete-request" type="button">Solicitar eliminación</button></strong></div>
+    <div id="cause-action-output" class="app-query-output" style="display:none"></div>`;
+  appBindControls();
+}
+
+function appRenderPanel(){
+  appRenderSidebar();
+  if (appState.view === "settings") appRenderSettingsPanel();
+  else appRenderCausesPanel();
+}
+
+function appShow(message, isError = false){
+  const out = document.getElementById("cause-action-output");
+  if (out) { out.style.display = "block"; out.textContent = message; out.style.color = isError ? "#ffd2d2" : "#d8e6ff"; }
+}
 
 async function appReload(){
   appState.dashboard = await appFetch("/api/dashboard");
   appState.user = appState.dashboard?.user || appState.user;
   appState.account = appState.dashboard?.account || null;
   appState.causes = Array.isArray(appState.dashboard?.causes) ? appState.dashboard.causes : [];
-  appRenderUser(); appRenderStats(); appRenderSidebar(); appRenderPanel();
+  appRenderUser(); appRenderStats(); appRenderPanel();
 }
 
 function appBindControls(){
-  document.querySelectorAll("[data-cause-filter]").forEach((button) => button.addEventListener("click", () => { appState.statusFilter = button.dataset.causeFilter || "all"; appRenderSidebar(); appRenderPanel(); }));
+  document.querySelectorAll("[data-cause-filter]").forEach((button) => button.addEventListener("click", () => { appState.view = "causes"; appState.statusFilter = button.dataset.causeFilter || "all"; appRenderPanel(); }));
   document.getElementById("cause-search-input")?.addEventListener("input", (event) => { appState.search = event.target.value || ""; const rows = document.getElementById("cause-list-rows"); if (rows) rows.innerHTML = appCauseRows(); appBindRowActions(); });
   document.getElementById("cause-add-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); try { await appFetch("/api/causes", { method:"POST", body:JSON.stringify({ code:String(form.get("code") || "").trim(), court:String(form.get("court") || "").trim() || null }) }); appShow("Causa agregada correctamente."); await appReload(); } catch (error) { appShow(error.message || "Error agregando causa.", true); } });
   document.getElementById("cause-bulk-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const causes = String(form.get("bulk") || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => { const [code, court] = line.split("|").map((part) => part.trim()); return { code, court: court || null }; }).filter((cause) => cause.code); if (!causes.length) return appShow("No hay causas válidas para cargar.", true); try { const result = await appFetch("/api/causes/bulk", { method:"POST", body:JSON.stringify({ causes }) }); appShow(`Carga masiva terminada. Registros procesados: ${result.created_or_updated || 0}.`); await appReload(); } catch (error) { appShow(error.message || "Error en carga masiva.", true); } });
+  document.getElementById("account-settings-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); try { appState.account = await appFetch("/api/account/settings", { method:"PATCH", body:JSON.stringify({ ui_theme_preference:String(form.get("ui_theme_preference") || "dark"), default_payment_method:String(form.get("default_payment_method") || "manual"), daily_summary_email_enabled:form.has("daily_summary_email_enabled") }) }); appShow("Configuración guardada."); await appReload(); } catch (error) { appShow(error.message || "Error guardando configuración.", true); } });
+  document.getElementById("account-delete-request")?.addEventListener("click", async () => { try { await appFetch("/api/account/delete-request", { method:"POST" }); appShow("Solicitud de eliminación registrada."); await appReload(); } catch (error) { appShow(error.message || "Error solicitando eliminación.", true); } });
   appBindRowActions();
 }
 
@@ -124,11 +176,12 @@ async function appLogout(){ try { await appFetch("/api/auth/logout", { method:"P
 
 async function appInit(){
   if (!appGetToken()) { window.location.href = "login.html?next=app.html"; return; }
-  appState.user = appStoredUser() || { name:"Usuario", email:"", role:"user" };
+  appState.user = appStoredUser() || { full_name:"Usuario", email:"", role:"client" };
   appRenderUser(); appSetupSidebarToggle();
-  try { await appReload(); } catch (error) { const root = document.getElementById("app-error"); if (root) { root.hidden = false; root.textContent = error.message || "No se pudo cargar el home productivo."; } return; }
-  document.getElementById("app-config-button")?.addEventListener("click", () => { appState.statusFilter = "all"; appRenderSidebar(); appRenderPanel(); });
+  document.getElementById("app-causes-button")?.addEventListener("click", () => { appState.view = "causes"; appRenderPanel(); });
+  document.getElementById("app-config-button")?.addEventListener("click", () => { appState.view = "settings"; appRenderPanel(); });
   document.getElementById("app-logout-button")?.addEventListener("click", appLogout);
+  try { await appReload(); } catch (error) { const root = document.getElementById("app-error"); if (root) { root.hidden = false; root.textContent = error.message || "No se pudo cargar el home productivo."; } }
 }
 
 appInit();

@@ -6,9 +6,9 @@ function aviaLoadStandardHeaderFromFooter(){
 }
 
 function aviaLoadI18n(){
-  if (document.querySelector('script[src="avia-i18n.js"]')) return;
+  if (document.querySelector('script[src^="avia-i18n.js"]')) return;
   var script = document.createElement('script');
-  script.src = 'avia-i18n.js';
+  script.src = 'avia-i18n.js?v=20260604-3';
   document.body.appendChild(script);
 }
 
@@ -19,7 +19,7 @@ function aviaApplyStandardFooter(){
     document.body.appendChild(footer);
   }
   footer.className = 'site-footer footer-clean footer-orbit';
-  footer.innerHTML = '<span class="footer-star" aria-hidden="true"></span><div class="container footer-grid"><div class="footer-brand-wrap"><a class="brand footer-brand" href="index.html"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><p class="footer-legal">© 2026 AVIA Rockets. Todos los derechos reservados.</p></div><div class="footer-links"><a href="mapa-del-sitio.html">Mapa del sitio</a><a href="trabaja-con-nosotros.html">Trabaja con nosotros</a><a href="index.html#business-lines">Soluciones</a></div></div>';
+  footer.innerHTML = '<span class="footer-star" aria-hidden="true"></span><div class="container footer-grid"><div class="footer-brand-wrap"><a class="brand footer-brand" href="index.html"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a><p class="footer-legal">© 2026 AVIA Rockets. Todos los derechos reservados.</p></div><div class="footer-links"><a href="mapa-del-sitio.html">Mapa del sitio</a><a href="trabaja-con-nosotros.html">Trabaja con nosotros</a><a href="index.html#business-lines">Soluciones</a><a href="index.html#contact">Contacto</a></div></div>';
   if (!document.getElementById('avia-standard-footer-style')) {
     var style = document.createElement('style');
     style.id = 'avia-standard-footer-style';

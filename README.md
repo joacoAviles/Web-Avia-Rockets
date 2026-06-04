@@ -23,6 +23,13 @@ npm run dev
 
 API base: `http://localhost:8080`
 
+Cuenta local Legal / Causas:
+- usuario: `usuario1`
+- password: `usuario1`
+- email alternativo: `usuario1@aviarockets.local`
+
+Puedes desactivar el seed local con `SEED_LEGAL_USER=false`.
+
 ## Documentación
 - API: `docs/API.md`
 - Backlog: `docs/BACKLOG_SAAS_CHILE.md`
@@ -32,5 +39,6 @@ API base: `http://localhost:8080`
 
 - API Reference detallada: `docs/API_REFERENCE.md`
 - Setup DB: `docs/DB_SETUP.md`
+- SQL único producción: `sql/avia_app_complete.sql`
 - APIs y claves requeridas: `docs/INTEGRATION_KEYS_REQUIRED.md`
 - Hoja de cambios del agente: `CHANGELOG_AGENT.md`

@@ -12,6 +12,13 @@ import authRoutes from './routes/auth.js';
 import billingProfileRoutes from './routes/billing-profiles.js';
 import accessRoutes from './routes/access.js';
 import billingCycleRoutes from './routes/billing-cycle.js';
+import causeRoutes from './routes/causes.js';
+import resultRoutes from './routes/results.js';
+import dashboardRoutes from './routes/dashboard.js';
+import accountRoutes from './routes/account.js';
+import publicRoutes from './routes/public.js';
+import siteRoutes from './routes/site.js';
+import adminRoutes from './routes/admin.js';
 
 const app = express();
 
@@ -42,7 +49,10 @@ app.get('/', (_req, res) => {
       'payments',
       'subscriptions',
       'entitlements',
-      'billing cycle'
+      'billing cycle',
+      'dashboard',
+      'causes',
+      'results'
     ]
   });
 });
@@ -56,6 +66,13 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/access', accessRoutes);
 app.use('/api/billing', billingCycleRoutes);
+app.use('/api/causes', causeRoutes);
+app.use('/api/results', resultRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/account', accountRoutes);
+app.use('/api/public', publicRoutes);
+app.use('/api/site', siteRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

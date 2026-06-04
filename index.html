@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AVIA Rockets | Operación, inteligencia y sistemas digitales</title>
-<meta name="description" content="AVIA Rockets ordena operaciones críticas, convierte datos en decisión y construye sistemas digitales a medida." />
+<title>AVIA Rockets | Operacion, inteligencia y sistemas digitales</title>
+<meta name="description" content="AVIA Rockets ordena operaciones criticas, convierte datos en decision y construye sistemas digitales a medida." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -14,48 +14,193 @@
 <link rel="stylesheet" href="home-marketing.css" />
 <link rel="stylesheet" href="beta-products.css" />
 <link rel="stylesheet" href="home-solutions-panel.css?v=production-home-20260604-user2-panel" />
+<link rel="stylesheet" href="form-status.css" />
 </head>
 <body data-page="home">
 <header class="site-header">
   <div class="container navbar">
-    <a class="brand" href="#home" aria-label="AVIA Rockets home"><img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" /><span><strong>AVIA</strong><small>ROCKETS</small></span></a>
+    <a class="brand" href="#home" aria-label="AVIA Rockets home">
+      <img src="assets/avia-rockets-logo.svg" alt="AVIA Rockets logo" />
+      <span><strong>AVIA</strong><small>ROCKETS</small></span>
+    </a>
     <button class="nav-toggle" id="nav-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
-    <nav class="nav-panel" id="nav-panel" aria-label="Primary navigation"><a href="#business-lines">Soluciones</a><a href="contacto.html">Contacto</a><a class="btn btn-primary btn-nav" href="login.html">Log In</a></nav>
+    <nav class="nav-panel" id="nav-panel" aria-label="Primary navigation">
+      <a href="#guided-demo">Automatizacion</a>
+      <a href="#business-lines">Soluciones</a>
+      <a href="#contact">Contacto</a>
+      <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
+      <a class="btn btn-primary btn-nav" href="login.html">Log In</a>
+    </nav>
   </div>
 </header>
+
 <main id="home">
-<section class="hero hero-marketing home-hero">
-  <div class="hero-bg"></div>
-  <div class="container hero-grid">
-    <div class="hero-copy reveal">
-      <p class="hero-status-pill"><span></span><em>Operación productiva conectada a datos reales</em></p>
-      <h1>Administra operaciones reales desde un solo home.</h1>
-      <p class="hero-text">Legal, Flota, Intelligence, API y Lab comparten una base común para reducir trabajo manual, mejorar trazabilidad y ordenar la acción siguiente.</p>
-      <div class="home-product-selector" id="home-product-selector"></div>
-      <div class="hero-actions"><a class="btn btn-primary" href="login.html">Ingresar al home productivo</a><a class="btn btn-secondary" href="#business-lines">Ver soluciones</a></div>
+  <section class="hero hero-marketing home-hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <p class="hero-status-pill"><span></span><em>Automatizacion aplicada a operaciones reales</em></p>
+        <h1>Prueba una operacion digital antes de construirla.</h1>
+        <p class="hero-text">Legal / Causas, Flota, Intelligence, API y Lab comparten una base comun para reducir trabajo manual, comparar cambios y ordenar la accion siguiente.</p>
+        <div class="home-product-selector" id="home-product-selector"></div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="login.html">Entrar a Legal / Causas</a>
+          <a class="btn btn-secondary" href="#guided-demo">Ver automatizacion</a>
+        </div>
+      </div>
+      <div class="hero-visual reveal reveal-delay">
+        <div class="home-product-stage" id="home-product-stage" aria-label="Producto seleccionado"></div>
+      </div>
     </div>
-    <div class="hero-visual reveal reveal-delay"><div class="home-product-stage" id="home-product-stage" aria-label="Producto seleccionado"></div></div>
-  </div>
-</section>
-<section class="section guided-demo-section" id="business-lines">
-  <div class="container beta-guide-grid">
-    <div class="section-heading reveal">
-      <p class="eyebrow">Home público</p>
-      <h2 id="guided-product-title">OPS Legal</h2>
-      <p id="guided-product-text">La vista pública toma los productos desde la API y usa usuario2 como referencia real de productos y causas cuando está cargado en base.</p>
-      <div class="guided-actions"><a class="btn btn-primary" href="login.html">Ingresar</a><a class="btn btn-secondary" href="contacto.html">Contacto</a></div>
+  </section>
+
+  <section class="section guided-demo-section" id="guided-demo">
+    <div class="container beta-guide-grid">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Automatizacion con pasos</p>
+        <h2 id="guided-product-title">OPS Legal</h2>
+        <p id="guided-product-text">Elige una linea en el Hero y esta guia se adapta. En Legal se conecta con las causas y resultados cargados para usuario1.</p>
+        <div class="guided-actions">
+          <a class="btn btn-primary" href="app.html">Abrir app</a>
+          <a class="btn btn-secondary" href="#contact">Contactar</a>
+        </div>
+      </div>
+      <ol class="guided-steps reveal reveal-delay" id="guided-product-steps"></ol>
     </div>
-    <div class="guided-product-right reveal reveal-delay">
-      <div class="guided-product-panel" id="guided-product-panel" aria-label="Panel del producto seleccionado"></div>
-      <ol class="guided-steps" id="guided-product-steps"></ol>
+  </section>
+
+  <section class="section use-cases-section" id="visualizaciones">
+    <div class="container">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Visualizaciones conectadas</p>
+        <h2>La pantalla muestra cambios, pausas y resultados.</h2>
+        <p>El caso Legal toma datos publicos del backend local para reflejar causas activas, pausadas y comparacion contra ayer.</p>
+      </div>
+      <div class="showcase-grid">
+        <article class="showcase-card reveal">
+          <div class="use-case-dashboard">
+            <div class="mini-dashboard-head"><strong>Legal / Causas</strong><span id="home-legal-email">Correo activo</span></div>
+            <div class="mini-kpi-row">
+              <div class="mini-kpi"><small>Causas</small><b data-home-kpi="causes">4</b></div>
+              <div class="mini-kpi"><small>Activas</small><b data-home-kpi="active">3</b></div>
+              <div class="mini-kpi"><small>Con cambios</small><b data-home-kpi="changes">0</b></div>
+            </div>
+            <div class="case-list" id="home-case-list">
+              <div class="case-line"><i class="case-dot"></i><small>C-1245-2024 · sin cambios contra ayer</small><span class="case-badge">Sin cambio</span></div>
+              <div class="case-line"><i class="case-dot"></i><small>C-2301-2023 · sin cambios contra ayer</small><span class="case-badge">Sin cambio</span></div>
+            </div>
+            <div class="email-chip"><span>Resultados hoy y ayer comparados</span><strong data-home-kpi="inactive">1 pausada</strong></div>
+          </div>
+          <h3>Seguimiento legal diario</h3>
+          <p>Agrega causas, pausas seguimiento, registra resultados y compara cargas entre dias para saber si hubo cambios reales.</p>
+          <strong>Resultado: menos revision manual y trazabilidad visible.</strong>
+        </article>
+
+        <article class="showcase-card reveal reveal-delay">
+          <div class="use-case-dashboard">
+            <div class="mini-dashboard-head"><strong>Centro de mantencion</strong><span>Alertas listas</span></div>
+            <div class="mini-kpi-row">
+              <div class="mini-kpi"><small>Al dia</small><b>37</b></div>
+              <div class="mini-kpi"><small>RT pendiente</small><b>3</b></div>
+              <div class="mini-kpi"><small>Vencen</small><b>2</b></div>
+            </div>
+            <div class="fleet-icons"><i class="fleet-car"></i><i class="fleet-car"></i><i class="fleet-car"></i><i class="fleet-car warn"></i><i class="fleet-car due"></i></div>
+            <div class="email-chip"><span>Reporte de flota enviado</span><strong>Prioridad diaria</strong></div>
+          </div>
+          <h3>Mantencion de flota</h3>
+          <p>Autos al dia, revisiones tecnicas pendientes y vencimientos quedan ordenados en una vista operativa.</p>
+          <strong>Resultado: tareas de mantencion priorizadas.</strong>
+        </article>
+
+        <article class="showcase-card reveal reveal-delay-2">
+          <div class="use-case-dashboard">
+            <div class="mini-dashboard-head"><strong>Demanda en tiempo real</strong><span>Live forecast</span></div>
+            <div class="mini-kpi-row">
+              <div class="mini-kpi"><small>Demanda</small><b>1.248</b></div>
+              <div class="mini-kpi"><small>Pronostico</small><b>+12%</b></div>
+              <div class="mini-kpi"><small>Volatilidad</small><b>Alta</b></div>
+            </div>
+            <div class="demand-chart"><span class="demand-line"></span><span class="forecast-line"></span><div class="demand-dots"><i></i><i></i><i></i><i></i><i></i></div></div>
+          </div>
+          <h3>Datos para decidir</h3>
+          <p>Dashboard de estimacion de demanda en tiempo real, con movimiento de demanda y pronostico durante el dia.</p>
+          <strong>Resultado: decision con senal viva.</strong>
+        </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="section product-tiles" id="business-lines">
+    <div class="container">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Soluciones</p>
+        <h2>Tres productos, tres formas claras de entrar.</h2>
+        <p>Elige la linea que mas se acerca a tu necesidad actual: operar, decidir con datos o construir una solucion a medida.</p>
+      </div>
+      <div class="business-grid home-simple-solutions">
+        <article class="business-card business-card-featured reveal" data-static-card="true">
+          <div class="card-icon">01</div>
+          <h3>Avia OPS</h3>
+          <p>Control operacional para causas, flota, estados, alertas y seguimiento diario desde una pantalla clara.</p>
+          <a class="btn btn-secondary" href="ops.html">Elegir Avia OPS</a>
+        </article>
+        <article class="business-card reveal reveal-delay" data-static-card="true">
+          <div class="card-icon">02</div>
+          <h3>Avia Intelligence</h3>
+          <p>Analisis, tableros ejecutivos y visualizaciones para entender cambios, riesgos y resultados en tiempo real.</p>
+          <a class="btn btn-secondary" href="avia-intelligence.html">Elegir Avia Intelligence</a>
+        </article>
+        <article class="business-card reveal reveal-delay-2" data-static-card="true">
+          <div class="card-icon">03</div>
+          <h3>Avia Labs</h3>
+          <p>APIs, apps internas, automatizaciones e integraciones hechas a medida para conectar tu operacion.</p>
+          <a class="btn btn-secondary" href="avia-labs.html">Elegir Avia Labs</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact-section" id="contact">
+    <div class="container contact-grid">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Contacto</p>
+        <h2>Cuéntanos qué operación quieres ordenar.</h2>
+        <p>El formulario queda conectado al backend de AVIA. Puedes pedir ayuda con Legal / Causas, flota, datos, APIs o una app interna.</p>
+        <div class="contact-meta">
+          <p><strong>Legal / Causas:</strong> alta, pausa, resultados y comparacion diaria.</p>
+          <p><strong>API:</strong> endpoints para conectar pantallas, procesos y fuentes reales.</p>
+          <p><strong>Labs:</strong> construccion de paneles y automatizaciones especificas.</p>
+        </div>
+      </div>
+      <form class="contact-form reveal reveal-delay" data-api-form data-success-url="/index.html?enviado=1#contact">
+        <input type="hidden" name="form" value="avia_home_contact" />
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
+        <label for="home-name">Nombre</label>
+        <input id="home-name" name="name" type="text" autocomplete="name" minlength="2" required />
+        <label for="home-email">Correo</label>
+        <input id="home-email" name="email" type="email" autocomplete="email" required />
+        <label for="home-interest">Linea de interes</label>
+        <select id="home-interest" name="interest" data-static-options="true" required>
+          <option value="legal">OPS Legal - causas y resultados</option>
+          <option value="flota">OPS Flota - vencimientos y mantencion</option>
+          <option value="intelligence">Avia Intelligence - datos y decision</option>
+          <option value="api">Avia API - integraciones y endpoints</option>
+          <option value="lab">Avia Lab - apps internas</option>
+        </select>
+        <label for="home-message">Mensaje</label>
+        <textarea id="home-message" name="message" rows="5" minlength="5" required></textarea>
+        <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+      </form>
+    </div>
+  </section>
 </main>
+
 <footer class="site-footer footer-clean"></footer>
-<script src="product-data.js?v=production-home-20260604-user2-panel"></script>
-<script src="home-experience.js?v=production-home-20260604-user2-panel"></script>
+<script src="api-config.js"></script>
+<script src="product-data.js?v=production-home-20260604-3"></script>
+<script src="home-experience.js?v=production-home-20260604-3"></script>
+<script src="forecast-sequence.js"></script>
 <script src="script.js"></script>
-<script src="footer-standard.js"></script>
+<script src="forms-api.js"></script>
 </body>
 </html>

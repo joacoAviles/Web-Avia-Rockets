@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { uid } from '../lib/id.js';
-import { appendRecord, findBy, updateRecord } from '../lib/store.js';
+import { appendRecord, findBy, readStore, updateRecord } from '../lib/store.js';
 import { hashPassword, issueToken, verifyPassword } from '../lib/auth.js';
+import { authRequired } from '../middleware/auth-required.js';
+import { publicUser } from '../lib/app-data.js';
 
 const router = Router();
 
@@ -15,8 +17,12 @@ const registerSchema = z.object({
 });
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  email: z.string().min(1).optional(),
+  identifier: z.string().min(1).optional(),
   password: z.string().min(8)
+}).refine((input) => input.email || input.identifier, {
+  message: 'Email or username is required',
+  path: ['identifier']
 });
 
 router.post('/register', (req, res) => {
@@ -37,6 +43,17 @@ router.post('/register', (req, res) => {
     emailVerifiedAt: null,
     verificationToken,
     ...input,
+    full_name: input.name,
+    settings: {
+      daily_summary_email_enabled: true,
+      ui_theme_preference: 'dark',
+      default_payment_method: 'manual'
+    },
+    terms: {
+      accepted: false,
+      version: '1.102',
+      acceptedAt: null
+    },
     passwordHash: hashPassword(input.password),
     password: undefined
   };
@@ -44,13 +61,7 @@ router.post('/register', (req, res) => {
   appendRecord('users', user);
 
   return res.status(201).json({
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      status: user.status
-    },
+    user: publicUser(user),
     verificationToken,
     message: 'User created, verify email to activate account'
   });
@@ -86,7 +97,10 @@ router.post('/login', (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
 
-  const user = findBy('users', (u) => u.email.toLowerCase() === parsed.data.email.toLowerCase());
+  const identifier = String(parsed.data.identifier || parsed.data.email || '').trim().toLowerCase();
+  const user = findBy('users', (u) => {
+    return u.email?.toLowerCase() === identifier || u.username?.toLowerCase() === identifier;
+  });
   if (!user) return res.status(401).json({ error: 'INVALID_CREDENTIALS' });
   if (!verifyPassword(parsed.data.password, user.passwordHash)) {
     return res.status(401).json({ error: 'INVALID_CREDENTIALS' });
@@ -96,14 +110,20 @@ router.post('/login', (req, res) => {
 
   return res.json({
     token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      status: user.status
-    }
+    user: publicUser(user)
   });
+});
+
+router.get('/me', authRequired, (req, res) => {
+  const store = readStore();
+  const user = store.users.find((item) => item.id === req.auth.userId);
+  if (!user) return res.status(404).json({ error: 'USER_NOT_FOUND' });
+
+  return res.json(publicUser(user));
+});
+
+router.post('/logout', (_req, res) => {
+  return res.json({ ok: true });
 });
 
 router.post('/recover-password', (req, res) => {

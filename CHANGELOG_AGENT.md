@@ -20,3 +20,32 @@ El objetivo fue dejar claridad total sobre:
 - Reduce iteraciones para integración frontend-backend.
 - Permite onboarding rápido de desarrollo y operación.
 - Deja checklist explícito de credenciales para habilitar cobros reales.
+
+## 2026-06-04
+
+### Cambio
+Se conectó el front productivo con el backend Express:
+- endpoints `/api/dashboard`, `/api/causes`, `/api/results`, `/api/account`, `/api/public/home`, `/api/site`, `/api/auth/me`, `/api/auth/logout`
+- alta, carga masiva, activación/pausa y resultados de causas desde `app.html`
+- API local automática en desarrollo y producción en dominio real
+- seed local Legal / Causas para `usuario1` en `data/store.json`
+- SQL único de producción en `sql/avia_app_complete.sql`
+
+### Por qué
+La web ya tenía botones y vistas preparados, pero llamaban rutas inexistentes o contratos de API mezclados entre FastAPI y Express.
+
+### Impacto
+- El flujo cliente puede iniciar sesión, administrar causas, registrar resultados y ver estadísticas.
+
+## 2026-06-04 Home
+
+### Cambio
+Se recuperó el home completo con Hero, automatización por pasos, visualizaciones, las 3 soluciones principales y contacto conectado al backend.
+Se ajustó la sección `Soluciones` al formato antiguo: tres productos con icono pequeño, descripción breve y botón directo.
+
+### Impacto
+- El `index.html` vuelve a mostrar el recorrido público completo.
+- Legal / Causas toma métricas y filas desde `/api/public/home`.
+- Las tarjetas `Avia OPS`, `Avia Intelligence` y `Avia Labs` quedan protegidas para no ser reemplazadas por el loader de servicios.
+- La home pública puede poblar visualizaciones desde API.
+- La documentación queda alineada con el contrato real del frontend.

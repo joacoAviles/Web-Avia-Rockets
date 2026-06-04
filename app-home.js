@@ -20,6 +20,7 @@ function appEscape(value){ return String(value ?? "").replaceAll("&","&amp;").re
 function appBool(value){ return value ? "Activado" : "Desactivado"; }
 function appStatus(value){ return ({active:"Activa", inactive:"Pausada", all:"Todas"}[value] || value || "-"); }
 function appPaid(account){ return account?.subscription?.is_paid ? "Pagado" : "No pagado"; }
+function appFormatDate(value){ if (!value) return "-"; try { return new Date(value).toLocaleString("es-CL", { dateStyle:"short", timeStyle:"short" }); } catch (_) { return String(value); } }
 
 async function appFetch(path, options = {}){
   const headers = new Headers(options.headers || {});
@@ -30,12 +31,12 @@ async function appFetch(path, options = {}){
   const response = await fetch(`${AVIA_APP_API}${path}`, { ...options, headers });
   let data = null;
   try { data = await response.json(); } catch (_) { data = null; }
-  if (response.status === 401) {
+  if (response.status === 401 || (response.status === 404 && data?.error === "USER_NOT_FOUND")) {
     appClearSession();
     window.location.href = "login.html?next=app.html";
     throw new Error("Sesión expirada o inválida");
   }
-  if (!response.ok) throw new Error(data?.detail || data?.message || `Error API ${response.status}`);
+  if (!response.ok) throw new Error(data?.detail || data?.message || data?.error || `Error API ${response.status}`);
   return data;
 }
 
@@ -93,7 +94,12 @@ function appCauseRows(){
   return causes.map((cause) => {
     const nextStatus = cause.user_status === "active" ? "inactive" : "active";
     const action = cause.user_status === "active" ? "Pausar" : "Reactivar";
-    return `<div class="app-config-row"><span><strong>${appEscape(cause.code)}</strong><br>${appEscape(cause.court || "Tribunal no informado")}<br><small>${appEscape(cause.title || "Causa sin título")}</small></span><strong>${appEscape(appStatus(cause.user_status))}<br><button class="btn btn-secondary" type="button" data-cause-status="${cause.id}" data-next-status="${nextStatus}">${action}</button></strong></div>`;
+    const latest = cause.latest_result;
+    const comparison = cause.comparison || {};
+    const latestText = latest ? `${comparison.label || (latest.has_changes ? "Cambio" : "Sin cambio")} · ${latest.summary || latest.result_text || "Resultado registrado"}` : "Sin resultados registrados";
+    const datesText = latest ? `Hoy: ${appFormatDate(comparison.latest_checked_at || latest.checkedAt)} · Anterior: ${appFormatDate(comparison.previous_checked_at)}` : "Carga pendiente";
+    return `<div class="app-config-row app-cause-row"><span><strong>${appEscape(cause.code)}</strong><br>${appEscape(cause.court || "Tribunal no informado")}<br><small>${appEscape(cause.title || "Causa sin título")}</small><br><small>${appEscape(latestText)}</small><br><small>${appEscape(datesText)}</small></span><strong class="app-cause-actions">${appEscape(appStatus(cause.user_status))}<br><button class="btn btn-secondary" type="button" data-cause-status="${cause.id}" data-next-status="${nextStatus}">${action}</button><button class="btn btn-secondary" type="button" data-cause-results="${cause.id}">Ver resultados</button><button class="btn btn-secondary" type="button" data-cause-run="${cause.id}">Revisar ahora</button></strong></div>
+      <form class="app-config-row app-result-form" data-result-form="${cause.id}"><span>Nuevo resultado<br><small>Guarda una salida manual para esta causa.</small></span><strong class="app-form-inline app-result-inline"><input name="summary" placeholder="Resumen" /><input name="result_text" placeholder="Detalle del resultado" /><label class="app-checkbox-line"><input type="checkbox" name="has_changes" /> Cambio</label><button class="btn btn-primary" type="submit">Guardar resultado</button></strong></form>`;
   }).join("");
 }
 
@@ -110,7 +116,7 @@ function appRenderCausesPanel(){
   if (!config) return;
   config.innerHTML = `<div class="app-config-row"><span>Buscar causa</span><strong><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Rol, tribunal o título" /></strong></div>
     <div class="app-config-row"><span>Filtros</span><strong class="app-row-actions"><button class="btn btn-secondary" type="button" data-cause-filter="all">Todas</button><button class="btn btn-secondary" type="button" data-cause-filter="active">Activas</button><button class="btn btn-secondary" type="button" data-cause-filter="inactive">Pausadas</button></strong></div>
-    <form class="app-config-row" id="cause-add-form"><span>Agregar causa</span><strong class="app-form-inline"><input name="code" required placeholder="C-5351-2026" /><input name="court" placeholder="Tribunal" /><button class="btn btn-primary" type="submit">Agregar</button></strong></form>
+    <form class="app-config-row" id="cause-add-form"><span>Agregar causa</span><strong class="app-form-inline app-cause-add-inline"><input name="code" required placeholder="C-5351-2026" /><input name="court" placeholder="Tribunal" /><input name="title" placeholder="Título o materia" /><button class="btn btn-primary" type="submit" data-cause-add-button onclick="window.appSubmitCauseAdd && window.appSubmitCauseAdd(event)">Agregar</button></strong></form>
     <details class="app-config-row"><summary><strong>Carga masiva</strong></summary><form id="cause-bulk-form"><textarea name="bulk" rows="6" placeholder="Una causa por línea. Ejemplo: C-5351-2026 | 29º Juzgado Civil de Santiago"></textarea><br><button class="btn btn-primary" type="submit">Cargar causas</button></form></details>
     <div id="cause-action-output" class="app-query-output" style="display:none"></div><div id="cause-list-rows">${appCauseRows()}</div>`;
   appBindControls();
@@ -149,6 +155,17 @@ function appShow(message, isError = false){
   if (out) { out.style.display = "block"; out.textContent = message; out.style.color = isError ? "#ffd2d2" : "#d8e6ff"; }
 }
 
+function appShowResults(data){
+  const rows = Array.isArray(data?.results) ? data.results : [];
+  const cause = data?.cause || {};
+  if (!rows.length) return appShow(`No hay resultados para ${cause.code || "esta causa"}.`);
+  const lines = rows.map((result) => {
+    const change = result.has_changes ? "Cambio" : "Sin cambio";
+    return `${appFormatDate(result.checkedAt || result.createdAt)} | ${change} | ${result.summary || "Resultado"}\n${result.result_text || ""}`;
+  });
+  appShow(`Resultados de ${cause.code || "causa"}\n\n${lines.join("\n\n")}`);
+}
+
 async function appReload(){
   appState.dashboard = await appFetch("/api/dashboard");
   appState.user = appState.dashboard?.user || appState.user;
@@ -157,18 +174,81 @@ async function appReload(){
   appRenderUser(); appRenderStats(); appRenderPanel();
 }
 
+async function appSubmitCauseForm(formNode){
+  const form = new FormData(formNode);
+  const code = String(form.get("code") || "").trim();
+  if (!code) return appShow("Ingresa el rol de la causa.", true);
+  await appFetch("/api/causes", {
+    method:"POST",
+    body:JSON.stringify({
+      code,
+      court:String(form.get("court") || "").trim() || null,
+      title:String(form.get("title") || "").trim() || null
+    })
+  });
+  await appReload();
+  appShow("Causa agregada correctamente.");
+}
+
+window.appSubmitCauseAdd = async function appSubmitCauseAdd(event){
+  event.preventDefault();
+  const formNode = event.currentTarget.closest("form") || document.getElementById("cause-add-form");
+  if (!formNode) return appShow("No se encontró el formulario de causa.", true);
+  try {
+    await appSubmitCauseForm(formNode);
+  } catch (error) {
+    appShow(error.message || "Error agregando causa.", true);
+  }
+};
+
 function appBindControls(){
   document.querySelectorAll("[data-cause-filter]").forEach((button) => button.addEventListener("click", () => { appState.view = "causes"; appState.statusFilter = button.dataset.causeFilter || "all"; appRenderPanel(); }));
   document.getElementById("cause-search-input")?.addEventListener("input", (event) => { appState.search = event.target.value || ""; const rows = document.getElementById("cause-list-rows"); if (rows) rows.innerHTML = appCauseRows(); appBindRowActions(); });
-  document.getElementById("cause-add-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); try { await appFetch("/api/causes", { method:"POST", body:JSON.stringify({ code:String(form.get("code") || "").trim(), court:String(form.get("court") || "").trim() || null }) }); appShow("Causa agregada correctamente."); await appReload(); } catch (error) { appShow(error.message || "Error agregando causa.", true); } });
-  document.getElementById("cause-bulk-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const causes = String(form.get("bulk") || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => { const [code, court] = line.split("|").map((part) => part.trim()); return { code, court: court || null }; }).filter((cause) => cause.code); if (!causes.length) return appShow("No hay causas válidas para cargar.", true); try { const result = await appFetch("/api/causes/bulk", { method:"POST", body:JSON.stringify({ causes }) }); appShow(`Carga masiva terminada. Registros procesados: ${result.created_or_updated || 0}.`); await appReload(); } catch (error) { appShow(error.message || "Error en carga masiva.", true); } });
-  document.getElementById("account-settings-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); try { appState.account = await appFetch("/api/account/settings", { method:"PATCH", body:JSON.stringify({ ui_theme_preference:String(form.get("ui_theme_preference") || "dark"), default_payment_method:String(form.get("default_payment_method") || "manual"), daily_summary_email_enabled:form.has("daily_summary_email_enabled") }) }); appShow("Configuración guardada."); await appReload(); } catch (error) { appShow(error.message || "Error guardando configuración.", true); } });
-  document.getElementById("account-delete-request")?.addEventListener("click", async () => { try { await appFetch("/api/account/delete-request", { method:"POST" }); appShow("Solicitud de eliminación registrada."); await appReload(); } catch (error) { appShow(error.message || "Error solicitando eliminación.", true); } });
+  document.getElementById("cause-add-form")?.addEventListener("submit", async (event) => { event.preventDefault(); try { await appSubmitCauseForm(event.currentTarget); } catch (error) { appShow(error.message || "Error agregando causa.", true); } });
+  document.getElementById("cause-bulk-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const causes = String(form.get("bulk") || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => { const [code, court] = line.split("|").map((part) => part.trim()); return { code, court: court || null }; }).filter((cause) => cause.code); if (!causes.length) return appShow("No hay causas válidas para cargar.", true); try { const result = await appFetch("/api/causes/bulk", { method:"POST", body:JSON.stringify({ causes }) }); await appReload(); appShow(`Carga masiva terminada. Registros procesados: ${result.created_or_updated || 0}.`); } catch (error) { appShow(error.message || "Error en carga masiva.", true); } });
+  document.getElementById("account-settings-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); try { appState.account = await appFetch("/api/account/settings", { method:"PATCH", body:JSON.stringify({ ui_theme_preference:String(form.get("ui_theme_preference") || "dark"), default_payment_method:String(form.get("default_payment_method") || "manual"), daily_summary_email_enabled:form.has("daily_summary_email_enabled") }) }); await appReload(); appShow("Configuración guardada."); } catch (error) { appShow(error.message || "Error guardando configuración.", true); } });
+  document.getElementById("account-delete-request")?.addEventListener("click", async () => { try { await appFetch("/api/account/delete-request", { method:"POST" }); await appReload(); appShow("Solicitud de eliminación registrada."); } catch (error) { appShow(error.message || "Error solicitando eliminación.", true); } });
   appBindRowActions();
 }
 
 function appBindRowActions(){
-  document.querySelectorAll("[data-cause-status]").forEach((button) => button.addEventListener("click", async () => { try { await appFetch(`/api/causes/${button.dataset.causeStatus}/status`, { method:"PATCH", body:JSON.stringify({ status: button.dataset.nextStatus }) }); await appReload(); } catch (error) { appShow(error.message || "Error actualizando causa.", true); } }));
+  document.querySelectorAll("[data-cause-status]").forEach((button) => {
+    if (button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", async () => { try { await appFetch(`/api/causes/${button.dataset.causeStatus}/status`, { method:"PATCH", body:JSON.stringify({ status: button.dataset.nextStatus }) }); await appReload(); } catch (error) { appShow(error.message || "Error actualizando causa.", true); } });
+  });
+  document.querySelectorAll("[data-cause-run]").forEach((button) => {
+    if (button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", async () => { try { await appFetch(`/api/causes/${button.dataset.causeRun}/run`, { method:"POST" }); await appReload(); appShow("Revisión registrada sin cambios."); } catch (error) { appShow(error.message || "Error registrando revisión.", true); } });
+  });
+  document.querySelectorAll("[data-cause-results]").forEach((button) => {
+    if (button.dataset.bound === "true") return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", async () => { try { appShowResults(await appFetch(`/api/causes/${button.dataset.causeResults}/results`)); } catch (error) { appShow(error.message || "Error cargando resultados.", true); } });
+  });
+  document.querySelectorAll("[data-result-form]").forEach((formNode) => {
+    if (formNode.dataset.bound === "true") return;
+    formNode.dataset.bound = "true";
+    formNode.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      try {
+        await appFetch(`/api/causes/${event.currentTarget.dataset.resultForm}/results`, {
+          method:"POST",
+          body:JSON.stringify({
+            summary:String(form.get("summary") || "").trim() || "Resultado manual",
+            result_text:String(form.get("result_text") || "").trim() || "Resultado registrado desde la web",
+            has_changes:form.has("has_changes")
+          })
+        });
+        await appReload();
+        appShow("Resultado guardado.");
+      } catch (error) {
+        appShow(error.message || "Error guardando resultado.", true);
+      }
+    });
+  });
 }
 
 function appSetupSidebarToggle(){ const layout = document.getElementById("app-layout"); const toggle = document.getElementById("app-sidebar-toggle"); if (!layout || !toggle) return; toggle.addEventListener("click", () => { const compact = layout.classList.toggle("is-compact"); toggle.textContent = compact ? "›" : "‹"; }); }

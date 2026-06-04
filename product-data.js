@@ -44,7 +44,9 @@ window.renderAviaProductPanel = function renderAviaProductPanel(product, options
 
 window.AVIA_API_BASE_URL_RESOLVED = (() => {
   if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
-  return "https://api.aviarockets.cl";
+  var host = window.location.hostname;
+  var isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
+  return isLocal ? "http://localhost:8080" : "https://api.aviarockets.cl";
 })();
 
 window.aviaNormalizeProductSlug = function aviaNormalizeProductSlug(slug) {
@@ -76,7 +78,7 @@ function aviaBuildLegalProductFromPublicData(baseProduct, publicData) {
     metrics: [["Causas", String(causes.length)], ["Activas", String(active)], ["Pausadas", String(inactive)], ["Correo", stats.daily_summary_email_enabled ? "ON" : "OFF"]],
     events: events.length ? events : baseProduct.events,
     headline: "Seguimiento real de causas asignadas al usuario productivo.",
-    description: "Esta vista usa datos reales cargados para usuario2 y refleja productos, causas y estado de correo resumen desde la base."
+    description: "Esta vista usa datos reales cargados para el usuario productivo y refleja productos, causas y estado de correo resumen desde la base."
   };
 }
 

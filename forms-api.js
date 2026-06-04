@@ -1,4 +1,5 @@
-const FORMS_API_URL = window.AVIA_FORMS_API_URL || 'https://api.aviarockets.cl/api/forms/submit';
+const FORMS_API_BASE = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || 'https://api.aviarockets.cl').replace(/\/$/, '');
+const FORMS_API_URL = window.AVIA_FORMS_API_URL || `${FORMS_API_BASE}/api/forms/submit`;
 
 function getFormPayload(form) {
   const data = new FormData(form);

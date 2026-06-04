@@ -24,6 +24,35 @@ npm run dev
 ## Leads
 - `POST /api/leads`
 
+## Sitio publico
+- `GET /api/site`
+- `GET /api/public/home`
+
+`public/home` entrega productos, causas publicas de referencia y estadisticas agregadas para las visualizaciones del home.
+
+## Dashboard cliente
+- `GET /api/dashboard` (requiere token)
+
+Entrega usuario, cuenta, estadisticas, causas y resultados recientes para `app.html`.
+
+## Causas y resultados
+- `GET /api/causes` (requiere token)
+- `POST /api/causes` (requiere token)
+- `POST /api/causes/bulk` (requiere token)
+- `PATCH /api/causes/:id/status` (requiere token)
+- `PATCH /api/causes/:id` (requiere token)
+- `GET /api/causes/:id/results` (requiere token)
+- `POST /api/causes/:id/results` (requiere token)
+- `POST /api/causes/:id/run` (requiere token, revision manual)
+
+Estados de causa para la web: `active` y `inactive` (pausada).
+
+## Cuenta
+- `GET /api/auth/me` (requiere token)
+- `POST /api/auth/logout`
+- `PATCH /api/account/settings` (requiere token)
+- `POST /api/account/delete-request` (requiere token)
+
 ## Perfil de facturación (Chile)
 - `POST /api/billing-profiles` (requiere `Authorization: Bearer <token>`)
 - `GET /api/billing-profiles/me` (requiere token)

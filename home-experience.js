@@ -66,10 +66,55 @@ function aviaHomeRenderSelector(){
   aviaHomeSelect(products[0].id);
 }
 
+function aviaRenderLegalUseCase(publicData){
+  if (!publicData) return;
+  var stats = publicData.stats || {};
+  var causes = Array.isArray(publicData.causes) ? publicData.causes : [];
+  var total = stats.total_causes_count ?? causes.length;
+  var active = stats.active_causes_count ?? causes.filter(function(cause){ return cause.user_status === 'active'; }).length;
+  var inactive = stats.inactive_causes_count ?? causes.filter(function(cause){ return cause.user_status === 'inactive'; }).length;
+  var changes = stats.changes_count ?? causes.filter(function(cause){ return cause.last_has_changes; }).length;
+  var values = {
+    causes: total,
+    active: active,
+    inactive: inactive + ' pausada' + (inactive === 1 ? '' : 's'),
+    changes: changes
+  };
+
+  Object.keys(values).forEach(function(key){
+    document.querySelectorAll('[data-home-kpi="' + key + '"]').forEach(function(node){
+      node.textContent = values[key];
+    });
+  });
+
+  var email = document.getElementById('home-legal-email');
+  if (email) email.textContent = stats.daily_summary_email_enabled ? 'Correo activo' : 'Correo pausado';
+
+  var list = document.getElementById('home-case-list');
+  if (!list) return;
+  aviaClear(list);
+  causes.slice(0, 2).forEach(function(cause){
+    var line = document.createElement('div');
+    line.className = 'case-line';
+    var dot = document.createElement('i');
+    dot.className = 'case-dot';
+    var text = document.createElement('small');
+    text.textContent = cause.code + ' · ' + (cause.comparison?.label || cause.last_result || 'Resultado cargado');
+    var badge = document.createElement('span');
+    badge.className = 'case-badge';
+    badge.textContent = cause.last_has_changes ? 'Cambio' : 'Sin cambio';
+    line.appendChild(dot);
+    line.appendChild(text);
+    line.appendChild(badge);
+    list.appendChild(line);
+  });
+}
+
 async function aviaHomeSetup(){
   if (window.aviaLoadProducts) {
     var apiProducts = await window.aviaLoadProducts();
     aviaSetHomeProducts(apiProducts);
+    aviaRenderLegalUseCase(window.AVIA_HOME_PUBLIC_DATA);
   }
   aviaHomeRenderSelector();
   var logos = document.getElementById('company-logo-strip');

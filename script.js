@@ -1,6 +1,8 @@
 const API_BASE_URL = (() => {
   if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
-  return "https://api.aviarockets.cl";
+  var host = window.location.hostname;
+  var isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
+  return isLocal ? "http://localhost:8080" : "https://api.aviarockets.cl";
 })();
 
 const TOKEN_KEY = "avia_auth_token";
@@ -154,7 +156,7 @@ function renderServices(services) {
   const primary = ["ops", "intelligence", "labs"];
   const selected = primary.map((slug) => normalizedServices.find((service) => service.normalizedSlug === slug)).filter(Boolean);
   const fallback = selected.length >= 3 ? selected : normalizedServices.slice(0, 3);
-  const cards = document.querySelectorAll(".business-card");
+  const cards = Array.from(document.querySelectorAll(".business-card")).filter((card) => !card.dataset.staticCard);
   fallback.slice(0, cards.length).forEach((service, index) => {
     const card = cards[index];
     const title = card.querySelector("h3");
@@ -165,7 +167,7 @@ function renderServices(services) {
     if (cta) cta.dataset.serviceSlug = service.normalizedSlug;
   });
   const interestSelect = document.getElementById("interest");
-  if (interestSelect) {
+  if (interestSelect && !interestSelect.dataset.staticOptions) {
     interestSelect.innerHTML = "";
     normalizedServices.forEach((service) => {
       const option = document.createElement("option");

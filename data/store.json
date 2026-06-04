@@ -1,7 +1,183 @@
 {
   "leads": [],
   "customers": [],
-  "users": [],
+  "users": [
+    {
+      "id": "usr_usuario1",
+      "username": "usuario1",
+      "role": "legal",
+      "status": "active",
+      "createdAt": "2026-06-03T16:00:00.000Z",
+      "updatedAt": "2026-06-03T16:00:00.000Z",
+      "emailVerifiedAt": "2026-06-03T16:00:00.000Z",
+      "verificationToken": null,
+      "name": "Usuario Legal 1",
+      "full_name": "Usuario Legal 1",
+      "email": "usuario1@aviarockets.local",
+      "phone": "+56900000000",
+      "type": "person",
+      "passwordHash": "usuario1_local_seed_20260604:684154b306a67c8a34c4d41a9ef8a98c75844b5d26b112f861bfa51d9e81ed18",
+      "settings": {
+        "daily_summary_email_enabled": true,
+        "ui_theme_preference": "dark",
+        "default_payment_method": "manual"
+      },
+      "terms": {
+        "accepted": true,
+        "version": "1.102",
+        "acceptedAt": "2026-06-03T16:00:00.000Z"
+      }
+    }
+  ],
+  "causes": [
+    {
+      "id": "cause_usuario1_001",
+      "userId": "usr_usuario1",
+      "code": "C-1245-2024",
+      "title": "Cobranza ejecutiva",
+      "court": "3 Juzgado Civil de Santiago",
+      "status": "active",
+      "user_status": "active",
+      "last_checked_at": "2026-06-03T16:00:00.000Z",
+      "last_result": "Sin cambios entre carga de ayer y carga de hoy",
+      "last_has_changes": false,
+      "createdAt": "2026-06-02T16:00:00.000Z",
+      "updatedAt": "2026-06-03T16:00:00.000Z"
+    },
+    {
+      "id": "cause_usuario1_002",
+      "userId": "usr_usuario1",
+      "code": "C-2301-2023",
+      "title": "Revision de estado procesal",
+      "court": "Juzgado de Cobranza Laboral",
+      "status": "active",
+      "user_status": "active",
+      "last_checked_at": "2026-06-03T16:00:00.000Z",
+      "last_result": "Sin cambios entre carga de ayer y carga de hoy",
+      "last_has_changes": false,
+      "createdAt": "2026-06-02T16:00:00.000Z",
+      "updatedAt": "2026-06-03T16:00:00.000Z"
+    },
+    {
+      "id": "cause_usuario1_003",
+      "userId": "usr_usuario1",
+      "code": "O-808-2025",
+      "title": "Causa laboral pausada",
+      "court": "2 Juzgado de Letras del Trabajo",
+      "status": "inactive",
+      "user_status": "inactive",
+      "last_checked_at": "2026-06-03T16:00:00.000Z",
+      "last_result": "Causa pausada por usuario. Sin cambios entre cargas.",
+      "last_has_changes": false,
+      "createdAt": "2026-06-02T16:00:00.000Z",
+      "updatedAt": "2026-06-03T16:00:00.000Z"
+    },
+    {
+      "id": "cause_usuario1_004",
+      "userId": "usr_usuario1",
+      "code": "C-5351-2026",
+      "title": "Prueba civil usuario1",
+      "court": "29 Juzgado Civil de Santiago",
+      "status": "active",
+      "user_status": "active",
+      "last_checked_at": "2026-06-03T16:00:00.000Z",
+      "last_result": "Sin cambios entre carga de ayer y carga de hoy",
+      "last_has_changes": false,
+      "createdAt": "2026-06-02T16:00:00.000Z",
+      "updatedAt": "2026-06-03T16:00:00.000Z"
+    }
+  ],
+  "causeResults": [
+    {
+      "id": "res_usuario1_1_ayer",
+      "causeId": "cause_usuario1_001",
+      "userId": "usr_usuario1",
+      "summary": "Carga de ayer sin novedades",
+      "result_text": "Sin cambios entre carga de ayer y carga de hoy",
+      "has_changes": false,
+      "source": "seed_yesterday",
+      "checkedAt": "2026-06-02T16:00:00.000Z",
+      "createdAt": "2026-06-02T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_1_hoy",
+      "causeId": "cause_usuario1_001",
+      "userId": "usr_usuario1",
+      "summary": "Carga de hoy igual a ayer",
+      "result_text": "Sin cambios entre carga de ayer y carga de hoy",
+      "has_changes": false,
+      "source": "seed_today",
+      "checkedAt": "2026-06-03T16:00:00.000Z",
+      "createdAt": "2026-06-03T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_2_ayer",
+      "causeId": "cause_usuario1_002",
+      "userId": "usr_usuario1",
+      "summary": "Carga de ayer sin novedades",
+      "result_text": "Sin cambios entre carga de ayer y carga de hoy",
+      "has_changes": false,
+      "source": "seed_yesterday",
+      "checkedAt": "2026-06-02T16:00:00.000Z",
+      "createdAt": "2026-06-02T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_2_hoy",
+      "causeId": "cause_usuario1_002",
+      "userId": "usr_usuario1",
+      "summary": "Carga de hoy igual a ayer",
+      "result_text": "Sin cambios entre carga de ayer y carga de hoy",
+      "has_changes": false,
+      "source": "seed_today",
+      "checkedAt": "2026-06-03T16:00:00.000Z",
+      "createdAt": "2026-06-03T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_3_ayer",
+      "causeId": "cause_usuario1_003",
+      "userId": "usr_usuario1",
+      "summary": "Carga de ayer sin novedades",
+      "result_text": "Causa pausada por usuario. Sin cambios entre cargas.",
+      "has_changes": false,
+      "source": "seed_yesterday",
+      "checkedAt": "2026-06-02T16:00:00.000Z",
+      "createdAt": "2026-06-02T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_3_hoy",
+      "causeId": "cause_usuario1_003",
+      "userId": "usr_usuario1",
+      "summary": "Carga de hoy igual a ayer",
+      "result_text": "Causa pausada por usuario. Sin cambios entre cargas.",
+      "has_changes": false,
+      "source": "seed_today",
+      "checkedAt": "2026-06-03T16:00:00.000Z",
+      "createdAt": "2026-06-03T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_4_ayer",
+      "causeId": "cause_usuario1_004",
+      "userId": "usr_usuario1",
+      "summary": "Carga de ayer sin novedades",
+      "result_text": "Sin cambios entre carga de ayer y carga de hoy",
+      "has_changes": false,
+      "source": "seed_yesterday",
+      "checkedAt": "2026-06-02T16:00:00.000Z",
+      "createdAt": "2026-06-02T16:00:00.000Z"
+    },
+    {
+      "id": "res_usuario1_4_hoy",
+      "causeId": "cause_usuario1_004",
+      "userId": "usr_usuario1",
+      "summary": "Carga de hoy igual a ayer",
+      "result_text": "Sin cambios entre carga de ayer y carga de hoy",
+      "has_changes": false,
+      "source": "seed_today",
+      "checkedAt": "2026-06-03T16:00:00.000Z",
+      "createdAt": "2026-06-03T16:00:00.000Z"
+    }
+  ],
+  "accountDeletionRequests": [],
   "billingProfiles": [],
   "subscriptions": [],
   "subscriptionChanges": [],

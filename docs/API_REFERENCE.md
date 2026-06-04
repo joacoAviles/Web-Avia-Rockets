@@ -64,13 +64,13 @@ Activa la cuenta con token de verificación.
 ```
 
 ### POST `/api/auth/login`
-Inicia sesión y devuelve token.
+Inicia sesión y devuelve token. Acepta `identifier` para usuario o correo, o `email` para compatibilidad.
 
 **Body**
 ```json
 {
-  "email": "ana@empresa.cl",
-  "password": "claveSuperSegura123"
+  "identifier": "usuario1",
+  "password": "usuario1"
 }
 ```
 
@@ -79,10 +79,11 @@ Inicia sesión y devuelve token.
 {
   "token": "eyJ1c2VySWQiOiJ1c3Jf...",
   "user": {
-    "id": "usr_xxx",
-    "name": "Ana Pérez",
-    "email": "ana@empresa.cl",
-    "role": "user",
+    "id": "usr_usuario1",
+    "username": "usuario1",
+    "name": "Usuario Legal 1",
+    "email": "usuario1@aviarockets.local",
+    "role": "legal",
     "status": "active"
   }
 }
@@ -114,6 +115,130 @@ Captura lead desde web pública.
   "message": "Necesito demo de gestión de vencimientos"
 }
 ```
+
+---
+
+## 3.1) Sitio publico
+
+### GET `/api/site`
+Entrega catalogo de servicios y settings publicos para poblar textos/selects del front.
+
+### GET `/api/public/home`
+Entrega productos, estadisticas y causas publicas de referencia para las visualizaciones del home.
+
+**Respuesta 200**
+```json
+{
+  "products": [
+    {
+      "id": "svc_legal",
+      "slug": "legal",
+      "name": "OPS Legal",
+      "short_description": "Causas judiciales",
+      "full_description": "Revisa causas, registra resultados, detecta cambios y mantiene trazabilidad por usuario.",
+      "is_active": true
+    }
+  ],
+  "causes": [],
+  "stats": {
+    "total_causes_count": 0,
+    "active_causes_count": 0,
+    "inactive_causes_count": 0,
+    "daily_summary_email_enabled": true
+  }
+}
+```
+
+---
+
+## 3.2) Dashboard cliente
+
+### GET `/api/dashboard` (Auth)
+Entrega todo lo necesario para `app.html`: usuario, cuenta, causas, resultados recientes y estadisticas.
+
+---
+
+## 3.3) Causas y resultados
+
+### GET `/api/causes` (Auth)
+Lista las causas del usuario.
+
+### POST `/api/causes` (Auth)
+Crea o actualiza una causa por `code`.
+
+**Body**
+```json
+{
+  "code": "C-5351-2026",
+  "court": "29 Juzgado Civil de Santiago",
+  "title": "Cobranza ejecutiva",
+  "status": "active"
+}
+```
+
+### POST `/api/causes/bulk` (Auth)
+Carga varias causas.
+
+**Body**
+```json
+{
+  "causes": [
+    { "code": "C-5351-2026", "court": "29 Juzgado Civil de Santiago" },
+    { "code": "O-808-2025", "court": "2 Juzgado de Letras del Trabajo", "status": "inactive" }
+  ]
+}
+```
+
+### PATCH `/api/causes/:id/status` (Auth)
+Activa o pausa una causa.
+
+**Body**
+```json
+{ "status": "inactive" }
+```
+
+### POST `/api/causes/:id/results` (Auth)
+Guarda un resultado manual para una causa.
+
+**Body**
+```json
+{
+  "summary": "Cambio relevante detectado",
+  "result_text": "Nuevo movimiento en expediente",
+  "has_changes": true
+}
+```
+
+### GET `/api/causes/:id/results` (Auth)
+Lista historial de resultados de una causa.
+
+### POST `/api/causes/:id/run` (Auth)
+Genera una revision manual. Si el resultado nuevo es igual al anterior, queda marcado sin cambios.
+
+---
+
+## 3.4) Cuenta y configuracion
+
+### GET `/api/auth/me` (Auth)
+Devuelve el usuario autenticado.
+
+### POST `/api/auth/logout`
+Cierra sesion en cliente. La API responde `{ "ok": true }`.
+
+### PATCH `/api/account/settings` (Auth)
+Actualiza preferencias.
+
+**Body**
+```json
+{
+  "daily_summary_email_enabled": true,
+  "ui_theme_preference": "dark",
+  "default_payment_method": "manual"
+}
+```
+
+### POST `/api/account/delete-request` (Auth)
+Registra solicitud de eliminacion de cuenta.
 
 ---
 
@@ -276,7 +401,7 @@ curl -X POST http://localhost:8080/api/auth/register \
 ```bash
 curl -X POST http://localhost:8080/api/auth/login \
   -H 'content-type: application/json' \
-  -d '{"email":"ana@empresa.cl","password":"supersegura123"}'
+  -d '{"identifier":"usuario1","password":"usuario1"}'
 ```
 
 3. Ver planes

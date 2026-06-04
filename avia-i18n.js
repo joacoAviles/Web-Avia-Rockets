@@ -323,15 +323,18 @@
 
   function shouldSkip(node){
     if (!node || !node.parentElement) return true;
+    if (node.parentElement.closest && node.parentElement.closest('.app-shell')) return true;
     var tag = node.parentElement.tagName;
     return ['SCRIPT','STYLE','SVG','PATH','LINE','POLYGON','CIRCLE'].indexOf(tag) !== -1;
   }
 
+  var textMemory = new WeakMap();
+
   function remember(node, attr, value){
-    var key = attr ? 'i18nOriginal' + attr.charAt(0).toUpperCase() + attr.slice(1) : 'i18nOriginalText';
-    if (!node.dataset) return value;
-    if (!node.dataset[key]) node.dataset[key] = value;
-    return node.dataset[key];
+    var key = attr ? 'data-i18n-original-' + attr.replace(/[^a-z0-9]+/gi, '-').toLowerCase() : 'data-i18n-original-text';
+    if (!node || !node.setAttribute) return value;
+    if (!node.hasAttribute(key)) node.setAttribute(key, value);
+    return node.getAttribute(key);
   }
 
   function applyLanguage(lang){
@@ -348,13 +351,17 @@
     var textNodes = [];
     while(walker.nextNode()) textNodes.push(walker.currentNode);
     textNodes.forEach(function(node){
-      var parent = node.parentElement;
-      var original = remember(parent, 'text', node.nodeValue);
+      var original = textMemory.get(node);
+      if (!original) {
+        original = node.nodeValue;
+        textMemory.set(node, original);
+      }
       var translated = lang === 'en' ? translateText(original, 'en') : original;
       if (translated !== node.nodeValue) node.nodeValue = translated;
     });
 
     document.querySelectorAll('[placeholder], [aria-label], [alt], [title]').forEach(function(el){
+      if (el.closest && el.closest('.app-shell')) return;
       ['placeholder','aria-label','alt','title'].forEach(function(attr){
         if (!el.hasAttribute(attr)) return;
         var original = remember(el, attr, el.getAttribute(attr));

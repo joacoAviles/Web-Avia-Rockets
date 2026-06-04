@@ -6,23 +6,31 @@ function aviaSetHomeProducts(products){
   if (Array.isArray(products) && products.length) window.AVIA_PRODUCTS = products;
 }
 
+function aviaRenderSelectedProductPanel(product){
+  var heroStage = document.getElementById('home-product-stage');
+  var guidedPanel = document.getElementById('guided-product-panel');
+  if (!window.renderAviaProductPanel) return;
+  var html = window.renderAviaProductPanel(product, { compact: true });
+  if (heroStage) heroStage.innerHTML = html;
+  if (guidedPanel) guidedPanel.innerHTML = html;
+}
+
 function aviaHomeSelect(productId){
   var products = aviaHomeProducts();
   var product = products.find(function(item){ return item.id === productId; }) || products[0];
   if (!product) return;
-  var stage = document.getElementById('home-product-stage');
   var title = document.getElementById('guided-product-title');
   var text = document.getElementById('guided-product-text');
   var steps = document.getElementById('guided-product-steps');
   document.querySelectorAll('[data-home-product]').forEach(function(button){
     button.classList.toggle('is-active', button.dataset.homeProduct === product.id);
   });
-  if (stage && window.renderAviaProductPanel) stage.innerHTML = window.renderAviaProductPanel(product, { compact: true });
+  aviaRenderSelectedProductPanel(product);
   if (title) title.textContent = product.title;
   if (text) text.textContent = product.description;
   if (steps) {
     aviaClear(steps);
-    product.steps.forEach(function(step, index){
+    (product.steps || []).forEach(function(step, index){
       var li = document.createElement('li');
       li.className = 'guided-step' + (index === 0 ? ' is-active' : '');
       var strong = document.createElement('strong');

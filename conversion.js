@@ -34,30 +34,57 @@
     return new Intl.NumberFormat('es-CL').format(n);
   }
 
-  var MODULES_COPY_ES = {
-    eyebrow: 'Módulos',
-    title: 'Entramos donde tu operación lo necesite.',
-    intro: 'AVIA puede ayudarte desde el inicio, cuando todo está en planillas y correos; en el intermedio, cuando ya tienes datos pero falta control; o al final, cuando necesitas sistemas, APIs e integraciones propias.',
-    cards: [
-      {
-        icon: '🧭',
-        title: 'Avia OPS',
-        text: 'Control operativo para el día a día. Monitoreamos causas, flotas, estados, vencimientos, alertas y tareas pendientes para que sepas qué cambió y qué requiere acción.',
-        cta: 'Ver OPS'
-      },
-      {
-        icon: '📊',
-        title: 'Avia Intelligence',
-        text: 'Datos convertidos en decisión. Creamos dashboards, reportes y análisis para detectar riesgos, tendencias, prioridades y oportunidades dentro de tu operación.',
-        cta: 'Ver Intelligence'
-      },
-      {
-        icon: '🛠️',
-        title: 'Avia Labs',
-        text: 'Herramientas hechas a la medida. Construimos APIs, conectores, apps internas e integraciones cuando tu proceso necesita una solución propia.',
-        cta: 'Ver Labs'
-      }
-    ]
+  var MODULES_COPY = {
+    es: {
+      eyebrow: 'Módulos',
+      title: 'Entramos donde tu operación lo necesite',
+      intro: 'AVIA puede ayudarte desde el inicio, cuando todo está en planillas y correos; en el intermedio, cuando ya tienes datos pero falta control; o al final, cuando necesitas sistemas, APIs e integraciones propias.',
+      cards: [
+        {
+          icon: '🧭',
+          title: 'Avia OPS',
+          text: 'Control operativo para el día a día. Monitoreamos causas, flotas, estados, vencimientos, alertas y tareas pendientes para que sepas qué cambió y qué requiere acción.',
+          cta: 'Ver OPS'
+        },
+        {
+          icon: '📊',
+          title: 'Avia Intelligence',
+          text: 'Datos convertidos en decisión. Creamos dashboards, reportes y análisis para detectar riesgos, tendencias, prioridades y oportunidades dentro de tu operación.',
+          cta: 'Ver Intelligence'
+        },
+        {
+          icon: '🛠️',
+          title: 'Avia Labs',
+          text: 'Herramientas hechas a la medida. Construimos APIs, conectores, apps internas e integraciones cuando tu proceso necesita una solución propia.',
+          cta: 'Ver Labs'
+        }
+      ]
+    },
+    en: {
+      eyebrow: 'Modules',
+      title: 'We enter wherever your operation needs us',
+      intro: 'AVIA can help from the beginning, when everything still lives in spreadsheets and emails; in the middle, when you already have data but lack control; or at the end, when you need your own systems, APIs, and integrations.',
+      cards: [
+        {
+          icon: '🧭',
+          title: 'Avia OPS',
+          text: 'Operational control for the day to day. We monitor cases, fleets, statuses, expirations, alerts, and pending tasks so you know what changed and what requires action.',
+          cta: 'View OPS'
+        },
+        {
+          icon: '📊',
+          title: 'Avia Intelligence',
+          text: 'Data turned into decisions. We create dashboards, reports, and analysis to detect risks, trends, priorities, and opportunities inside your operation.',
+          cta: 'View Intelligence'
+        },
+        {
+          icon: '🛠️',
+          title: 'Avia Labs',
+          text: 'Custom-built tools. We build APIs, connectors, internal apps, and integrations when your process needs its own solution.',
+          cta: 'View Labs'
+        }
+      ]
+    }
   };
 
   async function loadPublicStats() {
@@ -101,8 +128,9 @@
 
   function updateModulesSection(lang) {
     var section = document.getElementById('business-lines');
-    if (!section || lang === 'en') return;
+    if (!section) return;
 
+    var copySet = MODULES_COPY[lang === 'en' ? 'en' : 'es'];
     var heading = section.querySelector('.section-heading');
     var cards = section.querySelectorAll('.business-card');
     if (!heading || !cards.length) return;
@@ -111,11 +139,11 @@
     var title = heading.querySelector('h2');
     var intro = heading.querySelector('p:not(.eyebrow)');
 
-    if (eyebrow) eyebrow.textContent = MODULES_COPY_ES.eyebrow;
-    if (title) title.textContent = MODULES_COPY_ES.title;
-    if (intro) intro.textContent = MODULES_COPY_ES.intro;
+    if (eyebrow) eyebrow.textContent = copySet.eyebrow;
+    if (title) title.textContent = copySet.title;
+    if (intro) intro.textContent = copySet.intro;
 
-    MODULES_COPY_ES.cards.forEach(function (copy, index) {
+    copySet.cards.forEach(function (copy, index) {
       var card = cards[index];
       if (!card) return;
       var icon = card.querySelector('.card-icon');

@@ -1,9 +1,10 @@
-name: Protect contact section
+name: Protect locked home sections
 
 on:
   pull_request:
     paths:
       - 'index.html'
+      - 'conversion.js'
       - 'CONTACT_LOCK.md'
       - '.github/workflows/protect-contact.yml'
   push:
@@ -11,18 +12,19 @@ on:
       - main
     paths:
       - 'index.html'
+      - 'conversion.js'
       - 'CONTACT_LOCK.md'
       - '.github/workflows/protect-contact.yml'
 
 jobs:
-  protect-contact:
+  protect-home-sections:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Validate locked contact block
+      - name: Validate locked contact block and AVIA method copy
         shell: bash
         run: |
           set -euo pipefail
@@ -32,24 +34,46 @@ jobs:
           import hashlib
           import sys
 
-          expected = '0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0'
-          start = '<!-- CONTACT_LOCK_START sha256:0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0 -->'
-          end = '<!-- CONTACT_LOCK_END -->'
-          text = Path('index.html').read_text(encoding='utf-8')
+          def sha256_block(block: str) -> str:
+              return hashlib.sha256((block + '\n').encode('utf-8')).hexdigest()
 
-          if text.count(start) != 1 or text.count(end) != 1:
+          contact_expected = '0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0'
+          contact_start = '<!-- CONTACT_LOCK_START sha256:0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0 -->'
+          contact_end = '<!-- CONTACT_LOCK_END -->'
+          index_text = Path('index.html').read_text(encoding='utf-8')
+
+          if index_text.count(contact_start) != 1 or index_text.count(contact_end) != 1:
               print('Contact lock markers are missing or duplicated.')
               sys.exit(1)
 
-          block = text.split(start, 1)[1].split(end, 1)[0].strip('\n')
-          digest = hashlib.sha256((block + '\n').encode('utf-8')).hexdigest()
+          contact_block = index_text.split(contact_start, 1)[1].split(contact_end, 1)[0].strip('\n')
+          contact_digest = sha256_block(contact_block)
 
-          if digest != expected:
+          if contact_digest != contact_expected:
               print('Protected contact block changed.')
-              print(f'Expected: {expected}')
-              print(f'Actual:   {digest}')
+              print(f'Expected: {contact_expected}')
+              print(f'Actual:   {contact_digest}')
               print('Do not modify the Contact section or translations in index.html.')
               sys.exit(1)
 
-          print('Protected contact block and translations hash is valid.')
+          method_expected = '2d7bd3effde8e65de0b507cf1e87cf4e4aa8bfe3d9d5d518618bbdcd742bebe4'
+          method_start = '  var METHOD_COPY = {'
+          method_end = '\n\n  function numberText'
+          conversion_text = Path('conversion.js').read_text(encoding='utf-8')
+
+          if conversion_text.count(method_start) != 1 or conversion_text.count(method_end) != 1:
+              print('AVIA method lock markers are missing or duplicated.')
+              sys.exit(1)
+
+          method_block = method_start + conversion_text.split(method_start, 1)[1].split(method_end, 1)[0]
+          method_digest = sha256_block(method_block)
+
+          if method_digest != method_expected:
+              print('Protected AVIA method copy changed.')
+              print(f'Expected: {method_expected}')
+              print(f'Actual:   {method_digest}')
+              print('Do not modify METHOD_COPY in conversion.js.')
+              sys.exit(1)
+
+          print('Protected Contact and AVIA Method hashes are valid.')
           PY

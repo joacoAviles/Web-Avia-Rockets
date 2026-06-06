@@ -87,6 +87,79 @@
     }
   };
 
+  var USE_CASES_COPY = {
+    es: {
+      eyebrow: 'Sistema AVIA',
+      title: 'Un mismo motor para varias partes de tu operacion',
+      intro: 'No vendemos módulos aislados: diseñamos el sistema que tu operación necesita. Puede ser sólo seguimiento legal, sólo control de flota, sólo dashboards o una integración completa entre varias áreas.',
+      cards: [
+        {
+          head: 'Legal / Causas',
+          badge: 'Control legal en curso',
+          kpis: [['Causas revisadas', '4'], ['Alertas nuevas', '0']],
+          rows: [['C-7780-2026 · Revisión completada', 'Sin cambio'], ['C-9012-2026 · Revisión completada', 'Sin cambio']],
+          chip: ['Última revisión', 'Sin movimientos pendientes'],
+          title: 'Legal',
+          text: 'Detectamos cambios, movimientos y estados relevantes antes de que tengas que revisar causa por causa.',
+          strong: 'Revisa sólo lo que requiere atención.'
+        },
+        {
+          head: 'Vehículos / Flota',
+          badge: 'Desde 4 hasta 100 vehículos',
+          kpis: [['Vehículos registrados', '37'], ['Vencen pronto', '3'], ['Requieren atención', '2'], ['Restricción ambiental', '0']],
+          chip: ['Para revisar', '2 revisiones técnicas vencidas'],
+          title: 'Flota',
+          text: 'Ordenamos revisiones técnicas, permisos, mantenciones, vencimientos y restricción ambiental para autos familiares, vehículos de reparto o flotas de empresa.',
+          strong: 'Sabe qué revisar, cuándo hacerlo y qué no puede esperar.'
+        },
+        {
+          head: 'Datos / Dashboards',
+          badge: 'Señales para decidir',
+          kpis: [['Registros analizados', '1.248'], ['Variación proyectada', '+12%']],
+          chip: ['Reporte ejecutivo', 'Listo para revisar'],
+          title: 'Datos',
+          text: 'Convertimos planillas, bases y fuentes dispersas en dashboards, reportes y señales útiles para decidir.',
+          strong: 'Menos datos sueltos. Más claridad para actuar.'
+        }
+      ]
+    },
+    en: {
+      eyebrow: 'AVIA System',
+      title: 'One engine for different parts of your operation',
+      intro: 'We do not sell isolated modules: we design the system your operation needs. It can be only legal tracking, only fleet control, only dashboards, or a full integration across several areas.',
+      cards: [
+        {
+          head: 'Legal / Cases',
+          badge: 'Legal control in progress',
+          kpis: [['Cases reviewed', '4'], ['New alerts', '0']],
+          rows: [['C-7780-2026 · Review completed', 'No change'], ['C-9012-2026 · Review completed', 'No change']],
+          chip: ['Last review', 'No pending movements'],
+          title: 'Legal',
+          text: 'We detect relevant changes, movements, and statuses before you have to review case by case.',
+          strong: 'Review only what requires attention.'
+        },
+        {
+          head: 'Vehicles / Fleet',
+          badge: 'From 4 to 100 vehicles',
+          kpis: [['Registered vehicles', '37'], ['Expiring soon', '3'], ['Need attention', '2'], ['Environmental restriction', '0']],
+          chip: ['To review', '2 expired technical inspections'],
+          title: 'Fleet',
+          text: 'We organize technical inspections, permits, maintenance, expirations, and environmental restrictions for family cars, delivery vehicles, or company fleets.',
+          strong: 'Know what to review, when to do it, and what cannot wait.'
+        },
+        {
+          head: 'Data / Dashboards',
+          badge: 'Signals for decisions',
+          kpis: [['Records analyzed', '1,248'], ['Projected variation', '+12%']],
+          chip: ['Executive report', 'Ready to review'],
+          title: 'Data',
+          text: 'We turn spreadsheets, databases, and scattered sources into dashboards, reports, and useful signals for decisions.',
+          strong: 'Less scattered data. More clarity to act.'
+        }
+      ]
+    }
+  };
+
   async function loadPublicStats() {
     var targets = document.querySelectorAll('[data-public-stat]');
     if (!targets.length) return;
@@ -161,6 +234,85 @@
     });
   }
 
+  function fillKpis(row, kpis) {
+    if (!row) return;
+    row.innerHTML = '';
+    kpis.forEach(function (kpi) {
+      var item = document.createElement('div');
+      item.className = 'mini-kpi';
+      var label = document.createElement('small');
+      label.textContent = kpi[0];
+      var value = document.createElement('b');
+      value.textContent = kpi[1];
+      item.appendChild(label);
+      item.appendChild(value);
+      row.appendChild(item);
+    });
+  }
+
+  function fillRows(list, rows) {
+    if (!list || !rows) return;
+    list.innerHTML = '';
+    rows.forEach(function (row) {
+      var line = document.createElement('div');
+      line.className = 'case-line';
+      var dot = document.createElement('i');
+      dot.className = 'case-dot';
+      var text = document.createElement('small');
+      text.textContent = row[0];
+      var badge = document.createElement('span');
+      badge.className = 'case-badge';
+      badge.textContent = row[1];
+      line.appendChild(dot);
+      line.appendChild(text);
+      line.appendChild(badge);
+      list.appendChild(line);
+    });
+  }
+
+  function updateUseCasesSection(lang) {
+    var section = document.getElementById('visualizaciones');
+    if (!section) return;
+    var copySet = USE_CASES_COPY[lang === 'en' ? 'en' : 'es'];
+    var heading = section.querySelector('.section-heading');
+    var cards = section.querySelectorAll('.showcase-card');
+
+    if (heading) {
+      var eyebrow = heading.querySelector('.eyebrow');
+      var title = heading.querySelector('h2');
+      var intro = heading.querySelector('p:not(.eyebrow)');
+      if (eyebrow) eyebrow.textContent = copySet.eyebrow;
+      if (title) title.textContent = copySet.title;
+      if (intro) intro.textContent = copySet.intro;
+    }
+
+    copySet.cards.forEach(function (copy, index) {
+      var card = cards[index];
+      if (!card) return;
+      var head = card.querySelector('.mini-dashboard-head strong');
+      var badge = card.querySelector('.mini-dashboard-head span');
+      var kpiRow = card.querySelector('.mini-kpi-row');
+      var chip = card.querySelector('.email-chip');
+      var title = card.querySelector('h3');
+      var text = card.querySelector(':scope > p');
+      var strong = card.querySelector(':scope > strong');
+
+      if (head) head.textContent = copy.head;
+      if (badge) badge.textContent = copy.badge;
+      fillKpis(kpiRow, copy.kpis);
+      if (copy.rows) fillRows(card.querySelector('.case-list'), copy.rows);
+      if (chip) {
+        var chipLabel = chip.querySelector('span');
+        var chipValue = chip.querySelector('strong');
+        if (chipLabel) chipLabel.textContent = copy.chip[0];
+        if (chipValue) chipValue.textContent = copy.chip[1];
+      }
+      if (title) title.textContent = copy.title;
+      if (text) text.textContent = copy.text;
+      if (strong) strong.textContent = copy.strong;
+    });
+  }
+
   function updateMethodSection(lang) {
     var section = document.getElementById('guided-demo');
     if (!section) return;
@@ -202,17 +354,6 @@
     }
   }
 
-  function removeDataAlertKpi() {
-    var dataCard = document.querySelector('#visualizaciones .showcase-card:nth-child(3)');
-    if (!dataCard) return;
-    dataCard.querySelectorAll('.mini-kpi').forEach(function (item) {
-      var label = item.querySelector('small');
-      if (label && label.textContent.trim() === 'Alertas detectadas') {
-        item.remove();
-      }
-    });
-  }
-
   function setupExitIntent() {
     var modal = document.getElementById('exit-intent-modal');
     if (!modal) return;
@@ -241,9 +382,9 @@
 
   function refreshHomeCopy(lang) {
     var selected = lang || currentLang();
+    updateUseCasesSection(selected);
     updateMethodSection(selected);
     updateModulesSection(selected);
-    removeDataAlertKpi();
   }
 
   function init() {

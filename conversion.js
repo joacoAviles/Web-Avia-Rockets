@@ -12,7 +12,7 @@
         ['Avisamos', 'Mostramos el resultado en paneles, alertas o correos para que sepas qué pasó y qué hacer después.']
       ],
       primary: 'Crear cuenta gratis',
-      secondary: 'Entrar a la app'
+      secondary: 'Log In'
     },
     en: {
       eyebrow: 'The AVIA method',
@@ -24,7 +24,7 @@
         ['We notify', 'We show the result through dashboards, alerts, or emails so you know what happened and what to do next.']
       ],
       primary: 'Create free account',
-      secondary: 'Enter the app'
+      secondary: 'Log In'
     }
   };
 

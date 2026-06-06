@@ -72,16 +72,19 @@
     return document.documentElement.lang === 'en' ? 'en' : 'es';
   }
 
-  function scheduleApply() {
+  function scheduleApply(lang) {
     window.requestAnimationFrame(function () {
-      apply(currentLang());
+      apply(lang || currentLang());
     });
   }
 
-  scheduleApply();
+  window.aviaApplyProtectedContactLanguage = function (lang) {
+    scheduleApply(lang);
+  };
 
-  var langToggle = document.getElementById('lang-toggle');
-  if (langToggle) {
-    langToggle.addEventListener('click', scheduleApply);
-  }
+  document.addEventListener('avia:language-changed', function (event) {
+    scheduleApply(event.detail && event.detail.lang);
+  });
+
+  scheduleApply();
 })();

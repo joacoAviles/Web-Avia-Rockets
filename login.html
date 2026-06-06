@@ -13,14 +13,36 @@
 <meta name="theme-color" content="#071426" />
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="beta-products.css" />
+<link rel="stylesheet" href="conversion.css" />
 <style>
 .auth-hero{min-height:calc(100vh - 78px);display:flex;align-items:center;padding:7rem 0 4rem;background:radial-gradient(circle at 14% 12%,rgba(10,108,255,.22),transparent 30%),radial-gradient(circle at 88% 24%,rgba(71,163,255,.13),transparent 28%)}
-.auth-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:1.2rem;align-items:stretch}.auth-copy,.auth-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.auth-copy h1{font-size:clamp(2.2rem,5vw,4.4rem);line-height:.95;margin:.6rem 0 1rem}.auth-copy p{color:var(--muted);max-width:62ch}.auth-form{display:grid;gap:.75rem}.auth-form label{font-weight:750;color:var(--muted-2)}.auth-form input{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.auth-status{margin:0;color:var(--muted);min-height:1.2rem}.auth-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.86rem}.auth-row a{color:var(--primary-3);text-decoration:none}@media(max-width:860px){.auth-grid{grid-template-columns:1fr}.auth-hero{padding:5rem 0 3rem}}
+.auth-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:1.2rem;align-items:stretch}.auth-copy,.auth-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.auth-copy h1{font-size:clamp(2.2rem,5vw,4.4rem);line-height:.95;margin:.6rem 0 1rem}.auth-copy p{color:var(--muted);max-width:62ch}.auth-form{display:grid;gap:.75rem}.auth-form label{font-weight:750;color:var(--muted-2)}.auth-form input{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.auth-status{margin:0;color:var(--muted);min-height:1.2rem}.auth-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.86rem}.auth-row a{color:var(--primary-3);text-decoration:none}.auth-secondary-cta{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}.auth-secondary-cta span{color:var(--muted);font-size:.92rem}@media(max-width:860px){.auth-grid{grid-template-columns:1fr}.auth-hero{padding:5rem 0 3rem}}
 </style>
 </head>
 <body data-page="auth">
 <header class="site-header"></header>
-<main><section class="auth-hero"><div class="container auth-grid"><div class="auth-copy"><p class="eyebrow">Acceso Legal / Causas</p><h1>Ingresa a tus causas.</h1><p>Usuario local: <strong>usuario1</strong><br>Clave local: <strong>usuario1</strong></p></div><div class="auth-card"><form class="auth-form" id="login-form"><label for="login-identifier">Usuario o correo</label><input id="login-identifier" type="text" autocomplete="username" placeholder="usuario1" required /><label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required /><div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label><a href="contacto.html">Necesito ayuda</a></div><button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p></form></div></div></section></main>
+<main>
+<section class="auth-hero">
+  <div class="container auth-grid">
+    <div class="auth-copy">
+      <p class="eyebrow">Acceso Legal / Causas</p>
+      <h1>Entra a tu centro de control.</h1>
+      <p>Revisa tus causas activas, estados, correo resumen y módulos contratados. Si todavía no tienes cuenta, parte con 5 causas gratis.</p>
+      <div class="onboarding-steps"><article><span>1</span><strong>Crear causa</strong><p>Agrega rol, tribunal y año.</p></article><article><span>2</span><strong>Ver resultado</strong><p>Compara estado y cambios.</p></article><article><span>3</span><strong>Activar resumen</strong><p>Recibe aviso por correo.</p></article></div>
+      <div class="auth-secondary-cta"><a class="btn btn-primary" href="register.html">Crear cuenta gratis</a><span>Sin tarjeta · 5 causas iniciales</span></div>
+    </div>
+    <div class="auth-card">
+      <div class="demo-banner"><strong>Modo demo disponible</strong><span>Usa el acceso de prueba interno sólo para revisar la experiencia. Las credenciales no se muestran como texto plano en la página.</span></div>
+      <form class="auth-form" id="login-form">
+        <label for="login-identifier">Correo</label><input id="login-identifier" type="email" autocomplete="username" placeholder="cliente@empresa.cl" required />
+        <label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required />
+        <div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label><a href="register.html">Crear cuenta gratis</a></div>
+        <button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
 <footer class="site-footer footer-clean"></footer>
 <script src="api-config.js"></script>
 <script src="header-standard.js"></script>
@@ -37,7 +59,7 @@ function setStatus(message, type = "") { loginStatus.hidden = false; loginStatus
 function getRedirectTarget() { const params = new URLSearchParams(window.location.search); const next = params.get("next"); return next && !next.startsWith("http") && !next.startsWith("//") ? next.replace("app-beta.html", "app.html") : DEFAULT_AFTER_LOGIN; }
 async function apiRequest(path, options = {}) { const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers: { Accept: "application/json", "Content-Type": "application/json", ...(options.headers || {}) } }); let data = null; try { data = await response.json(); } catch (_) { data = null; } if (!response.ok) { const code = data?.error; throw new Error(code === "INVALID_CREDENTIALS" ? "Usuario o contraseña incorrectos." : data?.detail || data?.message || code || `Error API ${response.status}`); } return data; }
 function saveSession(data) { localStorage.setItem(TOKEN_KEY, data.token); localStorage.setItem(USER_KEY, JSON.stringify(data.user)); }
-loginForm.addEventListener("submit", async (event) => { event.preventDefault(); const identifier = document.getElementById("login-identifier").value.trim(); const password = document.getElementById("login-password").value; if (!identifier || !password) { setStatus("Ingresa usuario y contraseña.", "form-status-error"); return; } loginButton.disabled = true; loginButton.textContent = "Entrando..."; setStatus("Validando usuario contra la API..."); try { const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ identifier, password }) }); saveSession(data); setStatus("Ingreso correcto. Redirigiendo a Legal / Causas...", "form-status-ok"); window.location.href = getRedirectTarget(); } catch (error) { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); setStatus(error.message || "No se pudo iniciar sesión.", "form-status-error"); } finally { loginButton.disabled = false; loginButton.textContent = "Ingresar"; } });
+loginForm.addEventListener("submit", async (event) => { event.preventDefault(); const identifier = document.getElementById("login-identifier").value.trim(); const password = document.getElementById("login-password").value; if (!identifier || !password) { setStatus("Ingresa correo y contraseña.", "form-status-error"); return; } loginButton.disabled = true; loginButton.textContent = "Entrando..."; setStatus("Validando usuario contra la API..."); try { const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email: identifier, password }) }); saveSession(data); setStatus("Ingreso correcto. Redirigiendo a Legal / Causas...", "form-status-ok"); window.location.href = getRedirectTarget(); } catch (error) { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); setStatus(error.message || "No se pudo iniciar sesión.", "form-status-error"); } finally { loginButton.disabled = false; loginButton.textContent = "Ingresar"; } });
 </script>
 </body>
 </html>

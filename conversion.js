@@ -202,6 +202,17 @@
     }
   }
 
+  function removeDataAlertKpi() {
+    var dataCard = document.querySelector('#visualizaciones .showcase-card:nth-child(3)');
+    if (!dataCard) return;
+    dataCard.querySelectorAll('.mini-kpi').forEach(function (item) {
+      var label = item.querySelector('small');
+      if (label && label.textContent.trim() === 'Alertas detectadas') {
+        item.remove();
+      }
+    });
+  }
+
   function setupExitIntent() {
     var modal = document.getElementById('exit-intent-modal');
     if (!modal) return;
@@ -232,6 +243,7 @@
     var selected = lang || currentLang();
     updateMethodSection(selected);
     updateModulesSection(selected);
+    removeDataAlertKpi();
   }
 
   function init() {

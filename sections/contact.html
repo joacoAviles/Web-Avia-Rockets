@@ -1,0 +1,34 @@
+<section class="section contact-section" id="contact">
+  <div class="container contact-grid">
+    <div class="section-heading reveal">
+      <p class="eyebrow">Contacto</p>
+      <h2>Cuéntanos qué operación quieres ordenar</h2>
+      <p>Cuéntanos qué estás revisando manualmente hoy. Te diremos si conviene resolverlo con alertas, panel, API o automatización.</p>
+      <div class="contact-meta">
+        <p><strong>Legal:</strong> revisión de causas, detección de cambios y correos resumen.</p>
+        <p><strong>Flota:</strong> control de revisión técnica, mantenciones, vencimientos y prioridades.</p>
+        <p><strong>Datos / API / Lab:</strong> dashboards, conectores, integraciones y apps internas.</p>
+      </div>
+    </div>
+    <form class="contact-form compact-contact reveal reveal-delay" data-api-form data-success-url="/index.html?enviado=1#contact">
+      <input type="hidden" name="form" value="avia_contact" />
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
+      <label for="home-name">Nombre</label>
+      <input id="home-name" name="name" type="text" autocomplete="name" minlength="2" required />
+      <label for="home-email">Correo</label>
+      <input id="home-email" name="email" type="email" autocomplete="email" required />
+      <label for="home-interest">Qué necesitas ordenar</label>
+      <select id="home-interest" name="interest" data-static-options="true" required>
+        <option value="legal">Causas y seguimiento legal</option>
+        <option value="flota">Flota, vencimientos y mantencion</option>
+        <option value="intelligence">Datos, dashboard o reportes</option>
+        <option value="api">API, conectores o integraciones</option>
+        <option value="lab">App interna o automatizacion a medida</option>
+        <option value="no-se">No se, necesito orientacion</option>
+      </select>
+      <label for="home-message">Cuéntanos un poco más <span style="color:var(--muted);font-weight:600">(opcional)</span></label>
+      <textarea id="home-message" name="message" rows="4" maxlength="1000" placeholder="Ej: tengo 80 causas y quiero recibir un resumen diario sólo cuando haya cambios.">Cuéntanos en qué podemos ayudarte?</textarea>
+      <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+    </form>
+  </div>
+</section>

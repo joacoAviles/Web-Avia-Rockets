@@ -273,6 +273,7 @@
   function updateUseCasesSection(lang) {
     var section = document.getElementById('visualizaciones');
     if (!section) return;
+    section.classList.add('app-shell');
     var copySet = USE_CASES_COPY[lang === 'en' ? 'en' : 'es'];
     var heading = section.querySelector('.section-heading');
     var cards = section.querySelectorAll('.showcase-card');
@@ -383,6 +384,7 @@
   function refreshHomeCopy(lang) {
     var selected = lang || currentLang();
     updateUseCasesSection(selected);
+    setTimeout(function () { updateUseCasesSection(selected); }, 100);
     updateMethodSection(selected);
     updateModulesSection(selected);
   }

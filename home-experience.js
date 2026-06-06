@@ -72,12 +72,11 @@ function aviaRenderLegalUseCase(publicData){
   var causes = Array.isArray(publicData.causes) ? publicData.causes : [];
   var total = stats.total_causes_count ?? causes.length;
   var active = stats.active_causes_count ?? causes.filter(function(cause){ return cause.user_status === 'active'; }).length;
-  var inactive = stats.inactive_causes_count ?? causes.filter(function(cause){ return cause.user_status === 'inactive'; }).length;
   var changes = stats.changes_count ?? causes.filter(function(cause){ return cause.last_has_changes; }).length;
   var values = {
     causes: total,
     active: active,
-    inactive: inactive + ' pausada' + (inactive === 1 ? '' : 's'),
+    inactive: 'Sin movimientos pendientes',
     changes: changes
   };
 
@@ -88,7 +87,7 @@ function aviaRenderLegalUseCase(publicData){
   });
 
   var email = document.getElementById('home-legal-email');
-  if (email) email.textContent = stats.daily_summary_email_enabled ? 'Correo activo' : 'Correo pausado';
+  if (email) email.textContent = 'Control legal en curso';
 
   var list = document.getElementById('home-case-list');
   if (!list) return;
@@ -99,7 +98,7 @@ function aviaRenderLegalUseCase(publicData){
     var dot = document.createElement('i');
     dot.className = 'case-dot';
     var text = document.createElement('small');
-    text.textContent = cause.code + ' · ' + (cause.comparison?.label || cause.last_result || 'Resultado cargado');
+    text.textContent = cause.code + ' · Revisión completada';
     var badge = document.createElement('span');
     badge.className = 'case-badge';
     badge.textContent = cause.last_has_changes ? 'Cambio' : 'Sin cambio';

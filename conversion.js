@@ -34,6 +34,32 @@
     return new Intl.NumberFormat('es-CL').format(n);
   }
 
+  var MODULES_COPY_ES = {
+    eyebrow: 'Módulos',
+    title: 'Entramos donde tu operación lo necesite.',
+    intro: 'AVIA puede ayudarte desde el inicio, cuando todo está en planillas y correos; en el intermedio, cuando ya tienes datos pero falta control; o al final, cuando necesitas sistemas, APIs e integraciones propias.',
+    cards: [
+      {
+        icon: '🧭',
+        title: 'Avia OPS',
+        text: 'Control operativo para el día a día. Monitoreamos causas, flotas, estados, vencimientos, alertas y tareas pendientes para que sepas qué cambió y qué requiere acción.',
+        cta: 'Ver OPS'
+      },
+      {
+        icon: '📊',
+        title: 'Avia Intelligence',
+        text: 'Datos convertidos en decisión. Creamos dashboards, reportes y análisis para detectar riesgos, tendencias, prioridades y oportunidades dentro de tu operación.',
+        cta: 'Ver Intelligence'
+      },
+      {
+        icon: '🛠️',
+        title: 'Avia Labs',
+        text: 'Herramientas hechas a la medida. Construimos APIs, conectores, apps internas e integraciones cuando tu proceso necesita una solución propia.',
+        cta: 'Ver Labs'
+      }
+    ]
+  };
+
   async function loadPublicStats() {
     var targets = document.querySelectorAll('[data-public-stat]');
     if (!targets.length) return;
@@ -71,6 +97,40 @@
 
   function currentLang() {
     return document.documentElement.lang === 'en' ? 'en' : 'es';
+  }
+
+  function updateModulesSection(lang) {
+    var section = document.getElementById('business-lines');
+    if (!section || lang === 'en') return;
+
+    var heading = section.querySelector('.section-heading');
+    var cards = section.querySelectorAll('.business-card');
+    if (!heading || !cards.length) return;
+
+    var eyebrow = heading.querySelector('.eyebrow');
+    var title = heading.querySelector('h2');
+    var intro = heading.querySelector('p:not(.eyebrow)');
+
+    if (eyebrow) eyebrow.textContent = MODULES_COPY_ES.eyebrow;
+    if (title) title.textContent = MODULES_COPY_ES.title;
+    if (intro) intro.textContent = MODULES_COPY_ES.intro;
+
+    MODULES_COPY_ES.cards.forEach(function (copy, index) {
+      var card = cards[index];
+      if (!card) return;
+      var icon = card.querySelector('.card-icon');
+      var cardTitle = card.querySelector('h3');
+      var text = card.querySelector('p');
+      var cta = card.querySelector('a.btn');
+
+      if (icon) {
+        icon.textContent = copy.icon;
+        icon.setAttribute('aria-hidden', 'true');
+      }
+      if (cardTitle) cardTitle.textContent = copy.title;
+      if (text) text.textContent = copy.text;
+      if (cta) cta.textContent = copy.cta;
+    });
   }
 
   function updateMethodSection(lang) {
@@ -140,15 +200,21 @@
     document.addEventListener('keydown', function (event) { if (event.key === 'Escape') hide(); });
   }
 
+  function refreshHomeCopy(lang) {
+    var selected = lang || currentLang();
+    updateMethodSection(selected);
+    updateModulesSection(selected);
+  }
+
   function init() {
-    updateMethodSection(currentLang());
+    refreshHomeCopy(currentLang());
     updateContactTextareaCopy();
     loadPublicStats();
     setupExitIntent();
   }
 
   document.addEventListener('avia:language-changed', function (event) {
-    updateMethodSection(event.detail && event.detail.lang ? event.detail.lang : currentLang());
+    refreshHomeCopy(event.detail && event.detail.lang ? event.detail.lang : currentLang());
   });
 
   if (document.readyState === 'loading') {

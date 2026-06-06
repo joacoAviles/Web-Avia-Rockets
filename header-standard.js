@@ -31,6 +31,12 @@ function aviaClearSession(){
   localStorage.removeItem('avia_auth_user');
 }
 
+function aviaBroadcastLanguage(lang){
+  document.dispatchEvent(new CustomEvent('avia:language-changed', { detail: { lang: lang } }));
+  if (window.aviaApplyProtectedContactLanguage) window.aviaApplyProtectedContactLanguage(lang);
+  if (window.aviaApplyLanguage) window.aviaApplyLanguage(lang);
+}
+
 function aviaApplyStandardHeader(){
   aviaApplyStandardFavicon();
 
@@ -84,11 +90,11 @@ function aviaApplyStandardHeader(){
       document.documentElement.lang = next;
       localStorage.setItem('avia-lang', next);
       langToggle.textContent = next === 'es' ? 'EN' : 'ES';
-      if (window.aviaApplyLanguage) window.aviaApplyLanguage(next);
+      aviaBroadcastLanguage(next);
     });
   }
 
-  if (window.aviaApplyLanguage) window.aviaApplyLanguage(document.documentElement.lang);
+  aviaBroadcastLanguage(document.documentElement.lang);
 }
 
 if (document.readyState === 'loading') {

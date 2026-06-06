@@ -1,6 +1,33 @@
 (function aviaConversion() {
   var API_BASE = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || 'https://api.aviarockets.cl').replace(/\/$/, '');
 
+  var METHOD_COPY = {
+    es: {
+      eyebrow: 'El método AVIA',
+      title: 'Capturamos, comparamos y avisamos.',
+      intro: 'Tomamos la información que hoy revisas a mano, la contrastamos contra su historial y te mostramos sólo lo que cambió, venció o requiere acción.',
+      steps: [
+        ['Capturamos', 'Traemos los datos desde donde ya están: carga manual, archivos, APIs, bases de datos o conectores.'],
+        ['Comparamos', 'Revisamos el estado actual contra el historial para detectar cambios, vencimientos, errores y pendientes.'],
+        ['Avisamos', 'Mostramos el resultado en paneles, alertas o correos para que sepas qué pasó y qué hacer después.']
+      ],
+      primary: 'Crear cuenta gratis',
+      secondary: 'Entrar a la app'
+    },
+    en: {
+      eyebrow: 'The AVIA method',
+      title: 'We capture, compare, and notify.',
+      intro: 'We take the information you currently review by hand, compare it against its history, and show you only what changed, expired, or requires action.',
+      steps: [
+        ['We capture', 'We bring the data from where it already lives: manual uploads, files, APIs, databases, or connectors.'],
+        ['We compare', 'We check the current state against the historical record to detect changes, expirations, errors, and pending items.'],
+        ['We notify', 'We show the result through dashboards, alerts, or emails so you know what happened and what to do next.']
+      ],
+      primary: 'Create free account',
+      secondary: 'Enter the app'
+    }
+  };
+
   function numberText(value, fallback) {
     var n = Number(value);
     if (!Number.isFinite(n)) return fallback;
@@ -42,6 +69,39 @@
     }
   }
 
+  function currentLang() {
+    return document.documentElement.lang === 'en' ? 'en' : 'es';
+  }
+
+  function updateMethodSection(lang) {
+    var section = document.getElementById('guided-demo');
+    if (!section) return;
+
+    var copy = METHOD_COPY[lang === 'en' ? 'en' : 'es'];
+    section.classList.add('method-stars-section');
+
+    var eyebrow = section.querySelector('.section-heading .eyebrow');
+    var title = section.querySelector('.section-heading h2');
+    var intro = section.querySelector('.section-heading > p:not(.eyebrow)');
+    var actions = section.querySelectorAll('.guided-actions a');
+    var steps = section.querySelectorAll('.guided-steps li');
+
+    if (eyebrow) eyebrow.textContent = copy.eyebrow;
+    if (title) title.textContent = copy.title;
+    if (intro) intro.textContent = copy.intro;
+    if (actions[0]) actions[0].textContent = copy.primary;
+    if (actions[1]) actions[1].textContent = copy.secondary;
+
+    copy.steps.forEach(function (step, index) {
+      var item = steps[index];
+      if (!item) return;
+      var strong = item.querySelector('strong');
+      var span = item.querySelector('span');
+      if (strong) strong.textContent = step[0];
+      if (span) span.textContent = step[1];
+    });
+  }
+
   function updateContactTextareaCopy() {
     var textarea = document.getElementById('home-message');
     if (!textarea) return;
@@ -81,10 +141,15 @@
   }
 
   function init() {
+    updateMethodSection(currentLang());
     updateContactTextareaCopy();
     loadPublicStats();
     setupExitIntent();
   }
+
+  document.addEventListener('avia:language-changed', function (event) {
+    updateMethodSection(event.detail && event.detail.lang ? event.detail.lang : currentLang());
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

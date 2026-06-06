@@ -27,18 +27,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          EXPECTED_HASH='4fa4482102b319c19e11191f4958dfcf0d1f3ada85a776385d744c336cb52aea'
-          START='<!-- CONTACT_LOCK_START sha256:4fa4482102b319c19e11191f4958dfcf0d1f3ada85a776385d744c336cb52aea -->'
-          END='<!-- CONTACT_LOCK_END -->'
-
           python3 - <<'PY'
           from pathlib import Path
           import hashlib
-          import os
           import sys
 
-          expected = os.environ.get('EXPECTED_HASH', '4fa4482102b319c19e11191f4958dfcf0d1f3ada85a776385d744c336cb52aea')
-          start = '<!-- CONTACT_LOCK_START sha256:4fa4482102b319c19e11191f4958dfcf0d1f3ada85a776385d744c336cb52aea -->'
+          expected = '0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0'
+          start = '<!-- CONTACT_LOCK_START sha256:0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0 -->'
           end = '<!-- CONTACT_LOCK_END -->'
           text = Path('index.html').read_text(encoding='utf-8')
 
@@ -53,8 +48,8 @@ jobs:
               print('Protected contact block changed.')
               print(f'Expected: {expected}')
               print(f'Actual:   {digest}')
-              print('Do not modify the Contact section in index.html.')
+              print('Do not modify the Contact section or translations in index.html.')
               sys.exit(1)
 
-          print('Protected contact block hash is valid.')
+          print('Protected contact block and translations hash is valid.')
           PY

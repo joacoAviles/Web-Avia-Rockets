@@ -42,6 +42,18 @@
     }
   }
 
+  function updateContactTextareaCopy() {
+    var textarea = document.getElementById('home-message');
+    if (!textarea) return;
+
+    var oldText = 'Contacto rápido desde home: solicita evaluación inicial.';
+    var newText = 'Cuéntanos en qué podemos ayudarte?';
+
+    if (textarea.value.trim() === oldText) {
+      textarea.value = newText;
+    }
+  }
+
   function setupExitIntent() {
     var modal = document.getElementById('exit-intent-modal');
     if (!modal) return;
@@ -69,6 +81,7 @@
   }
 
   function init() {
+    updateContactTextareaCopy();
     loadPublicStats();
     setupExitIntent();
   }

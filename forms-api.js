@@ -61,6 +61,13 @@ async function submitApiForm(event) {
   }
 }
 
-document.querySelectorAll('form[data-api-form]').forEach((form) => {
-  form.addEventListener('submit', submitApiForm);
-});
+function bindApiForms(root = document) {
+  root.querySelectorAll('form[data-api-form]').forEach((form) => {
+    if (form.dataset.apiFormBound === 'true') return;
+    form.dataset.apiFormBound = 'true';
+    form.addEventListener('submit', submitApiForm);
+  });
+}
+
+bindApiForms();
+document.addEventListener('avia:contact-loaded', () => bindApiForms());

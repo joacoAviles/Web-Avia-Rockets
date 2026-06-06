@@ -7,9 +7,9 @@
       title: 'Capturamos, comparamos y avisamos',
       intro: 'Tomamos la información que hoy revisas a mano, la contrastamos contra su historial y te mostramos sólo lo que cambió, venció o requiere acción.',
       steps: [
-        ['Capturamos', 'Traemos los datos desde donde ya están: carga manual, archivos, APIs, bases de datos o conectores.'],
-        ['Comparamos', 'Revisamos el estado actual contra el historial para detectar cambios, vencimientos, errores y pendientes.'],
-        ['Avisamos', 'Mostramos el resultado en paneles, alertas o correos para que sepas qué pasó y qué hacer después.']
+        ['Capturamos', 'Te ayudamos con la recolección de datos: automatizamos cargas manuales, creamos APIs, bases de datos y sus conexiones.'],
+        ['Comparamos', 'Analizamos, proyectamos y comparamos para detectar cambios, vencimientos, errores y anomalías.'],
+        ['Avisamos', 'Te ayudamos con el monitoreo, paneles, alertas o correos para que sepas qué pasó y qué hacer en el momento exacto.']
       ],
       primary: 'Crear cuenta gratis',
       secondary: 'Log In'
@@ -19,9 +19,9 @@
       title: 'We capture, compare, and notify',
       intro: 'We take the information you currently review by hand, compare it against its history, and show you only what changed, expired, or requires action.',
       steps: [
-        ['We capture', 'We bring the data from where it already lives: manual uploads, files, APIs, databases, or connectors.'],
-        ['We compare', 'We check the current state against the historical record to detect changes, expirations, errors, and pending items.'],
-        ['We notify', 'We show the result through dashboards, alerts, or emails so you know what happened and what to do next.']
+        ['We capture', 'We help with data collection: we automate manual uploads, create APIs, databases, and their connections.'],
+        ['We compare', 'We analyze, project, and compare to detect changes, expirations, errors, and anomalies.'],
+        ['We notify', 'We help with monitoring, dashboards, alerts, or emails so you know what happened and what to do at the exact right moment.']
       ],
       primary: 'Create free account',
       secondary: 'Log In'

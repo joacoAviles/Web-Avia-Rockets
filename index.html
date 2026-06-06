@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AVIA Rockets | Operacion, inteligencia y sistemas digitales</title>
-<meta name="description" content="AVIA Rockets ordena operaciones criticas, convierte datos en decision y construye sistemas digitales a medida." />
+<meta name="description" content="AVIA Rockets detecta cambios en causas, flotas y procesos antes de que los revises manualmente. Empieza con 5 causas gratis, sin tarjeta." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -16,6 +16,8 @@
 <link rel="stylesheet" href="home-solutions-panel.css?v=production-home-20260604-user2-panel" />
 <link rel="stylesheet" href="hero-control-center.css?v=20260604-1" />
 <link rel="stylesheet" href="form-status.css" />
+<link rel="stylesheet" href="conversion.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"AVIA Rockets","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Centro de control para detectar cambios en causas, flotas, datos, APIs y procesos internos.","offers":{"@type":"Offer","price":"0","priceCurrency":"CLP","description":"Plan gratis: 5 causas sin tarjeta."}}</script>
 </head>
 <body data-page="home">
 <header class="site-header">
@@ -30,7 +32,8 @@
       <a href="#business-lines">Soluciones</a>
       <a href="#contact">Contacto</a>
       <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
-      <a class="btn btn-primary btn-nav" href="login.html">Log In</a>
+      <a class="btn btn-secondary btn-nav" href="login.html">Log In</a>
+      <a class="btn btn-primary btn-nav" href="register.html">Crear cuenta gratis</a>
     </nav>
   </div>
 </header>
@@ -41,225 +44,65 @@
     <div class="container hero-grid">
       <div class="hero-copy reveal">
         <p class="hero-status-pill"><span></span><em>Centro de control para operaciones reales</em></p>
-        <h1>Tu operación nunca duerme.</h1>
-        <p class="hero-text">AVIA monitorea causas, flotas, datos, integraciones y procesos internos. Si algo cambia, vence o requiere acción, aparece en tu centro de control.</p>
+        <h1>Detecta cambios antes de revisar manualmente.</h1>
+        <p class="hero-text">AVIA monitorea causas, flotas, datos, integraciones y procesos internos. Recibes el resumen antes de abrir el computador y sabes qué requiere acción.</p>
+        <p class="hero-proof-line">Empieza con 5 causas gratis, sin tarjeta. Luego activas correo resumen y más módulos si lo necesitas.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#visualizaciones">Ver plataforma</a>
-          <a class="btn btn-secondary" href="#contact">Solicitar demo</a>
+          <a class="btn btn-primary" href="register.html">Crear cuenta gratis</a>
+          <a class="btn btn-secondary" href="#visualizaciones">Ver plataforma</a>
         </div>
       </div>
       <div class="hero-visual reveal reveal-delay">
         <div class="avia-control-card" aria-label="AVIA Control Center">
           <div class="control-orbit control-orbit-one"></div>
           <div class="control-orbit control-orbit-two"></div>
-          <div class="control-card-head">
-            <div>
-              <span>AVIA CONTROL CENTER</span>
-              <strong>Operación activa</strong>
-            </div>
-            <em>Sync · 12s</em>
-          </div>
-          <div class="control-kpis">
-            <div><small>Causas</small><b>4.218</b></div>
-            <div><small>Vehículos</small><b>183</b></div>
-            <div><small>Alertas</small><b>17</b></div>
-            <div><small>APIs</small><b>24</b></div>
-          </div>
-          <div class="control-timeline">
-            <article class="control-event event-legal">
-              <time>09:12</time>
-              <div><strong>Nuevo movimiento detectado</strong><span>C-5351-2026 · Legal</span></div>
-            </article>
-            <article class="control-event event-fleet">
-              <time>09:27</time>
-              <div><strong>Revisión técnica por vencer</strong><span>Flota · 3 días restantes</span></div>
-            </article>
-            <article class="control-event event-data">
-              <time>10:14</time>
-              <div><strong>Demanda sobre pronóstico</strong><span>Intelligence · +14%</span></div>
-            </article>
-            <article class="control-event event-api">
-              <time>10:31</time>
-              <div><strong>API sincronizada</strong><span>12.421 registros actualizados</span></div>
-            </article>
-            <article class="control-event event-lab">
-              <time>11:05</time>
-              <div><strong>Automatización ejecutada</strong><span>Lab · reporte enviado</span></div>
-            </article>
-          </div>
-          <div class="control-footer">
-            <span>Legal</span><span>Flota</span><span>Datos</span><span>API</span><span>Lab</span>
-          </div>
+          <div class="control-card-head"><div><span>AVIA CONTROL CENTER</span><strong>Operación activa</strong></div><em>Sync · 12s</em></div>
+          <div class="control-kpis"><div><small>Causas</small><b>4.218</b></div><div><small>Vehículos</small><b>183</b></div><div><small>Alertas</small><b>17</b></div><div><small>APIs</small><b>24</b></div></div>
+          <div class="control-timeline"><article class="control-event event-legal"><time>09:12</time><div><strong>Nuevo movimiento detectado</strong><span>C-5351-2026 · Legal</span></div></article><article class="control-event event-fleet"><time>09:27</time><div><strong>Revisión técnica por vencer</strong><span>Flota · 3 días restantes</span></div></article><article class="control-event event-data"><time>10:14</time><div><strong>Demanda sobre pronóstico</strong><span>Intelligence · +14%</span></div></article><article class="control-event event-api"><time>10:31</time><div><strong>API sincronizada</strong><span>12.421 registros actualizados</span></div></article><article class="control-event event-lab"><time>11:05</time><div><strong>Automatización ejecutada</strong><span>Lab · reporte enviado</span></div></article></div>
+          <div class="control-footer"><span>Legal</span><span>Flota</span><span>Datos</span><span>API</span><span>Lab</span></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="conversion-proof" aria-label="Métricas operativas AVIA">
+    <div class="container proof-panel">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Actividad real</p>
+        <h2>Prueba con datos operativos, no logos falsos.</h2>
+        <p>Las métricas se cargan desde la API pública del sitio. Si la API no responde, se muestra un fallback conservador.</p>
+      </div>
+      <div class="proof-grid">
+        <article class="proof-card"><strong data-public-stat="causes_count" data-fallback="5">5</strong><span>Causas visibles en demo</span></article>
+        <article class="proof-card"><strong data-public-stat="active_causes_count" data-fallback="5">5</strong><span>Causas activas</span></article>
+        <article class="proof-card"><strong data-public-stat="products_count" data-fallback="3">3</strong><span>Módulos disponibles</span></article>
+        <article class="proof-card"><strong data-public-stat="daily_summary_email_enabled" data-fallback="Disponible">Disponible</strong><span>Correo resumen</span></article>
+      </div>
+      <p class="proof-note">Sin placeholders tipo Amazon o Google. Cuando haya clientes reales autorizados, se agregan con nombre y permiso.</p>
     </div>
   </section>
 
   <section class="section use-cases-section" id="visualizaciones">
     <div class="container">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Sistema AVIA</p>
-        <h2>Un mismo motor para varias partes de tu operacion.</h2>
-        <p>Los productos no compiten. Se conectan segun el proceso: seguimiento legal, control de flota, inteligencia de datos, APIs y herramientas internas.</p>
-      </div>
+      <div class="section-heading reveal"><p class="eyebrow">Sistema AVIA</p><h2>Un mismo motor para varias partes de tu operacion.</h2><p>Los productos no compiten. Se conectan segun el proceso: seguimiento legal, control de flota, inteligencia de datos, APIs y herramientas internas.</p></div>
       <div class="showcase-grid">
-        <article class="showcase-card reveal">
-          <div class="use-case-dashboard">
-            <div class="mini-dashboard-head"><strong>Legal / Causas</strong><span id="home-legal-email">Correo activo</span></div>
-            <div class="mini-kpi-row">
-              <div class="mini-kpi"><small>Causas</small><b data-home-kpi="causes">4</b></div>
-              <div class="mini-kpi"><small>Activas</small><b data-home-kpi="active">3</b></div>
-              <div class="mini-kpi"><small>Con cambios</small><b data-home-kpi="changes">0</b></div>
-            </div>
-            <div class="case-list" id="home-case-list">
-              <div class="case-line"><i class="case-dot"></i><small>C-1245-2024 · sin cambios contra ayer</small><span class="case-badge">Sin cambio</span></div>
-              <div class="case-line"><i class="case-dot"></i><small>C-2301-2023 · sin cambios contra ayer</small><span class="case-badge">Sin cambio</span></div>
-            </div>
-            <div class="email-chip"><span>Resultados hoy y ayer comparados</span><strong data-home-kpi="inactive">1 pausada</strong></div>
-          </div>
-          <h3>Legal</h3>
-          <p>Causas, estados, cambios diarios y resumen automatico.</p>
-          <strong>Menos revision manual. Mas trazabilidad.</strong>
-        </article>
-
-        <article class="showcase-card reveal reveal-delay">
-          <div class="use-case-dashboard">
-            <div class="mini-dashboard-head"><strong>Centro de mantencion</strong><span>Alertas listas</span></div>
-            <div class="mini-kpi-row">
-              <div class="mini-kpi"><small>Al dia</small><b>37</b></div>
-              <div class="mini-kpi"><small>RT pendiente</small><b>3</b></div>
-              <div class="mini-kpi"><small>Vencen</small><b>2</b></div>
-            </div>
-            <div class="fleet-icons"><i class="fleet-car"></i><i class="fleet-car"></i><i class="fleet-car"></i><i class="fleet-car warn"></i><i class="fleet-car due"></i></div>
-            <div class="email-chip"><span>Reporte de flota enviado</span><strong>Prioridad diaria</strong></div>
-          </div>
-          <h3>Flota</h3>
-          <p>Vehiculos, vencimientos, revisiones tecnicas y prioridades.</p>
-          <strong>Alertas antes de que el problema llegue tarde.</strong>
-        </article>
-
-        <article class="showcase-card reveal reveal-delay-2">
-          <div class="use-case-dashboard">
-            <div class="mini-dashboard-head"><strong>Demanda en tiempo real</strong><span>Live forecast</span></div>
-            <div class="mini-kpi-row">
-              <div class="mini-kpi"><small>Demanda</small><b>1.248</b></div>
-              <div class="mini-kpi"><small>Pronostico</small><b>+12%</b></div>
-              <div class="mini-kpi"><small>Volatilidad</small><b>Alta</b></div>
-            </div>
-            <div class="demand-chart"><span class="demand-line"></span><span class="forecast-line"></span><div class="demand-dots"><i></i><i></i><i></i><i></i><i></i></div></div>
-          </div>
-          <h3>Datos</h3>
-          <p>Dashboards, reportes, demanda, riesgos y senales ejecutivas.</p>
-          <strong>Decision con informacion viva.</strong>
-        </article>
+        <article class="showcase-card reveal"><div class="use-case-dashboard"><div class="mini-dashboard-head"><strong>Legal / Causas</strong><span id="home-legal-email">Correo activo</span></div><div class="mini-kpi-row"><div class="mini-kpi"><small>Causas</small><b data-home-kpi="causes">4</b></div><div class="mini-kpi"><small>Activas</small><b data-home-kpi="active">3</b></div><div class="mini-kpi"><small>Con cambios</small><b data-home-kpi="changes">0</b></div></div><div class="case-list" id="home-case-list"><div class="case-line"><i class="case-dot"></i><small>C-1245-2024 · sin cambios contra ayer</small><span class="case-badge">Sin cambio</span></div><div class="case-line"><i class="case-dot"></i><small>C-2301-2023 · sin cambios contra ayer</small><span class="case-badge">Sin cambio</span></div></div><div class="email-chip"><span>Resultados hoy y ayer comparados</span><strong data-home-kpi="inactive">1 pausada</strong></div></div><h3>Legal</h3><p>Causas, estados, cambios diarios y resumen automatico.</p><strong>Menos revision manual. Mas trazabilidad.</strong></article>
+        <article class="showcase-card reveal reveal-delay"><div class="use-case-dashboard"><div class="mini-dashboard-head"><strong>Centro de mantencion</strong><span>Alertas listas</span></div><div class="mini-kpi-row"><div class="mini-kpi"><small>Al dia</small><b>37</b></div><div class="mini-kpi"><small>RT pendiente</small><b>3</b></div><div class="mini-kpi"><small>Vencen</small><b>2</b></div></div><div class="fleet-icons"><i class="fleet-car"></i><i class="fleet-car"></i><i class="fleet-car"></i><i class="fleet-car warn"></i><i class="fleet-car due"></i></div><div class="email-chip"><span>Reporte de flota enviado</span><strong>Prioridad diaria</strong></div></div><h3>Flota</h3><p>Vehiculos, vencimientos, revisiones tecnicas y prioridades.</p><strong>Alertas antes de que el problema llegue tarde.</strong></article>
+        <article class="showcase-card reveal reveal-delay-2"><div class="use-case-dashboard"><div class="mini-dashboard-head"><strong>Demanda en tiempo real</strong><span>Live forecast</span></div><div class="mini-kpi-row"><div class="mini-kpi"><small>Demanda</small><b>1.248</b></div><div class="mini-kpi"><small>Pronostico</small><b>+12%</b></div><div class="mini-kpi"><small>Volatilidad</small><b>Alta</b></div></div><div class="demand-chart"><span class="demand-line"></span><span class="forecast-line"></span><div class="demand-dots"><i></i><i></i><i></i><i></i><i></i></div></div></div><h3>Datos</h3><p>Dashboards, reportes, demanda, riesgos y senales ejecutivas.</p><strong>Decision con informacion viva.</strong></article>
       </div>
     </div>
   </section>
 
-  <section class="section product-tiles" id="business-lines">
-    <div class="container">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Modulos</p>
-        <h2>AVIA se arma segun tu operacion.</h2>
-        <p>Legal, Flota, Datos, API y Lab son piezas del mismo sistema. Puedes partir por una y conectar mas despues.</p>
-      </div>
-      <div class="business-grid home-simple-solutions">
-        <article class="business-card business-card-featured reveal" data-static-card="true">
-          <div class="card-icon">01</div>
-          <h3>Avia OPS</h3>
-          <p>Seguimiento operativo diario para causas, flotas, estados, alertas y tareas pendientes.</p>
-          <a class="btn btn-secondary" href="ops.html">Ver OPS</a>
-        </article>
-        <article class="business-card reveal reveal-delay" data-static-card="true">
-          <div class="card-icon">02</div>
-          <h3>Avia Intelligence</h3>
-          <p>Analisis, tableros y reportes para transformar datos dispersos en decisiones concretas.</p>
-          <a class="btn btn-secondary" href="avia-intelligence.html">Ver Intelligence</a>
-        </article>
-        <article class="business-card reveal reveal-delay-2" data-static-card="true">
-          <div class="card-icon">03</div>
-          <h3>Avia Labs</h3>
-          <p>APIs, apps internas, conectores e integraciones cuando el proceso necesita una herramienta propia.</p>
-          <a class="btn btn-secondary" href="avia-labs.html">Ver Labs</a>
-        </article>
-      </div>
-    </div>
-  </section>
+  <section class="section product-tiles" id="business-lines"><div class="container"><div class="section-heading reveal"><p class="eyebrow">Modulos</p><h2>AVIA se arma segun tu operacion.</h2><p>Legal, Flota, Datos, API y Lab son piezas del mismo sistema. Puedes partir por una y conectar mas despues.</p></div><div class="business-grid home-simple-solutions"><article class="business-card business-card-featured reveal" data-static-card="true"><div class="card-icon">01</div><h3>Avia OPS</h3><p>Seguimiento operativo diario para causas, flotas, estados, alertas y tareas pendientes.</p><a class="btn btn-secondary" href="ops.html">Ver OPS</a></article><article class="business-card reveal reveal-delay" data-static-card="true"><div class="card-icon">02</div><h3>Avia Intelligence</h3><p>Analisis, tableros y reportes para transformar datos dispersos en decisiones concretas.</p><a class="btn btn-secondary" href="avia-intelligence.html">Ver Intelligence</a></article><article class="business-card reveal reveal-delay-2" data-static-card="true"><div class="card-icon">03</div><h3>Avia Labs</h3><p>APIs, apps internas, conectores e integraciones cuando el proceso necesita una herramienta propia.</p><a class="btn btn-secondary" href="avia-labs.html">Ver Labs</a></article></div></div></section>
 
-  <section class="section guided-demo-section" id="guided-demo">
-    <div class="container beta-guide-grid">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Metodo</p>
-        <h2>Capturamos, comparamos y avisamos.</h2>
-        <p>La base es simple: conectamos la informacion, detectamos cambios relevantes y dejamos visible la accion siguiente.</p>
-        <div class="guided-actions">
-          <a class="btn btn-primary" href="#contact">Ordenar mi operacion</a>
-          <a class="btn btn-secondary" href="login.html">Entrar a la app</a>
-        </div>
-      </div>
-      <ol class="guided-steps reveal reveal-delay">
-        <li>
-          <strong>Captura</strong>
-          <span>Datos desde fuentes reales: carga manual, archivos, APIs, base de datos o conectores.</span>
-        </li>
-        <li>
-          <strong>Comparacion</strong>
-          <span>Estados actuales contra historial para detectar cambios, vencimientos y pendientes.</span>
-        </li>
-        <li>
-          <strong>Accion</strong>
-          <span>Paneles, alertas y reportes para saber que paso y que hacer despues.</span>
-        </li>
-      </ol>
-    </div>
-  </section>
+  <section class="section guided-demo-section" id="guided-demo"><div class="container beta-guide-grid"><div class="section-heading reveal"><p class="eyebrow">Metodo</p><h2>Capturamos, comparamos y avisamos.</h2><p>La base es simple: conectamos la informacion, detectamos cambios relevantes y dejamos visible la accion siguiente.</p><div class="guided-actions"><a class="btn btn-primary" href="register.html">Crear cuenta gratis</a><a class="btn btn-secondary" href="login.html">Entrar a la app</a></div></div><ol class="guided-steps reveal reveal-delay"><li><strong>Captura</strong><span>Datos desde fuentes reales: carga manual, archivos, APIs, base de datos o conectores.</span></li><li><strong>Comparacion</strong><span>Estados actuales contra historial para detectar cambios, vencimientos y pendientes.</span></li><li><strong>Accion</strong><span>Paneles, alertas y reportes para saber que paso y que hacer despues.</span></li></ol></div></section>
 
-  <section class="section contact-section" id="contact">
-    <div class="container contact-grid">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Contacto</p>
-        <h2>Cuéntanos qué operación quieres ordenar.</h2>
-        <p>Describe el proceso que hoy revisas manualmente. Lo convertimos en flujo, panel, alerta o herramienta interna segun corresponda.</p>
-        <div class="contact-meta">
-          <p><strong>Legal:</strong> causas, cambios y correos resumen.</p>
-          <p><strong>Flota:</strong> vencimientos, mantencion y prioridades.</p>
-          <p><strong>Datos / API / Lab:</strong> dashboards, conectores y apps internas.</p>
-        </div>
-      </div>
-      <form class="contact-form reveal reveal-delay" data-api-form data-success-url="/index.html?enviado=1#contact">
-        <input type="hidden" name="form" value="avia_home_contact" />
-        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
-        <label for="home-name">Nombre</label>
-        <input id="home-name" name="name" type="text" autocomplete="name" minlength="2" required />
-        <label for="home-email">Correo</label>
-        <input id="home-email" name="email" type="email" autocomplete="email" required />
-        <label for="home-interest">Qué necesitas ordenar</label>
-        <select id="home-interest" name="interest" data-static-options="true" required>
-          <option value="legal">Causas y seguimiento legal</option>
-          <option value="flota">Flota, vencimientos y mantencion</option>
-          <option value="intelligence">Datos, dashboard o reportes</option>
-          <option value="api">API, conectores o integraciones</option>
-          <option value="lab">App interna o automatizacion a medida</option>
-          <option value="no-se">No se, necesito orientacion</option>
-        </select>
-        <label for="home-message">Mensaje</label>
-        <textarea id="home-message" name="message" rows="5" minlength="5" required></textarea>
-        <button class="btn btn-primary" type="submit">Enviar solicitud</button>
-      </form>
-    </div>
-  </section>
+  <section class="section contact-section" id="contact"><div class="container contact-grid"><div class="section-heading reveal"><p class="eyebrow">Contacto</p><h2>Cuéntanos qué operación quieres ordenar.</h2><p>Primer contacto sin fricción: nombre, correo y necesidad. El detalle se pregunta después.</p><div class="contact-meta"><p><strong>Legal:</strong> causas, cambios y correos resumen.</p><p><strong>Flota:</strong> vencimientos, mantencion y prioridades.</p><p><strong>Datos / API / Lab:</strong> dashboards, conectores y apps internas.</p></div></div><form class="contact-form compact-contact reveal reveal-delay" data-api-form data-success-url="/index.html?enviado=1#contact"><input type="hidden" name="form" value="avia_contact" /><input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" /><input type="hidden" name="message" value="Contacto rápido desde home: solicita evaluación inicial." /><label for="home-name">Nombre</label><input id="home-name" name="name" type="text" autocomplete="name" minlength="2" required /><label for="home-email">Correo</label><input id="home-email" name="email" type="email" autocomplete="email" required /><label for="home-interest">Qué necesitas ordenar</label><select id="home-interest" name="interest" data-static-options="true" required><option value="legal">Causas y seguimiento legal</option><option value="flota">Flota, vencimientos y mantencion</option><option value="intelligence">Datos, dashboard o reportes</option><option value="api">API, conectores o integraciones</option><option value="lab">App interna o automatizacion a medida</option><option value="no-se">No se, necesito orientacion</option></select><button class="btn btn-primary" type="submit">Enviar solicitud</button></form></div></section>
 </main>
 
+<a class="floating-help" href="#contact">¿Tienes dudas? Escríbenos</a>
+<div class="exit-modal-backdrop" id="exit-intent-modal" role="dialog" aria-modal="true" aria-labelledby="exit-title"><div class="exit-modal"><p class="eyebrow">Prueba gratis</p><h3 id="exit-title">Antes de irte: prueba Legal con 5 causas.</h3><p>Sin tarjeta. Agregas tus causas, ves el primer resultado y decides si activas correo resumen.</p><div class="exit-modal-actions"><a class="btn btn-primary" href="register.html">Crear cuenta gratis</a><button class="exit-close" type="button" data-exit-close>Seguir mirando</button></div></div></div>
 <footer class="site-footer footer-clean"></footer>
-<script src="api-config.js"></script>
-<script src="product-data.js?v=production-home-20260604-3"></script>
-<script src="home-experience.js?v=production-home-20260604-3"></script>
-<script src="forecast-sequence.js"></script>
-<script src="script.js"></script>
-<script src="forms-api.js"></script>
-<script src="hero-particles.js"></script>
-<script src="hero-live-events.js"></script>
-<script src="hero-counters.js"></script>
-<script src="section-aurora.js"></script>
+<script src="api-config.js"></script><script src="product-data.js?v=production-home-20260604-3"></script><script src="home-experience.js?v=production-home-20260604-3"></script><script src="forecast-sequence.js"></script><script src="script.js"></script><script src="forms-api.js"></script><script src="hero-particles.js"></script><script src="hero-live-events.js"></script><script src="hero-counters.js"></script><script src="section-aurora.js"></script><script src="conversion.js"></script>
 </body>
 </html>

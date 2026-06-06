@@ -12,6 +12,63 @@ const navPanel = document.getElementById("nav-panel");
 const langToggle = document.getElementById("lang-toggle");
 const revealNodes = document.querySelectorAll(".reveal");
 
+const CONTACT_I18N = {
+  es: {
+    eyebrow: "Contacto",
+    title: "Cuéntanos qué operación quieres ordenar",
+    intro: "Cuéntanos qué estás revisando manualmente hoy. Te diremos si conviene resolverlo con alertas, panel, API o automatización.",
+    meta: [
+      ["Legal:", " revisión de causas, detección de cambios y correos resumen."],
+      ["Flota:", " control de revisión técnica, mantenciones, vencimientos y prioridades."],
+      ["Datos / API / Lab:", " dashboards, conectores, integraciones y apps internas."]
+    ],
+    name: "Nombre",
+    email: "Correo",
+    interest: "Qué necesitas ordenar",
+    details: "Cuéntanos un poco más ",
+    optional: "(opcional)",
+    placeholder: "Ej: tengo 80 causas y quiero recibir un resumen diario sólo cuando haya cambios.",
+    message: "Cuéntanos en qué podemos ayudarte?",
+    submit: "Enviar solicitud",
+    options: [
+      ["legal", "Causas y seguimiento legal"],
+      ["flota", "Flota, vencimientos y mantencion"],
+      ["intelligence", "Datos, dashboard o reportes"],
+      ["api", "API, conectores o integraciones"],
+      ["lab", "App interna o automatizacion a medida"],
+      ["no-se", "No se, necesito orientacion"]
+    ],
+    sent: "Solicitud enviada. Te contactaremos pronto."
+  },
+  en: {
+    eyebrow: "Contact",
+    title: "Tell us what operation you want to organize",
+    intro: "Tell us what you are reviewing manually today. We will tell you whether it should be solved with alerts, a dashboard, an API, or automation.",
+    meta: [
+      ["Legal:", " case review, change detection, and summary emails."],
+      ["Fleet:", " technical inspection tracking, maintenance, expirations, and priorities."],
+      ["Data / API / Lab:", " dashboards, connectors, integrations, and internal apps."]
+    ],
+    name: "Name",
+    email: "Email",
+    interest: "What do you need to organize?",
+    details: "Tell us a little more ",
+    optional: "(optional)",
+    placeholder: "Example: I have 80 cases and want to receive a daily summary only when there are changes.",
+    message: "How can we help you?",
+    submit: "Send request",
+    options: [
+      ["legal", "Legal case tracking"],
+      ["flota", "Fleet, expirations, and maintenance"],
+      ["intelligence", "Data, dashboards, or reports"],
+      ["api", "APIs, connectors, or integrations"],
+      ["lab", "Internal app or custom automation"],
+      ["no-se", "I am not sure; I need guidance"]
+    ],
+    sent: "Request sent. We will contact you soon."
+  }
+};
+
 function setPreferredLanguage(lang) {
   const selected = lang === "en" ? "en" : "es";
   document.documentElement.lang = selected;
@@ -19,12 +76,70 @@ function setPreferredLanguage(lang) {
   const languageSelect = document.getElementById("language");
   if (languageSelect) languageSelect.value = selected;
   if (langToggle) langToggle.textContent = selected === "es" ? "EN" : "ES";
+  applyContactTranslations(selected);
 }
 
 function detectInitialLanguage() {
   const saved = localStorage.getItem("avia-lang");
   if (saved === "es" || saved === "en") return saved;
   return navigator.language?.toLowerCase().startsWith("es") ? "es" : "en";
+}
+
+function setText(node, text) {
+  if (node) node.textContent = text;
+}
+
+function applyContactTranslations(lang) {
+  const copy = CONTACT_I18N[lang] || CONTACT_I18N.es;
+  const contact = document.getElementById("contact");
+  if (!contact) return;
+
+  setText(contact.querySelector(".eyebrow"), copy.eyebrow);
+  setText(contact.querySelector(".section-heading h2"), copy.title);
+
+  const intro = contact.querySelector(".section-heading > p:not(.eyebrow)");
+  setText(intro, copy.intro);
+
+  const metaItems = contact.querySelectorAll(".contact-meta p");
+  copy.meta.forEach((item, index) => {
+    const row = metaItems[index];
+    if (!row) return;
+    row.innerHTML = `<strong>${item[0]}</strong>${item[1]}`;
+  });
+
+  setText(contact.querySelector('label[for="home-name"]'), copy.name);
+  setText(contact.querySelector('label[for="home-email"]'), copy.email);
+  setText(contact.querySelector('label[for="home-interest"]'), copy.interest);
+
+  const detailsLabel = contact.querySelector('label[for="home-message"]');
+  if (detailsLabel) {
+    detailsLabel.innerHTML = `${copy.details}<span style="color:var(--muted);font-weight:600">${copy.optional}</span>`;
+  }
+
+  const textarea = document.getElementById("home-message");
+  if (textarea) {
+    const allDefaultMessages = [CONTACT_I18N.es.message, CONTACT_I18N.en.message, "Contacto rápido desde home: solicita evaluación inicial."];
+    if (allDefaultMessages.includes(textarea.value.trim())) {
+      textarea.value = copy.message;
+    }
+    textarea.placeholder = copy.placeholder;
+  }
+
+  const select = document.getElementById("home-interest");
+  if (select) {
+    const selectedValue = select.value;
+    select.innerHTML = "";
+    copy.options.forEach(([value, label]) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      select.appendChild(option);
+    });
+    if (selectedValue) select.value = selectedValue;
+  }
+
+  const submit = contact.querySelector('button[type="submit"]');
+  setText(submit, copy.submit);
 }
 
 if (langToggle) langToggle.addEventListener("click", () => setPreferredLanguage(document.documentElement.lang === "es" ? "en" : "es"));
@@ -76,10 +191,11 @@ function showReturnedFormStatus() {
   if (params.get("enviado") !== "1") return;
   const status = createStatus(form, ".form-status", "form-status form-status-ok");
   const isJobApplication = window.location.pathname.includes("trabaja-con-nosotros");
+  const currentLang = document.documentElement.lang === "en" ? "en" : "es";
   status.hidden = false;
   status.textContent = isJobApplication
     ? "Postulación enviada. Revisaremos tus datos y te contactaremos pronto."
-    : "Solicitud enviada. Te contactaremos pronto.";
+    : CONTACT_I18N[currentLang].sent;
   if (window.history?.replaceState) {
     window.history.replaceState({}, document.title, window.location.pathname);
   }

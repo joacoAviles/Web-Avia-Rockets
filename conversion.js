@@ -4,7 +4,7 @@
   var METHOD_COPY = {
     es: {
       eyebrow: 'El método AVIA',
-      title: 'Capturamos, comparamos y avisamos.',
+      title: 'Capturamos, comparamos y avisamos',
       intro: 'Tomamos la información que hoy revisas a mano, la contrastamos contra su historial y te mostramos sólo lo que cambió, venció o requiere acción.',
       steps: [
         ['Capturamos', 'Traemos los datos desde donde ya están: carga manual, archivos, APIs, bases de datos o conectores.'],
@@ -16,7 +16,7 @@
     },
     en: {
       eyebrow: 'The AVIA method',
-      title: 'We capture, compare, and notify.',
+      title: 'We capture, compare, and notify',
       intro: 'We take the information you currently review by hand, compare it against its history, and show you only what changed, expired, or requires action.',
       steps: [
         ['We capture', 'We bring the data from where it already lives: manual uploads, files, APIs, databases, or connectors.'],

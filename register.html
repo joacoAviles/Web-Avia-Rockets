@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Crear cuenta gratis | AVIA Rockets</title>
-<meta name="description" content="Crea una cuenta gratis en AVIA Rockets y prueba Legal con 5 causas sin tarjeta." />
+<meta name="description" content="Crea una cuenta gratis en AVIA Rockets, valida tu correo y entra al panel Legal." />
 <link rel="canonical" href="https://aviarockets.cl/register.html" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,9 +14,77 @@
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="form-status.css" />
 <link rel="stylesheet" href="conversion.css" />
-<style>.register-hero{min-height:calc(100vh - 78px);display:flex;align-items:center;padding:7rem 0 4rem;background:radial-gradient(circle at 14% 12%,rgba(10,108,255,.22),transparent 30%),radial-gradient(circle at 88% 24%,rgba(71,163,255,.13),transparent 28%)}.register-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:1.2rem;align-items:stretch}.register-copy,.register-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.register-copy h1{font-size:clamp(2.2rem,5vw,4.3rem);line-height:.95;margin:.6rem 0 1rem}.register-copy p{color:var(--muted)}.register-form{display:grid;gap:.75rem}.register-form label{font-weight:750;color:var(--muted-2)}.register-form input,.register-form select{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.register-note{color:var(--muted);font-size:.9rem}.register-success{display:none}.register-success.is-visible{display:block}@media(max-width:860px){.register-grid{grid-template-columns:1fr}.register-hero{padding:5rem 0 3rem}}</style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"AVIA Rockets Legal","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"CLP","description":"5 causas gratis sin tarjeta"}}</script>
+<style>
+.register-hero{min-height:calc(100vh - 78px);display:flex;align-items:center;padding:7rem 0 4rem;background:radial-gradient(circle at 14% 12%,rgba(10,108,255,.22),transparent 30%),radial-gradient(circle at 88% 24%,rgba(71,163,255,.13),transparent 28%)}
+.register-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:1.2rem;align-items:stretch}.register-copy,.register-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.register-copy h1{font-size:clamp(2.2rem,5vw,4.3rem);line-height:.95;margin:.6rem 0 1rem}.register-copy p{color:var(--muted)}
+.register-form{display:grid;gap:.75rem}.register-form label{font-weight:750;color:var(--muted-2)}.register-form input,.register-form select{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.register-note{color:var(--muted);font-size:.9rem}.register-step{display:none}.register-step.is-active{display:grid;gap:.75rem}.register-code{font-size:1.2rem;letter-spacing:.24em;text-align:center}.register-actions{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}.register-summary{border:1px solid rgba(134,176,255,.16);border-radius:18px;background:rgba(255,255,255,.035);padding:.85rem;color:var(--muted-2)}
+@media(max-width:860px){.register-grid{grid-template-columns:1fr}.register-hero{padding:5rem 0 3rem}}
+</style>
 </head>
 <body data-page="register">
 <header class="site-header"></header>
-<main><section class="register-hero"><div class="container register-grid"><div class="register-copy"><p class="eyebrow">Plan gratis</p><h1>Prueba Legal con 5 causas.</h1><p>Sin tarjeta. El flujo inicial es simple: crear causa, ver resultado y activar correo resumen.</p><div class="onboarding-steps"><article><span>1</span><strong>Crear causa</strong><p>Ingresa rol, tribunal y año.</p></article><article><span>2</span><strong>Ver resultado</strong><p>Revisa el estado y los cambios.</p></article><article><span>3</span><strong>Activar correo</strong><p>Recibe resumen diario.</p></article></div></div><div class="register-card"><form class="register-form" id="register-form"><input type="hidden" name="form" value="avia_contact" /><input type="hidden" name="source" value="register_free_trial" /><label for="register-name">Nombre</label><input id="register-name" name="name" type="text" minlength="2" autocomplete="name" required /><label for="register-email">Correo</label><input id="register-email" name="email" type="email" autocomplete="email" required /><label for="register-interest">Qué quieres probar</label><select id="register-interest" name="interest" required><option value="legal">OPS Legal: 5 causas gratis</option><option value="flota">OPS Flota</option><option value="intelligence">Avia Intelligence</option><option value="lab">Avia Labs</option></select><input type="hidden" name="message" value="Solicitud de cuenta gratis: plan Legal con 5 causas sin tarjeta." /><button class="btn btn-primary" type="submit" id="register-button">Crear cuenta gratis</button><p class="register-note">Te contactamos para activar el acceso inicial. Cuando el endpoint de creación automática quede habilitado, este mismo flujo puede crear usuario directo.</p><p class="form-status" id="register-status" aria-live="polite" hidden></p></form><div class="register-success" id="register-success"><p class="eyebrow">Solicitud recibida</p><h2>Primer paso listo.</h2><div class="onboarding-steps"><article><span>1</span><strong>Crear causa</strong><p>Te pediremos la primera causa.</p></article><article><span>2</span><strong>Ver resultado</strong><p>Revisaremos el estado inicial.</p></article><article><span>3</span><strong>Activar resumen</strong><p>Dejamos listo el correo diario.</p></article></div><div class="auth-secondary-cta"><a class="btn btn-primary" href="login.html">Ir a login</a><a class="btn btn-secondary" href="index.html">Volver al home</a></div></div></div></div></section></main><footer class="site-footer footer-clean"></footer><script src="api-config.js"></script><script src="header-standard.js"></script><script src="footer-standard.js?v=20260604-3"></script><script>const API_BASE=(window.AVIA_API_BASE_URL_RESOLVED||window.AVIA_API_BASE_URL||'https://api.aviarockets.cl').replace(/\/$/,'');const form=document.getElementById('register-form');const btn=document.getElementById('register-button');const statusEl=document.getElementById('register-status');const success=document.getElementById('register-success');function status(msg,error=false){statusEl.hidden=false;statusEl.textContent=msg;statusEl.className='form-status '+(error?'form-status-error':'form-status-ok')}form.addEventListener('submit',async(e)=>{e.preventDefault();btn.disabled=true;btn.textContent='Creando solicitud...';status('Enviando solicitud de cuenta gratis...');try{const payload=Object.fromEntries(new FormData(form).entries());const res=await fetch(API_BASE+'/api/forms/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});const data=await res.json().catch(()=>({}));if(!res.ok||data.ok===false)throw new Error(data.detail||data.message||'No se pudo crear la solicitud');form.style.display='none';success.classList.add('is-visible')}catch(err){status(err.message||'No se pudo enviar. Intenta nuevamente.',true)}finally{btn.disabled=false;btn.textContent='Crear cuenta gratis'}});</script></body></html>
+<main>
+<section class="register-hero">
+<div class="container register-grid">
+<div class="register-copy">
+<p class="eyebrow">Registro validado</p>
+<h1>Valida tu correo y entra a Legal.</h1>
+<p>El acceso se crea sólo después de confirmar un código enviado a tu email. Luego completas tus datos y puedes entrar al home con Legal / Causas activo.</p>
+<div class="onboarding-steps"><article><span>1</span><strong>Correo</strong><p>Ingresa email, nombre y contraseña.</p></article><article><span>2</span><strong>Código</strong><p>Recibe y valida el código.</p></article><article><span>3</span><strong>Perfil</strong><p>Completa datos y primera causa.</p></article></div>
+</div>
+<div class="register-card">
+<div class="register-step is-active" id="step-request">
+<form class="register-form" id="request-form">
+<label for="register-name">Nombre</label><input id="register-name" name="full_name" type="text" minlength="2" autocomplete="name" required />
+<label for="register-email">Correo</label><input id="register-email" name="email" type="email" autocomplete="email" required />
+<label for="register-password">Contraseña</label><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required />
+<button class="btn btn-primary" type="submit" id="request-button">Enviar código</button>
+<p class="register-note">Te enviaremos un código de 6 dígitos. El usuario no queda activo hasta validar el correo.</p>
+</form>
+</div>
+<div class="register-step" id="step-verify">
+<form class="register-form" id="verify-form">
+<div class="register-summary">Código enviado a <strong id="verify-email-label">-</strong>.</div>
+<label for="register-code">Código de verificación</label><input class="register-code" id="register-code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
+<div class="register-actions"><button class="btn btn-primary" type="submit" id="verify-button">Validar correo</button><button class="btn btn-secondary" type="button" id="resend-button">Reenviar código</button></div>
+</form>
+</div>
+<div class="register-step" id="step-onboarding">
+<form class="register-form" id="onboarding-form">
+<div class="register-summary">Correo validado. Completa tu perfil para entrar al home.</div>
+<label for="onboarding-name">Nombre visible</label><input id="onboarding-name" name="full_name" type="text" minlength="2" required />
+<label for="onboarding-company">Empresa</label><input id="onboarding-company" name="company_name" type="text" placeholder="Opcional" />
+<label for="onboarding-phone">Teléfono</label><input id="onboarding-phone" name="phone" type="tel" placeholder="Opcional" />
+<label for="onboarding-cause-code">Primera causa</label><input id="onboarding-cause-code" name="first_cause_code" type="text" placeholder="C-5351-2026" />
+<label for="onboarding-cause-court">Tribunal</label><input id="onboarding-cause-court" name="first_cause_court" type="text" placeholder="29º Juzgado Civil de Santiago" />
+<label><input name="daily_summary_email_enabled" type="checkbox" checked /> Activar correo resumen diario</label>
+<button class="btn btn-primary" type="submit" id="onboarding-button">Entrar al home</button>
+</form>
+</div>
+<p class="form-status" id="register-status" aria-live="polite" hidden></p>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer footer-clean"></footer>
+<script src="api-config.js"></script>
+<script src="header-standard.js"></script>
+<script src="footer-standard.js?v=20260604-3"></script>
+<script>
+const API_BASE=(window.AVIA_API_BASE_URL_RESOLVED||window.AVIA_API_BASE_URL||'https://api.aviarockets.cl').replace(/\/$/,'');
+const TOKEN_KEY='avia_auth_token';
+const USER_KEY='avia_auth_user';
+let registrationEmail='';
+let registrationPassword='';
+let registrationName='';
+const statusEl=document.getElementById('register-status');
+function setStatus(msg,error=false){statusEl.hidden=false;statusEl.textContent=msg;statusEl.className='form-status '+(error?'form-status-error':'form-status-ok')}
+function showStep(id){document.querySelectorAll('.register-step').forEach((node)=>node.classList.remove('is-active'));document.getElementById(id).classList.add('is-active');statusEl.hidden=true}
+async function postJson(path,payload,token){const headers={'Content-Type':'application/json','Accept':'application/json'};if(token)headers.Authorization='Bearer '+token;const res=await fetch(API_BASE+path,{method:'POST',headers,body:JSON.stringify(payload)});const data=await res.json().catch(()=>({}));if(!res.ok||data.ok===false)throw new Error(data.detail||data.message||'Error en el registro');return data}
+document.getElementById('request-form').addEventListener('submit',async(e)=>{e.preventDefault();const btn=document.getElementById('request-button');const form=new FormData(e.currentTarget);registrationEmail=String(form.get('email')||'').trim();registrationPassword=String(form.get('password')||'');registrationName=String(form.get('full_name')||'').trim();btn.disabled=true;btn.textContent='Enviando...';setStatus('Enviando código de verificación...');try{await postJson('/api/register/request-code',{email:registrationEmail,password:registrationPassword,full_name:registrationName});document.getElementById('verify-email-label').textContent=registrationEmail;document.getElementById('onboarding-name').value=registrationName;showStep('step-verify')}catch(err){setStatus(err.message||'No se pudo enviar el código.',true)}finally{btn.disabled=false;btn.textContent='Enviar código'}});
+document.getElementById('resend-button').addEventListener('click',async()=>{try{setStatus('Reenviando código...');await postJson('/api/register/request-code',{email:registrationEmail,password:registrationPassword,full_name:registrationName});setStatus('Código reenviado. Revisa tu correo.')}catch(err){setStatus(err.message||'No se pudo reenviar.',true)}});
+document.getElementById('verify-form').addEventListener('submit',async(e)=>{e.preventDefault();const btn=document.getElementById('verify-button');btn.disabled=true;btn.textContent='Validando...';setStatus('Validando código...');try{const code=document.getElementById('register-code').value.trim();const data=await postJson('/api/register/verify-code',{email:registrationEmail,code});localStorage.setItem(TOKEN_KEY,data.token);localStorage.setItem(USER_KEY,JSON.stringify(data.user));showStep('step-onboarding')}catch(err){setStatus(err.message||'Código inválido.',true)}finally{btn.disabled=false;btn.textContent='Validar correo'}});
+document.getElementById('onboarding-form').addEventListener('submit',async(e)=>{e.preventDefault();const btn=document.getElementById('onboarding-button');const token=localStorage.getItem(TOKEN_KEY);const form=new FormData(e.currentTarget);btn.disabled=true;btn.textContent='Guardando...';setStatus('Guardando perfil y activando Legal...');try{await postJson('/api/register/onboarding',{full_name:String(form.get('full_name')||'').trim(),company_name:String(form.get('company_name')||'').trim()||null,phone:String(form.get('phone')||'').trim()||null,first_cause_code:String(form.get('first_cause_code')||'').trim()||null,first_cause_court:String(form.get('first_cause_court')||'').trim()||null,daily_summary_email_enabled:form.has('daily_summary_email_enabled')},token);window.location.href='app.html'}catch(err){setStatus(err.message||'No se pudo completar el perfil.',true)}finally{btn.disabled=false;btn.textContent='Entrar al home'}});
+</script>
+</body>
+</html>

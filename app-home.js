@@ -2,6 +2,34 @@ const AVIA_APP_API = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_
 const AVIA_TOKEN_KEY = "avia_auth_token";
 const AVIA_USER_KEY = "avia_auth_user";
 
+const ACADEMY_FALLBACK = {
+  ok: true,
+  source: "fallback-web",
+  stats: { banks_count: 1, total_questions: 8, thematicas_count: 5, due_reviews: 0 },
+  banks: [
+    {
+      bank_id: "robinson-r22-manual-tecnico",
+      slug: "robinson-r22-manual-tecnico",
+      titulo: "Robinson R22 · Manual técnico",
+      dominio: "aviacion",
+      tipo_banco: "manual_tecnico",
+      tematicas: ["Vigencia documental", "Inspección 100 horas/anual", "Zonas del helicóptero", "Sistema eléctrico", "Vida limitada"],
+      questions_count: 8,
+      estado: "borrador_estudio",
+    },
+  ],
+  questions: [
+    { id:"r22-mt-vig-001", bank_id:"robinson-r22-manual-tecnico", tematica:"Vigencia documental", subtematica:"Revisión vigente", nivel:"basico", tipo_pregunta:"respuesta_corta", pregunta:"¿Por qué se debe revisar la versión vigente del manual antes de estudiar datos técnicos?", respuesta_correcta_texto:"Porque las páginas efectivas pueden cambiar entre revisiones.", explicacion_corta:"Un dato técnico solo sirve si pertenece a la revisión aplicable.", explicacion_profunda:"En manuales técnicos de aeronaves, distintas páginas pueden tener fechas diferentes. La revisión vigente y el revision log determinan qué páginas siguen aplicando.", fuente:{ documento:"r22_mm_DEC_2024_fd49c66adc.pdf" } },
+    { id:"r22-mt-vig-002", bank_id:"robinson-r22-manual-tecnico", tematica:"Vigencia documental", subtematica:"Revision log", nivel:"basico", tipo_pregunta:"respuesta_corta", pregunta:"¿Qué documento permite ordenar o verificar las páginas efectivas del manual?", respuesta_correcta_texto:"El revision log.", explicacion_corta:"El revision log permite confirmar qué páginas están vigentes.", explicacion_profunda:"La estructura de publicaciones técnicas exige comprobar la vigencia de las páginas antes de usar datos o tablas.", fuente:{ documento:"r22_mm_DEC_2024_fd49c66adc.pdf" } },
+    { id:"r22-mt-insp-001", bank_id:"robinson-r22-manual-tecnico", tematica:"Inspección 100 horas/anual", subtematica:"Alcance general", nivel:"basico", tipo_pregunta:"respuesta_corta", pregunta:"¿Qué áreas generales cubre la inspección de 100 horas/anual?", respuesta_correcta_texto:"Funcionamiento general, zonas físicas y trazabilidad documental.", explicacion_corta:"La inspección combina pruebas funcionales, revisión por accesos y cierre documental.", explicacion_profunda:"El manual ordena el estudio entre ground check, run-up, flight check, preparación, inspección por paneles y control de cumplimiento documental.", fuente:{ documento:"r22_mm_100hour_c2ec0da743.pdf" } },
+    { id:"r22-mt-insp-004", bank_id:"robinson-r22-manual-tecnico", tematica:"Inspección 100 horas/anual", subtematica:"Run-up", nivel:"intermedio", tipo_pregunta:"respuesta_corta", pregunta:"¿Qué revisa el run-up?", respuesta_correcta_texto:"Motor, rotor, clutch, governor, tacómetros, carga eléctrica y avisos.", explicacion_corta:"El run-up cruza motor, rotor, instrumentos y avisos.", explicacion_profunda:"El run-up permite estudiar la relación entre planta motriz, sistema rotor, clutch, governor, tacómetros y circuito eléctrico bajo condición funcional.", fuente:{ documento:"r22_mm_100hour_c2ec0da743.pdf" } },
+    { id:"r22-mt-zona-003", bank_id:"robinson-r22-manual-tecnico", tematica:"Zonas del helicóptero", subtematica:"Circuit breaker panel", nivel:"intermedio", tipo_pregunta:"respuesta_corta", pregunta:"¿Qué zona agrupa circuit breakers y bus bars?", respuesta_correcta_texto:"El panel eléctrico de protección y distribución.", explicacion_corta:"Ese panel concentra protección, conexiones y distribución eléctrica.", explicacion_profunda:"El estudio del panel debe considerar condición de wiring, conexiones, breakers, bus bars y limpieza interior.", fuente:{ documento:"r22_mm_100hour_c2ec0da743.pdf" } },
+    { id:"r22-mt-elec-001", bank_id:"robinson-r22-manual-tecnico", tematica:"Sistema eléctrico", subtematica:"Método de lectura", nivel:"basico", tipo_pregunta:"respuesta_corta", pregunta:"¿Cómo se estudia un circuito eléctrico de forma ordenada?", respuesta_correcta_texto:"Fuente, protección, control, carga y ground.", explicacion_corta:"Ese orden evita mirar cables sin contexto.", explicacion_profunda:"Un circuito se entiende mejor como una cadena funcional: energía, protección, mando o condición, consumo y retorno eléctrico.", fuente:{ documento:"R22_Electrical_System_Schematics_c8dca0bf0c.pdf" } },
+    { id:"r22-mt-elec-005", bank_id:"robinson-r22-manual-tecnico", tematica:"Sistema eléctrico", subtematica:"Warning lights", nivel:"basico", tipo_pregunta:"respuesta_corta", pregunta:"¿Qué warning lights conviene agrupar al estudiar el R22?", respuesta_correcta_texto:"Low oil pressure, low fuel, low voltage, clutch, rotor brake, CO, chip/temperature y low RPM.", explicacion_corta:"Esas luces conectan el estudio eléctrico con sistemas y sensores.", explicacion_profunda:"Las luces de aviso no se estudian aisladas: cada una depende de alimentación, control, sensor o condición, carga y ground.", fuente:{ documento:"R22_Electrical_System_Schematics_c8dca0bf0c.pdf" } },
+    { id:"r22-mt-vida-001", bank_id:"robinson-r22-manual-tecnico", tematica:"Vida limitada", subtematica:"Método de tiempo", nivel:"intermedio", tipo_pregunta:"respuesta_corta", pregunta:"¿Qué dos formas de medir tiempo aparecen en las limitaciones?", respuesta_correcta_texto:"Engine run time y flight/collective-up time.", explicacion_corta:"El método de conteo determina qué tabla aplicar.", explicacion_profunda:"El manual separa vidas según tiempo de motor o tiempo de vuelo/colectivo arriba. No son intercambiables.", fuente:{ documento:"r22_mm_DEC_2024_fd49c66adc.pdf" } },
+  ],
+};
+
 const appState = {
   dashboard: null,
   user: null,
@@ -10,6 +38,12 @@ const appState = {
   causes: [],
   technicalReviews: null,
   vehicles: [],
+  academy: null,
+  academyBank: "robinson-r22-manual-tecnico",
+  academyTheme: "all",
+  academyMode: "study",
+  academyQuestionIndex: 0,
+  academyAnswerVisible: false,
   vehicleFilter: "all",
   statusFilter: "all",
   search: "",
@@ -28,6 +62,7 @@ function appPaid(account){ return account?.subscription?.is_paid ? "Pagado" : "N
 function appFormatDate(value){ if (!value) return "-"; try { return new Date(value).toLocaleDateString("es-CL"); } catch (_) { return String(value); } }
 function appDaysText(days){ if (days === null || days === undefined) return "Sin vencimiento"; if (days < 0) return `Vencida hace ${Math.abs(days)} días`; if (days === 0) return "Vence hoy"; return `Vence en ${days} días`; }
 function appReviewLabel(status){ return ({ok:"Al día", warning:"Por vencer", expired:"Vencida", unknown:"Sin dato", inactive:"Pausado"}[status] || status || "-"); }
+function appNormalizeTheme(value){ return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 
 async function appFetch(path, options = {}){
   const headers = new Headers(options.headers || {});
@@ -55,10 +90,37 @@ function appRenderUser(){
   appSetText("app-product-role", user.role || "client");
 }
 
+function appAcademyQuestions(){
+  const academy = appState.academy || ACADEMY_FALLBACK;
+  const selectedBank = appState.academyBank || academy.banks?.[0]?.bank_id;
+  const selectedTheme = appState.academyTheme || "all";
+  return (Array.isArray(academy.questions) ? academy.questions : []).filter((question) => {
+    if (selectedBank && question.bank_id && question.bank_id !== selectedBank) return false;
+    if (selectedTheme !== "all" && appNormalizeTheme(question.tematica) !== appNormalizeTheme(selectedTheme)) return false;
+    return true;
+  });
+}
+
+function appAcademyStats(){
+  const academy = appState.academy || ACADEMY_FALLBACK;
+  const banks = Array.isArray(academy.banks) ? academy.banks : [];
+  const questions = Array.isArray(academy.questions) ? academy.questions : [];
+  const themes = new Set(questions.map((q) => q.tematica).filter(Boolean));
+  return {
+    banks_count: academy.stats?.banks_count ?? banks.length,
+    total_questions: academy.stats?.total_questions ?? questions.length,
+    thematicas_count: academy.stats?.tematicas_count ?? themes.size,
+  };
+}
+
 function appCurrentStats(){
   if (appState.view === "technical-reviews") {
     const stats = appState.technicalReviews?.stats || {};
     return [String(stats.vehicles_up_to_date ?? 0), String(stats.vehicles_due_soon ?? 0), String(stats.vehicles_expired ?? 0)];
+  }
+  if (appState.view === "academy") {
+    const stats = appAcademyStats();
+    return [String(stats.banks_count ?? 0), String(stats.total_questions ?? 0), String(stats.thematicas_count ?? 0)];
   }
   const stats = appState.dashboard?.stats || {};
   return [String(stats.active_causes_count ?? 0), String(stats.inactive_causes_count ?? 0), appBool(stats.daily_summary_email_enabled)];
@@ -66,7 +128,13 @@ function appCurrentStats(){
 
 function appRenderStats(){
   const cards = document.querySelectorAll(".app-stat");
-  const labels = appState.view === "technical-reviews" ? ["Autos al día", "Por vencer", "Vencidos"] : ["Causas activas", "Causas pausadas", "Correo resumen"];
+  const labelsByView = {
+    "technical-reviews": ["Autos al día", "Por vencer", "Vencidos"],
+    academy: ["Bancos", "Preguntas", "Temáticas"],
+    causes: ["Causas activas", "Causas pausadas", "Correo resumen"],
+    settings: ["Causas activas", "Causas pausadas", "Correo resumen"],
+  };
+  const labels = labelsByView[appState.view] || labelsByView.causes;
   const values = appCurrentStats();
   cards.forEach((card, index) => {
     const small = card.querySelector("small");
@@ -80,9 +148,12 @@ function appProductItems(){
   const products = Array.isArray(appState.products) ? appState.products : [];
   const hasLegal = products.some((p) => p.slug === "legal");
   const hasReviews = products.some((p) => p.slug === "revision-tecnica");
+  const hasAcademy = products.some((p) => ["labs-academy", "academy"].includes(p.slug));
+  const academyQuestions = appAcademyStats().total_questions || 0;
   const base = [];
   if (hasLegal || !products.length) base.push(["causes", "Legal / Causas", `${appState.causes.length} causas`, "LG"]);
   if (hasReviews || true) base.push(["technical-reviews", "Revisiones Técnicas", `${appState.vehicles.length || 0} autos`, "RT"]);
+  if (hasAcademy || true) base.push(["academy", "Labs / Academy", `${academyQuestions} preguntas`, "AC"]);
   base.push(["settings", "Configuración", "Cuenta y preferencias", "CF"]);
   return base;
 }
@@ -102,6 +173,11 @@ function appRenderSidebar(){
   if (appState.view === "technical-reviews") {
     const stats = appState.technicalReviews?.stats || {};
     filters = [["all", "Todos", `${stats.total_vehicles ?? 0} autos`], ["ok", "Al día", `${stats.vehicles_up_to_date ?? 0}`], ["warning", "Por vencer", `${stats.vehicles_due_soon ?? 0}`], ["expired", "Vencidos", `${stats.vehicles_expired ?? 0}`]].map(([value, label, meta]) => `<button class="app-product-button${appState.vehicleFilter === value ? " is-active" : ""}" type="button" data-vehicle-filter="${value}"><strong>${label.slice(0,2).toUpperCase()}</strong><span>${label}</span><small>${meta}</small></button>`).join("");
+  }
+  if (appState.view === "academy") {
+    const questions = appAcademyQuestions();
+    const themeButtons = [...new Set((appState.academy?.questions || ACADEMY_FALLBACK.questions).map((q) => q.tematica).filter(Boolean))].slice(0, 4);
+    filters = [["all", "Todas", `${(appState.academy?.questions || ACADEMY_FALLBACK.questions).length} preguntas`], ...themeButtons.map((theme) => [theme, theme, `${questions.filter((q) => appNormalizeTheme(q.tematica) === appNormalizeTheme(theme)).length}`])].map(([value, label, meta]) => `<button class="app-product-button${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(value) ? " is-active" : ""}" type="button" data-academy-theme="${appEscape(value)}"><strong>${label.slice(0,2).toUpperCase()}</strong><span>${appEscape(label)}</span><small>${appEscape(meta)}</small></button>`).join("");
   }
   menu.innerHTML = productButtons + (filters ? `<hr style="width:100%;border:0;border-top:1px solid rgba(134,176,255,.14);margin:.2rem 0">${filters}` : "");
 }
@@ -224,6 +300,70 @@ async function appRenderTechnicalReviewsPanel(){
   appBindControls();
 }
 
+async function appEnsureAcademyLoaded(force = false){
+  if (appState.academy && !force) return;
+  try {
+    appState.academy = await appFetch("/api/academy/dashboard");
+  } catch (error) {
+    appState.academy = ACADEMY_FALLBACK;
+    appState.academy.error = error.message || "Academy API no disponible";
+  }
+  const banks = Array.isArray(appState.academy?.banks) ? appState.academy.banks : [];
+  if (!banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = banks[0]?.bank_id || "robinson-r22-manual-tecnico";
+}
+
+function appAcademySummaryHtml(){
+  const stats = appAcademyStats();
+  const bank = (appState.academy?.banks || ACADEMY_FALLBACK.banks).find((item) => item.bank_id === appState.academyBank) || {};
+  return `<div class="app-config-grid">
+    <div class="app-config-row"><span>Producto</span><strong>Labs / Academy<br><small>Subproducto de AVIA Labs para estudio y captación.</small></strong></div>
+    <div class="app-config-row"><span>Banco activo</span><strong>${appEscape(bank.titulo || bank.bank_id || "Banco de estudio")}<br><small>${appEscape(bank.dominio || "aprendizaje")} · ${appEscape(bank.tipo_banco || "question_bank")}</small></strong></div>
+    <div class="app-config-row"><span>Preguntas</span><strong>${appEscape(stats.total_questions)}<br><small>${appEscape(stats.thematicas_count)} temáticas disponibles</small></strong></div>
+    <div class="app-config-row"><span>Estado</span><strong>${appEscape(appState.academy?.source === "fallback-web" ? "Demo local" : "Conectado a API")}<br><small>${appEscape(appState.academy?.error || "Listo para estudiar")}</small></strong></div>
+  </div>`;
+}
+
+function appAcademyControlsHtml(){
+  const banks = appState.academy?.banks || ACADEMY_FALLBACK.banks;
+  const themes = ["all", ...new Set((appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => !appState.academyBank || q.bank_id === appState.academyBank).map((q) => q.tematica).filter(Boolean))];
+  const bankOptions = banks.map((bank) => `<option value="${appEscape(bank.bank_id)}" ${appState.academyBank === bank.bank_id ? "selected" : ""}>${appEscape(bank.titulo || bank.bank_id)}</option>`).join("");
+  const themeOptions = themes.map((theme) => `<option value="${appEscape(theme)}" ${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(theme) ? "selected" : ""}>${theme === "all" ? "Todas las temáticas" : appEscape(theme)}</option>`).join("");
+  return `<div class="app-config-row"><span>Configurar estudio</span><strong class="app-form-inline app-academy-controls"><select id="academy-bank-select">${bankOptions}</select><select id="academy-theme-select">${themeOptions}</select><select id="academy-mode-select"><option value="exam" ${appState.academyMode === "exam" ? "selected" : ""}>Modo examen</option><option value="study" ${appState.academyMode === "study" ? "selected" : ""}>Modo estudio</option><option value="instructor" ${appState.academyMode === "instructor" ? "selected" : ""}>Modo instructor</option></select></strong></div>`;
+}
+
+function appAcademyQuestionHtml(){
+  const questions = appAcademyQuestions();
+  if (!questions.length) return `<div class="app-config-row"><span>Sin preguntas</span><strong>No hay preguntas para este filtro.</strong></div>`;
+  if (appState.academyQuestionIndex >= questions.length) appState.academyQuestionIndex = 0;
+  if (appState.academyQuestionIndex < 0) appState.academyQuestionIndex = questions.length - 1;
+  const question = questions[appState.academyQuestionIndex];
+  const visible = appState.academyAnswerVisible;
+  const showDeep = visible && appState.academyMode === "instructor";
+  return `<article class="academy-card">
+    <div class="academy-card-head"><span>${appEscape(question.tematica || "Temática")}</span><small>${appEscape(question.subtematica || "")} · ${appEscape(question.nivel || "")}</small></div>
+    <h3>${appEscape(question.pregunta)}</h3>
+    ${visible ? `<div class="academy-answer"><strong>Respuesta</strong><p>${appEscape(question.respuesta_correcta_texto || question.respuesta_correcta || "-")}</p><strong>Explicación</strong><p>${appEscape(question.explicacion_corta || "-")}</p>${showDeep ? `<strong>Explicación profunda</strong><p>${appEscape(question.explicacion_profunda || "-")}</p>` : ""}<small>Fuente: ${appEscape(question.fuente?.documento || question.fuente || "No informada")}</small></div>` : `<p class="academy-muted">Responde mentalmente o en voz alta. Luego revela la respuesta.</p>`}
+    <div class="academy-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-reveal">${visible ? "Ocultar respuesta" : "Ver respuesta"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><small>${appState.academyQuestionIndex + 1} / ${questions.length}</small></div>
+  </article>`;
+}
+
+async function appRenderAcademyPanel(){
+  await appEnsureAcademyLoaded();
+  appSetText("app-view-label", "Labs · Subproducto Academy");
+  appSetText("app-product-title", "AVIA Academy");
+  appSetText("app-product-description", "Espacio de estudio dentro del login: bancos de preguntas, modos examen/estudio/instructor y preparación para progreso por usuario.");
+  appSetText("app-product-status", `${appAcademyStats().total_questions ?? 0} preguntas`);
+  appSetText("app-product-slug", "labs-academy");
+  appRenderStats();
+  const demo = document.getElementById("app-product-demo");
+  if (demo) demo.innerHTML = appAcademySummaryHtml();
+  appSetText("app-config-title", "Estudiar preguntas");
+  const config = document.getElementById("app-product-config");
+  if (!config) return;
+  config.innerHTML = `${appAcademyControlsHtml()}<div id="academy-question-wrap">${appAcademyQuestionHtml()}</div><div id="cause-action-output" class="app-query-output" style="display:none"></div>`;
+  appBindControls();
+}
+
 function appRenderSettingsPanel(){
   const account = appState.account || {};
   const settings = account.settings || {};
@@ -250,6 +390,7 @@ async function appRenderPanel(){
   appRenderSidebar();
   if (appState.view === "settings") appRenderSettingsPanel();
   else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
+  else if (appState.view === "academy") await appRenderAcademyPanel();
   else appRenderCausesPanel();
   appRenderSidebar();
   appRenderStats();
@@ -278,6 +419,7 @@ async function appReload(){
   appState.products = Array.isArray(appState.dashboard?.products) ? appState.dashboard.products : [];
   appState.causes = Array.isArray(appState.dashboard?.causes) ? appState.dashboard.causes : [];
   if (appState.view === "technical-reviews") await appEnsureReviewsLoaded(true);
+  if (appState.view === "academy") await appEnsureAcademyLoaded(true);
   appRenderUser(); appRenderStats(); await appRenderPanel();
 }
 
@@ -304,10 +446,20 @@ async function appSubmitVehicleForm(formNode){
   await appEnsureReviewsLoaded(true); await appRenderPanel(); appShow("Auto agregado correctamente.");
 }
 
+function appBindAcademyControls(){
+  document.getElementById("academy-bank-select")?.addEventListener("change", async (event) => { appState.academyBank = event.target.value || ""; appState.academyTheme = "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; await appRenderPanel(); });
+  document.getElementById("academy-theme-select")?.addEventListener("change", async (event) => { appState.academyTheme = event.target.value || "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; await appRenderPanel(); });
+  document.getElementById("academy-mode-select")?.addEventListener("change", async (event) => { appState.academyMode = event.target.value || "study"; appState.academyAnswerVisible = false; await appRenderPanel(); });
+  document.getElementById("academy-prev")?.addEventListener("click", async () => { appState.academyQuestionIndex -= 1; appState.academyAnswerVisible = false; await appRenderPanel(); });
+  document.getElementById("academy-next")?.addEventListener("click", async () => { appState.academyQuestionIndex += 1; appState.academyAnswerVisible = false; await appRenderPanel(); });
+  document.getElementById("academy-reveal")?.addEventListener("click", async () => { appState.academyAnswerVisible = !appState.academyAnswerVisible; await appRenderPanel(); });
+}
+
 function appBindControls(){
   document.querySelectorAll("[data-product-view]").forEach((button) => button.addEventListener("click", async () => { appState.view = button.dataset.productView || "causes"; await appRenderPanel(); }));
   document.querySelectorAll("[data-cause-filter]").forEach((button) => button.addEventListener("click", () => { appState.view = "causes"; appState.statusFilter = button.dataset.causeFilter || "all"; appRenderPanel(); }));
   document.querySelectorAll("[data-vehicle-filter]").forEach((button) => button.addEventListener("click", () => { appState.view = "technical-reviews"; appState.vehicleFilter = button.dataset.vehicleFilter || "all"; appRenderPanel(); }));
+  document.querySelectorAll("[data-academy-theme]").forEach((button) => button.addEventListener("click", async () => { appState.view = "academy"; appState.academyTheme = button.dataset.academyTheme || "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; await appRenderPanel(); }));
   document.getElementById("cause-search-input")?.addEventListener("input", (event) => { appState.search = event.target.value || ""; const rows = document.getElementById("cause-list-rows"); if (rows) rows.innerHTML = appCauseRows(); appBindRowActions(); });
   document.getElementById("vehicle-search-input")?.addEventListener("input", (event) => { appState.vehicleSearch = event.target.value || ""; const rows = document.getElementById("vehicle-list-rows"); if (rows) rows.innerHTML = appVehicleRows(); appBindVehicleActions(); });
   document.getElementById("cause-add-form")?.addEventListener("submit", async (event) => { event.preventDefault(); try { await appSubmitCauseForm(event.currentTarget); } catch (error) { appShow(error.message || "Error agregando causa.", true); } });
@@ -315,7 +467,7 @@ function appBindControls(){
   document.getElementById("cause-bulk-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const causes = String(form.get("bulk") || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => { const [code, court] = line.split("|").map((part) => part.trim()); return { code, court: court || null }; }).filter((cause) => cause.code); if (!causes.length) return appShow("No hay causas válidas para cargar.", true); try { const result = await appFetch("/api/causes/bulk", { method:"POST", body:JSON.stringify({ causes }) }); await appReload(); appShow(`Carga masiva terminada. Registros procesados: ${result.created_or_updated || 0}.`); } catch (error) { appShow(error.message || "Error en carga masiva.", true); } });
   document.getElementById("account-settings-form")?.addEventListener("submit", async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); try { appState.account = await appFetch("/api/account/settings", { method:"PATCH", body:JSON.stringify({ ui_theme_preference:String(form.get("ui_theme_preference") || "dark"), default_payment_method:String(form.get("default_payment_method") || "manual"), daily_summary_email_enabled:form.has("daily_summary_email_enabled") }) }); await appReload(); appShow("Configuración guardada."); } catch (error) { appShow(error.message || "Error guardando configuración.", true); } });
   document.getElementById("account-delete-request")?.addEventListener("click", async () => { try { await appFetch("/api/account/delete-request", { method:"POST" }); await appReload(); appShow("Solicitud de eliminación registrada."); } catch (error) { appShow(error.message || "Error solicitando eliminación.", true); } });
-  appBindRowActions(); appBindVehicleActions();
+  appBindAcademyControls(); appBindRowActions(); appBindVehicleActions();
 }
 
 function appBindRowActions(){

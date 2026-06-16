@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="conversion.css" />
 <style>
 .auth-hero{min-height:calc(100vh - 78px);display:flex;align-items:center;padding:7rem 0 4rem;background:radial-gradient(circle at 14% 12%,rgba(10,108,255,.22),transparent 30%),radial-gradient(circle at 88% 24%,rgba(71,163,255,.13),transparent 28%)}
-.auth-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:1.2rem;align-items:stretch}.auth-copy,.auth-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.auth-copy h1{font-size:clamp(2.2rem,5vw,4.4rem);line-height:.95;margin:.6rem 0 1rem}.auth-copy p{color:var(--muted);max-width:62ch}.auth-form{display:grid;gap:.75rem}.auth-form label{font-weight:750;color:var(--muted-2)}.auth-form input{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.auth-status{margin:0;color:var(--muted);min-height:1.2rem}.auth-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.86rem}.auth-row a{color:var(--primary-3);text-decoration:none}.auth-secondary-cta{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}.auth-secondary-cta span{color:var(--muted);font-size:.92rem}@media(max-width:860px){.auth-grid{grid-template-columns:1fr}.auth-hero{padding:5rem 0 3rem}}
+.auth-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:1.2rem;align-items:stretch}.auth-copy,.auth-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.auth-copy h1{font-size:clamp(2.2rem,5vw,4.4rem);line-height:.95;margin:.6rem 0 1rem}.auth-copy p{color:var(--muted);max-width:62ch}.auth-form{display:grid;gap:.75rem}.auth-form label{font-weight:750;color:var(--muted-2)}.auth-form input{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.auth-status{margin:0;color:var(--muted);min-height:1.2rem;white-space:pre-line}.auth-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.86rem}.auth-row a{color:var(--primary-3);text-decoration:none}.auth-secondary-cta{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}.auth-secondary-cta span{color:var(--muted);font-size:.92rem}@media(max-width:860px){.auth-grid{grid-template-columns:1fr}.auth-hero{padding:5rem 0 3rem}}
 </style>
 </head>
 <body data-page="auth">
@@ -48,18 +48,107 @@
 <script src="header-standard.js"></script>
 <script src="footer-standard.js?v=20260604-3"></script>
 <script>
-const API_BASE_URL = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || "https://api.aviarockets.cl").replace(/\/$/, "");
+const PRIMARY_API_BASE_URL = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || "https://api.aviarockets.cl").replace(/\/$/, "");
 const TOKEN_KEY = "avia_auth_token";
 const USER_KEY = "avia_auth_user";
 const DEFAULT_AFTER_LOGIN = "app.html";
 const loginForm = document.getElementById("login-form");
 const loginButton = document.getElementById("login-button");
 const loginStatus = document.getElementById("login-status");
-function setStatus(message, type = "") { loginStatus.hidden = false; loginStatus.textContent = message; loginStatus.className = `auth-status ${type}`.trim(); }
-function getRedirectTarget() { const params = new URLSearchParams(window.location.search); const next = params.get("next"); return next && !next.startsWith("http") && !next.startsWith("//") ? next.replace("app-beta.html", "app.html") : DEFAULT_AFTER_LOGIN; }
-async function apiRequest(path, options = {}) { const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers: { Accept: "application/json", "Content-Type": "application/json", ...(options.headers || {}) } }); let data = null; try { data = await response.json(); } catch (_) { data = null; } if (!response.ok) { const code = data?.error; throw new Error(code === "INVALID_CREDENTIALS" ? "Usuario o contraseña incorrectos." : data?.detail || data?.message || code || `Error API ${response.status}`); } return data; }
-function saveSession(data) { localStorage.setItem(TOKEN_KEY, data.token); localStorage.setItem(USER_KEY, JSON.stringify(data.user)); }
-loginForm.addEventListener("submit", async (event) => { event.preventDefault(); const identifier = document.getElementById("login-identifier").value.trim(); const password = document.getElementById("login-password").value; if (!identifier || !password) { setStatus("Ingresa correo y contraseña.", "form-status-error"); return; } loginButton.disabled = true; loginButton.textContent = "Entrando..."; setStatus("Validando usuario contra la API..."); try { const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email: identifier, password }) }); saveSession(data); setStatus("Ingreso correcto. Redirigiendo a Legal / Causas...", "form-status-ok"); window.location.href = getRedirectTarget(); } catch (error) { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); setStatus(error.message || "No se pudo iniciar sesión.", "form-status-error"); } finally { loginButton.disabled = false; loginButton.textContent = "Ingresar"; } });
+
+function setStatus(message, type = "") {
+  loginStatus.hidden = false;
+  loginStatus.textContent = message;
+  loginStatus.className = `auth-status ${type}`.trim();
+}
+
+function getRedirectTarget() {
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get("next");
+  return next && !next.startsWith("http") && !next.startsWith("//") ? next.replace("app-beta.html", "app.html") : DEFAULT_AFTER_LOGIN;
+}
+
+function getApiCandidates() {
+  const candidates = [PRIMARY_API_BASE_URL, "https://api.aviarockets.cl", window.location.origin];
+  return [...new Set(candidates.filter(Boolean).map((url) => String(url).replace(/\/$/, "")))];
+}
+
+async function apiRequestFrom(baseUrl, path, options = {}) {
+  let response;
+  try {
+    response = await fetch(`${baseUrl}${path}`, {
+      ...options,
+      mode: "cors",
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      }
+    });
+  } catch (error) {
+    throw new Error(`Sin conexión con ${baseUrl}: ${error.message || "fallo de red/CORS"}`);
+  }
+
+  let data = null;
+  const text = await response.text();
+  try { data = text ? JSON.parse(text) : null; } catch (_) { data = null; }
+
+  if (!response.ok) {
+    const code = data?.error;
+    const msg = code === "INVALID_CREDENTIALS"
+      ? "Usuario o contraseña incorrectos."
+      : data?.detail || data?.message || code || text?.slice(0, 160) || `Error API ${response.status}`;
+    throw new Error(`${baseUrl} respondió ${response.status}: ${msg}`);
+  }
+
+  return data;
+}
+
+async function apiRequest(path, options = {}) {
+  const errors = [];
+  for (const baseUrl of getApiCandidates()) {
+    try {
+      const data = await apiRequestFrom(baseUrl, path, options);
+      localStorage.setItem("avia_api_base_url", baseUrl);
+      return data;
+    } catch (error) {
+      errors.push(error.message || String(error));
+    }
+  }
+  throw new Error(`No se pudo conectar con la API.\n${errors.join("\n")}`);
+}
+
+function saveSession(data) {
+  localStorage.setItem(TOKEN_KEY, data.token);
+  localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+}
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const identifier = document.getElementById("login-identifier").value.trim();
+  const password = document.getElementById("login-password").value;
+  if (!identifier || !password) {
+    setStatus("Ingresa correo y contraseña.", "form-status-error");
+    return;
+  }
+  loginButton.disabled = true;
+  loginButton.textContent = "Entrando...";
+  setStatus("Validando usuario contra la API...");
+  try {
+    const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email: identifier, password }) });
+    saveSession(data);
+    setStatus("Ingreso correcto. Redirigiendo a Legal / Causas...", "form-status-ok");
+    window.location.href = getRedirectTarget();
+  } catch (error) {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    setStatus(error.message || "No se pudo iniciar sesión.", "form-status-error");
+  } finally {
+    loginButton.disabled = false;
+    loginButton.textContent = "Ingresar";
+  }
+});
 </script>
 </body>
 </html>

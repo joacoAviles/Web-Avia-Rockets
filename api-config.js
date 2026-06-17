@@ -1,5 +1,7 @@
 (function resolveAviaApiBaseUrl(){
-  var current = window.AVIA_API_BASE_URL;
+  var stored = "";
+  try { stored = localStorage.getItem("avia_api_base_url") || ""; } catch (_) {}
+  var current = window.AVIA_API_BASE_URL || stored;
   var host = window.location.hostname;
   var isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
   var fallback = isLocal ? "http://localhost:18000" : "https://api.aviarockets.cl";

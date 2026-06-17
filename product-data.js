@@ -46,11 +46,30 @@ window.AVIA_API_BASE_URL_RESOLVED = (() => {
   if (window.AVIA_API_BASE_URL) return window.AVIA_API_BASE_URL.replace(/\/$/, "");
   var host = window.location.hostname;
   var isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
-  return isLocal ? "http://localhost:8080" : "https://api.aviarockets.cl";
+  return isLocal ? "http://localhost:18000" : "https://api.aviarockets.cl";
 })();
 
 window.aviaNormalizeProductSlug = function aviaNormalizeProductSlug(slug) {
-  const map = { ops: "legal", legal: "legal", "ops-legal": "legal", pdlju: "legal", flota: "flota", fleet: "flota", intelligence: "intelligence", datos: "intelligence", labs: "lab", lab: "lab", custom: "lab", api: "api", "integraciones-api": "api" };
+  const map = {
+    ops: "legal",
+    legal: "legal",
+    "ops-legal": "legal",
+    pdlju: "legal",
+    flota: "flota",
+    fleet: "flota",
+    "revision-tecnica": "flota",
+    "technical-reviews": "flota",
+    intelligence: "intelligence",
+    datos: "intelligence",
+    dashboards: "intelligence",
+    labs: "lab",
+    lab: "lab",
+    academy: "lab",
+    "labs-academy": "lab",
+    custom: "lab",
+    api: "api",
+    "integraciones-api": "api"
+  };
   return map[slug] || slug;
 };
 
@@ -88,7 +107,7 @@ window.aviaLoadProducts = async function aviaLoadProducts() {
     window.AVIA_HOME_PUBLIC_DATA = publicHome;
     const services = Array.isArray(publicHome?.products) && publicHome.products.length ? publicHome.products : [];
     const products = services.map((service) => {
-      const id = window.aviaNormalizeProductSlug(service.slug);
+      const id = window.aviaNormalizeProductSlug(service.slug || service.id);
       const fallback = window.AVIA_PRODUCTS.find((product) => product.id === id) || window.AVIA_PRODUCTS[0];
       const merged = {
         ...fallback,
@@ -97,7 +116,7 @@ window.aviaLoadProducts = async function aviaLoadProducts() {
         short: fallback.short,
         title: service.name || fallback.title,
         headline: service.short_description || fallback.headline,
-        description: service.full_description || service.short_description || fallback.description,
+        description: service.full_description || service.summary || service.short_description || fallback.description,
         apiServiceId: service.id,
         apiSlug: service.slug,
         isActive: service.is_active

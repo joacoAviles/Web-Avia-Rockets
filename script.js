@@ -127,12 +127,7 @@ function clearSession() {
 }
 
 async function logoutSession() {
-  try {
-    await apiFetch("/api/auth/logout", { method: "POST" });
-  } catch (_) {
-  } finally {
-    clearSession();
-  }
+  try { await apiFetch("/api/auth/logout", { method: "POST" }); } catch (_) {} finally { clearSession(); }
 }
 
 async function apiFetch(path, options = {}) {
@@ -141,34 +136,15 @@ async function apiFetch(path, options = {}) {
   if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   const token = getToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
-
   const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
   let data = null;
   try { data = await response.json(); } catch (_) { data = null; }
-  if (!response.ok) {
-    const message = data?.detail || `Error API ${response.status}`;
-    throw new Error(message);
-  }
+  if (!response.ok) throw new Error(data?.detail || `Error API ${response.status}`);
   return data;
 }
 
 function normalizeServiceSlug(slug) {
-  const map = {
-    ops: "ops",
-    legal: "legal",
-    flota: "flota",
-    fleet: "flota",
-    intelligence: "intelligence",
-    labs: "labs",
-    lab: "labs",
-    api: "api",
-    custom: "labs",
-    pdlju: "legal",
-    automatizacion: "ops",
-    datos: "intelligence",
-    "web-saas": "labs",
-    "integraciones-api": "api"
-  };
+  const map = { ops:"ops", legal:"legal", flota:"flota", fleet:"flota", intelligence:"intelligence", labs:"labs", lab:"labs", api:"api", custom:"labs", pdlju:"legal", automatizacion:"ops", datos:"intelligence", "web-saas":"labs", "integraciones-api":"api" };
   return map[slug] || slug;
 }
 
@@ -185,7 +161,7 @@ function renderServices(services) {
     const text = card.querySelector("p:not(.eyebrow)");
     const cta = card.querySelector("a.btn");
     if (title) title.textContent = service.name || title.textContent;
-    if (text) text.textContent = service.full_description || service.short_description || text.textContent;
+    if (text) text.textContent = service.full_description || service.short_description || service.summary || text.textContent;
     if (cta) cta.dataset.serviceSlug = service.normalizedSlug;
   });
   const interestSelect = document.getElementById("interest");
@@ -200,9 +176,7 @@ function renderServices(services) {
   }
 }
 
-function renderSiteSettings(settings) {
-  if (!settings || typeof settings !== "object") return;
-}
+function renderSiteSettings(settings) { if (!settings || typeof settings !== "object") return; }
 
 async function loadSiteData() {
   try {
@@ -210,32 +184,24 @@ async function loadSiteData() {
     renderServices(data.services);
     renderSiteSettings(data.settings);
   } catch (error) {
-    console.warn("No se pudo cargar contenido desde la base de datos", error);
+    console.warn("No se pudo cargar contenido desde la API", error);
   }
 }
 
-function setupContactForms() {
-  const form = document.querySelector(".contact-form");
-  if (!form) return;
-  showReturnedFormStatus();
-}
+function setupContactForms() { const form = document.querySelector(".contact-form"); if (!form) return; showReturnedFormStatus(); }
 
 function renderCauses(causes) {
   const grid = document.getElementById("causes-grid");
   const status = document.getElementById("dashboard-status");
   if (!grid || !status) return;
   grid.innerHTML = "";
-  if (!Array.isArray(causes) || causes.length === 0) {
-    status.textContent = "No tienes causas asignadas.";
-    status.className = "dashboard-status";
-    return;
-  }
-  status.textContent = `${causes.length} causa(s) cargada(s) desde la base de datos.`;
+  if (!Array.isArray(causes) || causes.length === 0) { status.textContent = "No tienes causas asignadas."; status.className = "dashboard-status"; return; }
+  status.textContent = `${causes.length} causa(s) cargada(s) desde la API.`;
   status.className = "dashboard-status dashboard-status-ok";
   causes.forEach((cause) => {
     const card = document.createElement("article");
     card.className = "cause-card";
-    card.innerHTML = `<h3>${cause.code} · ${cause.title}</h3><p>${cause.court || "Sin tribunal registrado"}</p><div class="cause-badges"><span>Estado: ${cause.status}</span><span>Usuarios asignados: ${cause.assigned_users_count}</span><span>ID: ${cause.id}</span></div>`;
+    card.innerHTML = `<h3>${cause.code || "Causa"} · ${cause.title || "Sin titulo"}</h3><p>${cause.court || "Sin tribunal registrado"}</p><div class="cause-badges"><span>Estado: ${cause.status || cause.user_status || "active"}</span><span>ID: ${cause.id}</span></div>`;
     grid.appendChild(card);
   });
 }
@@ -245,23 +211,6 @@ async function renderAdminUsers(user) {
   if (!grid) return;
   grid.innerHTML = "";
   if (!user || user.role !== "admin") return;
-  try {
-    const users = await apiFetch("/api/admin/users");
-    const title = document.createElement("h3");
-    title.textContent = "Usuarios registrados";
-    grid.appendChild(title);
-    users.forEach((item) => {
-      const card = document.createElement("article");
-      card.className = "user-card";
-      card.innerHTML = `<h3>${item.full_name}</h3><p>${item.email}</p><div class="cause-badges"><span>Rol: ${item.role}</span><span>${item.is_active ? "Activo" : "Inactivo"}</span><span>ID: ${item.id}</span></div>`;
-      grid.appendChild(card);
-    });
-  } catch (error) {
-    const card = document.createElement("p");
-    card.className = "dashboard-status dashboard-status-error";
-    card.textContent = error.message;
-    grid.appendChild(card);
-  }
 }
 
 function showDashboard(user) {
@@ -270,7 +219,7 @@ function showDashboard(user) {
   const dashboardUser = document.getElementById("dashboard-user");
   if (loginCard) loginCard.hidden = true;
   if (dashboardCard) dashboardCard.hidden = false;
-  if (dashboardUser) dashboardUser.textContent = `${user.full_name} · ${user.email} · rol: ${user.role}`;
+  if (dashboardUser) dashboardUser.textContent = `${user.full_name || user.name || "Usuario"} · ${user.email || ""} · rol: ${user.role || "client"}`;
 }
 
 function showLogin() {
@@ -282,9 +231,11 @@ function showLogin() {
 
 async function loadDashboard() {
   try {
-    const user = await apiFetch("/api/auth/me");
+    const mePayload = await apiFetch("/api/auth/me");
+    const user = mePayload.user || mePayload;
     showDashboard(user);
-    const causes = await apiFetch("/api/causes");
+    const causesPayload = await apiFetch("/api/causes");
+    const causes = Array.isArray(causesPayload) ? causesPayload : (causesPayload.causes || []);
     renderCauses(causes);
     await renderAdminUsers(user);
   } catch (error) {
@@ -298,67 +249,35 @@ function setupLogin() {
   const button = document.getElementById("login-button");
   const status = document.getElementById("login-status");
   const logoutButton = document.getElementById("logout-button");
-
-  if (logoutButton) {
-    logoutButton.addEventListener("click", async () => {
-      await logoutSession();
-      showLogin();
-      const grid = document.getElementById("causes-grid");
-      if (grid) grid.innerHTML = "";
-    });
-  }
-
+  if (logoutButton) logoutButton.addEventListener("click", async () => { await logoutSession(); showLogin(); const grid = document.getElementById("causes-grid"); if (grid) grid.innerHTML = ""; });
   if (!form) return;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const email = getFormValue("login-email");
     const password = getFormValue("login-password");
     if (!email || !password) return;
-
-    if (button) {
-      button.disabled = true;
-      button.textContent = "Entrando...";
-    }
-    if (status) {
-      status.hidden = false;
-      status.textContent = "Validando usuario...";
-      status.className = "login-status";
-    }
-
+    if (button) { button.disabled = true; button.textContent = "Entrando..."; }
+    if (status) { status.hidden = false; status.textContent = "Validando usuario..."; status.className = "login-status"; }
     try {
       const data = await apiFetch("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
       saveSession(data);
-      if (status) {
-        status.textContent = "Ingreso correcto.";
-        status.className = "login-status login-status-ok";
-      }
+      if (status) { status.textContent = "Ingreso correcto."; status.className = "login-status login-status-ok"; }
       await loadDashboard();
     } catch (error) {
       clearSession();
-      if (status) {
-        status.textContent = error.message || "No se pudo iniciar sesión.";
-        status.className = "login-status login-status-error";
-      }
+      if (status) { status.textContent = error.message || "No se pudo iniciar sesión."; status.className = "login-status login-status-error"; }
     } finally {
-      if (button) {
-        button.disabled = false;
-        button.textContent = "Ingresar";
-      }
+      if (button) { button.disabled = false; button.textContent = "Ingresar"; }
     }
   });
 }
 
-function loadStandardScript(src) {
-  if (document.querySelector(`script[src="${src}"]`)) return;
-  const script = document.createElement("script");
-  script.src = src;
-  document.body.appendChild(script);
-}
+function loadStandardScript(src) { if (document.querySelector(`script[src="${src}"]`)) return; const script = document.createElement("script"); script.src = src; document.body.appendChild(script); }
 
 setPreferredLanguage(detectInitialLanguage());
 loadSiteData();
 setupContactForms();
 setupLogin();
-if (getToken()) loadDashboard();
+loadDashboard();
 loadStandardScript("header-standard.js");
 loadStandardScript("footer-standard.js");

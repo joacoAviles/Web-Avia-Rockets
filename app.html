@@ -69,6 +69,23 @@
       border-color: rgba(71, 163, 255, .34);
     }
 
+    body[data-page="app-home"] .nav-panel .app-line-nav {
+      border: 0;
+      background: transparent;
+      color: var(--muted-2);
+      cursor: pointer;
+      font: inherit;
+      font-size: .93rem;
+      font-weight: 750;
+      padding: .35rem .1rem;
+      transition: color var(--transition), text-shadow var(--transition);
+    }
+
+    body[data-page="app-home"] .nav-panel .app-line-nav:hover {
+      color: #fff;
+      text-shadow: 0 0 16px rgba(10, 108, 255, .45);
+    }
+
     body[data-page="app-home"] .nav-panel .app-line-nav.is-active {
       color: var(--primary-3);
     }

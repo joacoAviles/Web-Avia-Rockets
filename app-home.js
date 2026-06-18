@@ -39,11 +39,12 @@ const appState = {
   technicalReviews: null,
   vehicles: [],
   academy: null,
-  academyBank: "robinson-r22-manual-tecnico",
+  academyBank: "all",
   academyTheme: "all",
   academyMode: "study",
   academyQuestionIndex: 0,
   academyAnswerVisible: false,
+  academyProgress: {},
   vehicleFilter: "all",
   statusFilter: "all",
   search: "",
@@ -92,10 +93,10 @@ function appRenderUser(){
 
 function appAcademyQuestions(){
   const academy = appState.academy || ACADEMY_FALLBACK;
-  const selectedBank = appState.academyBank || academy.banks?.[0]?.bank_id;
+  const selectedBank = appState.academyBank || "all";
   const selectedTheme = appState.academyTheme || "all";
   return (Array.isArray(academy.questions) ? academy.questions : []).filter((question) => {
-    if (selectedBank && question.bank_id && question.bank_id !== selectedBank) return false;
+    if (selectedBank !== "all" && question.bank_id && question.bank_id !== selectedBank) return false;
     if (selectedTheme !== "all" && appNormalizeTheme(question.tematica) !== appNormalizeTheme(selectedTheme)) return false;
     return true;
   });
@@ -175,9 +176,9 @@ function appRenderSidebar(){
     filters = [["all", "Todos", `${stats.total_vehicles ?? 0} autos`], ["ok", "Al día", `${stats.vehicles_up_to_date ?? 0}`], ["warning", "Por vencer", `${stats.vehicles_due_soon ?? 0}`], ["expired", "Vencidos", `${stats.vehicles_expired ?? 0}`]].map(([value, label, meta]) => `<button class="app-product-button${appState.vehicleFilter === value ? " is-active" : ""}" type="button" data-vehicle-filter="${value}"><strong>${label.slice(0,2).toUpperCase()}</strong><span>${label}</span><small>${meta}</small></button>`).join("");
   }
   if (appState.view === "academy") {
-    const questions = appAcademyQuestions();
-    const themeButtons = [...new Set((appState.academy?.questions || ACADEMY_FALLBACK.questions).map((q) => q.tematica).filter(Boolean))].slice(0, 4);
-    filters = [["all", "Todas", `${(appState.academy?.questions || ACADEMY_FALLBACK.questions).length} preguntas`], ...themeButtons.map((theme) => [theme, theme, `${questions.filter((q) => appNormalizeTheme(q.tematica) === appNormalizeTheme(theme)).length}`])].map(([value, label, meta]) => `<button class="app-product-button${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(value) ? " is-active" : ""}" type="button" data-academy-theme="${appEscape(value)}"><strong>${label.slice(0,2).toUpperCase()}</strong><span>${appEscape(label)}</span><small>${appEscape(meta)}</small></button>`).join("");
+    const source = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
+    const themes = [...new Set(source.map((q) => q.tematica).filter(Boolean))];
+    filters = [["all", "Todas", `${source.length} preguntas`], ...themes.map((theme) => [theme, theme, `${source.filter((q) => appNormalizeTheme(q.tematica) === appNormalizeTheme(theme)).length} preguntas`])].map(([value, label, meta]) => `<button class="app-product-button${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(value) ? " is-active" : ""}" type="button" data-academy-theme="${appEscape(value)}"><strong>${label.slice(0,2).toUpperCase()}</strong><span>${appEscape(label)}</span><small>${appEscape(meta)}</small></button>`).join("");
   }
   menu.innerHTML = productButtons + (filters ? `<hr style="width:100%;border:0;border-top:1px solid rgba(134,176,255,.14);margin:.2rem 0">${filters}` : "");
 }
@@ -309,12 +310,13 @@ async function appEnsureAcademyLoaded(force = false){
     appState.academy.error = error.message || "Academy API no disponible";
   }
   const banks = Array.isArray(appState.academy?.banks) ? appState.academy.banks : [];
-  if (!banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = banks[0]?.bank_id || "robinson-r22-manual-tecnico";
+  if (appState.academyBank !== "all" && !banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = "all";
 }
 
 function appAcademySummaryHtml(){
   const stats = appAcademyStats();
-  const bank = (appState.academy?.banks || ACADEMY_FALLBACK.banks).find((item) => item.bank_id === appState.academyBank) || {};
+  let bank = (appState.academy?.banks || ACADEMY_FALLBACK.banks).find((item) => item.bank_id === appState.academyBank) || {};
+  if (appState.academyBank === "all") bank = { titulo: "Todos los bancos de aviacion", dominio: `${stats.banks_count} bancos`, tipo_banco: "todas las tematicas" };
   return `<div class="app-config-grid">
     <div class="app-config-row"><span>Producto</span><strong>Labs / Academy<br><small>Subproducto de AVIA Labs para estudio y captación.</small></strong></div>
     <div class="app-config-row"><span>Banco activo</span><strong>${appEscape(bank.titulo || bank.bank_id || "Banco de estudio")}<br><small>${appEscape(bank.dominio || "aprendizaje")} · ${appEscape(bank.tipo_banco || "question_bank")}</small></strong></div>
@@ -325,13 +327,14 @@ function appAcademySummaryHtml(){
 
 function appAcademyControlsHtml(){
   const banks = appState.academy?.banks || ACADEMY_FALLBACK.banks;
-  const themes = ["all", ...new Set((appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => !appState.academyBank || q.bank_id === appState.academyBank).map((q) => q.tematica).filter(Boolean))];
-  const bankOptions = banks.map((bank) => `<option value="${appEscape(bank.bank_id)}" ${appState.academyBank === bank.bank_id ? "selected" : ""}>${appEscape(bank.titulo || bank.bank_id)}</option>`).join("");
+  const scopedQuestions = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
+  const themes = ["all", ...new Set(scopedQuestions.map((q) => q.tematica).filter(Boolean))];
+  const bankOptions = [`<option value="all" ${appState.academyBank === "all" ? "selected" : ""}>Todos los bancos</option>`, ...banks.map((bank) => `<option value="${appEscape(bank.bank_id)}" ${appState.academyBank === bank.bank_id ? "selected" : ""}>${appEscape(bank.titulo || bank.bank_id)}</option>`)].join("");
   const themeOptions = themes.map((theme) => `<option value="${appEscape(theme)}" ${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(theme) ? "selected" : ""}>${theme === "all" ? "Todas las temáticas" : appEscape(theme)}</option>`).join("");
   return `<div class="app-config-row"><span>Configurar estudio</span><strong class="app-form-inline app-academy-controls"><select id="academy-bank-select">${bankOptions}</select><select id="academy-theme-select">${themeOptions}</select><select id="academy-mode-select"><option value="exam" ${appState.academyMode === "exam" ? "selected" : ""}>Modo examen</option><option value="study" ${appState.academyMode === "study" ? "selected" : ""}>Modo estudio</option><option value="instructor" ${appState.academyMode === "instructor" ? "selected" : ""}>Modo instructor</option></select></strong></div>`;
 }
 
-function appAcademyQuestionHtml(){
+function appAcademyQuestionHtmlLegacy(){
   const questions = appAcademyQuestions();
   if (!questions.length) return `<div class="app-config-row"><span>Sin preguntas</span><strong>No hay preguntas para este filtro.</strong></div>`;
   if (appState.academyQuestionIndex >= questions.length) appState.academyQuestionIndex = 0;
@@ -344,6 +347,50 @@ function appAcademyQuestionHtml(){
     <h3>${appEscape(question.pregunta)}</h3>
     ${visible ? `<div class="academy-answer"><strong>Respuesta</strong><p>${appEscape(question.respuesta_correcta_texto || question.respuesta_correcta || "-")}</p><strong>Explicación</strong><p>${appEscape(question.explicacion_corta || "-")}</p>${showDeep ? `<strong>Explicación profunda</strong><p>${appEscape(question.explicacion_profunda || "-")}</p>` : ""}<small>Fuente: ${appEscape(question.fuente?.documento || question.fuente || "No informada")}</small></div>` : `<p class="academy-muted">Responde mentalmente o en voz alta. Luego revela la respuesta.</p>`}
     <div class="academy-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-reveal">${visible ? "Ocultar respuesta" : "Ver respuesta"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><small>${appState.academyQuestionIndex + 1} / ${questions.length}</small></div>
+  </article>`;
+}
+
+function appAcademyThemeMapHtml(){
+  const source = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
+  const themes = [...new Set(source.map((q) => q.tematica).filter(Boolean))];
+  if (!themes.length) return "";
+  return `<div class="academy-topic-grid">${themes.map((theme) => {
+    const count = source.filter((q) => appNormalizeTheme(q.tematica) === appNormalizeTheme(theme)).length;
+    const active = appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(theme);
+    return `<button class="academy-topic${active ? " is-active" : ""}" type="button" data-academy-theme="${appEscape(theme)}"><span>${appEscape(theme)}</span><strong>${count}</strong></button>`;
+  }).join("")}</div>`;
+}
+
+function appAcademyOptionsHtml(question){
+  const explicit = Array.isArray(question.opciones) ? question.opciones.filter(Boolean) : [];
+  const parsed = String(question.pregunta || "").split(/\n/).map((line) => line.trim()).filter((line) => /^[A-D][\.\)-]\s+/i.test(line));
+  const options = explicit.length ? explicit : parsed;
+  if (!options.length) return "";
+  return `<div class="academy-options">${options.map((option) => `<button type="button" class="academy-option">${appEscape(option)}</button>`).join("")}</div>`;
+}
+
+function appAcademyProgressLabel(question){
+  const value = appState.academyProgress[question.id];
+  if (value === "known") return "Dominada";
+  if (value === "review") return "Repasar";
+  return "Sin marcar";
+}
+
+function appAcademyQuestionHtml(){
+  const questions = appAcademyQuestions();
+  if (!questions.length) return `<div class="app-config-row"><span>Sin preguntas</span><strong>No hay preguntas para este filtro.</strong></div>`;
+  if (appState.academyQuestionIndex >= questions.length) appState.academyQuestionIndex = 0;
+  if (appState.academyQuestionIndex < 0) appState.academyQuestionIndex = questions.length - 1;
+  const question = questions[appState.academyQuestionIndex];
+  const visible = appState.academyAnswerVisible;
+  const showDeep = visible && appState.academyMode === "instructor";
+  const concepts = Array.isArray(question.conceptos_relacionados) ? question.conceptos_relacionados : [];
+  return `<article class="academy-card">
+    <div class="academy-card-head"><span>${appEscape(question.tematica || "Tematica")}</span><small>${appEscape(question.subtematica || "")} · ${appEscape(question.nivel || "")}</small></div>
+    <h3>${appEscape(question.pregunta)}</h3>
+    ${appAcademyOptionsHtml(question)}
+    ${visible ? `<div class="academy-answer"><strong>Respuesta</strong><p>${appEscape(question.respuesta_correcta_texto || question.respuesta_correcta || "-")}</p>${appState.academyMode !== "exam" ? `<strong>Explicacion</strong><p>${appEscape(question.explicacion_corta || "-")}</p>` : ""}${showDeep ? `<strong>Explicacion profunda</strong><p>${appEscape(question.explicacion_profunda || "-")}</p>${concepts.length ? `<strong>Conceptos</strong><p>${concepts.map(appEscape).join(" · ")}</p>` : ""}` : ""}<small>Fuente: ${appEscape(question.fuente?.documento || question.fuente || "No informada")}</small></div>` : `<p class="academy-muted">Intenta responder antes de revelar. En modo examen solo veras la pauta; en estudio e instructor aparece la explicacion.</p>`}
+    <div class="academy-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-reveal">${visible ? "Ocultar respuesta" : "Ver respuesta"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" data-academy-progress="known">La sabia</button><button class="btn btn-secondary" type="button" data-academy-progress="review">Repasar</button><small>${appState.academyQuestionIndex + 1} / ${questions.length} · ${appEscape(appAcademyProgressLabel(question))}</small></div>
   </article>`;
 }
 
@@ -360,7 +407,7 @@ async function appRenderAcademyPanel(){
   appSetText("app-config-title", "Estudiar preguntas");
   const config = document.getElementById("app-product-config");
   if (!config) return;
-  config.innerHTML = `${appAcademyControlsHtml()}<div id="academy-question-wrap">${appAcademyQuestionHtml()}</div><div id="cause-action-output" class="app-query-output" style="display:none"></div>`;
+  config.innerHTML = `${appAcademyControlsHtml()}${appAcademyThemeMapHtml()}<div id="academy-question-wrap">${appAcademyQuestionHtml()}</div><div id="cause-action-output" class="app-query-output" style="display:none"></div>`;
   appBindControls();
 }
 
@@ -453,6 +500,13 @@ function appBindAcademyControls(){
   document.getElementById("academy-prev")?.addEventListener("click", async () => { appState.academyQuestionIndex -= 1; appState.academyAnswerVisible = false; await appRenderPanel(); });
   document.getElementById("academy-next")?.addEventListener("click", async () => { appState.academyQuestionIndex += 1; appState.academyAnswerVisible = false; await appRenderPanel(); });
   document.getElementById("academy-reveal")?.addEventListener("click", async () => { appState.academyAnswerVisible = !appState.academyAnswerVisible; await appRenderPanel(); });
+  document.querySelectorAll("[data-academy-progress]").forEach((button) => button.addEventListener("click", async () => {
+    const question = appAcademyQuestions()[appState.academyQuestionIndex];
+    if (question?.id) appState.academyProgress[question.id] = button.dataset.academyProgress || "review";
+    appState.academyQuestionIndex += 1;
+    appState.academyAnswerVisible = false;
+    await appRenderPanel();
+  }));
 }
 
 function appBindControls(){

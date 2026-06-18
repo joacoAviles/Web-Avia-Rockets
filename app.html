@@ -4,11 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AVIA Rockets | Home</title>
-  <meta name="description" content="Home interno de AVIA Rockets para administrar productos, causas, revisiones técnicas, Academy, usuario, plan y configuración." />
+  <meta name="description" content="Home interno de AVIA Rockets para administrar líneas de negocio, productos contratados, usuario, plan y configuración." />
   <link rel="canonical" href="https://aviarockets.cl/app.html" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="beta-products.css" />
   <link rel="stylesheet" href="app-home.css" />
+  <style>
+    body[data-page="app-home"] .app-sidebar-toggle,
+    body[data-page="app-home"] .app-side-link {
+      display: none !important;
+    }
+
+    body[data-page="app-home"] .app-layout.is-compact {
+      grid-template-columns: 300px minmax(0, 1fr) !important;
+    }
+
+    body[data-page="app-home"] .app-layout.is-compact .app-sidebar {
+      align-items: stretch !important;
+    }
+
+    body[data-page="app-home"] .app-layout.is-compact .app-user-box small,
+    body[data-page="app-home"] .app-layout.is-compact .app-user-box strong,
+    body[data-page="app-home"] .app-layout.is-compact .app-product-button span,
+    body[data-page="app-home"] .app-layout.is-compact .app-product-button small {
+      display: block !important;
+    }
+
+    body[data-page="app-home"] .app-layout.is-compact .app-product-button {
+      grid-template-columns: 42px minmax(0, 1fr) !important;
+      justify-content: initial !important;
+    }
+
+    body[data-page="app-home"] .app-sidebar-head {
+      align-items: flex-start;
+    }
+
+    body[data-page="app-home"] .app-sidebar-head strong {
+      display: grid;
+      gap: .15rem;
+    }
+
+    body[data-page="app-home"] .app-sidebar-head strong small {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    body[data-page="app-home"] .app-product-menu-empty,
+    body[data-page="app-home"] .app-line-hook {
+      border: 1px solid rgba(134, 176, 255, .16);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .035);
+      color: var(--muted);
+      padding: .9rem;
+      display: grid;
+      gap: .3rem;
+    }
+
+    body[data-page="app-home"] .app-product-menu-empty strong,
+    body[data-page="app-home"] .app-line-hook strong {
+      color: var(--text);
+    }
+
+    body[data-page="app-home"] .app-config-row[data-api-hook] {
+      border-color: rgba(71, 163, 255, .34);
+    }
+
+    body[data-page="app-home"] .nav-panel .app-line-nav.is-active {
+      color: var(--primary-3);
+    }
+
+    body[data-page="app-home"] .app-config-wheel {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    body[data-page="app-home"] .app-config-wheel::before {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 18px;
+      margin: auto;
+      border: 3px solid currentColor;
+      border-radius: 50%;
+      box-shadow: 0 -9px 0 -6px currentColor, 0 9px 0 -6px currentColor, 9px 0 0 -6px currentColor, -9px 0 0 -6px currentColor;
+    }
+
+    @media (max-width: 980px) {
+      body[data-page="app-home"] .app-layout.is-compact {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
 </head>
 <body data-page="app-home">
   <header class="site-header"></header>
@@ -20,7 +112,7 @@
       <div class="app-layout" id="app-layout">
         <aside class="app-sidebar">
           <div class="app-sidebar-head">
-            <strong>AVIA Home</strong>
+            <strong>Productos<small id="app-sidebar-line-label">OPS</small></strong>
             <button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button" aria-label="Contraer menú">‹</button>
           </div>
 
@@ -77,6 +169,287 @@
   <script src="api-config.js"></script>
   <script src="header-standard.js"></script>
   <script src="app-home.js?v=labs-academy-20260616-1"></script>
+  <script>
+    (function(){
+      if (typeof appState === "undefined") return;
+
+      const LINE_KEY = "avia_app_selected_line";
+      const LINE_HOME_SUFFIX = "-home";
+      const lines = {
+        ops: {
+          id: "ops",
+          label: "OPS",
+          eyebrow: "Línea OPS",
+          title: "OPS",
+          description: "Operación diaria: seguimiento legal, flota, vencimientos y procesos que necesitan control constante.",
+          products: ["causes", "technical-reviews"]
+        },
+        intelligence: {
+          id: "intelligence",
+          label: "Intelligence",
+          eyebrow: "Línea Intelligence",
+          title: "Intelligence",
+          description: "Datos, tableros, alertas y modelos conectados a la operación. La vista queda preparada para conectar el producto desde la API.",
+          products: ["intelligence-dashboard"]
+        },
+        labs: {
+          id: "labs",
+          label: "Labs",
+          eyebrow: "Línea Labs",
+          title: "Labs",
+          description: "Productos experimentales, Academy, conectores y herramientas internas para probar nuevas capacidades dentro del login.",
+          products: ["academy", "api-lab"]
+        }
+      };
+
+      const catalog = {
+        "causes": {
+          line: "ops",
+          icon: "LG",
+          label: "Legal / Causas",
+          apiSlug: "legal",
+          slugs: ["legal", "causes", "causas", "legal-causas"],
+          meta: function(){ return `${appState.causes.length || 0} causas`; }
+        },
+        "technical-reviews": {
+          line: "ops",
+          icon: "RT",
+          label: "Revisiones Técnicas",
+          apiSlug: "revision-tecnica",
+          slugs: ["revision-tecnica", "revisiones-tecnicas", "technical-reviews", "flota", "fleet"],
+          meta: function(){ return `${appState.vehicles.length || 0} autos`; }
+        },
+        "intelligence-dashboard": {
+          line: "intelligence",
+          icon: "IN",
+          label: "Dashboards / Datos",
+          apiSlug: "intelligence-dashboard",
+          slugs: ["intelligence", "data-intelligence", "datos", "dashboards", "demand-intelligence"],
+          meta: function(){ return "API pendiente"; },
+          title: "Dashboards / Datos",
+          description: "Vista reservada para tableros, alertas, proyecciones y lectura de datos operativos. No hace llamadas nuevas todavía."
+        },
+        "academy": {
+          line: "labs",
+          icon: "AC",
+          label: "Academy",
+          apiSlug: "labs-academy",
+          slugs: ["labs-academy", "academy", "avia-academy"],
+          meta: function(){ return `${appAcademyStats().total_questions || 0} preguntas`; }
+        },
+        "api-lab": {
+          line: "labs",
+          icon: "API",
+          label: "API Lab",
+          apiSlug: "api-lab",
+          slugs: ["api-lab", "labs-api", "lab-api", "labs-query"],
+          meta: function(){ return "Hook listo"; },
+          title: "API Lab",
+          description: "Vista reservada para consultas directas, conectores internos y pruebas controladas. Queda sin llamada automática a la API."
+        }
+      };
+
+      appState.selectedLine = localStorage.getItem(LINE_KEY) || "ops";
+
+      function normalize(value){
+        return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      }
+
+      function productToken(product){
+        return normalize(product?.slug || product?.product_slug || product?.code || product?.key || product?.name || product?.title);
+      }
+
+      function hasContractedProducts(){
+        return Array.isArray(appState.products) && appState.products.length > 0;
+      }
+
+      function isContracted(view){
+        if (!hasContractedProducts()) return false;
+        const item = catalog[view];
+        if (!item) return false;
+        const allowed = item.slugs.map(normalize);
+        return appState.products.some(function(product){ return allowed.includes(productToken(product)); });
+      }
+
+      function itemsForLine(lineId){
+        const line = lines[lineId] || lines.ops;
+        return line.products.filter(isContracted).map(function(view){
+          const item = catalog[view];
+          return [view, item.label, item.meta(), item.icon, item.apiSlug];
+        });
+      }
+
+      function lineForView(view){
+        if (String(view || "").endsWith(LINE_HOME_SUFFIX)) return String(view).replace(LINE_HOME_SUFFIX, "");
+        return catalog[view]?.line || appState.selectedLine || "ops";
+      }
+
+      function homeView(lineId){
+        return `${lineId}${LINE_HOME_SUFFIX}`;
+      }
+
+      function resolveView(){
+        if (appState.view === "settings") return;
+        const activeLine = lines[appState.selectedLine] ? appState.selectedLine : "ops";
+        const currentLine = lineForView(appState.view);
+        if (currentLine !== activeLine) {
+          const first = itemsForLine(activeLine)[0]?.[0];
+          appState.view = first || homeView(activeLine);
+          return;
+        }
+        if (catalog[appState.view] && !isContracted(appState.view)) {
+          const first = itemsForLine(activeLine)[0]?.[0];
+          appState.view = first || homeView(activeLine);
+        }
+      }
+
+      function updateLineHeader(){
+        document.querySelectorAll("[data-app-line]").forEach(function(item){
+          item.classList.toggle("is-active", item.dataset.appLine === appState.selectedLine && appState.view !== "settings");
+        });
+        const label = document.getElementById("app-sidebar-line-label");
+        if (label) label.textContent = lines[appState.selectedLine]?.label || "OPS";
+      }
+
+      function renderHeader(){
+        const header = document.querySelector("header.site-header");
+        if (!header) return;
+        const nav = header.querySelector(".nav-panel");
+        if (!nav || nav.dataset.appHeader === "ready") return;
+        nav.dataset.appHeader = "ready";
+        nav.innerHTML = '<button class="app-line-nav" data-app-line="ops" type="button">OPS</button><button class="app-line-nav" data-app-line="intelligence" type="button">Intelligence</button><button class="app-line-nav" data-app-line="labs" type="button">Labs</button><button class="app-config-wheel" id="app-header-settings" type="button" aria-label="Configuración"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
+        nav.querySelectorAll("[data-app-line]").forEach(function(button){
+          button.addEventListener("click", async function(){
+            await selectLine(button.dataset.appLine || "ops");
+          });
+        });
+        nav.querySelector("#app-header-settings")?.addEventListener("click", async function(){
+          appState.view = "settings";
+          await appRenderPanel();
+        });
+        nav.querySelector("#app-header-logout")?.addEventListener("click", function(){
+          localStorage.removeItem("avia_auth_token");
+          localStorage.removeItem("avia_auth_user");
+          window.location.href = "login.html";
+        });
+        updateLineHeader();
+      }
+
+      async function selectLine(lineId){
+        appState.selectedLine = lines[lineId] ? lineId : "ops";
+        localStorage.setItem(LINE_KEY, appState.selectedLine);
+        const first = itemsForLine(appState.selectedLine)[0]?.[0];
+        appState.view = first || homeView(appState.selectedLine);
+        await appRenderPanel();
+      }
+
+      function renderLineHome(lineId){
+        const line = lines[lineId] || lines.ops;
+        appSetText("app-view-label", line.eyebrow);
+        appSetText("app-product-title", line.title);
+        appSetText("app-product-description", line.description);
+        appSetText("app-product-status", "Sin producto activo");
+        appSetText("app-product-slug", line.id);
+        const demo = document.getElementById("app-product-demo");
+        if (demo) demo.innerHTML = `<div class="app-line-hook"><strong>${appEscape(line.label)}</strong><span>Botón superior activo. Los subproductos aparecerán aquí cuando el perfil los tenga contratado desde la API.</span></div>`;
+        const stats = document.querySelectorAll(".app-stat");
+        const labels = ["Productos contratados", "Estado API", "Conexión"];
+        const values = [String(itemsForLine(line.id).length), "Pendiente", "Preparada"];
+        stats.forEach(function(card, index){
+          const small = card.querySelector("small");
+          const strong = card.querySelector("strong");
+          if (small) small.textContent = labels[index] || "-";
+          if (strong) strong.textContent = values[index] || "-";
+        });
+        appSetText("app-config-title", "Productos contratados");
+        const config = document.getElementById("app-product-config");
+        if (config) {
+          config.innerHTML = `<div class="app-config-row" data-api-hook="/api/dashboard.products"><span>Sin subproductos visibles</span><strong>No hay productos contratados para ${appEscape(line.label)}.<br><small>La navegación superior queda fija. Cuando /api/dashboard entregue productos asociados al perfil, se listarán bajo esta línea.</small></strong></div>`;
+        }
+      }
+
+      function renderPlaceholderProduct(view){
+        const item = catalog[view];
+        if (!item) return renderLineHome(appState.selectedLine);
+        appSetText("app-view-label", `${lines[item.line].label} · Producto`);
+        appSetText("app-product-title", item.title || item.label);
+        appSetText("app-product-description", item.description || "Producto contratado preparado para conexión posterior con API.");
+        appSetText("app-product-status", "Conexión pendiente");
+        appSetText("app-product-slug", item.apiSlug);
+        const demo = document.getElementById("app-product-demo");
+        if (demo) {
+          demo.innerHTML = `<div class="app-config-grid"><div class="app-config-row" data-api-hook="/api/products/${appEscape(item.apiSlug)}/dashboard"><span>Hook API</span><strong>/api/products/${appEscape(item.apiSlug)}/dashboard<br><small>No se consume todavía. Queda marcado para conectar después sin tocar esta vista.</small></strong></div></div>`;
+        }
+        const stats = document.querySelectorAll(".app-stat");
+        const labels = ["Producto", "API", "Estado"];
+        const values = [item.label, item.apiSlug, "Pendiente"];
+        stats.forEach(function(card, index){
+          const small = card.querySelector("small");
+          const strong = card.querySelector("strong");
+          if (small) small.textContent = labels[index] || "-";
+          if (strong) strong.textContent = values[index] || "-";
+        });
+        appSetText("app-config-title", "Conexión preparada");
+        const config = document.getElementById("app-product-config");
+        if (config) {
+          config.innerHTML = `<div class="app-config-row" data-api-hook="/api/products/${appEscape(item.apiSlug)}/config"><span>Próximo paso</span><strong>Conectar datos reales desde API.<br><small>Este botón existe sólo en frontend y no modifica backend.</small></strong></div>`;
+        }
+      }
+
+      appProductItems = function(){
+        return itemsForLine(appState.selectedLine);
+      };
+
+      appRenderSidebar = function(){
+        resolveView();
+        updateLineHeader();
+        const menu = document.getElementById("app-product-menu");
+        if (!menu) return;
+        const items = appProductItems();
+        if (!items.length) {
+          const line = lines[appState.selectedLine] || lines.ops;
+          menu.innerHTML = `<div class="app-product-menu-empty"><strong>${appEscape(line.label)}</strong><span>Sin subproductos contratados.</span><small>La API podrá llenar esta lista por slug de producto.</small></div>`;
+          return;
+        }
+        menu.innerHTML = items.map(function(item){
+          const view = item[0], label = item[1], meta = item[2], icon = item[3], apiSlug = item[4];
+          return `<button class="app-product-button${appState.view === view ? " is-active" : ""}" type="button" data-product-view="${appEscape(view)}" data-api-slug="${appEscape(apiSlug)}"><strong>${appEscape(icon)}</strong><span>${appEscape(label)}</span><small>${appEscape(meta)}</small></button>`;
+        }).join("");
+      };
+
+      appRenderPanel = async function(){
+        renderHeader();
+        resolveView();
+        appRenderSidebar();
+        if (appState.view === "settings") appRenderSettingsPanel();
+        else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
+        else if (appState.view === "academy") await appRenderAcademyPanel();
+        else if (appState.view === "intelligence-dashboard" || appState.view === "api-lab") renderPlaceholderProduct(appState.view);
+        else if (String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) renderLineHome(lineForView(appState.view));
+        else appRenderCausesPanel();
+        appRenderSidebar();
+        if (!["intelligence-dashboard", "api-lab"].includes(appState.view) && !String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) appRenderStats();
+      };
+
+      document.addEventListener("click", async function(event){
+        const productButton = event.target.closest("[data-product-view]");
+        if (productButton) {
+          event.preventDefault();
+          appState.view = productButton.dataset.productView || homeView(appState.selectedLine);
+          await appRenderPanel();
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", function(){
+        renderHeader();
+        updateLineHeader();
+        const layout = document.getElementById("app-layout");
+        if (layout) layout.classList.remove("is-compact");
+      });
+
+      setTimeout(function(){ renderHeader(); updateLineHeader(); }, 0);
+    })();
+  </script>
   <script src="footer-standard.js?v=20260604-3"></script>
 </body>
 </html>

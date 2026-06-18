@@ -1,2 +1,316 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Avia Labs | APIs y apps · AVIA Rockets</title><meta name="description" content="Avia Labs diseña y construye APIs, apps, integraciones y sistemas digitales a medida." /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg" />
-<meta name="theme-color" content="#071426" /><link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="product.css" /><link rel="stylesheet" href="conversion.css" /><script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Avia Labs","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"APIs, apps internas, integraciones y automatizaciones a medida.","offers":{"@type":"Offer","price":"0","priceCurrency":"CLP","description":"Discovery inicial gratis."}}</script></head><body data-product="labs"><header class="site-header"></header><main><section class="product-hero"><div class="container product-grid"><div class="product-copy reveal is-visible"><div class="product-kicker">Avia Labs</div><h1>APIs y apps conectadas a la operación real.</h1><p>Avia Labs construye herramientas digitales a medida: APIs, dashboards, automatizaciones, apps internas e integraciones que convierten procesos manuales en sistemas utilizables.</p><div class="product-actions"><a class="btn btn-primary" href="register.html">Pedir discovery gratis</a><a class="btn btn-secondary" href="ops.html">Ver Avia OPS</a></div><div class="pricing-strip"><div><strong>Discovery inicial: $0 CLP</strong><br><span>Revisamos el proceso, la fuente de datos y el primer flujo automatizable.</span></div><a class="btn btn-primary" href="register.html">Conversar proyecto</a></div><div class="product-badges"><span>APIs</span><span>Apps internas</span><span>Integraciones</span></div><div class="mini-nav"><a href="index.html">Home</a><a href="ops.html">OPS</a><a href="avia-intelligence.html">Intelligence</a></div></div><div class="product-visual"><div class="product-card-ui"><div class="product-window"><div class="window-left"><img src="assets/avia-rockets-logo.svg" alt="" /><div><strong>LABS BUILDER</strong><small>APIs · Apps · Integraciones</small></div></div><div class="window-dots"><span></span><span></span><span></span></div></div><div class="product-ui-body"><div class="metric-grid"><div class="metric"><span>APIs</span><strong>8</strong></div><div class="metric"><span>Apps</span><strong>3</strong></div><div class="metric"><span>Jobs</span><strong>24</strong></div><div class="metric"><span>Uptime</span><strong>99</strong></div></div><div class="ui-split"><div class="ui-panel"><h3>Integraciones activas</h3><div class="flow-row"><span class="flow-icon">API</span><div><strong>Endpoint operativo</strong><small>Consulta y respuesta normalizada</small></div><span class="status-pill">Live</span></div><div class="flow-row"><span class="flow-icon">DB</span><div><strong>Base conectada</strong><small>Lectura y escritura segura</small></div><span class="status-pill">OK</span></div><div class="flow-row"><span class="flow-icon">APP</span><div><strong>Interfaz interna</strong><small>Flujo listo para usuarios</small></div><span class="status-pill">Build</span></div></div><div class="ui-panel"><h3>Deploy</h3><div class="bar-list"><span></span><span></span><span></span></div></div></div></div></div></div></div></section><section class="section-product"><div class="container"><div class="section-heading"><p class="eyebrow">Producto</p><h2>Qué construye Avia Labs</h2><p>Desarrolla herramientas digitales específicas para resolver procesos internos que no calzan bien en software genérico.</p></div><div class="feature-grid"><article class="feature-card"><h3>APIs</h3><p>Servicios para conectar bases, sitios, herramientas externas y procesos internos.</p></article><article class="feature-card"><h3>Apps</h3><p>Interfaces web o móviles para capturar datos, ejecutar procesos y consultar información.</p></article><article class="feature-card"><h3>Automatizaciones</h3><p>Jobs, bots y flujos programados que reducen trabajo repetitivo y errores manuales.</p></article></div></div></section></main><footer class="site-footer footer-clean"></footer><script src="header-standard.js"></script><script src="footer-standard.js?v=20260604-3"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avia Labs | APIs y apps · AVIA Rockets</title>
+  <meta name="description" content="Avia Labs diseña y construye APIs, apps, integraciones, sistemas digitales a medida y bancos de estudio de aviación." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg" />
+  <meta name="theme-color" content="#071426" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="product.css" />
+  <link rel="stylesheet" href="conversion.css" />
+  <style>
+    .labs-academy-shell{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:28px;background:linear-gradient(135deg,rgba(7,20,38,.96),rgba(12,32,58,.92));box-shadow:0 24px 80px rgba(0,0,0,.28);padding:24px;color:#f7fbff}
+    .labs-academy-shell:before{content:"";position:absolute;inset:-120px -80px auto auto;width:320px;height:320px;background:radial-gradient(circle,rgba(61,139,255,.28),transparent 64%);pointer-events:none}
+    .labs-academy-top{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start}
+    .labs-academy-copy h2{margin:8px 0 10px;font-size:clamp(2rem,4vw,3.4rem);line-height:.95;letter-spacing:-.06em}
+    .labs-academy-copy p{color:#c6d3e6;max-width:680px}
+    .labs-academy-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .labs-academy-stat{border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.06);padding:14px}
+    .labs-academy-stat span{display:block;color:#9eb2cf;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+    .labs-academy-stat strong{display:block;margin-top:4px;font-size:1.75rem;line-height:1}
+    .labs-study-panel{position:relative;margin-top:22px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:rgba(255,255,255,.05);padding:18px}
+    .labs-study-status{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px;color:#c6d3e6;font-size:.92rem}
+    .labs-study-controls{display:grid;grid-template-columns:1.3fr 1.1fr .9fr 1.5fr auto;gap:10px;margin-bottom:16px}
+    .labs-study-controls select,.labs-study-controls input{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(4,12,24,.82);color:#f7fbff;padding:12px 13px;font:inherit;outline:none}
+    .labs-topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+    .labs-topic{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.06);color:#f7fbff;text-align:left;padding:12px;cursor:pointer}
+    .labs-topic.is-active{border-color:rgba(102,170,255,.8);background:rgba(36,104,214,.22)}
+    .labs-topic span{display:block;color:#dbe8ff;font-weight:700}
+    .labs-topic small{color:#9eb2cf}
+    .labs-question-card{border:1px solid rgba(255,255,255,.13);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));padding:18px}
+    .labs-question-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;color:#9eb2cf;font-size:.9rem}
+    .labs-question-head strong{color:#f7fbff}
+    .labs-question-card h3{margin:0 0 14px;font-size:clamp(1.25rem,2.4vw,2rem);line-height:1.12;letter-spacing:-.03em}
+    .labs-options{display:grid;gap:8px;margin:12px 0}
+    .labs-option{border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(4,12,24,.55);color:#dbe8ff;padding:11px 12px;text-align:left}
+    .labs-answer{border-left:3px solid rgba(102,170,255,.9);margin-top:14px;padding:12px 14px;background:rgba(39,104,209,.13);border-radius:14px;color:#dbe8ff}
+    .labs-answer strong{display:block;color:#fff;margin:7px 0 4px}
+    .labs-answer p{margin:0 0 8px;color:#dbe8ff}
+    .labs-source{display:block;margin-top:8px;color:#9eb2cf}
+    .labs-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+    .labs-actions small{color:#9eb2cf;margin-left:auto}
+    .labs-muted{color:#9eb2cf;margin:12px 0 0}
+    .labs-error{border:1px solid rgba(255,138,138,.35);background:rgba(120,28,28,.22);color:#ffdede;border-radius:16px;padding:14px;margin-top:12px}
+    @media (max-width:900px){.labs-academy-top{grid-template-columns:1fr}.labs-study-controls{grid-template-columns:1fr}.labs-academy-meta{grid-template-columns:1fr 1fr}.labs-actions small{margin-left:0;width:100%}}
+    @media (max-width:520px){.labs-academy-shell{padding:16px;border-radius:22px}.labs-academy-meta{grid-template-columns:1fr}.labs-study-panel{padding:14px}.labs-question-head{display:block}}
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Avia Labs","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"APIs, apps internas, integraciones, automatizaciones a medida y bancos de estudio de aviación.","offers":{"@type":"Offer","price":"0","priceCurrency":"CLP","description":"Discovery inicial gratis."}}</script>
+</head>
+<body data-product="labs">
+  <header class="site-header"></header>
+  <main>
+    <section class="product-hero">
+      <div class="container product-grid">
+        <div class="product-copy reveal is-visible">
+          <div class="product-kicker">Avia Labs</div>
+          <h1>APIs y apps conectadas a la operación real.</h1>
+          <p>Avia Labs construye herramientas digitales a medida: APIs, dashboards, automatizaciones, apps internas e integraciones que convierten procesos manuales en sistemas utilizables.</p>
+          <div class="product-actions"><a class="btn btn-primary" href="register.html">Pedir discovery gratis</a><a class="btn btn-secondary" href="ops.html">Ver Avia OPS</a></div>
+          <div class="pricing-strip"><div><strong>Discovery inicial: $0 CLP</strong><br><span>Revisamos el proceso, la fuente de datos y el primer flujo automatizable.</span></div><a class="btn btn-primary" href="register.html">Conversar proyecto</a></div>
+          <div class="product-badges"><span>APIs</span><span>Apps internas</span><span>Integraciones</span></div>
+          <div class="mini-nav"><a href="index.html">Home</a><a href="ops.html">OPS</a><a href="avia-intelligence.html">Intelligence</a></div>
+        </div>
+        <div class="product-visual">
+          <div class="product-card-ui">
+            <div class="product-window"><div class="window-left"><img src="assets/avia-rockets-logo.svg" alt="" /><div><strong>LABS BUILDER</strong><small>APIs · Apps · Integraciones</small></div></div><div class="window-dots"><span></span><span></span><span></span></div></div>
+            <div class="product-ui-body">
+              <div class="metric-grid"><div class="metric"><span>APIs</span><strong>8</strong></div><div class="metric"><span>Apps</span><strong>3</strong></div><div class="metric"><span>Jobs</span><strong>24</strong></div><div class="metric"><span>Uptime</span><strong>99</strong></div></div>
+              <div class="ui-split"><div class="ui-panel"><h3>Integraciones activas</h3><div class="flow-row"><span class="flow-icon">API</span><div><strong>Endpoint operativo</strong><small>Consulta y respuesta normalizada</small></div><span class="status-pill">Live</span></div><div class="flow-row"><span class="flow-icon">DB</span><div><strong>Base conectada</strong><small>Lectura y escritura segura</small></div><span class="status-pill">OK</span></div><div class="flow-row"><span class="flow-icon">APP</span><div><strong>Interfaz interna</strong><small>Flujo listo para usuarios</small></div><span class="status-pill">Build</span></div></div><div class="ui-panel"><h3>Deploy</h3><div class="bar-list"><span></span><span></span><span></span></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-product">
+      <div class="container">
+        <div class="section-heading"><p class="eyebrow">Producto</p><h2>Qué construye Avia Labs</h2><p>Desarrolla herramientas digitales específicas para resolver procesos internos que no calzan bien en software genérico.</p></div>
+        <div class="feature-grid"><article class="feature-card"><h3>APIs</h3><p>Servicios para conectar bases, sitios, herramientas externas y procesos internos.</p></article><article class="feature-card"><h3>Apps</h3><p>Interfaces web o móviles para capturar datos, ejecutar procesos y consultar información.</p></article><article class="feature-card"><h3>Automatizaciones</h3><p>Jobs, bots y flujos programados que reducen trabajo repetitivo y errores manuales.</p></article></div>
+      </div>
+    </section>
+
+    <section class="section-product" id="aviacion-academy">
+      <div class="container">
+        <div class="labs-academy-shell">
+          <div class="labs-academy-top">
+            <div class="labs-academy-copy">
+              <p class="eyebrow">Aviación · banco de estudio</p>
+              <h2>Estudia las preguntas del repo Aviación sin mezclar temas.</h2>
+              <p>El módulo carga los bancos expuestos por la API de Academy y, como respaldo técnico, intenta leer el índice canónico del repo Aviación. Cada pregunta mantiene el mismo formato: temática, subtemática, nivel, respuesta, explicación y fuente.</p>
+            </div>
+            <div class="labs-academy-meta">
+              <div class="labs-academy-stat"><span>Bancos</span><strong id="labs-stat-banks">-</strong></div>
+              <div class="labs-academy-stat"><span>Preguntas</span><strong id="labs-stat-questions">-</strong></div>
+              <div class="labs-academy-stat"><span>Temas</span><strong id="labs-stat-themes">-</strong></div>
+            </div>
+          </div>
+          <div class="labs-study-panel">
+            <div class="labs-study-status"><span id="labs-study-status">Cargando bancos de preguntas...</span><span id="labs-study-source">Academy API</span></div>
+            <div class="labs-study-controls">
+              <select id="labs-bank-select" aria-label="Banco de preguntas"><option>Cargando bancos</option></select>
+              <select id="labs-theme-select" aria-label="Temática"><option>Todas las temáticas</option></select>
+              <select id="labs-mode-select" aria-label="Modo de estudio"><option value="study">Modo estudio</option><option value="exam">Modo examen</option><option value="instructor">Modo instructor</option></select>
+              <input id="labs-search-input" type="search" placeholder="Buscar por pregunta, concepto o fuente" />
+              <button class="btn btn-secondary" type="button" id="labs-shuffle-button">Mezclar</button>
+            </div>
+            <div id="labs-topic-grid" class="labs-topic-grid"></div>
+            <div id="labs-question-wrap"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer footer-clean"></footer>
+  <script>
+    (() => {
+      const API_BASE = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || "https://api.aviarockets.cl").replace(/\/$/, "");
+      const AVIACION_RAW_BASE = "https://raw.githubusercontent.com/joacoAviles/Aviacion/main";
+      const state = { banks: [], questions: [], bank: "all", theme: "all", mode: "study", index: 0, reveal: false, query: "", source: "" };
+      const $ = (selector) => document.querySelector(selector);
+      const strip = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      const escapeHtml = (value) => String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+      const unique = (items) => [...new Set(items.filter(Boolean))];
+
+      async function fetchJson(url) {
+        const response = await fetch(url, { headers: { Accept: "application/json" }, cache: "no-store" });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        return response.json();
+      }
+
+      function normalizeQuestion(question, bank, bankData) {
+        return {
+          ...question,
+          id: question.id || `${bank.bank_id || bank.slug || "bank"}-${Math.random().toString(36).slice(2, 8)}`,
+          bank_id: question.bank_id || bank.bank_id || bankData?.banco_id || bankData?.bank_id,
+          banco_titulo: bank.titulo || bankData?.titulo || bankData?.curso || "Banco de preguntas",
+          tematica: question.tematica || "Sin temática",
+          subtematica: question.subtematica || "General",
+          nivel: question.nivel || "sin nivel",
+          tipo_pregunta: question.tipo_pregunta || "respuesta_corta",
+          opciones: Array.isArray(question.opciones) ? question.opciones : [],
+          respuesta_correcta_texto: question.respuesta_correcta_texto || question.respuesta_correcta || "",
+          explicacion_corta: question.explicacion_corta || "",
+          explicacion_profunda: question.explicacion_profunda || "",
+          conceptos_relacionados: Array.isArray(question.conceptos_relacionados) ? question.conceptos_relacionados : [],
+          fuente: question.fuente || bankData?.fuente || {}
+        };
+      }
+
+      async function loadFromApi() {
+        const data = await fetchJson(`${API_BASE}/api/academy/dashboard`);
+        const questions = Array.isArray(data.questions) ? data.questions : [];
+        if (!questions.length) throw new Error("La API no devolvió preguntas de Academy.");
+        const banks = Array.isArray(data.banks) && data.banks.length ? data.banks : [{ bank_id: "academy", titulo: "Academy", tematicas: unique(questions.map((q) => q.tematica)) }];
+        return { banks, questions: questions.map((q) => normalizeQuestion(q, banks.find((b) => b.bank_id === q.bank_id) || banks[0], data)), source: "API Academy" };
+      }
+
+      async function loadFromAviationRepo() {
+        const index = await fetchJson(`${AVIACION_RAW_BASE}/question-banks.index.json`);
+        const exposedBanks = (index.banks || []).filter((bank) => bank.exponer_api !== false && bank.path);
+        const loadedBanks = [];
+        const loadedQuestions = [];
+        for (const bank of exposedBanks) {
+          const data = await fetchJson(`${AVIACION_RAW_BASE}/${bank.path}`);
+          if (data.deprecated || data.api?.exponer === false) continue;
+          const rawQuestions = Array.isArray(data.preguntas) ? data.preguntas : [];
+          const normalized = rawQuestions.map((question) => normalizeQuestion(question, bank, data));
+          loadedBanks.push({ ...bank, questions_count: normalized.length, tematicas: unique(normalized.map((q) => q.tematica)) });
+          loadedQuestions.push(...normalized);
+        }
+        if (!loadedQuestions.length) throw new Error("El repo Aviación no expuso preguntas cargables.");
+        return { banks: loadedBanks, questions: loadedQuestions, source: "Repo Aviación" };
+      }
+
+      function filteredQuestions() {
+        return state.questions.filter((question) => {
+          if (state.bank !== "all" && question.bank_id !== state.bank) return false;
+          if (state.theme !== "all" && strip(question.tematica) !== strip(state.theme)) return false;
+          if (state.query) {
+            const haystack = [question.pregunta, question.respuesta_correcta_texto, question.explicacion_corta, question.explicacion_profunda, question.tematica, question.subtematica, question.nivel, question.fuente?.documento, ...(question.conceptos_relacionados || [])].join(" ");
+            if (!strip(haystack).includes(strip(state.query))) return false;
+          }
+          return true;
+        });
+      }
+
+      function themesForActiveBank() {
+        return unique(state.questions.filter((q) => state.bank === "all" || q.bank_id === state.bank).map((q) => q.tematica));
+      }
+
+      function setStats() {
+        const themes = unique(state.questions.map((q) => q.tematica));
+        $("#labs-stat-banks").textContent = String(state.banks.length);
+        $("#labs-stat-questions").textContent = String(state.questions.length);
+        $("#labs-stat-themes").textContent = String(themes.length);
+        $("#labs-study-source").textContent = state.source || "Academy";
+      }
+
+      function renderControls() {
+        const bankSelect = $("#labs-bank-select");
+        const themeSelect = $("#labs-theme-select");
+        const bankOptions = [`<option value="all">Todos los bancos</option>`, ...state.banks.map((bank) => `<option value="${escapeHtml(bank.bank_id)}">${escapeHtml(bank.titulo || bank.bank_id)}</option>`)];
+        bankSelect.innerHTML = bankOptions.join("");
+        bankSelect.value = state.bank;
+        const themes = themesForActiveBank();
+        themeSelect.innerHTML = [`<option value="all">Todas las temáticas</option>`, ...themes.map((theme) => `<option value="${escapeHtml(theme)}">${escapeHtml(theme)}</option>`)].join("");
+        themeSelect.value = themes.some((theme) => strip(theme) === strip(state.theme)) ? state.theme : "all";
+        state.theme = themeSelect.value;
+        $("#labs-mode-select").value = state.mode;
+        $("#labs-search-input").value = state.query;
+      }
+
+      function renderTopics() {
+        const grid = $("#labs-topic-grid");
+        const source = state.questions.filter((q) => state.bank === "all" || q.bank_id === state.bank);
+        const themes = themesForActiveBank();
+        grid.innerHTML = themes.map((theme) => {
+          const count = source.filter((q) => strip(q.tematica) === strip(theme)).length;
+          const active = strip(state.theme) === strip(theme);
+          return `<button class="labs-topic${active ? " is-active" : ""}" type="button" data-theme="${escapeHtml(theme)}"><span>${escapeHtml(theme)}</span><small>${count} preguntas</small></button>`;
+        }).join("");
+      }
+
+      function optionText(option) {
+        if (typeof option === "string") return option;
+        if (option && typeof option === "object") return option.texto || option.label || option.value || JSON.stringify(option);
+        return String(option || "");
+      }
+
+      function renderQuestion() {
+        const wrap = $("#labs-question-wrap");
+        const questions = filteredQuestions();
+        if (!questions.length) {
+          wrap.innerHTML = `<div class="labs-error">No hay preguntas para ese filtro. Cambia el banco, la temática o la búsqueda.</div>`;
+          return;
+        }
+        if (state.index >= questions.length) state.index = 0;
+        if (state.index < 0) state.index = questions.length - 1;
+        const question = questions[state.index];
+        const showStudyExplanation = state.reveal && state.mode !== "exam";
+        const showDeep = state.reveal && state.mode === "instructor";
+        const concepts = question.conceptos_relacionados || [];
+        const options = (question.opciones || []).filter(Boolean);
+        wrap.innerHTML = `<article class="labs-question-card">
+          <div class="labs-question-head"><strong>${escapeHtml(question.tematica)}</strong><span>${escapeHtml(question.subtematica)} · ${escapeHtml(question.nivel)} · ${escapeHtml(question.tipo_pregunta)}</span></div>
+          <h3>${escapeHtml(question.pregunta)}</h3>
+          ${options.length ? `<div class="labs-options">${options.map((option) => `<div class="labs-option">${escapeHtml(optionText(option))}</div>`).join("")}</div>` : ""}
+          ${state.reveal ? `<div class="labs-answer"><strong>Respuesta</strong><p>${escapeHtml(question.respuesta_correcta_texto || question.respuesta_correcta || "-")}</p>${showStudyExplanation ? `<strong>Explicación</strong><p>${escapeHtml(question.explicacion_corta || "-")}</p>` : ""}${showDeep ? `<strong>Explicación profunda</strong><p>${escapeHtml(question.explicacion_profunda || "-")}</p>${concepts.length ? `<strong>Conceptos relacionados</strong><p>${concepts.map(escapeHtml).join(" · ")}</p>` : ""}` : ""}<small class="labs-source">Fuente: ${escapeHtml(question.fuente?.documento || question.fuente || "No informada")}</small></div>` : `<p class="labs-muted">Responde primero. Luego revela la pauta. En modo instructor se muestra la explicación profunda y conceptos relacionados.</p>`}
+          <div class="labs-actions"><button class="btn btn-secondary" type="button" id="labs-prev-question">Anterior</button><button class="btn btn-primary" type="button" id="labs-reveal-answer">${state.reveal ? "Ocultar respuesta" : "Ver respuesta"}</button><button class="btn btn-secondary" type="button" id="labs-next-question">Siguiente</button><small>${state.index + 1} / ${questions.length}</small></div>
+        </article>`;
+        bindQuestionButtons();
+      }
+
+      function render() {
+        setStats();
+        renderControls();
+        renderTopics();
+        renderQuestion();
+        bindControls();
+      }
+
+      function bindQuestionButtons() {
+        $("#labs-prev-question")?.addEventListener("click", () => { state.index -= 1; state.reveal = false; renderQuestion(); });
+        $("#labs-next-question")?.addEventListener("click", () => { state.index += 1; state.reveal = false; renderQuestion(); });
+        $("#labs-reveal-answer")?.addEventListener("click", () => { state.reveal = !state.reveal; renderQuestion(); });
+      }
+
+      function bindControls() {
+        $("#labs-bank-select")?.addEventListener("change", (event) => { state.bank = event.target.value || "all"; state.theme = "all"; state.index = 0; state.reveal = false; render(); });
+        $("#labs-theme-select")?.addEventListener("change", (event) => { state.theme = event.target.value || "all"; state.index = 0; state.reveal = false; render(); });
+        $("#labs-mode-select")?.addEventListener("change", (event) => { state.mode = event.target.value || "study"; state.reveal = false; renderQuestion(); });
+        $("#labs-search-input")?.addEventListener("input", (event) => { state.query = event.target.value || ""; state.index = 0; state.reveal = false; renderQuestion(); });
+        $("#labs-shuffle-button")?.addEventListener("click", () => { state.questions = [...state.questions].sort(() => Math.random() - 0.5); state.index = 0; state.reveal = false; render(); });
+        document.querySelectorAll("[data-theme]").forEach((button) => button.addEventListener("click", () => { state.theme = button.dataset.theme || "all"; state.index = 0; state.reveal = false; render(); }));
+      }
+
+      async function bootAcademy() {
+        const status = $("#labs-study-status");
+        try {
+          status.textContent = "Cargando desde la API de Academy...";
+          const payload = await loadFromApi();
+          state.banks = payload.banks;
+          state.questions = payload.questions;
+          state.source = payload.source;
+          status.textContent = "Banco cargado desde la API. Puedes estudiar por banco, temática, modo y búsqueda.";
+          render();
+          return;
+        } catch (apiError) {
+          try {
+            status.textContent = "API no disponible o vacía. Intentando leer el índice canónico del repo Aviación...";
+            const payload = await loadFromAviationRepo();
+            state.banks = payload.banks;
+            state.questions = payload.questions;
+            state.source = payload.source;
+            status.textContent = "Banco cargado desde el repo Aviación.";
+            render();
+          } catch (repoError) {
+            status.textContent = "No se pudieron cargar las preguntas.";
+            $("#labs-question-wrap").innerHTML = `<div class="labs-error"><strong>Academy sin datos cargables.</strong><br>La API respondió sin preguntas o no estuvo disponible, y el respaldo raw del repo Aviación tampoco fue accesible. Si el repo Aviación es privado, la solución correcta es que la API exponga /api/academy/dashboard con los bancos cargados desde question-banks.index.json.<br><br>API: ${escapeHtml(apiError.message)}<br>Repo: ${escapeHtml(repoError.message)}</div>`;
+            $("#labs-study-source").textContent = "Sin datos";
+          }
+        }
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bootAcademy);
+      else bootAcademy();
+    })();
+  </script>
+  <script src="header-standard.js"></script>
+  <script src="footer-standard.js?v=20260604-3"></script>
+</body>
+</html>

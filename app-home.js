@@ -674,13 +674,33 @@ function appAcademySessionPanelsHtml(question, progressStats, questions){
   </aside>`;
 }
 
+function appAcademyIsWrittenQuestion(question){
+  const type = String(question?.tipo_pregunta || question?.question_type || "").toLowerCase();
+  const options = appAcademyQuestionOptions(question);
+  return !options.length || ["written", "respuesta_corta", "short_answer", "free_text", "essay"].includes(type);
+}
+
+function appAcademyWrittenAnswerHtml(question){
+  const key = appAcademyQuestionKey(question);
+  const progress = appState.academyProgress[key] || {};
+  const savedText = appEscape(progress.written_answer || "");
+  return `<div class="academy-written-answer">
+    <label for="academy-written-response"><strong>Respuesta escrita</strong></label>
+    <textarea id="academy-written-response" rows="5" placeholder="Escribe tu respuesta o respondela mentalmente antes de ver la pauta.">${savedText}</textarea>
+    <small>Esta pregunta no tiene alternativas importadas. Academy mostrara la respuesta esperada y la fuente al responder.</small>
+  </div>`;
+}
+
 function appAcademyOptionsHtml(question){
   const options = appAcademyQuestionOptions(question);
-  if (!options.length) return `<div class="academy-muted">Pregunta sin alternativas: usa Ver explicacion o Reportar error si falta la pauta.</div>`;
+
+  if (!options.length) return appAcademyWrittenAnswerHtml(question);
+
   const key = appAcademyQuestionKey(question);
   const selected = new Set(appAcademySelectedKeys(question));
   const progress = appState.academyProgress[key] || {};
   const answered = Boolean(progress.status);
+
   return `<div class="academy-options" role="list">${options.map((option) => {
     const classes = ["academy-option"];
     if (selected.has(option.option_key)) classes.push("is-selected");
@@ -722,6 +742,7 @@ function appAcademyQuestionHtml(){
   const progress = appState.academyProgress[key] || {};
   const answered = Boolean(progress.status) || appState.academyAnswerVisible;
   const correctKeys = appAcademyCorrectKeys(question);
+  const isWrittenQuestion = appAcademyIsWrittenQuestion(question);
   const progressStats = appAcademyProgressStats();
   const source = appAcademySourceLabel(question.fuente);
   return `<article class="academy-study-shell">
@@ -744,8 +765,8 @@ function appAcademyQuestionHtml(){
       ${appAcademyMediaHtml(question)}
       <p class="academy-source-line">Fuente: ${appEscape(source)}</p>
       ${appAcademyOptionsHtml(question)}
-      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-primary" type="button" id="academy-submit">${correctKeys.length > 1 ? "Confirmar seleccion" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicacion</button><button class="btn btn-secondary" type="button" id="academy-unknown">No se</button></div>
-      ${answered ? `<div class="academy-answer"><button class="academy-answer-toggle" type="button">Por que esta es la respuesta correcta?</button><div><strong>Respuesta correcta: ${appEscape(correctKeys.join(", ") || question.respuesta_correcta_texto || "-")}</strong><p>${appEscape(question.explicacion_corta || question.explicacion_profunda || "-")}</p>${appState.academyMode === "instructor" || appState.academySourceOpen ? `<p>Fuente verificable: ${appEscape(source)}</p>${question.explicacion_profunda ? `<p>${appEscape(question.explicacion_profunda)}</p>` : ""}` : ""}</div></div>` : `<p class="academy-muted">Selecciona una alternativa y responde. Las respuestas se guardan en PostgreSQL.</p>`}
+      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-primary" type="button" id="academy-submit">${isWrittenQuestion ? "Ver respuesta esperada" : correctKeys.length > 1 ? "Confirmar seleccion" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicacion</button><button class="btn btn-secondary" type="button" id="academy-unknown">No se</button></div>
+      ${answered ? `<div class="academy-answer"><button class="academy-answer-toggle" type="button">${isWrittenQuestion ? "Respuesta esperada" : "Por que esta es la respuesta correcta?"}</button><div><strong>${isWrittenQuestion ? "Pauta esperada" : "Respuesta correcta"}: ${appEscape(isWrittenQuestion ? question.respuesta_correcta_texto || "-" : correctKeys.join(", ") || question.respuesta_correcta_texto || "-")}</strong><p>${appEscape(question.explicacion_corta || question.explicacion_profunda || "-")}</p>${appState.academyMode === "instructor" || appState.academySourceOpen ? `<p>Fuente verificable: ${appEscape(source)}</p>${question.explicacion_profunda ? `<p>${appEscape(question.explicacion_profunda)}</p>` : ""}` : ""}</div></div>` : `<p class="academy-muted">${isWrittenQuestion ? "Escribe o piensa tu respuesta. Luego revisa la pauta esperada desde PostgreSQL." : "Selecciona una alternativa y responde. Las respuestas se guardan en PostgreSQL."}</p>`}
     </section>
     ${appAcademySessionPanelsHtml(question, progressStats, questions)}
     ${appAcademyReportHtml(question)}
@@ -775,20 +796,32 @@ async function appAcademySubmitAnswer(statusOverride = null){
   const key = appAcademyQuestionKey(question);
   const selected = statusOverride === "unknown" ? [] : appAcademySelectedKeys(question);
   const correct = appAcademyCorrectKeys(question);
+  const isWrittenQuestion = appAcademyIsWrittenQuestion(question);
+  const writtenAnswer = isWrittenQuestion ? String(document.getElementById("academy-written-response")?.value || "").trim() : "";
   const selectedSet = new Set(selected);
   const isCorrect = correct.length ? selected.length === correct.length && correct.every((item) => selectedSet.has(item)) : false;
   const isPartial = !isCorrect && selected.some((item) => correct.includes(item));
   appState.academyProgress[key] = {
-    status: statusOverride === "unknown" ? "incorrect" : isCorrect ? "correct" : isPartial ? "partial" : "incorrect",
+    status: isWrittenQuestion ? "review" : statusOverride === "unknown" ? "incorrect" : isCorrect ? "correct" : isPartial ? "partial" : "incorrect",
     selected,
     correct,
+    written_answer: writtenAnswer,
     answeredAt: new Date().toISOString(),
     version: question.version || 1,
     marked: appState.academyProgress[key]?.marked || false,
   };
   appState.academyAnswerVisible = true;
   try {
-    await appFetch("/api/academy/answers", { method:"POST", body:JSON.stringify({ question_id: question.id || question.question_uuid || key, selected_option_keys: selected, mode: appState.academyMode, time_spent_seconds: Math.max(1, Math.round((Date.now() - appState.academyQuestionStartedAt) / 1000)), confidence_level: statusOverride === "unknown" ? "no_sabia" : "seguro", feedback_shown: true, public_id: key }) });
+    await appFetch("/api/academy/answers", { method:"POST", body:JSON.stringify({
+      question_id: question.id || question.question_uuid || key,
+      selected_option_keys: selected,
+      written_answer: writtenAnswer || null,
+      mode: appState.academyMode,
+      time_spent_seconds: Math.max(1, Math.round((Date.now() - appState.academyQuestionStartedAt) / 1000)),
+      confidence_level: statusOverride === "unknown" ? "no_sabia" : isWrittenQuestion ? "respuesta_escrita" : "seguro",
+      feedback_shown: true,
+      public_id: key
+    }) });
   } catch (error) {
     appState.academyProgress[key].sync_error = error.message;
   }

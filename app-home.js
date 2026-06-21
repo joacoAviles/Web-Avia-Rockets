@@ -30,6 +30,26 @@ const ACADEMY_FALLBACK = {
   ],
 };
 
+Object.assign(ACADEMY_FALLBACK, {
+  stats: { banks_count: 1, total_questions: 4, thematicas_count: 4, due_reviews: 0 },
+  banks: [{
+    bank_id: "cessna-152-poh",
+    slug: "cessna-152-poh",
+    titulo: "Cessna 152 POH",
+    dominio: "aviacion",
+    tipo_banco: "manual_poh",
+    tematicas: ["Limitaciones", "Performance", "Procedimientos normales", "Emergencias"],
+    questions_count: 4,
+    estado: "published",
+  }],
+  questions: [
+    { id:"c152-lim-00023", public_id:"C152-LIM-00023", bank_id:"cessna-152-poh", curso:"Cessna 152", tematica:"Limitaciones", subtematica:"Velocidades", nivel:"basic", tipo_pregunta:"single_choice", status:"published", version:1, pregunta:"En una pregunta basada en POH, que dato debe verificarse antes de usar una velocidad operacional?", respuesta_correcta_texto:"La fuente exacta del POH, capitulo y condicion aplicable.", explicacion_corta:"Una velocidad solo es util si corresponde a la version, capitulo y condicion de operacion correcta.", explicacion_profunda:"Academy guarda fuente, capitulo, pagina y version para que cada respuesta sea auditable. Si cambia la fuente, se versiona la pregunta en vez de borrar el historial.", fuente:{ documento:"Cessna 152 POH", capitulo:"Section 2 - Limitations", pagina:"2-1", source_id:"cessna-152-manual-poh" }, media:[{ media_type:"table", caption:"Extracto de referencia POH", source:"Cessna 152 POH Section 2", alt_text:"Tabla de limitaciones para estudio", allow_zoom:true, sort_order:1, metadata:{ rows:[["Campo","Valor"],["Documento","Cessna 152 POH"],["Capitulo","Section 2 - Limitations"],["Uso","Verificacion de fuente"]] } }], opciones:[{ option_key:"A", option_text:"Solo la memoria del alumno.", is_correct:false, explanation:"La memoria ayuda, pero no entrega trazabilidad ni version." },{ option_key:"B", option_text:"La fuente exacta del POH, capitulo y condicion aplicable.", is_correct:true, explanation:"Es la unica opcion que permite auditar y corregir la pregunta si cambia el manual." },{ option_key:"C", option_text:"Una respuesta vista en redes sociales.", is_correct:false, explanation:"No es una fuente aeronautica verificable." },{ option_key:"D", option_text:"El promedio de respuestas de otros alumnos.", is_correct:false, explanation:"El consenso no reemplaza la fuente primaria." }] },
+    { id:"c152-perf-00007", public_id:"C152-PERF-00007", bank_id:"cessna-152-poh", curso:"Cessna 152", tematica:"Performance", subtematica:"Tablas", nivel:"intermediate", tipo_pregunta:"multiple_select", status:"published", version:1, pregunta:"Que elementos hacen que una pregunta con tabla de performance sea trazable?", respuesta_correcta_texto:"Documento, capitulo/pagina, condiciones usadas y version de pregunta.", explicacion_corta:"Las tablas requieren registrar las condiciones de entrada y la referencia exacta.", explicacion_profunda:"Si un alumno reporta un error, el admin necesita reconstruir que tabla se uso, con que valores y bajo que version de la pregunta.", fuente:{ documento:"Cessna 152 POH", capitulo:"Section 5 - Performance", pagina:"5-3", source_id:"cessna-152-manual-poh" }, opciones:[{ option_key:"A", option_text:"Documento y pagina.", is_correct:true, explanation:"Permite volver a la tabla original." },{ option_key:"B", option_text:"Condiciones de entrada usadas en el caso.", is_correct:true, explanation:"Sin condiciones, la respuesta no se puede recalcular." },{ option_key:"C", option_text:"Color del boton seleccionado.", is_correct:false, explanation:"No aporta trazabilidad tecnica." },{ option_key:"D", option_text:"Version de la pregunta.", is_correct:true, explanation:"Evita mezclar respuestas antiguas con cambios posteriores." }] },
+    { id:"c152-proc-00011", public_id:"C152-PROC-00011", bank_id:"cessna-152-poh", curso:"Cessna 152", tematica:"Procedimientos normales", subtematica:"Checklist", nivel:"basic", tipo_pregunta:"true_false", status:"published", version:1, pregunta:"Verdadero o falso: si una pregunta publicada ya tiene respuestas de alumnos, debe borrarse para corregirla.", respuesta_correcta_texto:"Falso. Debe archivarse o versionarse.", explicacion_corta:"Borrar rompe la trazabilidad del progreso y de los reportes.", explicacion_profunda:"La plataforma debe conservar intentos, versiones, reportes y fuentes. Para corregir contenido se crea una nueva version o se archiva la pregunta anterior.", fuente:{ documento:"Academy content policy", capitulo:"Versionado", pagina:"N/A" }, opciones:[{ option_key:"A", option_text:"Verdadero", is_correct:false, explanation:"Borrar perderia intentos y reportes existentes." },{ option_key:"B", option_text:"Falso", is_correct:true, explanation:"Se archiva o versiona para mantener auditoria." }] },
+    { id:"c152-emg-00015", public_id:"C152-EMG-00015", bank_id:"cessna-152-poh", curso:"Cessna 152", tematica:"Emergencias", subtematica:"Caso practico", nivel:"advanced", tipo_pregunta:"single_choice", status:"published", version:1, pregunta:"Un alumno marca una respuesta y detecta que el enunciado no indica una condicion necesaria del caso. Que accion soporta Academy?", respuesta_correcta_texto:"Reportar error con tipo, comentario, respuesta elegida, respuesta del sistema y version.", explicacion_corta:"El reporte permite triage editorial sin perder la respuesta del alumno.", explicacion_profunda:"Cada reporte guarda usuario, fecha, tipo de problema, payload de respuesta y version de la pregunta para que el panel admin pueda corregir con evidencia.", fuente:{ documento:"Academy QA workflow", capitulo:"Reportes", pagina:"N/A" }, opciones:[{ option_key:"A", option_text:"Ignorar la duda y pasar a la siguiente.", is_correct:false, explanation:"Eso no mejora el banco." },{ option_key:"B", option_text:"Reportar error con evidencia y comentario.", is_correct:true, explanation:"Es el flujo auditable requerido." },{ option_key:"C", option_text:"Cambiar localmente la respuesta correcta.", is_correct:false, explanation:"El alumno no debe editar la pauta publicada." }] },
+  ],
+});
+
 const appState = {
   dashboard: null,
   user: null,
@@ -45,6 +65,10 @@ const appState = {
   academyQuestionIndex: 0,
   academyAnswerVisible: false,
   academyProgress: {},
+  academySelected: {},
+  academyReportOpen: false,
+  academySourceOpen: false,
+  academyQuestionStartedAt: Date.now(),
   vehicleFilter: "all",
   statusFilter: "all",
   search: "",
@@ -301,7 +325,7 @@ async function appRenderTechnicalReviewsPanel(){
   appBindControls();
 }
 
-async function appEnsureAcademyLoaded(force = false){
+async function appEnsureAcademyLoadedLegacy(force = false){
   if (appState.academy && !force) return;
   try {
     appState.academy = await appFetch("/api/academy/dashboard");
@@ -313,7 +337,7 @@ async function appEnsureAcademyLoaded(force = false){
   if (appState.academyBank !== "all" && !banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = "all";
 }
 
-function appAcademySummaryHtml(){
+function appAcademySummaryHtmlLegacy(){
   const stats = appAcademyStats();
   let bank = (appState.academy?.banks || ACADEMY_FALLBACK.banks).find((item) => item.bank_id === appState.academyBank) || {};
   if (appState.academyBank === "all") bank = { titulo: "Todos los bancos de aviacion", dominio: `${stats.banks_count} bancos`, tipo_banco: "todas las tematicas" };
@@ -325,7 +349,7 @@ function appAcademySummaryHtml(){
   </div>`;
 }
 
-function appAcademyControlsHtml(){
+function appAcademyControlsHtmlLegacy(){
   const banks = appState.academy?.banks || ACADEMY_FALLBACK.banks;
   const scopedQuestions = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
   const themes = ["all", ...new Set(scopedQuestions.map((q) => q.tematica).filter(Boolean))];
@@ -350,7 +374,7 @@ function appAcademyQuestionHtmlLegacy(){
   </article>`;
 }
 
-function appAcademyThemeMapHtml(){
+function appAcademyThemeMapHtmlLegacy(){
   const source = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
   const themes = [...new Set(source.map((q) => q.tematica).filter(Boolean))];
   if (!themes.length) return "";
@@ -361,7 +385,7 @@ function appAcademyThemeMapHtml(){
   }).join("")}</div>`;
 }
 
-function appAcademyOptionsHtml(question){
+function appAcademyOptionsHtmlLegacy(question){
   const explicit = Array.isArray(question.opciones) ? question.opciones.filter(Boolean) : [];
   const parsed = String(question.pregunta || "").split(/\n/).map((line) => line.trim()).filter((line) => /^[A-D][\.\)-]\s+/i.test(line));
   const options = explicit.length ? explicit : parsed;
@@ -376,7 +400,7 @@ function appAcademyProgressLabel(question){
   return "Sin marcar";
 }
 
-function appAcademyQuestionHtml(){
+function appAcademyQuestionHtmlOldCard(){
   const questions = appAcademyQuestions();
   if (!questions.length) return `<div class="app-config-row"><span>Sin preguntas</span><strong>No hay preguntas para este filtro.</strong></div>`;
   if (appState.academyQuestionIndex >= questions.length) appState.academyQuestionIndex = 0;
@@ -394,7 +418,7 @@ function appAcademyQuestionHtml(){
   </article>`;
 }
 
-async function appRenderAcademyPanel(){
+async function appRenderAcademyPanelLegacy(){
   await appEnsureAcademyLoaded();
   appSetText("app-view-label", "Labs · Subproducto Academy");
   appSetText("app-product-title", "AVIA Academy");
@@ -493,7 +517,7 @@ async function appSubmitVehicleForm(formNode){
   await appEnsureReviewsLoaded(true); await appRenderPanel(); appShow("Auto agregado correctamente.");
 }
 
-function appBindAcademyControls(){
+function appBindAcademyControlsLegacy(){
   document.getElementById("academy-bank-select")?.addEventListener("change", async (event) => { appState.academyBank = event.target.value || ""; appState.academyTheme = "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; await appRenderPanel(); });
   document.getElementById("academy-theme-select")?.addEventListener("change", async (event) => { appState.academyTheme = event.target.value || "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; await appRenderPanel(); });
   document.getElementById("academy-mode-select")?.addEventListener("change", async (event) => { appState.academyMode = event.target.value || "study"; appState.academyAnswerVisible = false; await appRenderPanel(); });
@@ -507,6 +531,282 @@ function appBindAcademyControls(){
     appState.academyAnswerVisible = false;
     await appRenderPanel();
   }));
+}
+
+function appAcademyQuestionKey(question){
+  return String(question?.public_id || question?.id || question?.question_uuid || "question");
+}
+
+function appAcademySourceLabel(source){
+  if (!source) return "Fuente no informada";
+  if (typeof source === "string") return source;
+  return [source.documento, source.capitulo, source.pagina].filter(Boolean).join(" / ") || source.source_id || "Fuente no informada";
+}
+
+function appAcademyQuestionOptions(question){
+  const explicit = Array.isArray(question?.opciones) ? question.opciones : (Array.isArray(question?.options) ? question.options : []);
+  if (explicit.length) {
+    return explicit.map((option, index) => ({
+      option_key: String(option.option_key || option.key || String.fromCharCode(65 + index)),
+      option_text: option.option_text || option.text || option.label || String(option),
+      is_correct: Boolean(option.is_correct),
+      explanation: option.explanation || option.explicacion || "",
+    }));
+  }
+  return String(question?.pregunta || "").split(/\n/).map((line) => line.trim()).filter((line) => /^[A-D][\.\)-]\s+/i.test(line)).map((line, index) => ({
+    option_key: line.slice(0, 1).toUpperCase(),
+    option_text: line.replace(/^[A-D][\.\)-]\s+/i, ""),
+    is_correct: false,
+    explanation: index === 0 ? "Opcion importada desde texto plano." : "",
+  }));
+}
+
+function appAcademyCorrectKeys(question){
+  return appAcademyQuestionOptions(question).filter((option) => option.is_correct).map((option) => option.option_key);
+}
+
+function appAcademySelectedKeys(question){
+  const key = appAcademyQuestionKey(question);
+  return Array.isArray(appState.academySelected[key]) ? appState.academySelected[key] : [];
+}
+
+function appAcademyProgressStats(){
+  const values = Object.values(appState.academyProgress || {});
+  const answered = values.filter((item) => item && item.status).length;
+  const correct = values.filter((item) => item?.status === "correct").length;
+  const review = values.filter((item) => item?.marked || item?.status === "review").length;
+  return { answered, correct, review, accuracy: answered ? Math.round((correct / answered) * 100) : 0 };
+}
+
+async function appEnsureAcademyLoaded(force = false){
+  if (appState.academy && !force) return;
+  const params = new URLSearchParams();
+  if (appState.academyBank && appState.academyBank !== "all") params.set("bank", appState.academyBank);
+  if (appState.academyTheme && appState.academyTheme !== "all") params.set("tematica", appState.academyTheme);
+  params.set("mode", appState.academyMode || "study");
+  params.set("limit", "40");
+  try {
+    appState.academy = await appFetch(`/api/academy/study/session?${params.toString()}`);
+    if (!Array.isArray(appState.academy.questions) || !appState.academy.questions.length) {
+      const dashboard = await appFetch("/api/academy/dashboard");
+      appState.academy = { ...dashboard, student: appState.academy.student, session: appState.academy.session };
+    }
+  } catch (error) {
+    appState.academy = { ...ACADEMY_FALLBACK, error: error.message || "Academy API no disponible" };
+  }
+  const banks = Array.isArray(appState.academy?.banks) ? appState.academy.banks : [];
+  if (appState.academyBank !== "all" && !banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = "all";
+}
+
+function appAcademySummaryHtml(){
+  const stats = appAcademyStats();
+  const progress = appAcademyProgressStats();
+  let bank = (appState.academy?.banks || ACADEMY_FALLBACK.banks).find((item) => item.bank_id === appState.academyBank) || {};
+  if (appState.academyBank === "all") bank = { titulo: "Todos los bancos de aviacion", dominio: `${stats.banks_count} bancos`, tipo_banco: "todas las tematicas" };
+  return `<div class="app-config-grid">
+    <div class="app-config-row"><span>Producto</span><strong>Labs / Academy<br><small>Motor de estudio con preguntas trazables, reportes y progreso.</small></strong></div>
+    <div class="app-config-row"><span>Banco activo</span><strong>${appEscape(bank.titulo || bank.bank_id || "Banco de estudio")}<br><small>${appEscape(bank.dominio || "aprendizaje")} / ${appEscape(bank.tipo_banco || "question_bank")}</small></strong></div>
+    <div class="app-config-row"><span>Sesion</span><strong>${appEscape(progress.answered)} respondidas / ${appEscape(progress.accuracy)}% precision<br><small>${appEscape(progress.review)} marcadas para repasar</small></strong></div>
+    <div class="app-config-row"><span>Estado</span><strong>${appEscape(appState.academy?.source === "fallback-web" ? "Demo local" : "Conectado a API")}<br><small>${appEscape(appState.academy?.error || "Listo para estudiar")}</small></strong></div>
+  </div>`;
+}
+
+function appAcademyControlsHtml(){
+  const banks = appState.academy?.banks || ACADEMY_FALLBACK.banks;
+  const scopedQuestions = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
+  const themes = ["all", ...new Set(scopedQuestions.map((q) => q.tematica).filter(Boolean))];
+  const modes = [["study", "Practica por tema"], ["exam", "Examen cronometrado"], ["review_errors", "Repasar errores"], ["bookmarked", "Marcadas"], ["new", "Preguntas nuevas"], ["weaknesses", "Debilidades"], ["final", "Simulador final"], ["source", "Modo fuente/POH"], ["flashcards", "Flashcards"], ["instructor", "Instructor/admin"]];
+  const bankOptions = [`<option value="all" ${appState.academyBank === "all" ? "selected" : ""}>Todos los bancos</option>`, ...banks.map((bank) => `<option value="${appEscape(bank.bank_id)}" ${appState.academyBank === bank.bank_id ? "selected" : ""}>${appEscape(bank.titulo || bank.bank_id)}</option>`)].join("");
+  const themeOptions = themes.map((theme) => `<option value="${appEscape(theme)}" ${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(theme) ? "selected" : ""}>${theme === "all" ? "Todas las tematicas" : appEscape(theme)}</option>`).join("");
+  const modeOptions = modes.map(([value, label]) => `<option value="${value}" ${appState.academyMode === value ? "selected" : ""}>${label}</option>`).join("");
+  return `<div class="app-config-row"><span>Configurar estudio</span><strong class="app-form-inline app-academy-controls"><select id="academy-bank-select">${bankOptions}</select><select id="academy-theme-select">${themeOptions}</select><select id="academy-mode-select">${modeOptions}</select></strong></div>`;
+}
+
+function appAcademyThemeMapHtml(){
+  const source = (appState.academy?.questions || ACADEMY_FALLBACK.questions).filter((q) => appState.academyBank === "all" || !appState.academyBank || q.bank_id === appState.academyBank);
+  const themes = [...new Set(source.map((q) => q.tematica).filter(Boolean))];
+  if (!themes.length) return "";
+  return `<div class="academy-topic-grid">${themes.map((theme) => {
+    const count = source.filter((q) => appNormalizeTheme(q.tematica) === appNormalizeTheme(theme)).length;
+    const active = appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(theme);
+    return `<button class="academy-topic${active ? " is-active" : ""}" type="button" data-academy-theme="${appEscape(theme)}"><span>${appEscape(theme)}</span><strong>${count}</strong></button>`;
+  }).join("")}</div>`;
+}
+
+function appAcademyMediaHtml(question){
+  const media = Array.isArray(question.media) ? question.media : [];
+  if (!media.length) return "";
+  return `<div class="academy-media-strip">${media.map((item) => {
+    const rows = Array.isArray(item.metadata?.rows) ? item.metadata.rows : [];
+    if (item.url) return `<figure class="academy-media"><img src="${appEscape(item.url)}" alt="${appEscape(item.alt_text || item.caption || "Material de pregunta")}" loading="lazy" /><figcaption>${appEscape(item.caption || item.source || "Material de estudio")}</figcaption></figure>`;
+    if (rows.length) return `<figure class="academy-media"><table>${rows.map((row) => `<tr>${row.map((cell) => `<td>${appEscape(cell)}</td>`).join("")}</tr>`).join("")}</table><figcaption>${appEscape(item.caption || item.source || "Extracto de fuente")}</figcaption></figure>`;
+    return `<figure class="academy-media"><div class="academy-media-placeholder">${appEscape(item.caption || item.media_type || "Material adjunto")}</div><figcaption>${appEscape(item.source || "")}</figcaption></figure>`;
+  }).join("")}</div>`;
+}
+
+function appAcademyOptionsHtml(question){
+  const options = appAcademyQuestionOptions(question);
+  if (!options.length) return `<div class="academy-muted">Pregunta sin alternativas: usa Ver explicacion o Reportar error si falta la pauta.</div>`;
+  const key = appAcademyQuestionKey(question);
+  const selected = new Set(appAcademySelectedKeys(question));
+  const progress = appState.academyProgress[key] || {};
+  const answered = Boolean(progress.status);
+  return `<div class="academy-options" role="list">${options.map((option) => {
+    const classes = ["academy-option"];
+    if (selected.has(option.option_key)) classes.push("is-selected");
+    if (answered && option.is_correct) classes.push("is-correct");
+    if (answered && selected.has(option.option_key) && !option.is_correct) classes.push("is-wrong");
+    return `<button type="button" class="${classes.join(" ")}" data-academy-option="${appEscape(option.option_key)}"><span>${appEscape(option.option_key)}</span><strong>${appEscape(option.option_text)}</strong>${answered && option.explanation ? `<small>${appEscape(option.explanation)}</small>` : ""}</button>`;
+  }).join("")}</div>`;
+}
+
+function appAcademyReportHtml(question){
+  if (!appState.academyReportOpen) return "";
+  const types = appState.academy?.report_types || [
+    { value:"enunciado_confuso", label:"Enunciado confuso" },
+    { value:"respuesta_incorrecta", label:"Respuesta incorrecta" },
+    { value:"mas_de_una_correcta", label:"Hay mas de una respuesta correcta" },
+    { value:"imagen_incorrecta", label:"Imagen incorrecta" },
+    { value:"error_fuente", label:"Error en la fuente" },
+    { value:"ortografia_redaccion", label:"Ortografia o redaccion" },
+    { value:"otro", label:"Otro" },
+  ];
+  return `<div class="academy-modal" role="dialog" aria-modal="true">
+    <form class="academy-modal-panel" id="academy-report-form">
+      <div class="academy-card-head"><span>Reportar error</span><button class="btn btn-secondary" type="button" id="academy-report-close">Cerrar</button></div>
+      <small>${appEscape(appAcademyQuestionKey(question))} / version ${appEscape(question.version || 1)}</small>
+      <select name="report_type">${types.map((type) => `<option value="${appEscape(type.value)}">${appEscape(type.label)}</option>`).join("")}</select>
+      <textarea name="comment" rows="4" placeholder="Describe el problema con el enunciado, alternativa, imagen o fuente."></textarea>
+      <button class="btn btn-primary" type="submit">Enviar reporte</button>
+    </form>
+  </div>`;
+}
+
+function appAcademyQuestionHtml(){
+  const questions = appAcademyQuestions();
+  if (!questions.length) return `<div class="app-config-row"><span>Sin preguntas</span><strong>No hay preguntas para este filtro.</strong></div>`;
+  if (appState.academyQuestionIndex >= questions.length) appState.academyQuestionIndex = 0;
+  if (appState.academyQuestionIndex < 0) appState.academyQuestionIndex = questions.length - 1;
+  const question = questions[appState.academyQuestionIndex];
+  const key = appAcademyQuestionKey(question);
+  const progress = appState.academyProgress[key] || {};
+  const answered = Boolean(progress.status) || appState.academyAnswerVisible;
+  const correctKeys = appAcademyCorrectKeys(question);
+  const progressStats = appAcademyProgressStats();
+  const source = appAcademySourceLabel(question.fuente);
+  return `<article class="academy-study-shell">
+    <aside class="academy-index" aria-label="Indice de sesion">
+      <strong>Sesion</strong>
+      <small>${questions.length} preguntas / ${progressStats.accuracy}% precision</small>
+      <div>${questions.map((item, index) => {
+        const itemKey = appAcademyQuestionKey(item);
+        const itemProgress = appState.academyProgress[itemKey] || {};
+        return `<button type="button" class="${index === appState.academyQuestionIndex ? "is-active" : ""} ${itemProgress.status || ""}" data-academy-jump="${index}"><span>${index + 1}</span><small>${appEscape(item.public_id || item.id || item.tematica || "Pregunta")}</small></button>`;
+      }).join("")}</div>
+    </aside>
+    <section class="academy-card academy-question-panel">
+      <div class="academy-breadcrumb">Academy / ${appEscape(question.curso || question.aeronave || question.banco_titulo || "Curso")} / ${appEscape(question.tematica || "Tema")} / ${appEscape(question.public_id || question.id || "Pregunta")}</div>
+      <div class="academy-card-head"><span>${appEscape(question.public_id || question.id || "ID pendiente")}</span><small>${appEscape(question.tipo_pregunta || "single_choice")} / ${appEscape(question.nivel || "basic")} / v${appEscape(question.version || 1)}</small></div>
+      <h3>${appEscape(question.pregunta || question.question || "Pregunta sin enunciado")}</h3>
+      <div class="academy-chip-row"><span>${appEscape(question.tematica || "Tema")}</span><span>${appEscape(question.subtematica || "Subtema")}</span><span>${appEscape(source)}</span></div>
+      ${appAcademyMediaHtml(question)}
+      ${appAcademyOptionsHtml(question)}
+      ${answered ? `<div class="academy-answer"><strong>Resultado: ${appEscape(progress.status === "correct" ? "correcto" : progress.status === "partial" ? "parcial" : progress.status === "incorrect" ? "incorrecto" : "pauta visible")}</strong><p>Respuesta correcta: ${appEscape(correctKeys.join(", ") || question.respuesta_correcta_texto || "-")}</p><strong>Explicacion</strong><p>${appEscape(question.explicacion_corta || question.explicacion_profunda || "-")}</p>${appState.academyMode === "instructor" || appState.academySourceOpen ? `<strong>Fuente verificable</strong><p>${appEscape(source)}</p>${question.explicacion_profunda ? `<strong>Detalle</strong><p>${appEscape(question.explicacion_profunda)}</p>` : ""}` : ""}<small>Accion recomendada: ${progress.status === "correct" ? "continua con preguntas nuevas." : "repasa la fuente y vuelve a intentarla."}</small></div>` : `<p class="academy-muted">Selecciona una alternativa antes de responder. En preguntas con varias respuestas, marca todas y confirma seleccion.</p>`}
+      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-submit">${correctKeys.length > 1 ? "Confirmar seleccion" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-unknown">No se</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicacion</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar para repasar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-end">Terminar sesion</button><small>${appState.academyQuestionIndex + 1} / ${questions.length}</small></div>
+    </section>
+    <aside class="academy-stats-panel">
+      <strong>Progreso</strong>
+      <div><span>Respondidas</span><b>${progressStats.answered}</b></div>
+      <div><span>Precision</span><b>${progressStats.accuracy}%</b></div>
+      <div><span>Marcadas</span><b>${progressStats.review}</b></div>
+      <div><span>Recomendacion</span><small>${appEscape(appState.academy?.student?.recommendation || "Continuar con preguntas nuevas")}</small></div>
+    </aside>
+    ${appAcademyReportHtml(question)}
+  </article>`;
+}
+
+async function appRenderAcademyPanel(){
+  await appEnsureAcademyLoaded();
+  appSetText("app-view-label", "Labs / Subproducto Academy");
+  appSetText("app-product-title", "AVIA Academy");
+  appSetText("app-product-description", "Motor de aprendizaje con bancos trazables, fuentes verificables, progreso por alumno y reportes de calidad.");
+  appSetText("app-product-status", `${appAcademyStats().total_questions ?? 0} preguntas`);
+  appSetText("app-product-slug", "labs-academy");
+  appRenderStats();
+  const demo = document.getElementById("app-product-demo");
+  if (demo) demo.innerHTML = appAcademySummaryHtml();
+  appSetText("app-config-title", "Estudiar preguntas");
+  const config = document.getElementById("app-product-config");
+  if (!config) return;
+  config.innerHTML = `${appAcademyControlsHtml()}${appAcademyThemeMapHtml()}<div id="academy-question-wrap">${appAcademyQuestionHtml()}</div><div id="cause-action-output" class="app-query-output" style="display:none"></div>`;
+  appBindControls();
+}
+
+async function appAcademySubmitAnswer(statusOverride = null){
+  const question = appAcademyQuestions()[appState.academyQuestionIndex];
+  if (!question) return;
+  const key = appAcademyQuestionKey(question);
+  const selected = statusOverride === "unknown" ? [] : appAcademySelectedKeys(question);
+  const correct = appAcademyCorrectKeys(question);
+  const selectedSet = new Set(selected);
+  const isCorrect = correct.length ? selected.length === correct.length && correct.every((item) => selectedSet.has(item)) : false;
+  const isPartial = !isCorrect && selected.some((item) => correct.includes(item));
+  appState.academyProgress[key] = {
+    status: statusOverride === "unknown" ? "incorrect" : isCorrect ? "correct" : isPartial ? "partial" : "incorrect",
+    selected,
+    correct,
+    answeredAt: new Date().toISOString(),
+    version: question.version || 1,
+    marked: appState.academyProgress[key]?.marked || false,
+  };
+  appState.academyAnswerVisible = true;
+  try {
+    await appFetch("/api/academy/answers", { method:"POST", body:JSON.stringify({ question_id: question.id || question.question_uuid || key, selected_option_keys: selected, mode: appState.academyMode, time_spent_seconds: Math.max(1, Math.round((Date.now() - appState.academyQuestionStartedAt) / 1000)), confidence_level: statusOverride === "unknown" ? "no_sabia" : "seguro", feedback_shown: true, public_id: key }) });
+  } catch (error) {
+    appState.academyProgress[key].sync_error = error.message;
+  }
+  await appRenderPanel();
+}
+
+function appBindAcademyControls(){
+  document.getElementById("academy-bank-select")?.addEventListener("change", async (event) => { appState.academyBank = event.target.value || "all"; appState.academyTheme = "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; appState.academyQuestionStartedAt = Date.now(); await appEnsureAcademyLoaded(true); await appRenderPanel(); });
+  document.getElementById("academy-theme-select")?.addEventListener("change", async (event) => { appState.academyTheme = event.target.value || "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; appState.academyQuestionStartedAt = Date.now(); await appEnsureAcademyLoaded(true); await appRenderPanel(); });
+  document.getElementById("academy-mode-select")?.addEventListener("change", async (event) => { appState.academyMode = event.target.value || "study"; appState.academyAnswerVisible = false; appState.academyQuestionStartedAt = Date.now(); await appEnsureAcademyLoaded(true); await appRenderPanel(); });
+  document.querySelectorAll("[data-academy-jump]").forEach((button) => button.addEventListener("click", async () => { appState.academyQuestionIndex = Number(button.dataset.academyJump || 0); appState.academyAnswerVisible = false; appState.academyQuestionStartedAt = Date.now(); await appRenderPanel(); }));
+  document.querySelectorAll("[data-academy-option]").forEach((button) => button.addEventListener("click", async () => {
+    const question = appAcademyQuestions()[appState.academyQuestionIndex];
+    const key = appAcademyQuestionKey(question);
+    const optionKey = button.dataset.academyOption;
+    const selected = new Set(appAcademySelectedKeys(question));
+    const isMulti = appAcademyCorrectKeys(question).length > 1 || question?.tipo_pregunta === "multiple_select";
+    if (selected.has(optionKey)) selected.delete(optionKey); else { if (!isMulti) selected.clear(); selected.add(optionKey); }
+    appState.academySelected[key] = [...selected];
+    await appRenderPanel();
+  }));
+  document.getElementById("academy-prev")?.addEventListener("click", async () => { appState.academyQuestionIndex -= 1; appState.academyAnswerVisible = false; appState.academyQuestionStartedAt = Date.now(); await appRenderPanel(); });
+  document.getElementById("academy-next")?.addEventListener("click", async () => { appState.academyQuestionIndex += 1; appState.academyAnswerVisible = false; appState.academyQuestionStartedAt = Date.now(); await appRenderPanel(); });
+  document.getElementById("academy-submit")?.addEventListener("click", () => appAcademySubmitAnswer());
+  document.getElementById("academy-unknown")?.addEventListener("click", () => appAcademySubmitAnswer("unknown"));
+  document.getElementById("academy-reveal")?.addEventListener("click", async () => { appState.academyAnswerVisible = true; await appRenderPanel(); });
+  document.getElementById("academy-source")?.addEventListener("click", async () => { appState.academySourceOpen = !appState.academySourceOpen; appState.academyAnswerVisible = true; await appRenderPanel(); });
+  document.getElementById("academy-bookmark")?.addEventListener("click", async () => {
+    const question = appAcademyQuestions()[appState.academyQuestionIndex];
+    const key = appAcademyQuestionKey(question);
+    appState.academyProgress[key] = { ...(appState.academyProgress[key] || {}), status: appState.academyProgress[key]?.status || "review", marked: true };
+    try { await appFetch(`/api/academy/questions/${encodeURIComponent(question.id || question.question_uuid || key)}/bookmark`, { method:"POST", body:JSON.stringify({ note:"Marcada desde Academy web" }) }); } catch (_) {}
+    await appRenderPanel();
+  });
+  document.getElementById("academy-report")?.addEventListener("click", async () => { appState.academyReportOpen = true; await appRenderPanel(); });
+  document.getElementById("academy-report-close")?.addEventListener("click", async () => { appState.academyReportOpen = false; await appRenderPanel(); });
+  document.getElementById("academy-end")?.addEventListener("click", async () => { const stats = appAcademyProgressStats(); try { await appFetch("/api/academy/study/session/end", { method:"POST", body:JSON.stringify({ ...stats, mode: appState.academyMode }) }); } catch (_) {} appShow(`Sesion terminada. Respondidas: ${stats.answered}. Precision: ${stats.accuracy}%.`); });
+  document.getElementById("academy-report-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const question = appAcademyQuestions()[appState.academyQuestionIndex];
+    const key = appAcademyQuestionKey(question);
+    const form = new FormData(event.currentTarget);
+    const payload = { report_type:String(form.get("report_type") || "otro"), comment:String(form.get("comment") || "").trim() || "Reporte sin comentario", selected_option_keys: appAcademySelectedKeys(question), correct_option_keys: appAcademyCorrectKeys(question), question_public_id:key, question_version: question.version || 1 };
+    try { await appFetch(`/api/academy/questions/${encodeURIComponent(question.id || question.question_uuid || key)}/report`, { method:"POST", body:JSON.stringify(payload) }); appState.academyReportOpen = false; await appRenderPanel(); appShow("Reporte enviado para revision."); } catch (error) { appShow(error.message || "No se pudo enviar el reporte.", true); }
+  });
 }
 
 function appBindControls(){

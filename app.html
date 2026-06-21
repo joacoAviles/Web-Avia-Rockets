@@ -185,7 +185,7 @@
   <footer class="site-footer footer-clean"></footer>
   <script src="api-config.js"></script>
   <script src="header-standard.js"></script>
-  <script src="app-home.js?v=labs-academy-20260616-1"></script>
+  <script src="app-home.js?v=labs-academy-20260621-1"></script>
   <script>
     (function(){
       if (typeof appState === "undefined") return;
@@ -214,7 +214,7 @@
           label: "Labs",
           eyebrow: "Línea Labs",
           title: "Labs",
-          description: "Productos experimentales, Academy, conectores y herramientas internas para probar nuevas capacidades dentro del login.",
+          description: "Academy, conectores y herramientas internas para convertir procesos reales en productos utilizables dentro del login.",
           products: ["academy", "api-lab"]
         }
       };
@@ -252,7 +252,9 @@
           label: "Academy",
           apiSlug: "labs-academy",
           slugs: ["labs-academy", "academy", "avia-academy"],
-          meta: function(){ return `${appAcademyStats().total_questions || 0} preguntas`; }
+          meta: function(){ return `${appAcademyStats().total_questions || 0} preguntas trazables`; },
+          title: "AVIA Academy",
+          description: "Motor de aprendizaje con fuentes verificables, reportes de error, progreso por alumno y modos de estudio."
         },
         "api-lab": {
           line: "labs",

@@ -458,7 +458,6 @@ function appRenderSettingsPanel(){
 }
 
 async function appRenderPanel(){
-  document.body.classList.toggle("academy-study-mode", appState.view === "academy");
   appRenderSidebar();
   if (appState.view === "settings") appRenderSettingsPanel();
   else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
@@ -755,7 +754,6 @@ function appAcademyQuestionHtml(){
 
 async function appRenderAcademyPanel(){
   await appEnsureAcademyLoaded();
-  document.body.classList.add("academy-study-mode");
   appSetText("app-view-label", "Labs / Subproducto Academy");
   appSetText("app-product-title", "AVIA Academy");
   appSetText("app-product-description", "Motor de aprendizaje con bancos trazables, fuentes verificables, progreso por alumno y reportes de calidad.");
@@ -763,11 +761,11 @@ async function appRenderAcademyPanel(){
   appSetText("app-product-slug", "labs-academy");
   appRenderStats();
   const demo = document.getElementById("app-product-demo");
-  if (demo) demo.innerHTML = appAcademySummaryHtml();
+  if (demo) demo.innerHTML = "";
   appSetText("app-config-title", "Estudiar preguntas");
   const config = document.getElementById("app-product-config");
   if (!config) return;
-  config.innerHTML = `${appAcademyControlsHtml()}${appAcademyThemeMapHtml()}<div id="academy-question-wrap">${appAcademyQuestionHtml()}</div><div id="cause-action-output" class="app-query-output" style="display:none"></div>`;
+  config.innerHTML = `<div class="academy-product-surface">${appAcademySummaryHtml()}${appAcademyControlsHtml()}${appAcademyThemeMapHtml()}<div id="academy-question-wrap">${appAcademyQuestionHtml()}</div><div id="cause-action-output" class="app-query-output" style="display:none"></div></div>`;
   appBindControls();
 }
 

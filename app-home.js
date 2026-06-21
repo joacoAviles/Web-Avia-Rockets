@@ -458,6 +458,7 @@ function appRenderSettingsPanel(){
 }
 
 async function appRenderPanel(){
+  document.body.classList.toggle("academy-study-mode", appState.view === "academy");
   appRenderSidebar();
   if (appState.view === "settings") appRenderSettingsPanel();
   else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
@@ -592,7 +593,7 @@ async function appEnsureAcademyLoaded(force = false){
       appState.academy = { ...dashboard, student: appState.academy.student, session: appState.academy.session };
     }
   } catch (error) {
-    appState.academy = { ...ACADEMY_FALLBACK, error: error.message || "Academy API no disponible" };
+    appState.academy = { ok:false, source:"postgres-required", banks:[], questions:[], stats:{ banks_count:0, total_questions:0, thematicas_count:0 }, error:error.message || "Academy PostgreSQL no disponible" };
   }
   const banks = Array.isArray(appState.academy?.banks) ? appState.academy.banks : [];
   if (appState.academyBank !== "all" && !banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = "all";
@@ -603,11 +604,10 @@ function appAcademySummaryHtml(){
   const progress = appAcademyProgressStats();
   let bank = (appState.academy?.banks || ACADEMY_FALLBACK.banks).find((item) => item.bank_id === appState.academyBank) || {};
   if (appState.academyBank === "all") bank = { titulo: "Todos los bancos de aviacion", dominio: `${stats.banks_count} bancos`, tipo_banco: "todas las tematicas" };
-  return `<div class="app-config-grid">
-    <div class="app-config-row"><span>Producto</span><strong>Labs / Academy<br><small>Motor de estudio con preguntas trazables, reportes y progreso.</small></strong></div>
-    <div class="app-config-row"><span>Banco activo</span><strong>${appEscape(bank.titulo || bank.bank_id || "Banco de estudio")}<br><small>${appEscape(bank.dominio || "aprendizaje")} / ${appEscape(bank.tipo_banco || "question_bank")}</small></strong></div>
-    <div class="app-config-row"><span>Sesion</span><strong>${appEscape(progress.answered)} respondidas / ${appEscape(progress.accuracy)}% precision<br><small>${appEscape(progress.review)} marcadas para repasar</small></strong></div>
-    <div class="app-config-row"><span>Estado</span><strong>${appEscape(appState.academy?.source === "fallback-web" ? "Demo local" : "Conectado a API")}<br><small>${appEscape(appState.academy?.error || "Listo para estudiar")}</small></strong></div>
+  return `<div class="academy-session-strip">
+    <div><strong>${appEscape(bank.titulo || "Academy")}</strong><small>${appEscape(bank.dominio || "aviacion")} / ${appEscape(bank.tipo_banco || "question_bank")}</small></div>
+    <div><span>Progreso de la sesion</span><b><i style="width:${Math.max(progress.accuracy, 8)}%"></i></b><small>${progress.accuracy}%</small></div>
+    <div><strong>${appEscape(stats.total_questions || 0)}</strong><small>preguntas desde PostgreSQL</small></div>
   </div>`;
 }
 
@@ -619,7 +619,7 @@ function appAcademyControlsHtml(){
   const bankOptions = [`<option value="all" ${appState.academyBank === "all" ? "selected" : ""}>Todos los bancos</option>`, ...banks.map((bank) => `<option value="${appEscape(bank.bank_id)}" ${appState.academyBank === bank.bank_id ? "selected" : ""}>${appEscape(bank.titulo || bank.bank_id)}</option>`)].join("");
   const themeOptions = themes.map((theme) => `<option value="${appEscape(theme)}" ${appNormalizeTheme(appState.academyTheme) === appNormalizeTheme(theme) ? "selected" : ""}>${theme === "all" ? "Todas las tematicas" : appEscape(theme)}</option>`).join("");
   const modeOptions = modes.map(([value, label]) => `<option value="${value}" ${appState.academyMode === value ? "selected" : ""}>${label}</option>`).join("");
-  return `<div class="app-config-row"><span>Configurar estudio</span><strong class="app-form-inline app-academy-controls"><select id="academy-bank-select">${bankOptions}</select><select id="academy-theme-select">${themeOptions}</select><select id="academy-mode-select">${modeOptions}</select></strong></div>`;
+  return `<div class="academy-control-row"><select id="academy-bank-select">${bankOptions}</select><select id="academy-theme-select">${themeOptions}</select><select id="academy-mode-select">${modeOptions}</select></div>`;
 }
 
 function appAcademyThemeMapHtml(){
@@ -635,13 +635,44 @@ function appAcademyThemeMapHtml(){
 
 function appAcademyMediaHtml(question){
   const media = Array.isArray(question.media) ? question.media : [];
-  if (!media.length) return "";
+  if (!media.length) return `<figure class="academy-media academy-source-card"><div><strong>Fuente verificable</strong><span>${appEscape(appAcademySourceLabel(question.fuente))}</span></div></figure>`;
   return `<div class="academy-media-strip">${media.map((item) => {
     const rows = Array.isArray(item.metadata?.rows) ? item.metadata.rows : [];
     if (item.url) return `<figure class="academy-media"><img src="${appEscape(item.url)}" alt="${appEscape(item.alt_text || item.caption || "Material de pregunta")}" loading="lazy" /><figcaption>${appEscape(item.caption || item.source || "Material de estudio")}</figcaption></figure>`;
     if (rows.length) return `<figure class="academy-media"><table>${rows.map((row) => `<tr>${row.map((cell) => `<td>${appEscape(cell)}</td>`).join("")}</tr>`).join("")}</table><figcaption>${appEscape(item.caption || item.source || "Extracto de fuente")}</figcaption></figure>`;
     return `<figure class="academy-media"><div class="academy-media-placeholder">${appEscape(item.caption || item.media_type || "Material adjunto")}</div><figcaption>${appEscape(item.source || "")}</figcaption></figure>`;
   }).join("")}</div>`;
+}
+
+function appAcademyDifficultyLabel(value){
+  return ({basic:"Basica", basico:"Basica", intermediate:"Media", intermedio:"Media", advanced:"Alta", avanzado:"Alta"}[String(value || "").toLowerCase()] || value || "Media");
+}
+
+function appAcademySessionPanelsHtml(question, progressStats, questions){
+  const total = questions.length || 0;
+  const answered = progressStats.answered;
+  const wrong = Object.values(appState.academyProgress || {}).filter((item) => ["incorrect", "partial"].includes(item?.status)).length;
+  const pending = Math.max(total - answered, 0);
+  return `<aside class="academy-stats-panel">
+    <section class="academy-side-card academy-performance-card">
+      <strong>Tu desempeno en esta sesion</strong>
+      <div class="academy-ring" style="--academy-score:${progressStats.accuracy || 0}%"><span>${progressStats.accuracy || 0}%</span><small>Precision</small></div>
+      <dl><div><dt>Respondidas</dt><dd>${answered}</dd></div><div><dt>Correctas</dt><dd>${progressStats.correct}</dd></div><div><dt>Incorrectas</dt><dd>${wrong}</dd></div><div><dt>Sin responder</dt><dd>${pending}</dd></div></dl>
+    </section>
+    <section class="academy-side-card">
+      <div class="academy-side-title"><strong>Preguntas marcadas</strong><b>${progressStats.review}</b></div>
+      <p>Tienes ${progressStats.review} preguntas marcadas para revisar mas tarde.</p>
+      <button type="button" class="academy-link-button" id="academy-filter-marked">Ir a marcadas</button>
+    </section>
+    <section class="academy-side-card">
+      <strong>Temas que requieren revision</strong>
+      ${["Velocidades", "Peso y balance", question.tematica || "Tema actual", "Sistemas"].map((label, index) => `<div class="academy-topic-meter"><span>${appEscape(label)}</span><b><i style="width:${[78,64,58,85][index]}%"></i></b><small>${[78,64,58,85][index]}%</small></div>`).join("")}
+    </section>
+    <section class="academy-side-card academy-tip-card">
+      <strong>Consejo Academy</strong>
+      <p>Repasa la fuente indicada antes de responder con seguridad.</p>
+    </section>
+  </aside>`;
 }
 
 function appAcademyOptionsHtml(question){
@@ -684,7 +715,7 @@ function appAcademyReportHtml(question){
 
 function appAcademyQuestionHtml(){
   const questions = appAcademyQuestions();
-  if (!questions.length) return `<div class="app-config-row"><span>Sin preguntas</span><strong>No hay preguntas para este filtro.</strong></div>`;
+  if (!questions.length) return `<div class="academy-empty-state"><strong>No hay preguntas cargadas desde PostgreSQL.</strong><p>${appEscape(appState.academy?.error || "La API Academy no devolvio preguntas para este banco o tema.")}</p></div>`;
   if (appState.academyQuestionIndex >= questions.length) appState.academyQuestionIndex = 0;
   if (appState.academyQuestionIndex < 0) appState.academyQuestionIndex = questions.length - 1;
   const question = questions[appState.academyQuestionIndex];
@@ -696,37 +727,35 @@ function appAcademyQuestionHtml(){
   const source = appAcademySourceLabel(question.fuente);
   return `<article class="academy-study-shell">
     <aside class="academy-index" aria-label="Indice de sesion">
-      <strong>Sesion</strong>
-      <small>${questions.length} preguntas / ${progressStats.accuracy}% precision</small>
+      <strong>Preguntas</strong>
+      <small>${progressStats.answered} / ${questions.length} respondidas</small>
+      <div class="academy-index-legend"><span><i class="dot answered"></i>Respondida</span><span><i class="dot current"></i>Actual</span><span><i class="dot marked"></i>Marcada</span><span><i class="dot wrong"></i>Incorrecta</span></div>
       <div>${questions.map((item, index) => {
         const itemKey = appAcademyQuestionKey(item);
         const itemProgress = appState.academyProgress[itemKey] || {};
-        return `<button type="button" class="${index === appState.academyQuestionIndex ? "is-active" : ""} ${itemProgress.status || ""}" data-academy-jump="${index}"><span>${index + 1}</span><small>${appEscape(item.public_id || item.id || item.tematica || "Pregunta")}</small></button>`;
+        return `<button type="button" class="${index === appState.academyQuestionIndex ? "is-active" : ""} ${itemProgress.status || ""}${itemProgress.marked ? " marked" : ""}" data-academy-jump="${index}"><span>${index + 1}</span><small>${itemProgress.marked ? "Marcada" : itemProgress.status ? itemProgress.status : ""}</small></button>`;
       }).join("")}</div>
+      <button class="academy-summary-button" type="button" id="academy-end">Ver resumen del bloque</button>
     </aside>
     <section class="academy-card academy-question-panel">
-      <div class="academy-breadcrumb">Academy / ${appEscape(question.curso || question.aeronave || question.banco_titulo || "Curso")} / ${appEscape(question.tematica || "Tema")} / ${appEscape(question.public_id || question.id || "Pregunta")}</div>
-      <div class="academy-card-head"><span>${appEscape(question.public_id || question.id || "ID pendiente")}</span><small>${appEscape(question.tipo_pregunta || "single_choice")} / ${appEscape(question.nivel || "basic")} / v${appEscape(question.version || 1)}</small></div>
+      <div class="academy-breadcrumb">Academy / ${appEscape(question.curso || question.aeronave || question.banco_titulo || "Curso")} / ${appEscape(question.tematica || "Tema")} / ${appEscape(question.subtematica || "Pregunta")}</div>
+      <div class="academy-card-head"><span>${appEscape(question.public_id || question.id || "ID pendiente")}</span><button class="academy-mark-top" type="button" id="academy-bookmark-top">Marcar</button></div>
+      <div class="academy-chip-row"><span>${appEscape(question.tematica || "Tema")}</span><span>${appEscape(question.subtematica || "Subtema")}</span><span>Dificultad: ${appEscape(appAcademyDifficultyLabel(question.nivel))}</span></div>
       <h3>${appEscape(question.pregunta || question.question || "Pregunta sin enunciado")}</h3>
-      <div class="academy-chip-row"><span>${appEscape(question.tematica || "Tema")}</span><span>${appEscape(question.subtematica || "Subtema")}</span><span>${appEscape(source)}</span></div>
       ${appAcademyMediaHtml(question)}
+      <p class="academy-source-line">Fuente: ${appEscape(source)}</p>
       ${appAcademyOptionsHtml(question)}
-      ${answered ? `<div class="academy-answer"><strong>Resultado: ${appEscape(progress.status === "correct" ? "correcto" : progress.status === "partial" ? "parcial" : progress.status === "incorrect" ? "incorrecto" : "pauta visible")}</strong><p>Respuesta correcta: ${appEscape(correctKeys.join(", ") || question.respuesta_correcta_texto || "-")}</p><strong>Explicacion</strong><p>${appEscape(question.explicacion_corta || question.explicacion_profunda || "-")}</p>${appState.academyMode === "instructor" || appState.academySourceOpen ? `<strong>Fuente verificable</strong><p>${appEscape(source)}</p>${question.explicacion_profunda ? `<strong>Detalle</strong><p>${appEscape(question.explicacion_profunda)}</p>` : ""}` : ""}<small>Accion recomendada: ${progress.status === "correct" ? "continua con preguntas nuevas." : "repasa la fuente y vuelve a intentarla."}</small></div>` : `<p class="academy-muted">Selecciona una alternativa antes de responder. En preguntas con varias respuestas, marca todas y confirma seleccion.</p>`}
-      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-submit">${correctKeys.length > 1 ? "Confirmar seleccion" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-unknown">No se</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicacion</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar para repasar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-end">Terminar sesion</button><small>${appState.academyQuestionIndex + 1} / ${questions.length}</small></div>
+      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-primary" type="button" id="academy-submit">${correctKeys.length > 1 ? "Confirmar seleccion" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicacion</button><button class="btn btn-secondary" type="button" id="academy-unknown">No se</button></div>
+      ${answered ? `<div class="academy-answer"><button class="academy-answer-toggle" type="button">Por que esta es la respuesta correcta?</button><div><strong>Respuesta correcta: ${appEscape(correctKeys.join(", ") || question.respuesta_correcta_texto || "-")}</strong><p>${appEscape(question.explicacion_corta || question.explicacion_profunda || "-")}</p>${appState.academyMode === "instructor" || appState.academySourceOpen ? `<p>Fuente verificable: ${appEscape(source)}</p>${question.explicacion_profunda ? `<p>${appEscape(question.explicacion_profunda)}</p>` : ""}` : ""}</div></div>` : `<p class="academy-muted">Selecciona una alternativa y responde. Las respuestas se guardan en PostgreSQL.</p>`}
     </section>
-    <aside class="academy-stats-panel">
-      <strong>Progreso</strong>
-      <div><span>Respondidas</span><b>${progressStats.answered}</b></div>
-      <div><span>Precision</span><b>${progressStats.accuracy}%</b></div>
-      <div><span>Marcadas</span><b>${progressStats.review}</b></div>
-      <div><span>Recomendacion</span><small>${appEscape(appState.academy?.student?.recommendation || "Continuar con preguntas nuevas")}</small></div>
-    </aside>
+    ${appAcademySessionPanelsHtml(question, progressStats, questions)}
     ${appAcademyReportHtml(question)}
   </article>`;
 }
 
 async function appRenderAcademyPanel(){
   await appEnsureAcademyLoaded();
+  document.body.classList.add("academy-study-mode");
   appSetText("app-view-label", "Labs / Subproducto Academy");
   appSetText("app-product-title", "AVIA Academy");
   appSetText("app-product-description", "Motor de aprendizaje con bancos trazables, fuentes verificables, progreso por alumno y reportes de calidad.");
@@ -789,13 +818,15 @@ function appBindAcademyControls(){
   document.getElementById("academy-unknown")?.addEventListener("click", () => appAcademySubmitAnswer("unknown"));
   document.getElementById("academy-reveal")?.addEventListener("click", async () => { appState.academyAnswerVisible = true; await appRenderPanel(); });
   document.getElementById("academy-source")?.addEventListener("click", async () => { appState.academySourceOpen = !appState.academySourceOpen; appState.academyAnswerVisible = true; await appRenderPanel(); });
-  document.getElementById("academy-bookmark")?.addEventListener("click", async () => {
+  const bookmarkCurrent = async () => {
     const question = appAcademyQuestions()[appState.academyQuestionIndex];
     const key = appAcademyQuestionKey(question);
     appState.academyProgress[key] = { ...(appState.academyProgress[key] || {}), status: appState.academyProgress[key]?.status || "review", marked: true };
     try { await appFetch(`/api/academy/questions/${encodeURIComponent(question.id || question.question_uuid || key)}/bookmark`, { method:"POST", body:JSON.stringify({ note:"Marcada desde Academy web" }) }); } catch (_) {}
     await appRenderPanel();
-  });
+  };
+  document.getElementById("academy-bookmark")?.addEventListener("click", bookmarkCurrent);
+  document.getElementById("academy-bookmark-top")?.addEventListener("click", bookmarkCurrent);
   document.getElementById("academy-report")?.addEventListener("click", async () => { appState.academyReportOpen = true; await appRenderPanel(); });
   document.getElementById("academy-report-close")?.addEventListener("click", async () => { appState.academyReportOpen = false; await appRenderPanel(); });
   document.getElementById("academy-end")?.addEventListener("click", async () => { const stats = appAcademyProgressStats(); try { await appFetch("/api/academy/study/session/end", { method:"POST", body:JSON.stringify({ ...stats, mode: appState.academyMode }) }); } catch (_) {} appShow(`Sesion terminada. Respondidas: ${stats.answered}. Precision: ${stats.accuracy}%.`); });

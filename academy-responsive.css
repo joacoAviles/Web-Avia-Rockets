@@ -1,0 +1,262 @@
+/* AVIA Academy responsive layer
+   Scope: only the Academy product surface inside the private app/Labs area.
+   Desktop keeps the 3-column study console. Mobile becomes a single-column lesson view. */
+
+body[data-page="app-home"] .app-main-card:has(.academy-product-surface) {
+  overflow: hidden;
+}
+
+@media (min-width: 1181px) {
+  body[data-page="app-home"] .academy-product-surface .academy-study-shell {
+    grid-template-columns: minmax(220px, 292px) minmax(0, 1fr) minmax(220px, 292px);
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-question-panel,
+  body[data-page="app-home"] .academy-product-surface .academy-index,
+  body[data-page="app-home"] .academy-product-surface .academy-stats-panel {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1180px) {
+  body[data-page="app-home"] .academy-product-surface,
+  body[data-page="app-home"] .academy-product-surface * {
+    box-sizing: border-box;
+  }
+
+  body[data-page="app-home"] .academy-product-surface {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-session-strip {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-session-strip b {
+    width: 100%;
+    max-width: 320px;
+    margin: .35rem 0 0;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-control-row,
+  body[data-page="app-home"] .academy-product-surface .academy-study-shell,
+  body[data-page="app-home"] .academy-product-surface .academy-stats-panel,
+  body[data-page="app-home"] .academy-product-surface .academy-actions {
+    min-width: 0;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-control-row select {
+    min-width: 0;
+    flex: 1 1 210px;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-study-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-question-panel {
+    order: 1;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-index {
+    order: 2;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-stats-panel {
+    order: 3;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  html,
+  body[data-page="app-home"] {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body[data-page="app-home"] .app-container:has(.academy-product-surface) {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 0;
+  }
+
+  body[data-page="app-home"] .app-layout:has(.academy-product-surface) {
+    display: block;
+    width: 100%;
+  }
+
+  body[data-page="app-home"] .app-content:has(.academy-product-surface),
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface),
+  body[data-page="app-home"] .app-config-grid:has(.academy-product-surface) {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > .eyebrow,
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > h1,
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > p,
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > .app-stats,
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > .app-meta-line,
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > h2,
+  body[data-page="app-home"] .app-main-card:has(.academy-product-surface) > .app-product-demo {
+    display: none;
+  }
+
+  body[data-page="app-home"] .academy-product-surface {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    gap: .85rem;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-session-strip {
+    border-radius: 0 0 18px 18px;
+    padding: .95rem 1rem 1.1rem;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-control-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-inline: 1rem;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-control-row select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body[data-page="app-home"] .academy-product-surface #academy-question-wrap {
+    padding: 0 1rem 1rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-study-shell,
+  body[data-page="app-home"] .academy-product-surface .academy-question-panel,
+  body[data-page="app-home"] .academy-product-surface .academy-index,
+  body[data-page="app-home"] .academy-product-surface .academy-stats-panel,
+  body[data-page="app-home"] .academy-product-surface .academy-side-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-question-panel {
+    padding: .95rem;
+    border-radius: 12px;
+    gap: .75rem;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-breadcrumb {
+    font-size: .78rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-card-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-card-head span {
+    min-width: 0;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-chip-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-chip-row span {
+    width: fit-content;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-question-panel h3 {
+    font-size: clamp(1.28rem, 7vw, 1.7rem);
+    line-height: 1.18;
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-media,
+  body[data-page="app-home"] .academy-product-surface .academy-source-card,
+  body[data-page="app-home"] .academy-product-surface .academy-source-line,
+  body[data-page="app-home"] .academy-product-surface .academy-written-answer,
+  body[data-page="app-home"] .academy-product-surface .academy-options,
+  body[data-page="app-home"] .academy-product-surface .academy-answer {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-written-answer textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: block;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .55rem;
+    position: static;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-actions .btn,
+  body[data-page="app-home"] .academy-product-surface .academy-actions #academy-submit {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    justify-self: stretch;
+    white-space: normal;
+    line-height: 1.15;
+    padding-inline: .65rem;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-actions #academy-submit {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-index > div:not(.academy-index-legend) {
+    display: flex;
+    gap: .45rem;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: .25rem;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-index button:not(.academy-summary-button) {
+    flex: 0 0 46px;
+    min-width: 46px;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-stats-panel {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="app-home"] .academy-product-surface .academy-performance-card {
+    grid-template-columns: 90px minmax(0, 1fr);
+  }
+}

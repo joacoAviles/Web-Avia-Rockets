@@ -592,7 +592,31 @@ async function appEnsureAcademyLoaded(force = false){
       appState.academy = { ...dashboard, student: appState.academy.student, session: appState.academy.session };
     }
   } catch (error) {
-    appState.academy = { ok:false, source:"postgres-required", banks:[], questions:[], stats:{ banks_count:0, total_questions:0, thematicas_count:0 }, error:error.message || "Academy PostgreSQL no disponible" };
+    try {
+      const [banksData, questionsData] = await Promise.all([
+        appFetch("/api/question-banks"),
+        appFetch(`/api/questions?${params.toString()}`),
+      ]);
+      appState.academy = {
+        ok: true,
+        source: questionsData.source || banksData.source || "postgres",
+        banks: Array.isArray(banksData.banks) ? banksData.banks : [],
+        questions: Array.isArray(questionsData.questions) ? questionsData.questions : [],
+        stats: banksData.stats || { banks_count: Array.isArray(banksData.banks) ? banksData.banks.length : 0, total_questions: questionsData.total || 0, thematicas_count: 0 },
+        session: { mode: appState.academyMode || "study", question_count: questionsData.count || 0, total_available: questionsData.total || 0 },
+        report_types: [
+          { value:"enunciado_confuso", label:"Enunciado confuso" },
+          { value:"respuesta_incorrecta", label:"Respuesta incorrecta" },
+          { value:"mas_de_una_correcta", label:"Hay mas de una respuesta correcta" },
+          { value:"imagen_incorrecta", label:"Imagen incorrecta" },
+          { value:"error_fuente", label:"Error en la fuente" },
+          { value:"ortografia_redaccion", label:"Ortografia o redaccion" },
+          { value:"otro", label:"Otro" },
+        ],
+      };
+    } catch (fallbackError) {
+      appState.academy = { ok:false, source:"postgres-required", banks:[], questions:[], stats:{ banks_count:0, total_questions:0, thematicas_count:0 }, error:fallbackError.message || error.message || "Academy PostgreSQL no disponible" };
+    }
   }
   const banks = Array.isArray(appState.academy?.banks) ? appState.academy.banks : [];
   if (appState.academyBank !== "all" && !banks.some((bank) => bank.bank_id === appState.academyBank)) appState.academyBank = "all";

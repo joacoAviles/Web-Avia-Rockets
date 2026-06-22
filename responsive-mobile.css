@@ -1,0 +1,100 @@
+/* AVIA Rockets mobile layer
+   Temporary split layer: same content as desktop, different rendering contract.
+   This file is intentionally broad and conservative so it can cover the whole web without redesigning every component yet. */
+
+@media (max-width: 760px) {
+  :root {
+    --avia-layout-mode: mobile;
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    min-width: 0;
+  }
+
+  .container {
+    width: min(100% - 32px, 1180px);
+    max-width: 100%;
+  }
+
+  .site-header,
+  .site-header .navbar,
+  .nav-panel,
+  main,
+  section,
+  article,
+  aside,
+  footer,
+  .hero,
+  .section,
+  .app-shell,
+  .app-container,
+  .app-layout,
+  .app-content,
+  .app-main-card {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  img,
+  svg,
+  video,
+  canvas,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  table {
+    max-width: 100%;
+  }
+
+  pre,
+  code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  a,
+  span,
+  strong,
+  small,
+  li,
+  button {
+    overflow-wrap: anywhere;
+  }
+
+  .nav-panel.is-open {
+    max-width: calc(100vw - 32px);
+  }
+
+  .btn,
+  button,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+  }
+
+  [class*="grid"],
+  [class*="cards"],
+  [class*="columns"] {
+    min-width: 0;
+  }
+}

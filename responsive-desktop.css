@@ -1,0 +1,36 @@
+/* AVIA Rockets desktop layer
+   Temporary split layer: desktop and mobile keep the same content today, but now the site has a dedicated desktop contract.
+   Applies to all public pages and the private app through header-standard.js. */
+
+@media (min-width: 761px) {
+  :root {
+    --avia-layout-mode: desktop;
+  }
+
+  body {
+    min-width: 0;
+  }
+
+  .container {
+    max-width: 1180px;
+  }
+
+  .site-header .navbar,
+  .nav-panel {
+    min-width: 0;
+  }
+
+  .hero,
+  .section,
+  .app-shell,
+  main {
+    min-width: 0;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+}

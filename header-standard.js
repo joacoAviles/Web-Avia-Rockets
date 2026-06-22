@@ -16,6 +16,23 @@ function aviaApplyStandardFavicon(){
   themeColor.content = '#071426';
 }
 
+function aviaEnsureResponsiveStyles(){
+  var styles = [
+    { id: 'avia-responsive-desktop', href: 'responsive-desktop.css?v=split-20260622-1', media: '(min-width: 761px)' },
+    { id: 'avia-responsive-mobile', href: 'responsive-mobile.css?v=split-20260622-1', media: '(max-width: 760px)' }
+  ];
+
+  styles.forEach(function(item){
+    if (document.getElementById(item.id)) return;
+    var link = document.createElement('link');
+    link.id = item.id;
+    link.rel = 'stylesheet';
+    link.href = item.href;
+    link.media = item.media;
+    document.head.appendChild(link);
+  });
+}
+
 function aviaGetLoggedUser(){
   try {
     var raw = localStorage.getItem('avia_auth_user');
@@ -84,6 +101,7 @@ function aviaBroadcastLanguage(lang){
 }
 
 function aviaApplyStandardHeader(){
+  aviaEnsureResponsiveStyles();
   aviaApplyStandardFavicon();
 
   var header = document.querySelector('header.site-header');

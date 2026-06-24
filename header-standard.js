@@ -100,6 +100,305 @@ function aviaBroadcastLanguage(lang){
   if (window.aviaApplyLanguage) window.aviaApplyLanguage(lang);
 }
 
+function aviaEscape(value){
+  return String(value || '').replace(/[&<>"]/g, function(char){
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char];
+  });
+}
+
+function aviaEnsureAppHeaderStyles(){
+  if (document.getElementById('avia-app-header-styles')) return;
+  var style = document.createElement('style');
+  style.id = 'avia-app-header-styles';
+  style.textContent = `
+    body[data-page="app-home"] .nav-panel {
+      gap: .45rem;
+      align-items: center;
+    }
+    body[data-page="app-home"] .avia-app-menu-item {
+      position: relative;
+    }
+    body[data-page="app-home"] .avia-app-menu-trigger {
+      border: 0;
+      background: transparent;
+      color: var(--muted-2);
+      cursor: pointer;
+      font: inherit;
+      font-size: .93rem;
+      font-weight: 800;
+      padding: .6rem .7rem;
+      border-radius: 999px;
+      transition: color var(--transition), background var(--transition), text-shadow var(--transition);
+    }
+    body[data-page="app-home"] .avia-app-menu-trigger:hover,
+    body[data-page="app-home"] .avia-app-menu-trigger.is-active,
+    body[data-page="app-home"] .avia-app-menu-item.is-open > .avia-app-menu-trigger {
+      color: #fff;
+      background: rgba(255,255,255,.07);
+      text-shadow: 0 0 16px rgba(10, 108, 255, .45);
+    }
+    body[data-page="app-home"] .avia-app-dropdown {
+      position: absolute;
+      top: calc(100% + .7rem);
+      left: 0;
+      min-width: 245px;
+      padding: .55rem;
+      border: 1px solid rgba(134,176,255,.22);
+      border-radius: 18px;
+      background: rgba(7,20,38,.98);
+      box-shadow: 0 24px 70px rgba(0,0,0,.35);
+      display: none;
+      z-index: 40;
+    }
+    body[data-page="app-home"] .avia-app-menu-item:hover .avia-app-dropdown,
+    body[data-page="app-home"] .avia-app-menu-item:focus-within .avia-app-dropdown,
+    body[data-page="app-home"] .avia-app-menu-item.is-open .avia-app-dropdown {
+      display: grid;
+      gap: .35rem;
+    }
+    body[data-page="app-home"] .avia-app-dropdown button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 38px minmax(0,1fr);
+      gap: .65rem;
+      align-items: center;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      padding: .55rem;
+      text-align: left;
+    }
+    body[data-page="app-home"] .avia-app-dropdown button:hover,
+    body[data-page="app-home"] .avia-app-dropdown button.is-active {
+      border-color: rgba(71,163,255,.32);
+      background: rgba(10,108,255,.13);
+    }
+    body[data-page="app-home"] .avia-app-dropdown strong {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(10,108,255,.16);
+      color: var(--primary-3);
+      font-size: .78rem;
+    }
+    body[data-page="app-home"] .avia-app-dropdown span {
+      display: grid;
+      gap: .1rem;
+      font-weight: 800;
+    }
+    body[data-page="app-home"] .avia-app-dropdown small {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    body[data-page="app-home"] .avia-app-dropdown-empty {
+      color: var(--muted);
+      font-size: .88rem;
+      padding: .7rem;
+    }
+    body[data-page="app-home"] .avia-app-settings-link {
+      border: 1px solid rgba(134,176,255,.2);
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      padding: .6rem .85rem;
+    }
+    body[data-page="app-home"] .avia-app-settings-link:hover {
+      border-color: rgba(71,163,255,.45);
+      background: rgba(10,108,255,.12);
+    }
+    body[data-page="app-home"] .avia-app-avatar-button {
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border: 1px solid rgba(134,176,255,.24);
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 0 0 3px rgba(10,108,255,.08);
+    }
+    body[data-page="app-home"] .avia-app-avatar-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    @media (max-width: 760px) {
+      body[data-page="app-home"] .nav-panel.is-open {
+        align-items: stretch;
+      }
+      body[data-page="app-home"] .avia-app-menu-item,
+      body[data-page="app-home"] .avia-app-settings-link,
+      body[data-page="app-home"] .avia-app-avatar-button {
+        width: 100%;
+      }
+      body[data-page="app-home"] .avia-app-menu-trigger,
+      body[data-page="app-home"] .avia-app-settings-link {
+        width: 100%;
+        text-align: left;
+      }
+      body[data-page="app-home"] .avia-app-dropdown {
+        position: static;
+        min-width: 0;
+        width: 100%;
+        box-shadow: none;
+        margin: .2rem 0 .55rem;
+      }
+      body[data-page="app-home"] .avia-app-avatar-button {
+        width: 52px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function aviaAppCatalog(){
+  return {
+    ops: {
+      label: 'Ops',
+      items: [
+        { view: 'causes', icon: 'LG', label: 'Legal / Causas', meta: 'Seguimiento legal', slugs: ['legal','causes','causas','legal-causas'] },
+        { view: 'technical-reviews', icon: 'RT', label: 'Revisiones Técnicas', meta: 'Flota y vencimientos', slugs: ['revision-tecnica','revisiones-tecnicas','technical-reviews','flota','fleet'] }
+      ]
+    },
+    intelligence: {
+      label: 'Intelligence',
+      items: [
+        { view: 'intelligence-dashboard', icon: 'IN', label: 'Dashboards / Datos', meta: 'Tableros y alertas', slugs: ['intelligence','data-intelligence','datos','dashboards','demand-intelligence'] }
+      ]
+    },
+    labs: {
+      label: 'Labs',
+      items: [
+        { view: 'academy', icon: 'AC', label: 'Academy', meta: 'Entrenamiento y preguntas', slugs: ['labs-academy','academy','avia-academy'] },
+        { view: 'api-lab', icon: 'API', label: 'API Lab', meta: 'Conectores internos', slugs: ['api-lab','labs-api','lab-api','labs-query'] }
+      ]
+    }
+  };
+}
+
+function aviaNormalize(value){
+  return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
+function aviaAppProductToken(product){
+  return aviaNormalize(product && (product.slug || product.product_slug || product.code || product.key || product.name || product.title));
+}
+
+function aviaAppVisibleItems(lineId){
+  var state = window.appState || {};
+  var catalog = aviaAppCatalog();
+  var line = catalog[lineId] || catalog.ops;
+  var products = Array.isArray(state.products) ? state.products : [];
+  if (!products.length) return line.items;
+  return line.items.filter(function(item){
+    var allowed = item.slugs.map(aviaNormalize);
+    return products.some(function(product){ return allowed.includes(aviaAppProductToken(product)); });
+  });
+}
+
+async function aviaAppSelectView(lineId, view){
+  if (window.appState) {
+    window.appState.selectedLine = lineId;
+    window.appState.view = view;
+  }
+  localStorage.setItem('avia_app_selected_line', lineId);
+  if (typeof window.appRenderPanel === 'function') await window.appRenderPanel();
+  setTimeout(aviaInstallAppHeaderMenu, 0);
+}
+
+async function aviaAppOpenSettings(){
+  if (window.appState) window.appState.view = 'settings';
+  if (typeof window.appRenderPanel === 'function') await window.appRenderPanel();
+  setTimeout(aviaInstallAppHeaderMenu, 0);
+}
+
+function aviaInstallAppHeaderMenu(){
+  if (document.body?.dataset?.page !== 'app-home') return;
+  var header = document.querySelector('header.site-header');
+  var nav = header && header.querySelector('.nav-panel');
+  if (!nav) return;
+  if (nav.dataset.aviaProductHeader === 'ready') return;
+
+  aviaEnsureAppHeaderStyles();
+  var catalog = aviaAppCatalog();
+  var state = window.appState || {};
+  var activeLine = state.selectedLine || localStorage.getItem('avia_app_selected_line') || 'ops';
+  var activeView = state.view || '';
+
+  function lineMarkup(lineId){
+    var line = catalog[lineId];
+    var items = aviaAppVisibleItems(lineId);
+    var buttons = items.length ? items.map(function(item){
+      var active = activeView === item.view ? ' is-active' : '';
+      return '<button class="avia-app-product-option'+ active +'" type="button" data-app-line="'+ aviaEscape(lineId) +'" data-product-view="'+ aviaEscape(item.view) +'"><strong>'+ aviaEscape(item.icon) +'</strong><span>'+ aviaEscape(item.label) +'<small>'+ aviaEscape(item.meta) +'</small></span></button>';
+    }).join('') : '<div class="avia-app-dropdown-empty">Sin opciones contratadas.</div>';
+    var active = activeLine === lineId && activeView !== 'settings' ? ' is-active' : '';
+    return '<div class="avia-app-menu-item"><button class="avia-app-menu-trigger'+ active +'" type="button" data-app-menu-trigger="'+ aviaEscape(lineId) +'">'+ aviaEscape(line.label) +'</button><div class="avia-app-dropdown">'+ buttons +'</div></div>';
+  }
+
+  nav.dataset.appHeader = 'ready';
+  nav.dataset.aviaProductHeader = 'ready';
+  nav.innerHTML = lineMarkup('ops') + lineMarkup('intelligence') + lineMarkup('labs') + '<button class="avia-app-settings-link" id="avia-app-settings-link" type="button">Configuración</button><button class="avia-app-avatar-button" id="avia-app-avatar-button" type="button" aria-label="Abrir configuración"><img src="assets/aurora-avatar.svg?v=20260623-1" alt="Aurora" /></button>';
+
+  nav.querySelectorAll('[data-app-menu-trigger]').forEach(function(button){
+    button.addEventListener('click', function(event){
+      event.preventDefault();
+      var wrapper = button.closest('.avia-app-menu-item');
+      nav.querySelectorAll('.avia-app-menu-item').forEach(function(item){
+        if (item !== wrapper) item.classList.remove('is-open');
+      });
+      if (wrapper) wrapper.classList.toggle('is-open');
+      if (window.appState) {
+        var line = button.getAttribute('data-app-menu-trigger') || 'ops';
+        window.appState.selectedLine = line;
+        localStorage.setItem('avia_app_selected_line', line);
+      }
+    });
+  });
+
+  nav.querySelectorAll('[data-product-view]').forEach(function(button){
+    button.addEventListener('click', function(event){
+      event.preventDefault();
+      aviaAppSelectView(button.getAttribute('data-app-line') || 'ops', button.getAttribute('data-product-view') || '');
+    });
+  });
+
+  nav.querySelector('#avia-app-settings-link')?.addEventListener('click', function(event){
+    event.preventDefault();
+    aviaAppOpenSettings();
+  });
+
+  nav.querySelector('#avia-app-avatar-button')?.addEventListener('click', function(event){
+    event.preventDefault();
+    aviaAppOpenSettings();
+  });
+}
+
+function aviaScheduleAppHeaderMenu(){
+  if (document.body?.dataset?.page !== 'app-home') return;
+  [0, 80, 250, 700, 1400].forEach(function(delay){
+    setTimeout(function(){
+      var nav = document.querySelector('header.site-header .nav-panel');
+      if (nav) delete nav.dataset.aviaProductHeader;
+      aviaInstallAppHeaderMenu();
+    }, delay);
+  });
+  document.addEventListener('click', function(event){
+    if (!event.target.closest('.avia-app-menu-item')) {
+      document.querySelectorAll('.avia-app-menu-item.is-open').forEach(function(item){ item.classList.remove('is-open'); });
+    }
+  });
+}
+
 function aviaApplyStandardHeader(){
   aviaEnsureResponsiveStyles();
   aviaApplyStandardFavicon();
@@ -141,7 +440,7 @@ function aviaApplyStandardHeader(){
     });
     navPanel.querySelectorAll('a, button').forEach(function(item){
       item.addEventListener('click', function(){
-        if (window.innerWidth <= 760) {
+        if (window.innerWidth <= 760 && !item.matches('[data-app-menu-trigger]')) {
           navPanel.classList.remove('is-open');
           navToggle.setAttribute('aria-expanded', 'false');
         }
@@ -161,6 +460,7 @@ function aviaApplyStandardHeader(){
 
   aviaUpdateHeaderLanguage(header, document.documentElement.lang, isLogged);
   aviaBroadcastLanguage(document.documentElement.lang);
+  aviaScheduleAppHeaderMenu();
 }
 
 if (document.readyState === 'loading') {

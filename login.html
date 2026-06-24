@@ -9,14 +9,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg" />
+<link rel="icon" type="image/svg+xml" href="assets/avia-rockets-logo.svg?v=20260623-1" />
 <meta name="theme-color" content="#071426" />
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="beta-products.css" />
 <link rel="stylesheet" href="conversion.css" />
 <style>
-.auth-hero{min-height:calc(100vh - 78px);display:flex;align-items:center;padding:7rem 0 4rem;background:radial-gradient(circle at 14% 12%,rgba(10,108,255,.22),transparent 30%),radial-gradient(circle at 88% 24%,rgba(71,163,255,.13),transparent 28%)}
-.auth-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:1.2rem;align-items:stretch}.auth-copy,.auth-card{border:1px solid rgba(134,176,255,.2);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.88);padding:1.4rem;box-shadow:0 26px 80px rgba(0,0,0,.28)}.auth-copy h1{font-size:clamp(2.2rem,5vw,4.4rem);line-height:.95;margin:.6rem 0 1rem}.auth-copy p{color:var(--muted);max-width:62ch}.auth-form{display:grid;gap:.75rem}.auth-form label{font-weight:750;color:var(--muted-2)}.auth-form input{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}.auth-status{margin:0;color:var(--muted);min-height:1.2rem;white-space:pre-line}.auth-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.86rem}.auth-row a{color:var(--primary-3);text-decoration:none}.auth-secondary-cta{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}.auth-secondary-cta span{color:var(--muted);font-size:.92rem}@media(max-width:860px){.auth-grid{grid-template-columns:1fr}.auth-hero{padding:5rem 0 3rem}}
+.auth-hero{min-height:calc(100vh - 78px);display:flex;align-items:center;padding:6rem 0 4rem;background:radial-gradient(circle at 14% 12%,rgba(10,108,255,.22),transparent 30%),radial-gradient(circle at 88% 24%,rgba(71,163,255,.13),transparent 28%)}
+.auth-grid{width:min(100%,680px);margin:0 auto;display:block}
+.auth-card{border:1px solid rgba(134,176,255,.22);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(7,20,38,.9);padding:clamp(1.25rem,4vw,2rem);box-shadow:0 26px 80px rgba(0,0,0,.28)}
+.auth-form{display:grid;gap:.85rem}
+.auth-form label{font-weight:750;color:var(--muted-2)}
+.auth-form input{width:100%;border:1px solid rgba(134,176,255,.22);border-radius:14px;background:rgba(255,255,255,.045);color:var(--text);padding:.85rem}
+.auth-status{margin:0;color:var(--muted);min-height:1.2rem;white-space:pre-line}
+.auth-row{display:flex;align-items:center;justify-content:flex-start;gap:.65rem;font-size:.9rem}
+.auth-row label{display:flex;align-items:center;gap:.5rem;color:var(--muted-2)}
+.auth-row input{width:auto;padding:0;accent-color:#0a6cff}
+@media(max-width:860px){.auth-hero{padding:5rem 0 3rem}.auth-card{border-radius:24px}}
 </style>
 </head>
 <body data-page="auth">
@@ -24,19 +33,11 @@
 <main>
 <section class="auth-hero">
   <div class="container auth-grid">
-    <div class="auth-copy">
-      <p class="eyebrow">Acceso Legal / Causas</p>
-      <h1>Entra a tu centro de control.</h1>
-      <p>Revisa tus causas activas, estados, correo resumen y módulos contratados. Si todavía no tienes cuenta, parte con 5 causas gratis.</p>
-      <div class="onboarding-steps"><article><span>1</span><strong>Crear causa</strong><p>Agrega rol, tribunal y año.</p></article><article><span>2</span><strong>Ver resultado</strong><p>Compara estado y cambios.</p></article><article><span>3</span><strong>Activar resumen</strong><p>Recibe aviso por correo.</p></article></div>
-      <div class="auth-secondary-cta"><a class="btn btn-primary" href="register.html">Crear cuenta gratis</a><span>Sin tarjeta · 5 causas iniciales</span></div>
-    </div>
-    <div class="auth-card">
-      <div class="demo-banner"><strong>Modo demo disponible</strong><span>Usa el acceso de prueba interno sólo para revisar la experiencia. Las credenciales no se muestran como texto plano en la página.</span></div>
+    <div class="auth-card" aria-label="Ingreso AVIA Rockets">
       <form class="auth-form" id="login-form">
         <label for="login-identifier">Correo</label><input id="login-identifier" type="email" autocomplete="username" placeholder="cliente@empresa.cl" required />
         <label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required />
-        <div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label><a href="register.html">Crear cuenta gratis</a></div>
+        <div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label></div>
         <button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p>
       </form>
     </div>
@@ -134,11 +135,11 @@ loginForm.addEventListener("submit", async (event) => {
   }
   loginButton.disabled = true;
   loginButton.textContent = "Entrando...";
-  setStatus("Validando usuario contra la API...");
+  setStatus("Validando acceso...");
   try {
     const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email: identifier, password }) });
     saveSession(data);
-    setStatus("Ingreso correcto. Redirigiendo a Legal / Causas...", "form-status-ok");
+    setStatus("Ingreso correcto. Redirigiendo...", "form-status-ok");
     window.location.href = getRedirectTarget();
   } catch (error) {
     localStorage.removeItem(TOKEN_KEY);

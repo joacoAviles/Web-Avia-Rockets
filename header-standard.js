@@ -347,7 +347,7 @@ function aviaInstallAppHeaderMenu(){
 
   nav.dataset.appHeader = 'ready';
   nav.dataset.aviaProductHeader = 'ready';
-  nav.innerHTML = lineMarkup('ops') + lineMarkup('intelligence') + lineMarkup('labs') + '<button class="avia-app-settings-link" id="avia-app-settings-link" type="button">Configuración</button><button class="avia-app-avatar-button" id="avia-app-avatar-button" type="button" aria-label="Abrir configuración"><img src="assets/aurora-avatar.svg?v=20260623-1" alt="Aurora" /></button>';
+  nav.innerHTML = lineMarkup('ops') + lineMarkup('intelligence') + lineMarkup('labs') + '<button class="avia-app-settings-link" id="avia-app-settings-link" type="button">Configuración</button><button class="avia-app-avatar-button" id="avia-app-avatar-button" type="button" aria-label="Abrir configuración"><img src="https://aviarockets.cl/bimi/logo.svg" alt="AVIA Rockets" /></button>';
 
   nav.querySelectorAll('[data-app-menu-trigger]').forEach(function(button){
     button.addEventListener('click', function(event){

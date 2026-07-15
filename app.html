@@ -470,29 +470,15 @@
         const item = catalog["pjud-upload"];
         appSetText("app-view-label", "Labs · Procurador");
         appSetText("app-product-title", item.title);
-        appSetText("app-product-description", item.description);
+        appSetText("app-product-description", "Sube el Excel diario de causas PJUD. AVIA lo compara contra las causas asignadas y prepara el resumen para correo.");
         appSetText("app-product-status", "Habilitado");
         appSetText("app-product-slug", item.apiSlug);
+        const statsWrap = document.querySelector(".app-stats");
+        if (statsWrap) statsWrap.style.display = "none";
         const demo = document.getElementById("app-product-demo");
         if (demo) {
-          demo.innerHTML = `<div class="app-upload-panel">
-            <img class="app-brand-mark" src="https://aviarockets.cl/bimi/logo.svg" alt="AVIA Rockets" />
-            <div class="app-config-grid">
-              <div class="app-config-row"><span>Usuario</span><strong>${appEscape(appState.user?.email || "-")}</strong></div>
-              <div class="app-config-row"><span>Endpoint</span><strong>/api/v1/labs/procurador-reports/uploads</strong></div>
-              <div class="app-config-row"><span>Formato</span><strong>Excel PJUD diario (.xlsx)</strong></div>
-            </div>
-          </div>`;
+          demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema hará la conciliación automáticamente.</span></div>`;
         }
-        const stats = document.querySelectorAll(".app-stat");
-        const labels = ["Producto", "Estado", "Destino"];
-        const values = ["PJUD", "Habilitado", "Labs"];
-        stats.forEach(function(card, index){
-          const small = card.querySelector("small");
-          const strong = card.querySelector("strong");
-          if (small) small.textContent = labels[index] || "-";
-          if (strong) strong.textContent = values[index] || "-";
-        });
         appSetText("app-config-title", "Cargar Excel de causas PJUD");
         const today = new Date().toISOString().slice(0, 10);
         const config = document.getElementById("app-product-config");
@@ -590,6 +576,8 @@
         renderHeader();
         resolveView();
         appRenderSidebar();
+        const statsWrap = document.querySelector(".app-stats");
+        if (statsWrap) statsWrap.style.display = "";
         if (appState.view === "settings") appRenderSettingsPanel();
         else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
         else if (appState.view === "academy") await appRenderAcademyPanel();

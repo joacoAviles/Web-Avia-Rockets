@@ -121,8 +121,17 @@ async function apiRequest(path, options = {}) {
 }
 
 function saveSession(data) {
-  localStorage.setItem(TOKEN_KEY, data.token);
-  localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+  const token = data.token || data.access_token;
+  const user = data.user || {
+    email: data.email,
+    full_name: data.full_name || data.name,
+    role: data.role,
+    products: data.products || [],
+    permissions: data.permissions || {}
+  };
+  if (!token) throw new Error("Login OK, pero la API no entregó token de sesión.");
+  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 loginForm.addEventListener("submit", async (event) => {

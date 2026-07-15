@@ -92,7 +92,7 @@ function appNormalizeTheme(value){ return String(value || "").normalize("NFD").r
 async function appFetch(path, options = {}){
   const headers = new Headers(options.headers || {});
   headers.set("Accept", "application/json");
-  if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (options.body && !(options.body instanceof FormData) && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   const token = appGetToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
   const response = await fetch(`${AVIA_APP_API}${path}`, { ...options, headers });
@@ -485,9 +485,10 @@ function appShowResults(data){
 
 async function appReload(){
   appState.dashboard = await appFetch("/api/dashboard");
-  appState.user = appState.dashboard?.user || appState.user;
+  const stored = appStoredUser();
+  appState.user = appState.dashboard?.user || stored || appState.user;
   appState.account = appState.dashboard?.account || null;
-  appState.products = Array.isArray(appState.dashboard?.products) ? appState.dashboard.products : [];
+  appState.products = Array.isArray(appState.dashboard?.products) ? appState.dashboard.products : (Array.isArray(appState.user?.products) ? appState.user.products : []);
   appState.causes = Array.isArray(appState.dashboard?.causes) ? appState.dashboard.causes : [];
   if (appState.view === "technical-reviews") await appEnsureReviewsLoaded(true);
   if (appState.view === "academy") await appEnsureAcademyLoaded(true);

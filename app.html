@@ -113,6 +113,32 @@
       box-shadow: 0 -9px 0 -6px currentColor, 0 9px 0 -6px currentColor, 9px 0 0 -6px currentColor, -9px 0 0 -6px currentColor;
     }
 
+    body[data-page="app-home"] .app-brand-mark {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      border-radius: 20px;
+      border: 1px solid rgba(134, 176, 255, .22);
+      background: rgba(255,255,255,.04);
+      padding: .35rem;
+      margin-bottom: 1rem;
+    }
+
+    body[data-page="app-home"] .app-upload-panel {
+      display: grid;
+      gap: 1rem;
+    }
+
+    body[data-page="app-home"] .app-upload-panel input[type="file"],
+    body[data-page="app-home"] .app-upload-panel input[type="date"] {
+      width: 100%;
+      border: 1px solid rgba(134,176,255,.22);
+      border-radius: 14px;
+      background: rgba(255,255,255,.045);
+      color: var(--text);
+      padding: .85rem;
+    }
+
     @media (max-width: 980px) {
       body[data-page="app-home"] .app-layout.is-compact {
         grid-template-columns: 1fr !important;
@@ -216,7 +242,7 @@
           eyebrow: "Línea Labs",
           title: "Labs",
           description: "Academy, conectores y herramientas internas para convertir procesos reales en productos utilizables dentro del login.",
-          products: ["academy", "api-lab"]
+          products: ["pjud-upload", "academy", "api-lab"]
         }
       };
 
@@ -257,6 +283,16 @@
           title: "AVIA Academy",
           description: "Motor de aprendizaje con fuentes verificables, reportes de error, progreso por alumno y modos de estudio."
         },
+        "pjud-upload": {
+          line: "labs",
+          icon: "PJ",
+          label: "Cargar causas PJUD",
+          apiSlug: "pjud-upload",
+          slugs: ["pjud-upload", "labs-pjud-upload", "procurador-pjud", "cargar-causas-pjud", "pjud"],
+          meta: function(){ return "Excel diario"; },
+          title: "Cargar causas PJUD",
+          description: "Sube el Excel diario del procurador. La API procesa, concilia y deja el lote listo para revisión."
+        },
         "api-lab": {
           line: "labs",
           icon: "API",
@@ -279,8 +315,33 @@
         return normalize(product?.slug || product?.product_slug || product?.code || product?.key || product?.name || product?.title);
       }
 
+      function permissionProductTokens(){
+        const fromProducts = Array.isArray(appState.products) ? appState.products.map(productToken) : [];
+        const fromUserProducts = Array.isArray(appState.user?.products) ? appState.user.products.map(productToken) : [];
+        const fromPermissions = Array.isArray(appState.user?.permissions?.products) ? appState.user.permissions.products.map(normalize) : [];
+        return [...new Set([...fromProducts, ...fromUserProducts, ...fromPermissions].filter(Boolean))];
+      }
+
+      function permissionLineTokens(){
+        const fromProducts = (Array.isArray(appState.products) ? appState.products : [])
+          .map((product) => normalize(product?.line || product?.product_line || product?.category))
+          .filter(Boolean);
+        const fromUserProducts = (Array.isArray(appState.user?.products) ? appState.user.products : [])
+          .map((product) => normalize(product?.line || product?.product_line || product?.category))
+          .filter(Boolean);
+        const fromPermissions = Array.isArray(appState.user?.permissions?.lines) ? appState.user.permissions.lines.map(normalize) : [];
+        return [...new Set([...fromProducts, ...fromUserProducts, ...fromPermissions].filter(Boolean))];
+      }
+
       function hasContractedProducts(){
-        return Array.isArray(appState.products) && appState.products.length > 0;
+        return permissionProductTokens().length > 0 || permissionLineTokens().length > 0;
+      }
+
+      function isLineAllowed(lineId){
+        if (!hasContractedProducts()) return false;
+        const lineTokens = permissionLineTokens();
+        if (lineTokens.includes(normalize(lineId))) return true;
+        return Object.keys(catalog).some((view) => catalog[view].line === lineId && isContracted(view));
       }
 
       function isContracted(view){
@@ -288,7 +349,15 @@
         const item = catalog[view];
         if (!item) return false;
         const allowed = item.slugs.map(normalize);
-        return appState.products.some(function(product){ return allowed.includes(productToken(product)); });
+        return permissionProductTokens().some(function(token){ return allowed.includes(token); });
+      }
+
+      function allowedLines(){
+        return Object.keys(lines).filter(isLineAllowed);
+      }
+
+      function firstAllowedLine(){
+        return allowedLines()[0] || "labs";
       }
 
       function itemsForLine(lineId){
@@ -310,7 +379,8 @@
 
       function resolveView(){
         if (appState.view === "settings") return;
-        const activeLine = lines[appState.selectedLine] ? appState.selectedLine : "ops";
+        if (!isLineAllowed(appState.selectedLine)) appState.selectedLine = firstAllowedLine();
+        const activeLine = lines[appState.selectedLine] ? appState.selectedLine : firstAllowedLine();
         const currentLine = lineForView(appState.view);
         if (currentLine !== activeLine) {
           const first = itemsForLine(activeLine)[0]?.[0];
@@ -335,9 +405,17 @@
         const header = document.querySelector("header.site-header");
         if (!header) return;
         const nav = header.querySelector(".nav-panel");
-        if (!nav || nav.dataset.appHeader === "ready") return;
+        if (!nav) return;
+        const lineIds = allowedLines();
+        const signature = lineIds.join("|") || "none";
+        if (nav.dataset.appHeader === "ready" && nav.dataset.allowedSignature === signature) return;
         nav.dataset.appHeader = "ready";
-        nav.innerHTML = '<button class="app-line-nav" data-app-line="ops" type="button">OPS</button><button class="app-line-nav" data-app-line="intelligence" type="button">Intelligence</button><button class="app-line-nav" data-app-line="labs" type="button">Labs</button><button class="app-config-wheel" id="app-header-settings" type="button" aria-label="Configuración"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
+        nav.dataset.allowedSignature = signature;
+        const lineButtons = lineIds.map(function(lineId){
+          const line = lines[lineId];
+          return `<button class="app-line-nav" data-app-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button>`;
+        }).join("");
+        nav.innerHTML = lineButtons + '<button class="app-config-wheel" id="app-header-settings" type="button" aria-label="Configuración"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
         nav.querySelectorAll("[data-app-line]").forEach(function(button){
           button.addEventListener("click", async function(){
             await selectLine(button.dataset.appLine || "ops");
@@ -356,7 +434,7 @@
       }
 
       async function selectLine(lineId){
-        appState.selectedLine = lines[lineId] ? lineId : "ops";
+        appState.selectedLine = lines[lineId] && isLineAllowed(lineId) ? lineId : firstAllowedLine();
         localStorage.setItem(LINE_KEY, appState.selectedLine);
         const first = itemsForLine(appState.selectedLine)[0]?.[0];
         appState.view = first || homeView(appState.selectedLine);
@@ -385,6 +463,77 @@
         const config = document.getElementById("app-product-config");
         if (config) {
           config.innerHTML = `<div class="app-config-row" data-api-hook="/api/dashboard.products"><span>Sin subproductos visibles</span><strong>No hay productos contratados para ${appEscape(line.label)}.<br><small>La navegación superior queda fija. Cuando /api/dashboard entregue productos asociados al perfil, se listarán bajo esta línea.</small></strong></div>`;
+        }
+      }
+
+      function renderPjudUploadProduct(){
+        const item = catalog["pjud-upload"];
+        appSetText("app-view-label", "Labs · Procurador");
+        appSetText("app-product-title", item.title);
+        appSetText("app-product-description", item.description);
+        appSetText("app-product-status", "Habilitado");
+        appSetText("app-product-slug", item.apiSlug);
+        const demo = document.getElementById("app-product-demo");
+        if (demo) {
+          demo.innerHTML = `<div class="app-upload-panel">
+            <img class="app-brand-mark" src="https://aviarockets.cl/bimi/logo.svg" alt="AVIA Rockets" />
+            <div class="app-config-grid">
+              <div class="app-config-row"><span>Usuario</span><strong>${appEscape(appState.user?.email || "-")}</strong></div>
+              <div class="app-config-row"><span>Endpoint</span><strong>/api/v1/labs/procurador-reports/uploads</strong></div>
+              <div class="app-config-row"><span>Formato</span><strong>Excel PJUD diario (.xlsx)</strong></div>
+            </div>
+          </div>`;
+        }
+        const stats = document.querySelectorAll(".app-stat");
+        const labels = ["Producto", "Estado", "Destino"];
+        const values = ["PJUD", "Habilitado", "Labs"];
+        stats.forEach(function(card, index){
+          const small = card.querySelector("small");
+          const strong = card.querySelector("strong");
+          if (small) small.textContent = labels[index] || "-";
+          if (strong) strong.textContent = values[index] || "-";
+        });
+        appSetText("app-config-title", "Cargar Excel de causas PJUD");
+        const today = new Date().toISOString().slice(0, 10);
+        const config = document.getElementById("app-product-config");
+        if (config) {
+          config.innerHTML = `<form class="app-config-row" id="pjud-upload-form">
+            <span>Archivo diario<br><small>Sube el Excel exportado por el procurador.</small></span>
+            <strong class="app-upload-panel">
+              <input id="pjud-report-date" name="report_date" type="date" value="${today}" required />
+              <input id="pjud-file" name="file" type="file" accept=".xlsx,.xls" required />
+              <button class="btn btn-primary" type="submit">Cargar causas PJUD</button>
+              <small>Al finalizar, la API crea un batch y deja el resultado listo para revisión.</small>
+            </strong>
+          </form>
+          <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">Sin carga en esta sesión.</strong></div>`;
+        }
+      }
+
+      async function submitPjudUpload(form){
+        const result = document.getElementById("pjud-upload-result");
+        const file = form.querySelector("#pjud-file")?.files?.[0];
+        const reportDate = form.querySelector("#pjud-report-date")?.value || new Date().toISOString().slice(0, 10);
+        if (!file) {
+          if (result) result.textContent = "Selecciona un archivo Excel.";
+          return;
+        }
+        const body = new FormData();
+        body.append("file", file);
+        body.append("report_date", reportDate);
+        if (result) result.textContent = "Cargando archivo...";
+        const token = appGetToken();
+        const response = await fetch(`${AVIA_APP_API}/api/v1/labs/procurador-reports/uploads`, {
+          method: "POST",
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          body
+        });
+        let data = null;
+        const text = await response.text();
+        try { data = text ? JSON.parse(text) : null; } catch (_) { data = null; }
+        if (!response.ok) throw new Error(data?.detail || data?.message || text || `Error API ${response.status}`);
+        if (result) {
+          result.innerHTML = `Batch creado: ${appEscape(data.batch_id || "-")}<br>Job: ${appEscape(data.job_id || "-")}<br>Estado: ${appEscape(data.status || "recibido")}`;
         }
       }
 
@@ -444,11 +593,12 @@
         if (appState.view === "settings") appRenderSettingsPanel();
         else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
         else if (appState.view === "academy") await appRenderAcademyPanel();
+        else if (appState.view === "pjud-upload") renderPjudUploadProduct();
         else if (appState.view === "intelligence-dashboard" || appState.view === "api-lab") renderPlaceholderProduct(appState.view);
         else if (String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) renderLineHome(lineForView(appState.view));
         else appRenderCausesPanel();
         appRenderSidebar();
-        if (!["intelligence-dashboard", "api-lab"].includes(appState.view) && !String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) appRenderStats();
+        if (!["intelligence-dashboard", "api-lab", "pjud-upload"].includes(appState.view) && !String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) appRenderStats();
       };
 
       document.addEventListener("click", async function(event){
@@ -457,6 +607,18 @@
           event.preventDefault();
           appState.view = productButton.dataset.productView || homeView(appState.selectedLine);
           await appRenderPanel();
+        }
+      });
+
+      document.addEventListener("submit", async function(event){
+        const form = event.target.closest("#pjud-upload-form");
+        if (!form) return;
+        event.preventDefault();
+        try {
+          await submitPjudUpload(form);
+        } catch (error) {
+          const result = document.getElementById("pjud-upload-result");
+          if (result) result.textContent = error.message || "Error cargando Excel PJUD.";
         }
       });
 

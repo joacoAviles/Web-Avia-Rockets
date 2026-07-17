@@ -477,7 +477,7 @@
         if (statsWrap) statsWrap.style.display = "none";
         const demo = document.getElementById("app-product-demo");
         if (demo) {
-          demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema hará la conciliación automáticamente.</span></div>`;
+          demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema hará la conciliación y enviará el correo automáticamente.</span></div>`;
         }
         appSetText("app-config-title", "Cargar Excel de causas PJUD");
         const today = new Date().toISOString().slice(0, 10);
@@ -489,10 +489,10 @@
               <input id="pjud-report-date" name="report_date" type="date" value="${today}" required />
               <input id="pjud-file" name="file" type="file" accept=".xlsx,.xls" required />
               <button class="btn btn-primary" type="submit">Cargar causas PJUD</button>
-              <small>Al finalizar, la API crea un batch y deja el resultado listo para revisión.</small>
+              <small>Al finalizar, AVIA procesa el archivo y envía el informe automáticamente.</small>
             </strong>
           </form>
-          <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">Sin carga en esta sesión.</strong></div>`;
+          <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">OK o ERROR aparecerá aquí.</strong></div>`;
         }
       }
 
@@ -507,7 +507,7 @@
         const body = new FormData();
         body.append("file", file);
         body.append("report_date", reportDate);
-        if (result) result.textContent = "Cargando archivo...";
+        if (result) result.textContent = "Procesando...";
         const token = appGetToken();
         const response = await fetch(`${AVIA_APP_API}/api/v1/labs/procurador-reports/uploads`, {
           method: "POST",
@@ -519,7 +519,7 @@
         try { data = text ? JSON.parse(text) : null; } catch (_) { data = null; }
         if (!response.ok) throw new Error(data?.detail || data?.message || text || `Error API ${response.status}`);
         if (result) {
-          result.innerHTML = `Batch creado: ${appEscape(data.batch_id || "-")}<br>Job: ${appEscape(data.job_id || "-")}<br>Estado: ${appEscape(data.status || "recibido")}`;
+          result.textContent = "OK";
         }
       }
 
@@ -606,7 +606,7 @@
           await submitPjudUpload(form);
         } catch (error) {
           const result = document.getElementById("pjud-upload-result");
-          if (result) result.textContent = error.message || "Error cargando Excel PJUD.";
+          if (result) result.textContent = `ERROR${error.message ? `: ${error.message}` : ""}`;
         }
       });
 

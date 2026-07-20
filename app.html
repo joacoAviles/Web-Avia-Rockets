@@ -211,8 +211,8 @@
 
   <footer class="site-footer footer-clean"></footer>
   <script src="api-config.js"></script>
-  <script src="header-standard.js?v=permissions-20260720-3"></script>
-  <script src="app-home.js?v=legal-causas-20260720-2"></script>
+  <script src="header-standard.js?v=permissions-20260720-4"></script>
+  <script src="app-home.js?v=legal-causas-20260720-3"></script>
   <script>
     (function(){
       if (typeof appState === "undefined") return;
@@ -413,14 +413,24 @@
         if (nav.dataset.appHeader === "ready" && nav.dataset.allowedSignature === signature) return;
         nav.dataset.appHeader = "ready";
         nav.dataset.allowedSignature = signature;
+        nav.dataset.aviaProductHeader = "ready";
         const lineButtons = lineIds.map(function(lineId){
           const line = lines[lineId];
-          return `<button class="app-line-nav" data-app-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button>`;
+          const options = itemsForLine(lineId).map(function(item){
+            return `<button class="avia-app-product-option" type="button" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`;
+          }).join("");
+          return `<div class="avia-app-menu-item"><button class="app-line-nav avia-app-menu-trigger" data-header-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button><div class="avia-app-dropdown">${options}</div></div>`;
         }).join("");
         nav.innerHTML = lineButtons + '<button class="app-config-wheel" id="app-header-settings" type="button" aria-label="Configuración"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
-        nav.querySelectorAll("[data-app-line]").forEach(function(button){
+        nav.querySelectorAll("[data-header-line]").forEach(function(button){
           button.addEventListener("click", async function(){
-            await selectLine(button.dataset.appLine || "ops");
+            await selectLine(button.dataset.headerLine || "ops");
+          });
+        });
+        nav.querySelectorAll("[data-header-product]").forEach(function(button){
+          button.addEventListener("click", async function(){
+            appState.view = button.dataset.headerProduct || "causes";
+            await appRenderPanel();
           });
         });
         nav.querySelector("#app-header-settings")?.addEventListener("click", async function(){

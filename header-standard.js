@@ -325,7 +325,7 @@ async function aviaAppOpenSettings(){
 }
 
 function aviaInstallAppHeaderMenu(){
-  if (document.body?.dataset?.page !== 'app-home') return;
+  if (document.body?.dataset?.page === 'app-home') return;
   var header = document.querySelector('header.site-header');
   var nav = header && header.querySelector('.nav-panel');
   if (!nav) return;

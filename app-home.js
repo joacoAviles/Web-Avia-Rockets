@@ -86,6 +86,8 @@ function appClearSession(){ localStorage.removeItem(AVIA_TOKEN_KEY); localStorag
 function appStoredUser(){ try { return JSON.parse(localStorage.getItem(AVIA_USER_KEY) || "null"); } catch (_) { return null; } }
 function appSetText(id, value){ const node = document.getElementById(id); if (node) node.textContent = value ?? "-"; }
 function appEscape(value){ return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+function appUniqueList(value){ return [...new Set(String(value || "").split(",").map((item) => item.trim()).filter(Boolean))].join(", "); }
+function appStatusLabel(value){ const status = String(value || "").toLowerCase(); if (status === "active") return "Activa"; if (status === "paused") return "Pausada"; return value || "-"; }
 function appBool(value){ return value ? "Activado" : "Desactivado"; }
 function appStatus(value){ return ({active:"Activa", inactive:"Pausada", all:"Todas"}[value] || value || "-"); }
 function appPaid(account){ return account?.subscription?.is_paid ? "Pagado" : "No pagado"; }
@@ -232,7 +234,7 @@ function appFilteredCauses(){
     if (appState.legalFilters.stage !== "all" && (cause.latest_stage || cause.latest_procedure || "") !== appState.legalFilters.stage) return false;
     if (appState.legalFilters.court !== "all" && cause.court !== appState.legalFilters.court) return false;
     if (appState.legalFilters.lawyer !== "all" && cause.assigned_lawyer !== appState.legalFilters.lawyer) return false;
-    if (appState.legalFilters.visibility !== "all" && cause.visibility_label !== appState.legalFilters.visibility) return false;
+    if (appState.legalFilters.visibility !== "all" && appUniqueList(cause.visibility_label) !== appState.legalFilters.visibility) return false;
     if (appState.legalFilters.emailGroup !== "all" && cause.email_group_id !== appState.legalFilters.emailGroup) return false;
     if (!q) return true;
     return [cause.code, cause.title, cause.court, cause.assigned_lawyer, cause.visibility_label, cause.email_group, cause.latest_movement].some((value) => String(value || "").toLowerCase().includes(q));
@@ -254,9 +256,9 @@ function appLegalTableHtml(){
     <td>${cause.title ? `<strong>${appEscape(cause.title)}</strong>` : ""}<small>${appEscape(cause.code)}</small></td>
     <td>${appEscape(cause.court || "-")}</td>
     <td>${appEscape(cause.assigned_lawyer || "-")}</td>
-    <td>${appEscape(cause.visibility_label || "-")}</td>
+    <td>${appEscape(appUniqueList(cause.visibility_label) || "-")}</td>
     <td>${appEscape(cause.email_group || "-")}</td>
-    <td><span class="legal-stage">${appEscape(cause.latest_stage || cause.latest_procedure || cause.status || "-")}</span><small>${cause.latest_movement ? appEscape(cause.latest_movement) : "Sin movimientos"}</small></td>
+    <td><span class="legal-stage">${appEscape((cause.latest_stage || cause.latest_procedure) || appStatusLabel(cause.user_status || cause.status))}</span><small>${cause.latest_movement ? appEscape(cause.latest_movement) : "Sin movimientos"}</small></td>
   </tr>`).join("")}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
 }
 
@@ -578,6 +580,9 @@ async function appReload(){
       causes,
       legal_catalogs: { lawyers: [], visibilityGroups: [], emailGroups: [], books: [] },
     };
+  }
+  if (Array.isArray(appState.dashboard?.causes)) {
+    appState.dashboard.causes = appState.dashboard.causes.map((cause) => ({ ...cause, visibility_label: appUniqueList(cause.visibility_label) }));
   }
   appState.legalCatalogs = appState.dashboard?.legal_catalogs || { lawyers: [], visibilityGroups: [], emailGroups: [], books: [] };
   try {

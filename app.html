@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://aviarockets.cl/app.html" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="beta-products.css" />
-  <link rel="stylesheet" href="app-home.css?v=labs-academy-20260621-3" />
+  <link rel="stylesheet" href="app-home.css?v=legal-causas-20260719-4" />
   <link rel="stylesheet" href="academy-responsive.css?v=academy-mobile-20260622-1" />
   <style>
     body[data-page="app-home"] .app-sidebar-toggle,
@@ -211,8 +211,8 @@
 
   <footer class="site-footer footer-clean"></footer>
   <script src="api-config.js"></script>
-  <script src="header-standard.js"></script>
-  <script src="app-home.js?v=permissions-pjud-20260714-1"></script>
+  <script src="header-standard.js?v=permissions-20260719-2"></script>
+  <script src="app-home.js?v=legal-causas-20260719-5"></script>
   <script>
     (function(){
       if (typeof appState === "undefined") return;
@@ -316,17 +316,19 @@
       }
 
       function permissionProductTokens(){
-        const fromProducts = Array.isArray(appState.products) ? appState.products.map(productToken) : [];
-        const fromUserProducts = Array.isArray(appState.user?.products) ? appState.user.products.map(productToken) : [];
+        const enabled = (product) => product?.enabled !== false && Number(product?.enabled) !== 0;
+        const fromProducts = Array.isArray(appState.products) ? appState.products.filter(enabled).map(productToken) : [];
+        const fromUserProducts = Array.isArray(appState.user?.products) ? appState.user.products.filter(enabled).map(productToken) : [];
         const fromPermissions = Array.isArray(appState.user?.permissions?.products) ? appState.user.permissions.products.map(normalize) : [];
-        return [...new Set([...fromProducts, ...fromUserProducts, ...fromPermissions].filter(Boolean))];
+        const flagProducts = appState.user?.legal_view_enabled === true || Number(appState.user?.legal_view_enabled) === 1 ? ["legal"] : [];
+        return [...new Set([...fromProducts, ...fromUserProducts, ...fromPermissions, ...flagProducts].filter(Boolean))];
       }
 
       function permissionLineTokens(){
-        const fromProducts = (Array.isArray(appState.products) ? appState.products : [])
+        const fromProducts = (Array.isArray(appState.products) ? appState.products : []).filter((product) => product?.enabled !== false && Number(product?.enabled) !== 0)
           .map((product) => normalize(product?.line || product?.product_line || product?.category))
           .filter(Boolean);
-        const fromUserProducts = (Array.isArray(appState.user?.products) ? appState.user.products : [])
+        const fromUserProducts = (Array.isArray(appState.user?.products) ? appState.user.products : []).filter((product) => product?.enabled !== false && Number(product?.enabled) !== 0)
           .map((product) => normalize(product?.line || product?.product_line || product?.category))
           .filter(Boolean);
         const fromPermissions = Array.isArray(appState.user?.permissions?.lines) ? appState.user.permissions.lines.map(normalize) : [];
@@ -584,7 +586,7 @@
         else if (appState.view === "pjud-upload") renderPjudUploadProduct();
         else if (appState.view === "intelligence-dashboard" || appState.view === "api-lab") renderPlaceholderProduct(appState.view);
         else if (String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) renderLineHome(lineForView(appState.view));
-        else appRenderCausesPanel();
+        else appRenderLegalPanel();
         appRenderSidebar();
         if (!["intelligence-dashboard", "api-lab", "pjud-upload"].includes(appState.view) && !String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) appRenderStats();
       };

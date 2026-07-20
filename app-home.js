@@ -72,6 +72,10 @@ const appState = {
   vehicleFilter: "all",
   statusFilter: "all",
   search: "",
+  legalTab: "causes",
+  legalCatalogs: { lawyers: [], visibilityGroups: [], emailGroups: [], books: [] },
+  legalFilters: { lawyer: "all", visibility: "all", emailGroup: "all" },
+  legalPage: 1,
   vehicleSearch: "",
   view: "causes",
 };
@@ -171,14 +175,14 @@ function appRenderStats(){
 
 function appProductItems(){
   const products = Array.isArray(appState.products) ? appState.products : [];
-  const hasLegal = products.some((p) => p.slug === "legal");
+  const hasLegal = products.some((p) => p.slug === "legal" && p.enabled !== false && Number(p.enabled) !== 0);
   const hasReviews = products.some((p) => p.slug === "revision-tecnica");
   const hasAcademy = products.some((p) => ["labs-academy", "academy"].includes(p.slug));
   const academyQuestions = appAcademyStats().total_questions || 0;
   const base = [];
-  if (hasLegal || !products.length) base.push(["causes", "Legal / Causas", `${appState.causes.length} causas`, "LG"]);
-  if (hasReviews || true) base.push(["technical-reviews", "Revisiones Técnicas", `${appState.vehicles.length || 0} autos`, "RT"]);
-  if (hasAcademy || true) base.push(["academy", "Labs / Academy", `${academyQuestions} preguntas`, "AC"]);
+  if (hasLegal) base.push(["causes", "Legal / Causas", `${appState.causes.length} causas`, "LG"]);
+  if (hasReviews) base.push(["technical-reviews", "Revisiones Técnicas", `${appState.vehicles.length || 0} autos`, "RT"]);
+  if (hasAcademy) base.push(["academy", "Labs / Academy", `${academyQuestions} preguntas`, "AC"]);
   base.push(["settings", "Configuración", "Cuenta y preferencias", "CF"]);
   return base;
 }
@@ -224,9 +228,51 @@ function appFilteredCauses(){
   const q = appState.search.trim().toLowerCase();
   return appState.causes.filter((cause) => {
     if (appState.statusFilter !== "all" && cause.user_status !== appState.statusFilter) return false;
+    if (appState.legalFilters.lawyer !== "all" && cause.lawyer_id !== appState.legalFilters.lawyer) return false;
+    if (appState.legalFilters.visibility !== "all" && cause.visibility_group_id !== appState.legalFilters.visibility) return false;
+    if (appState.legalFilters.emailGroup !== "all" && cause.email_group_id !== appState.legalFilters.emailGroup) return false;
     if (!q) return true;
-    return [cause.code, cause.title, cause.court].some((value) => String(value || "").toLowerCase().includes(q));
+    return [cause.code, cause.title, cause.court, cause.latest_movement].some((value) => String(value || "").toLowerCase().includes(q));
   });
+}
+
+function appCatalogOptions(items, selected, label = "Seleccionar"){
+  return `<option value="">${appEscape(label)}</option>${items.map((item) => `<option value="${appEscape(item.id)}" ${item.id === selected ? "selected" : ""}>${appEscape(item.name)}${item.email ? ` · ${appEscape(item.email)}` : ""}</option>`).join("")}`;
+}
+
+function appLegalTableHtml(){
+  const filtered = appFilteredCauses();
+  const perPage = 20;
+  const pages = Math.max(1, Math.ceil(filtered.length / perPage));
+  if (appState.legalPage > pages) appState.legalPage = pages;
+  const causes = filtered.slice((appState.legalPage - 1) * perPage, appState.legalPage * perPage);
+  const catalogs = appState.legalCatalogs;
+  if (!causes.length) return `<div class="legal-empty"><strong>No encontramos causas</strong><span>Prueba con otros términos o limpia los filtros.</span></div>`;
+  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Código</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Último movimiento</th></tr></thead><tbody>${causes.map((cause) => `<tr>
+    <td><strong>${appEscape(cause.title)}</strong><small>${appEscape(cause.code)}</small></td>
+    <td>${appEscape(cause.court || "Sin juzgado informado")}</td>
+    <td><select aria-label="Abogado de ${appEscape(cause.code)}" data-cause-field="lawyer_id" data-cause-id="${cause.id}">${appCatalogOptions(catalogs.lawyers, cause.lawyer_id, "Sin asignar")}</select></td>
+    <td><select aria-label="Visibilidad de ${appEscape(cause.code)}" data-cause-field="visibility_group_id" data-cause-id="${cause.id}">${appCatalogOptions(catalogs.visibilityGroups, cause.visibility_group_id, "Sin grupo")}</select></td>
+    <td><select aria-label="Grupo de correo de ${appEscape(cause.code)}" data-cause-field="email_group_id" data-cause-id="${cause.id}">${appCatalogOptions(catalogs.emailGroups, cause.email_group_id, "Sin grupo")}</select></td>
+    <td><span class="legal-movement${cause.last_has_changes ? " has-change" : ""}">${appEscape(cause.latest_movement || cause.last_result || "Sin movimientos")}</span><small>${appEscape(cause.latest_book || "Libro no informado")} · ${appEscape(appFormatDate(cause.last_checked_at))}</small></td>
+  </tr>`).join("")}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
+}
+
+function appLegalSummaryHtml(){
+  const catalogs = appState.legalCatalogs;
+  const total = appState.causes.length;
+  const active = appState.causes.filter((cause) => cause.user_status === "active").length;
+  const changed = appState.causes.filter((cause) => cause.last_has_changes).length;
+  const reviewed = appState.causes.filter((cause) => cause.last_checked_at).length;
+  const lawyers = catalogs.lawyers.map((lawyer) => {
+    const rows = appState.causes.filter((cause) => cause.lawyer_id === lawyer.id);
+    const progress = rows.length ? Math.round((rows.filter((cause) => cause.last_checked_at).length / rows.length) * 100) : 0;
+    return `<tr><td><strong>${appEscape(lawyer.name)}</strong></td><td>${rows.length}</td><td>${rows.filter((cause) => cause.user_status === "active").length}</td><td>${rows.filter((cause) => cause.last_has_changes).length}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progress}% revisadas</small></td></tr>`;
+  }).join("");
+  const totalProgress = total ? Math.round(reviewed / total * 100) : 0;
+  return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong><span>Portafolio completo</span></article><article><small>En tramitación</small><strong>${active}</strong><span>${total ? Math.round(active / total * 100) : 0}% del total</span></article><article><small>Con movimiento reciente</small><strong>${changed}</strong><span>Requieren atención</span></article><article><small>Revisadas</small><strong>${reviewed}</strong><span>Con información disponible</span></article></div>
+    <section class="legal-overview"><div><p class="eyebrow">Avance general</p><h3>${totalProgress}% de causas revisadas</h3><p>Seguimiento consolidado según el último movimiento registrado en los libros disponibles.</p></div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div></section>
+    <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Carga y avance</p><h3>Resumen por abogado</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Causas</th><th>Activas</th><th>Movimientos</th><th>Avance</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>`;
 }
 
 function appCauseRows(){
@@ -245,6 +291,7 @@ function appCauseRows(){
 }
 
 function appRenderCausesPanel(){
+  return appRenderLegalPanel();
   appSetText("app-view-label", "Producto Legal");
   appSetText("app-product-title", "Legal / Causas");
   appSetText("app-product-description", "Agrega, pausa, reactiva, busca y carga causas para el seguimiento automático.");
@@ -260,6 +307,22 @@ function appRenderCausesPanel(){
     <form class="app-config-row" id="cause-add-form"><span>Agregar causa</span><strong class="app-form-inline app-cause-add-inline"><input name="code" required placeholder="C-5351-2026" /><input name="court" placeholder="Tribunal" /><input name="title" placeholder="Título o materia" /><button class="btn btn-primary" type="submit" data-cause-add-button onclick="window.appSubmitCauseAdd && window.appSubmitCauseAdd(event)">Agregar</button></strong></form>
     <details class="app-config-row"><summary><strong>Carga masiva</strong></summary><form id="cause-bulk-form"><textarea name="bulk" rows="6" placeholder="Una causa por línea. Ejemplo: C-5351-2026 | 29º Juzgado Civil de Santiago"></textarea><br><button class="btn btn-primary" type="submit">Cargar causas</button></form></details>
     <div id="cause-action-output" class="app-query-output" style="display:none"></div><div id="cause-list-rows">${appCauseRows()}</div>`;
+  appBindControls();
+}
+
+function appRenderLegalPanel(){
+  appSetText("app-view-label", "Legal");
+  appSetText("app-product-title", appState.legalTab === "summary" ? "Resumen" : "Causas");
+  appSetText("app-product-description", appState.legalTab === "summary" ? "Una vista clara del avance general y la gestión de cada abogado." : "Consulta y administra todas tus causas desde un solo lugar.");
+  appSetText("app-product-status", appBool(appState.dashboard?.stats?.daily_summary_email_enabled));
+  appSetText("app-product-slug", "legal");
+  const demo = document.getElementById("app-product-demo");
+  if (demo) demo.innerHTML = `<nav class="legal-tabs" aria-label="Secciones legales"><button type="button" data-legal-tab="summary" class="${appState.legalTab === "summary" ? "is-active" : ""}">Resumen</button><button type="button" data-legal-tab="causes" class="${appState.legalTab === "causes" ? "is-active" : ""}">Causas</button></nav>`;
+  appSetText("app-config-title", appState.legalTab === "summary" ? "Estado de los juicios" : `${appFilteredCauses().length} causas`);
+  const config = document.getElementById("app-product-config");
+  if (!config) return;
+  const filterOptions = (items, selected) => items.map((item) => `<option value="${appEscape(item.id)}" ${item.id === selected ? "selected" : ""}>${appEscape(item.name)}</option>`).join("");
+  config.innerHTML = appState.legalTab === "summary" ? appLegalSummaryHtml() : `<div class="legal-toolbar"><label class="legal-search"><span>Buscar</span><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Causa, código, juzgado o movimiento…" /></label><label><span>Abogado</span><select data-legal-filter="lawyer"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.lawyers, appState.legalFilters.lawyer)}</select></label><label><span>Quién puede ver</span><select data-legal-filter="visibility"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.visibilityGroups, appState.legalFilters.visibility)}</select></label><label><span>Grupo de correo</span><select data-legal-filter="emailGroup"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.emailGroups, appState.legalFilters.emailGroup)}</select></label></div><div id="cause-action-output" class="app-query-output" style="display:none"></div><div id="cause-list-rows">${appLegalTableHtml()}</div>`;
   appBindControls();
 }
 
@@ -462,7 +525,7 @@ async function appRenderPanel(){
   if (appState.view === "settings") appRenderSettingsPanel();
   else if (appState.view === "technical-reviews") await appRenderTechnicalReviewsPanel();
   else if (appState.view === "academy") await appRenderAcademyPanel();
-  else appRenderCausesPanel();
+  else appRenderLegalPanel();
   appRenderSidebar();
   appRenderStats();
 }
@@ -484,7 +547,36 @@ function appShowResults(data){
 }
 
 async function appReload(){
-  appState.dashboard = await appFetch("/api/dashboard");
+  try {
+    appState.dashboard = await appFetch("/api/dashboard");
+  } catch (legacyError) {
+    const [user, legalCauses] = await Promise.all([
+      appFetch("/api/v1/auth/me"),
+      appFetch("/api/v1/legal/causes"),
+    ]);
+    const stored = appStoredUser() || {};
+    const sourceCauses = Array.isArray(legalCauses) ? legalCauses : (Array.isArray(legalCauses?.items) ? legalCauses.items : []);
+    const causes = sourceCauses.map((cause) => ({
+      ...cause,
+      code: cause.code || cause.rol,
+      court: cause.court || cause.tribunal,
+      title: cause.title || cause.party || cause.competencia || cause.tipo_causa,
+      latest_movement: cause.latest_movement || cause.last_movement || null,
+      last_result: cause.last_result || null,
+      last_checked_at: cause.last_checked_at || cause.updated_at || cause.updatedAt || null,
+    }));
+    appState.dashboard = {
+      user: { ...stored, ...user },
+      products: Array.isArray(stored.products) ? stored.products : [],
+      causes,
+      legal_catalogs: { lawyers: [], visibilityGroups: [], emailGroups: [], books: [] },
+    };
+  }
+  appState.legalCatalogs = appState.dashboard?.legal_catalogs || { lawyers: [], visibilityGroups: [], emailGroups: [], books: [] };
+  try {
+    const catalogs = await appFetch("/api/causes/catalogs/options");
+    if (catalogs && typeof catalogs === "object") appState.legalCatalogs = catalogs;
+  } catch (_) {}
   const stored = appStoredUser();
   appState.user = appState.dashboard?.user || stored || appState.user;
   appState.account = appState.dashboard?.account || null;
@@ -897,11 +989,27 @@ function appBindAcademyControls(){
 }
 
 function appBindControls(){
+  document.querySelectorAll("[data-legal-page]").forEach((button) => button.addEventListener("click", () => { appState.legalPage = Number(button.dataset.legalPage || 1); appRenderLegalPanel(); }));
+  document.querySelectorAll("[data-legal-tab]").forEach((button) => button.addEventListener("click", async () => { appState.legalTab = button.dataset.legalTab || "causes"; await appRenderPanel(); }));
+  document.querySelectorAll("[data-legal-filter]").forEach((select) => select.addEventListener("change", () => { appState.legalFilters[select.dataset.legalFilter] = select.value || "all"; appState.legalPage = 1; appRenderLegalPanel(); }));
+  document.querySelectorAll("[data-cause-field]").forEach((select) => select.addEventListener("change", async () => {
+    const previous = appState.causes.find((cause) => cause.id === select.dataset.causeId)?.[select.dataset.causeField] || "";
+    select.disabled = true;
+    try {
+      await appFetch(`/api/causes/${select.dataset.causeId}`, { method:"PATCH", body:JSON.stringify({ [select.dataset.causeField]: select.value || null }) });
+      await appReload();
+      appShow("Asignación actualizada.");
+    } catch (error) {
+      select.value = previous;
+      select.disabled = false;
+      appShow(error.message || "No se pudo actualizar la causa.", true);
+    }
+  }));
   document.querySelectorAll("[data-product-view]").forEach((button) => button.addEventListener("click", async () => { appState.view = button.dataset.productView || "causes"; await appRenderPanel(); }));
   document.querySelectorAll("[data-cause-filter]").forEach((button) => button.addEventListener("click", () => { appState.view = "causes"; appState.statusFilter = button.dataset.causeFilter || "all"; appRenderPanel(); }));
   document.querySelectorAll("[data-vehicle-filter]").forEach((button) => button.addEventListener("click", () => { appState.view = "technical-reviews"; appState.vehicleFilter = button.dataset.vehicleFilter || "all"; appRenderPanel(); }));
   document.querySelectorAll("[data-academy-theme]").forEach((button) => button.addEventListener("click", async () => { appState.view = "academy"; appState.academyTheme = button.dataset.academyTheme || "all"; appState.academyQuestionIndex = 0; appState.academyAnswerVisible = false; await appRenderPanel(); }));
-  document.getElementById("cause-search-input")?.addEventListener("input", (event) => { appState.search = event.target.value || ""; const rows = document.getElementById("cause-list-rows"); if (rows) rows.innerHTML = appCauseRows(); appBindRowActions(); });
+  document.getElementById("cause-search-input")?.addEventListener("input", (event) => { appState.search = event.target.value || ""; appState.legalPage = 1; const rows = document.getElementById("cause-list-rows"); if (rows) rows.innerHTML = appLegalTableHtml(); appBindControls(); });
   document.getElementById("vehicle-search-input")?.addEventListener("input", (event) => { appState.vehicleSearch = event.target.value || ""; const rows = document.getElementById("vehicle-list-rows"); if (rows) rows.innerHTML = appVehicleRows(); appBindVehicleActions(); });
   document.getElementById("cause-add-form")?.addEventListener("submit", async (event) => { event.preventDefault(); try { await appSubmitCauseForm(event.currentTarget); } catch (error) { appShow(error.message || "Error agregando causa.", true); } });
   document.getElementById("vehicle-add-form")?.addEventListener("submit", async (event) => { event.preventDefault(); try { await appSubmitVehicleForm(event.currentTarget); } catch (error) { appShow(error.message || "Error agregando auto.", true); } });

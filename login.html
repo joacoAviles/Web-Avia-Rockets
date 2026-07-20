@@ -120,6 +120,18 @@ async function apiRequest(path, options = {}) {
   throw new Error(`No se pudo conectar con la API.\n${errors.join("\n")}`);
 }
 
+async function loginRequest(identifier, password) {
+  try {
+    return await apiRequest("/api/v1/auth/login", { method: "POST", body: JSON.stringify({ email: identifier, password }) });
+  } catch (primaryError) {
+    try {
+      return await apiRequest("/api/login", { method: "POST", body: JSON.stringify({ username: identifier, password }) });
+    } catch (sqlError) {
+      throw new Error(`${primaryError.message}\n${sqlError.message}`);
+    }
+  }
+}
+
 function saveSession(data) {
   const token = data.token || data.access_token;
   const user = data.user || {
@@ -146,7 +158,7 @@ loginForm.addEventListener("submit", async (event) => {
   loginButton.textContent = "Entrando...";
   setStatus("Validando acceso...");
   try {
-    const data = await apiRequest("/api/auth/login", { method: "POST", body: JSON.stringify({ email: identifier, password }) });
+    const data = await loginRequest(identifier, password);
     saveSession(data);
     setStatus("Ingreso correcto. Redirigiendo...", "form-status-ok");
     window.location.href = getRedirectTarget();

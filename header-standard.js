@@ -298,10 +298,13 @@ function aviaAppVisibleItems(lineId){
   var catalog = aviaAppCatalog();
   var line = catalog[lineId] || catalog.ops;
   var products = Array.isArray(state.products) ? state.products : [];
-  if (!products.length) return line.items;
+  if (!products.length) return [];
   return line.items.filter(function(item){
     var allowed = item.slugs.map(aviaNormalize);
-    return products.some(function(product){ return allowed.includes(aviaAppProductToken(product)); });
+    return products.some(function(product){
+      var enabled = product && product.enabled;
+      return enabled !== false && Number(enabled) !== 0 && allowed.includes(aviaAppProductToken(product));
+    });
   });
 }
 

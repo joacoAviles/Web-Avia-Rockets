@@ -1383,3 +1383,8 @@
     grid-template-columns: 96px 1fr;
   }
 }
+.is-legal-view #app-product-description,
+.is-legal-view .app-stats,
+.is-legal-view .app-meta-line {
+  display: none;
+}

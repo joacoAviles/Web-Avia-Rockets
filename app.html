@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://aviarockets.cl/app.html" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="beta-products.css" />
-  <link rel="stylesheet" href="app-home.css?v=legal-causas-20260719-4" />
+  <link rel="stylesheet" href="app-home.css?v=legal-causas-20260720-1" />
   <link rel="stylesheet" href="academy-responsive.css?v=academy-mobile-20260622-1" />
   <style>
     body[data-page="app-home"] .app-sidebar-toggle,
@@ -212,7 +212,7 @@
   <footer class="site-footer footer-clean"></footer>
   <script src="api-config.js"></script>
   <script src="header-standard.js?v=permissions-20260719-2"></script>
-  <script src="app-home.js?v=legal-causas-20260719-5"></script>
+  <script src="app-home.js?v=legal-causas-20260720-1"></script>
   <script>
     (function(){
       if (typeof appState === "undefined") return;
@@ -577,6 +577,7 @@
       appRenderPanel = async function(){
         renderHeader();
         resolveView();
+        document.body.classList.toggle("is-legal-view", appState.view === "causes");
         appRenderSidebar();
         const statsWrap = document.querySelector(".app-stats");
         if (statsWrap) statsWrap.style.display = "";

@@ -74,8 +74,9 @@ const appState = {
   search: "",
   legalTab: "summary",
   legalCatalogs: { lawyers: [], visibilityGroups: [], emailGroups: [], books: [] },
-  legalFilters: { lawyer: "all", visibility: "all", emailGroup: "all" },
+  legalFilters: { status: "all", stage: "all", court: "all", lawyer: "all", visibility: "all", emailGroup: "all" },
   legalPage: 1,
+  legalPageSize: 25,
   vehicleSearch: "",
   view: "causes",
 };
@@ -227,12 +228,14 @@ function appSummaryHtml(){
 function appFilteredCauses(){
   const q = appState.search.trim().toLowerCase();
   return appState.causes.filter((cause) => {
-    if (appState.statusFilter !== "all" && cause.user_status !== appState.statusFilter) return false;
+    if (appState.legalFilters.status !== "all" && cause.user_status !== appState.legalFilters.status) return false;
+    if (appState.legalFilters.stage !== "all" && (cause.latest_stage || cause.latest_procedure || "") !== appState.legalFilters.stage) return false;
+    if (appState.legalFilters.court !== "all" && cause.court !== appState.legalFilters.court) return false;
     if (appState.legalFilters.lawyer !== "all" && cause.assigned_lawyer !== appState.legalFilters.lawyer) return false;
     if (appState.legalFilters.visibility !== "all" && cause.visibility_label !== appState.legalFilters.visibility) return false;
     if (appState.legalFilters.emailGroup !== "all" && cause.email_group_id !== appState.legalFilters.emailGroup) return false;
     if (!q) return true;
-    return [cause.code, cause.title, cause.court, cause.latest_movement].some((value) => String(value || "").toLowerCase().includes(q));
+    return [cause.code, cause.title, cause.court, cause.assigned_lawyer, cause.visibility_label, cause.email_group, cause.latest_movement].some((value) => String(value || "").toLowerCase().includes(q));
   });
 }
 
@@ -242,37 +245,36 @@ function appCatalogOptions(items, selected, label = "Seleccionar"){
 
 function appLegalTableHtml(){
   const filtered = appFilteredCauses();
-  const perPage = 20;
+  const perPage = appState.legalPageSize;
   const pages = Math.max(1, Math.ceil(filtered.length / perPage));
   if (appState.legalPage > pages) appState.legalPage = pages;
   const causes = filtered.slice((appState.legalPage - 1) * perPage, appState.legalPage * perPage);
-  const catalogs = appState.legalCatalogs;
-  if (!causes.length) return `<div class="legal-empty"><strong>No encontramos causas</strong><span>Prueba con otros términos o limpia los filtros.</span></div>`;
-  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Código</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Último movimiento</th></tr></thead><tbody>${causes.map((cause) => `<tr>
-    <td><strong>${appEscape(cause.title)}</strong><small>${appEscape(cause.code)}</small></td>
-    <td>${appEscape(cause.court || "Sin juzgado informado")}</td>
+  if (!causes.length) return `<div class="legal-empty"><strong>Sin causas para estos filtros</strong></div>`;
+  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Código</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${causes.map((cause) => `<tr>
+    <td>${cause.title ? `<strong>${appEscape(cause.title)}</strong>` : ""}<small>${appEscape(cause.code)}</small></td>
+    <td>${appEscape(cause.court || "-")}</td>
     <td>${appEscape(cause.assigned_lawyer || "-")}</td>
     <td>${appEscape(cause.visibility_label || "-")}</td>
     <td>${appEscape(cause.email_group || "-")}</td>
-    <td><span class="legal-movement${cause.last_has_changes ? " has-change" : ""}">${appEscape(cause.latest_movement || cause.last_result || "Sin movimientos")}</span><small>${appEscape(cause.latest_book || "Libro no informado")} · ${appEscape(appFormatDate(cause.last_checked_at))}</small></td>
+    <td><span class="legal-stage">${appEscape(cause.latest_stage || cause.latest_procedure || cause.status || "-")}</span><small>${cause.latest_movement ? appEscape(cause.latest_movement) : "Sin movimientos"}</small></td>
   </tr>`).join("")}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
 }
 
 function appLegalSummaryHtml(){
   const catalogs = appState.legalCatalogs;
   const total = appState.causes.length;
-  const active = appState.causes.filter((cause) => cause.user_status === "active").length;
-  const changed = appState.causes.filter((cause) => cause.last_has_changes).length;
-  const reviewed = appState.causes.filter((cause) => cause.last_checked_at).length;
+  const withMovement = appState.causes.filter((cause) => cause.latest_movement).length;
+  const withoutMovement = total - withMovement;
   const lawyers = catalogs.lawyers.map((lawyer) => {
     const rows = appState.causes.filter((cause) => cause.assigned_lawyer === lawyer.id);
-    const progress = rows.length ? Math.round((rows.filter((cause) => cause.last_checked_at).length / rows.length) * 100) : 0;
-    return `<tr><td><strong>${appEscape(lawyer.name)}</strong></td><td>${rows.length}</td><td>${rows.filter((cause) => cause.user_status === "active").length}</td><td>${rows.filter((cause) => cause.last_has_changes).length}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progress}% revisadas</small></td></tr>`;
+    const progressed = rows.filter((cause) => cause.latest_movement).length;
+    const progress = rows.length ? Math.round(progressed / rows.length * 100) : 0;
+    return `<tr><td><strong>${appEscape(lawyer.name)}</strong></td><td>${rows.length}</td><td>${progressed}</td><td>${rows.length - progressed}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progressed} / ${rows.length} · ${progress}%</small></td></tr>`;
   }).join("");
-  const totalProgress = total ? Math.round(reviewed / total * 100) : 0;
-  return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong><span>Portafolio completo</span></article><article><small>En tramitación</small><strong>${active}</strong><span>${total ? Math.round(active / total * 100) : 0}% del total</span></article><article><small>Con movimiento reciente</small><strong>${changed}</strong><span>Requieren atención</span></article><article><small>Revisadas</small><strong>${reviewed}</strong><span>Con información disponible</span></article></div>
-    <section class="legal-overview"><div><p class="eyebrow">Avance general</p><h3>${totalProgress}% de causas revisadas</h3><p>Seguimiento consolidado según el último movimiento registrado en los libros disponibles.</p></div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div></section>
-    <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Carga y avance</p><h3>Resumen por abogado</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Causas</th><th>Activas</th><th>Movimientos</th><th>Avance</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>`;
+  const totalProgress = total ? Math.round(withMovement / total * 100) : 0;
+  return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong></article><article><small>Con movimientos</small><strong>${withMovement}</strong><span>${totalProgress}% del total</span></article><article><small>Sin movimientos</small><strong>${withoutMovement}</strong><span>${total ? Math.round(withoutMovement / total * 100) : 0}% del total</span></article></div>
+    <section class="legal-overview"><div><p class="eyebrow">Avance total</p><h3>${withMovement} de ${total} causas con movimientos</h3></div><div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div><small>${totalProgress}%</small></div></section>
+    <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance por abogado</p><h3>Causas con movimientos sobre total asignado</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Total</th><th>Con movimientos</th><th>Sin movimientos</th><th>Avance / Total</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>`;
 }
 
 function appCauseRows(){
@@ -319,11 +321,13 @@ function appRenderLegalPanel(){
   appSetText("app-product-slug", "legal");
   const demo = document.getElementById("app-product-demo");
   if (demo) demo.innerHTML = `<nav class="legal-tabs" aria-label="Secciones legales"><button type="button" data-legal-tab="summary" class="${appState.legalTab === "summary" ? "is-active" : ""}">Resumen</button><button type="button" data-legal-tab="causes" class="${appState.legalTab === "causes" ? "is-active" : ""}">Causas</button></nav>`;
-  appSetText("app-config-title", appState.legalTab === "summary" ? "Estado de los juicios" : `${appFilteredCauses().length} causas`);
+  appSetText("app-config-title", appState.legalTab === "summary" ? "Resumen operativo" : `Total: ${appState.causes.length} causas`);
   const config = document.getElementById("app-product-config");
   if (!config) return;
   const filterOptions = (items, selected) => items.map((item) => `<option value="${appEscape(item.id)}" ${item.id === selected ? "selected" : ""}>${appEscape(item.name)}</option>`).join("");
-  config.innerHTML = appState.legalTab === "summary" ? appLegalSummaryHtml() : `<div class="legal-toolbar"><label class="legal-search"><span>Buscar</span><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Causa, código, juzgado o movimiento…" /></label><label><span>Abogado</span><select data-legal-filter="lawyer"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.lawyers, appState.legalFilters.lawyer)}</select></label><label><span>Grupo de correo</span><select data-legal-filter="emailGroup"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.emailGroups, appState.legalFilters.emailGroup)}</select></label></div><div id="cause-list-rows">${appLegalTableHtml()}</div>`;
+  const valueOptions = (values, selected) => [...new Set(values.filter(Boolean))].sort().map((value) => `<option value="${appEscape(value)}" ${value === selected ? "selected" : ""}>${appEscape(value)}</option>`).join("");
+  const resultCount = appFilteredCauses().length;
+  config.innerHTML = appState.legalTab === "summary" ? appLegalSummaryHtml() : `<div class="legal-search-row"><label class="legal-search"><span>Buscar</span><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Buscar causa, código o juzgado" /></label></div><div class="legal-toolbar"><label><span>Estado</span><select data-legal-filter="status"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.user_status), appState.legalFilters.status)}</select></label><label><span>Etapa</span><select data-legal-filter="stage"><option value="all">Todas</option>${valueOptions(appState.causes.map((cause) => cause.latest_stage || cause.latest_procedure), appState.legalFilters.stage)}</select></label><label><span>Juzgado</span><select data-legal-filter="court"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.court), appState.legalFilters.court)}</select></label><label><span>Abogado</span><select data-legal-filter="lawyer"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.lawyers, appState.legalFilters.lawyer)}</select></label><label><span>Quién puede ver</span><select data-legal-filter="visibility"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.visibility_label), appState.legalFilters.visibility)}</select></label><button class="legal-clear" type="button" data-legal-clear>Limpiar filtros</button><strong class="legal-result-count">${resultCount} resultados</strong><label class="legal-page-size"><span>Ver</span><select data-legal-page-size><option value="25" ${appState.legalPageSize === 25 ? "selected" : ""}>25</option><option value="50" ${appState.legalPageSize === 50 ? "selected" : ""}>50</option><option value="100" ${appState.legalPageSize === 100 ? "selected" : ""}>100</option></select></label></div><div id="cause-list-rows">${appLegalTableHtml()}</div>`;
   appBindControls();
 }
 
@@ -548,6 +552,8 @@ function appShowResults(data){
 }
 
 async function appReload(){
+  if (location.hash === "#legal-causes") appState.legalTab = "causes";
+  if (location.hash === "#legal-summary") appState.legalTab = "summary";
   try {
     appState.dashboard = await appFetch("/api/dashboard");
   } catch (legacyError) {
@@ -991,8 +997,10 @@ function appBindAcademyControls(){
 
 function appBindControls(){
   document.querySelectorAll("[data-legal-page]").forEach((button) => button.addEventListener("click", () => { appState.legalPage = Number(button.dataset.legalPage || 1); appRenderLegalPanel(); }));
-  document.querySelectorAll("[data-legal-tab]").forEach((button) => button.addEventListener("click", async () => { appState.legalTab = button.dataset.legalTab || "causes"; await appRenderPanel(); }));
+  document.querySelectorAll("[data-legal-tab]").forEach((button) => button.addEventListener("click", async () => { appState.legalTab = button.dataset.legalTab || "summary"; history.replaceState(null, "", `#legal-${appState.legalTab}`); await appRenderPanel(); }));
   document.querySelectorAll("[data-legal-filter]").forEach((select) => select.addEventListener("change", () => { appState.legalFilters[select.dataset.legalFilter] = select.value || "all"; appState.legalPage = 1; appRenderLegalPanel(); }));
+  document.querySelector("[data-legal-clear]")?.addEventListener("click", () => { appState.search = ""; Object.keys(appState.legalFilters).forEach((key) => { appState.legalFilters[key] = "all"; }); appState.legalPage = 1; appRenderLegalPanel(); });
+  document.querySelector("[data-legal-page-size]")?.addEventListener("change", (event) => { appState.legalPageSize = Number(event.target.value || 25); appState.legalPage = 1; appRenderLegalPanel(); });
   document.querySelectorAll("[data-cause-field]").forEach((select) => select.addEventListener("change", async () => {
     const previous = appState.causes.find((cause) => cause.id === select.dataset.causeId)?.[select.dataset.causeField] || "";
     select.disabled = true;

@@ -1388,3 +1388,33 @@
 .is-legal-view .app-meta-line {
   display: none;
 }
+
+/* Legal is operated from the header; the workspace uses the full content sheet. */
+.is-legal-view .app-sidebar { display: none; }
+.is-legal-view .app-layout,
+.app-layout:has(.legal-tabs) { grid-template-columns: minmax(0, 1fr); }
+.is-legal-view .app-container { width: min(100% - 2rem, 1540px); max-width: 1540px; }
+.is-legal-view .app-main-card { padding: clamp(1rem, 2vw, 1.6rem); }
+.is-legal-view .app-main-card > h1 { margin: 0; font-size: clamp(1.7rem, 2.5vw, 2.35rem); }
+.legal-tabs { gap: 2rem; }
+.legal-tabs button { font-size: 1rem; padding: .75rem .15rem 1rem; }
+.legal-search-row { display: flex; justify-content: flex-end; }
+.legal-search-row .legal-search { width: min(520px, 100%); display: grid; gap: .35rem; }
+.legal-search-row span { color: var(--muted); font-size: .74rem; font-weight: 800; }
+.legal-search-row input { width: 100%; border: 1px solid rgba(134,176,255,.2); border-radius: 10px; background: #0b1b31; color: var(--text); padding: .72rem .8rem; font: inherit; }
+.legal-toolbar { grid-template-columns: repeat(5, minmax(130px, 1fr)) auto auto minmax(90px, auto); }
+.legal-clear { align-self: end; border: 0; background: transparent; color: #7fc0ff; padding: .72rem .4rem; font: inherit; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.legal-result-count { align-self: end; color: var(--muted-2); padding: .72rem .2rem; white-space: nowrap; }
+.legal-page-size { grid-template-columns: auto 75px; align-items: center; }
+.legal-causes-table { min-width: 1180px; table-layout: fixed; }
+.legal-causes-table th:nth-child(1) { width: 21%; }
+.legal-causes-table th:nth-child(2) { width: 18%; }
+.legal-causes-table th:nth-child(3) { width: 14%; }
+.legal-causes-table th:nth-child(4) { width: 17%; }
+.legal-causes-table th:nth-child(5) { width: 14%; }
+.legal-causes-table th:nth-child(6) { width: 16%; }
+.legal-causes-table td { word-break: break-word; }
+.legal-stage { display: inline-flex; border-radius: 999px; background: rgba(71,163,255,.12); color: #7fc0ff; padding: .3rem .55rem; font-weight: 800; }
+.legal-summary-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+@media (max-width: 1180px) { .legal-toolbar { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 720px) { .is-legal-view .app-container { width: min(100% - 1rem, 1540px); } .legal-toolbar { grid-template-columns: 1fr 1fr; } .legal-summary-grid { grid-template-columns: 1fr; } }

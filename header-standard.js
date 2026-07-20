@@ -340,6 +340,7 @@ function aviaInstallAppHeaderMenu(){
   function lineMarkup(lineId){
     var line = catalog[lineId];
     var items = aviaAppVisibleItems(lineId);
+    if (!items.length) return '';
     var buttons = items.length ? items.map(function(item){
       var active = activeView === item.view ? ' is-active' : '';
       return '<button class="avia-app-product-option'+ active +'" type="button" data-app-line="'+ aviaEscape(lineId) +'" data-product-view="'+ aviaEscape(item.view) +'"><strong>'+ aviaEscape(item.icon) +'</strong><span>'+ aviaEscape(item.label) +'<small>'+ aviaEscape(item.meta) +'</small></span></button>';

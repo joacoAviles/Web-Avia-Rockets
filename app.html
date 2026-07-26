@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AVIA Rockets | Home</title>
-  <meta name="description" content="Home interno de AVIA Rockets para administrar líneas de negocio, productos contratados, usuario, plan y configuración." />
+  <meta name="description" content="Home interno de AVIA Rockets para administrar lÃ­neas de negocio, productos contratados, usuario, plan y configuraciÃ³n." />
   <link rel="canonical" href="https://aviarockets.cl/app.html" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="beta-products.css" />
@@ -157,7 +157,7 @@
         <aside class="app-sidebar">
           <div class="app-sidebar-head">
             <strong>Productos<small id="app-sidebar-line-label">OPS</small></strong>
-            <button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button" aria-label="Contraer menú">‹</button>
+            <button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button" aria-label="Contraer menÃº">â€¹</button>
           </div>
 
           <div class="app-user-box">
@@ -172,7 +172,7 @@
           </button>
           <button class="app-side-link" id="app-config-button" type="button">
             <span>CF</span>
-            <span>Configuración</span>
+            <span>ConfiguraciÃ³n</span>
           </button>
           <button class="app-side-link" id="app-logout-button" type="button">
             <span>SA</span>
@@ -186,7 +186,7 @@
           <article class="app-main-card">
             <p class="eyebrow" id="app-view-label">Home productivo</p>
             <h1 id="app-product-title">Cargando</h1>
-            <p id="app-product-description">Preparando información.</p>
+            <p id="app-product-description">Preparando informaciÃ³n.</p>
 
             <div class="app-product-demo" id="app-product-demo"></div>
 
@@ -223,23 +223,23 @@
         ops: {
           id: "ops",
           label: "OPS",
-          eyebrow: "Línea OPS",
+          eyebrow: "LÃ­nea OPS",
           title: "OPS",
-          description: "Operación diaria: seguimiento legal, flota, vencimientos y procesos que necesitan control constante.",
+          description: "OperaciÃ³n diaria: seguimiento legal, flota, vencimientos y procesos que necesitan control constante.",
           products: ["causes", "technical-reviews"]
         },
         intelligence: {
           id: "intelligence",
           label: "Intelligence",
-          eyebrow: "Línea Intelligence",
+          eyebrow: "LÃ­nea Intelligence",
           title: "Intelligence",
-          description: "Datos, tableros, alertas y modelos conectados a la operación. La vista queda preparada para conectar el producto desde la API.",
+          description: "Datos, tableros, alertas y modelos conectados a la operaciÃ³n. La vista queda preparada para conectar el producto desde la API.",
           products: ["intelligence-dashboard"]
         },
         labs: {
           id: "labs",
           label: "Labs",
-          eyebrow: "Línea Labs",
+          eyebrow: "LÃ­nea Labs",
           title: "Labs",
           description: "Academy, conectores y herramientas internas para convertir procesos reales en productos utilizables dentro del login.",
           products: ["pjud-upload", "academy", "api-lab"]
@@ -258,7 +258,7 @@
         "technical-reviews": {
           line: "ops",
           icon: "RT",
-          label: "Revisiones Técnicas",
+          label: "Revisiones TÃ©cnicas",
           apiSlug: "revision-tecnica",
           slugs: ["revision-tecnica", "revisiones-tecnicas", "technical-reviews", "flota", "fleet"],
           meta: function(){ return `${appState.vehicles.length || 0} autos`; }
@@ -271,7 +271,7 @@
           slugs: ["intelligence", "data-intelligence", "datos", "dashboards", "demand-intelligence"],
           meta: function(){ return "API pendiente"; },
           title: "Dashboards / Datos",
-          description: "Vista reservada para tableros, alertas, proyecciones y lectura de datos operativos. No hace llamadas nuevas todavía."
+          description: "Vista reservada para tableros, alertas, proyecciones y lectura de datos operativos. No hace llamadas nuevas todavÃ­a."
         },
         "academy": {
           line: "labs",
@@ -291,7 +291,7 @@
           slugs: ["pjud-upload", "labs-pjud-upload", "procurador-pjud", "cargar-causas-pjud", "pjud"],
           meta: function(){ return "Excel diario"; },
           title: "Cargar causas PJUD",
-          description: "Sube el Excel diario del procurador. La API procesa, concilia y deja el lote listo para revisión."
+          description: "Sube el Excel diario del procurador. La API procesa, concilia y deja el lote listo para revisiÃ³n."
         },
         "api-lab": {
           line: "labs",
@@ -301,7 +301,7 @@
           slugs: ["api-lab", "labs-api", "lab-api", "labs-query"],
           meta: function(){ return "Hook listo"; },
           title: "API Lab",
-          description: "Vista reservada para consultas directas, conectores internos y pruebas controladas. Queda sin llamada automática a la API."
+          description: "Vista reservada para consultas directas, conectores internos y pruebas controladas. Queda sin llamada automÃ¡tica a la API."
         }
       };
 
@@ -408,28 +408,20 @@
         if (!header) return;
         const nav = header.querySelector(".nav-panel");
         if (!nav) return;
-        const lineIds = Object.keys(lines);
-        const signature = lineIds.map(function(lineId){ return `${lineId}:${itemsForLine(lineId).map(function(item){ return item[0]; }).join(",")}`; }).join("|");
+        const lineIds = allowedLines();
+        const signature = lineIds.join("|") || "none";
         if (nav.dataset.appHeader === "ready" && nav.dataset.allowedSignature === signature) return;
         nav.dataset.appHeader = "ready";
         nav.dataset.allowedSignature = signature;
         nav.dataset.aviaProductHeader = "ready";
         const lineButtons = lineIds.map(function(lineId){
           const line = lines[lineId];
-          const items = itemsForLine(lineId);
-          const options = items.flatMap(function(item){
-            if (item[0] === "causes") {
-              return [
-                `<button class="avia-app-product-option" type="button" data-legal-header-tab="summary"><strong>LG</strong><span>Legal / Resumen<small>Avance operativo</small></span></button>`,
-                `<button class="avia-app-product-option" type="button" data-legal-header-tab="causes"><strong>LG</strong><span>Legal / Causas<small>${appEscape(item[2])}</small></span></button>`
-              ];
-            }
-            return [`<button class="avia-app-product-option" type="button" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`];
+          const options = itemsForLine(lineId).map(function(item){
+            return `<button class="avia-app-product-option" type="button" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`;
           }).join("");
-          const dropdown = options ? `<div class="avia-app-dropdown">${options}</div>` : "";
-          return `<div class="avia-app-menu-item"><button class="app-line-nav avia-app-menu-trigger" data-header-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button>${dropdown}</div>`;
+          return `<div class="avia-app-menu-item"><button class="app-line-nav avia-app-menu-trigger" data-header-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button><div class="avia-app-dropdown">${options}</div></div>`;
         }).join("");
-        nav.innerHTML = lineButtons + '<button class="app-config-wheel" id="app-header-settings" type="button" aria-label="Configuración"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
+        nav.innerHTML = lineButtons + '<button class="app-config-wheel" id="app-header-settings" type="button" aria-label="ConfiguraciÃ³n"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesiÃ³n</button>';
         nav.querySelectorAll("[data-header-line]").forEach(function(button){
           button.addEventListener("click", async function(){
             await selectLine(button.dataset.headerLine || "ops");
@@ -438,15 +430,6 @@
         nav.querySelectorAll("[data-header-product]").forEach(function(button){
           button.addEventListener("click", async function(){
             appState.view = button.dataset.headerProduct || "causes";
-            await appRenderPanel();
-          });
-        });
-        nav.querySelectorAll("[data-legal-header-tab]").forEach(function(button){
-          button.addEventListener("click", async function(){
-            appState.selectedLine = "ops";
-            appState.view = "causes";
-            appState.legalTab = button.dataset.legalHeaderTab === "causes" ? "causes" : "summary";
-            history.replaceState(null, "", appState.legalTab === "causes" ? "#legal-causes" : "#legal-summary");
             await appRenderPanel();
           });
         });
@@ -478,9 +461,9 @@
         appSetText("app-product-status", "Sin producto activo");
         appSetText("app-product-slug", line.id);
         const demo = document.getElementById("app-product-demo");
-        if (demo) demo.innerHTML = `<div class="app-line-hook"><strong>${appEscape(line.label)}</strong><span>Botón superior activo. Los subproductos aparecerán aquí cuando el perfil los tenga contratado desde la API.</span></div>`;
+        if (demo) demo.innerHTML = `<div class="app-line-hook"><strong>${appEscape(line.label)}</strong><span>BotÃ³n superior activo. Los subproductos aparecerÃ¡n aquÃ­ cuando el perfil los tenga contratado desde la API.</span></div>`;
         const stats = document.querySelectorAll(".app-stat");
-        const labels = ["Productos contratados", "Estado API", "Conexión"];
+        const labels = ["Productos contratados", "Estado API", "ConexiÃ³n"];
         const values = [String(itemsForLine(line.id).length), "Pendiente", "Preparada"];
         stats.forEach(function(card, index){
           const small = card.querySelector("small");
@@ -491,13 +474,13 @@
         appSetText("app-config-title", "Productos contratados");
         const config = document.getElementById("app-product-config");
         if (config) {
-          config.innerHTML = `<div class="app-config-row" data-api-hook="/api/dashboard.products"><span>Sin subproductos visibles</span><strong>No hay productos contratados para ${appEscape(line.label)}.<br><small>La navegación superior queda fija. Cuando /api/dashboard entregue productos asociados al perfil, se listarán bajo esta línea.</small></strong></div>`;
+          config.innerHTML = `<div class="app-config-row" data-api-hook="/api/dashboard.products"><span>Sin subproductos visibles</span><strong>No hay productos contratados para ${appEscape(line.label)}.<br><small>La navegaciÃ³n superior queda fija. Cuando /api/dashboard entregue productos asociados al perfil, se listarÃ¡n bajo esta lÃ­nea.</small></strong></div>`;
         }
       }
 
       function renderPjudUploadProduct(){
         const item = catalog["pjud-upload"];
-        appSetText("app-view-label", "Labs · Procurador");
+        appSetText("app-view-label", "Labs Â· Procurador");
         appSetText("app-product-title", item.title);
         appSetText("app-product-description", "Sube el Excel diario de causas PJUD. AVIA lo compara contra las causas asignadas y prepara el resumen para correo.");
         appSetText("app-product-status", "Habilitado");
@@ -506,22 +489,36 @@
         if (statsWrap) statsWrap.style.display = "none";
         const demo = document.getElementById("app-product-demo");
         if (demo) {
-          demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema hará la conciliación y enviará el correo automáticamente.</span></div>`;
+          demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema harÃ¡ la conciliaciÃ³n y enviarÃ¡ el correo automÃ¡ticamente.</span></div>`;
         }
         appSetText("app-config-title", "Cargar Excel de causas PJUD");
         const today = new Date().toISOString().slice(0, 10);
         const config = document.getElementById("app-product-config");
         if (config) {
+          const adminEmailPanel = normalize(appState.user?.role) === "admin" && normalize(appState.user?.email) === "admin@aviarockets.cl" ? `
+          <div class="app-config-row" id="pjud-control-email-panel">
+            <span>Correos de control legal<br><small>Disponible sÃ³lo para admin@aviarockets.cl.</small></span>
+            <strong class="app-upload-panel">
+              <button class="btn btn-secondary" id="pjud-control-preview" type="button">Preparar correos por grupo</button>
+              <button class="btn btn-primary" id="pjud-control-send" type="button" disabled>Enviar todos los correos</button>
+              <small id="pjud-control-status">Compara automÃ¡ticamente el Ãºltimo dÃ­a cargado contra el penÃºltimo y respalda un correo por portafolio.</small>
+            </strong>
+          </div>
+          <div class="app-config-row" id="pjud-control-preview-row" hidden>
+            <span>Preview respaldado</span>
+            <strong><pre id="pjud-control-preview-text" style="white-space:pre-wrap;max-height:520px;overflow:auto;text-align:left"></pre></strong>
+          </div>` : "";
           config.innerHTML = `<form class="app-config-row" id="pjud-upload-form">
             <span>Archivo diario<br><small>Sube el Excel exportado por el procurador.</small></span>
             <strong class="app-upload-panel">
               <input id="pjud-report-date" name="report_date" type="date" value="${today}" required />
               <input id="pjud-file" name="file" type="file" accept=".xlsx,.xls" required />
               <button class="btn btn-primary" type="submit">Cargar causas PJUD</button>
-              <small>Al finalizar, AVIA procesa el archivo y envía el informe automáticamente.</small>
+              <small>Al finalizar, AVIA procesa el archivo y envÃ­a el informe automÃ¡ticamente.</small>
             </strong>
           </form>
-          <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">OK o ERROR aparecerá aquí.</strong></div>`;
+          ${adminEmailPanel}
+          <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">OK o ERROR aparecerÃ¡ aquÃ­.</strong></div>`;
         }
       }
 
@@ -552,17 +549,60 @@
         }
       }
 
+      let pjudControlReportIds = [];
+
+      async function preparePjudControlEmail(){
+        const statusNode = document.getElementById("pjud-control-status");
+        const sendButton = document.getElementById("pjud-control-send");
+        if (statusNode) statusNode.textContent = "Comparando extracciones y generando respaldos por portafolio...";
+        if (sendButton) sendButton.disabled = true;
+        const data = await appFetch("/api/v1/labs/procurador-reports/pjud-control-email/grouped-preview", {
+          method: "POST",
+          body: JSON.stringify({})
+        });
+        pjudControlReportIds = data.reports.map((report) => report.report_id);
+        const previewRow = document.getElementById("pjud-control-preview-row");
+        const previewText = document.getElementById("pjud-control-preview-text");
+        if (previewText) previewText.textContent = data.reports.map((report, index) =>
+          `CORREO ${index + 1} Â· ${report.portfolio_name}\n` +
+          `Para: ${report.recipients.join(", ")}\n` +
+          `BCC: ${[...report.bcc, "keanuavia@gmail.com"].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
+          `Asunto: ${report.subject}\n\n${report.text_preview}`
+        ).join("\n\n" + "=".repeat(80) + "\n\n");
+        if (previewRow) previewRow.hidden = false;
+        if (statusNode) {
+          statusNode.textContent = `${data.totals.emails} correos respaldados Â· ${data.totals.causas} asignaciones de causas Â· ${data.totals.con_cambios} cambios.`;
+        }
+        if (sendButton) sendButton.disabled = !pjudControlReportIds.length || data.reports.every((report) => report.status !== "draft");
+      }
+
+      async function sendPjudControlEmail(){
+        if (!pjudControlReportIds.length) throw new Error("Primero genera y revisa los previews.");
+        const accepted = window.confirm(`Â¿Confirmas el envÃ­o de ${pjudControlReportIds.length} correos legales, separados por portafolio?`);
+        if (!accepted) return;
+        const statusNode = document.getElementById("pjud-control-status");
+        const sendButton = document.getElementById("pjud-control-send");
+        if (sendButton) sendButton.disabled = true;
+        if (statusNode) statusNode.textContent = "Encolando correo...";
+        const data = await appFetch("/api/v1/labs/procurador-reports/pjud-control-email/send-all", {
+          method: "POST",
+          body: JSON.stringify({ confirm: true, report_ids: pjudControlReportIds })
+        });
+        if (statusNode) statusNode.textContent =
+          `${data.queued} correos encolados Â· ${data.duplicates} duplicados omitidos.`;
+      }
+
       function renderPlaceholderProduct(view){
         const item = catalog[view];
         if (!item) return renderLineHome(appState.selectedLine);
-        appSetText("app-view-label", `${lines[item.line].label} · Producto`);
+        appSetText("app-view-label", `${lines[item.line].label} Â· Producto`);
         appSetText("app-product-title", item.title || item.label);
-        appSetText("app-product-description", item.description || "Producto contratado preparado para conexión posterior con API.");
-        appSetText("app-product-status", "Conexión pendiente");
+        appSetText("app-product-description", item.description || "Producto contratado preparado para conexiÃ³n posterior con API.");
+        appSetText("app-product-status", "ConexiÃ³n pendiente");
         appSetText("app-product-slug", item.apiSlug);
         const demo = document.getElementById("app-product-demo");
         if (demo) {
-          demo.innerHTML = `<div class="app-config-grid"><div class="app-config-row" data-api-hook="/api/products/${appEscape(item.apiSlug)}/dashboard"><span>Hook API</span><strong>/api/products/${appEscape(item.apiSlug)}/dashboard<br><small>No se consume todavía. Queda marcado para conectar después sin tocar esta vista.</small></strong></div></div>`;
+          demo.innerHTML = `<div class="app-config-grid"><div class="app-config-row" data-api-hook="/api/products/${appEscape(item.apiSlug)}/dashboard"><span>Hook API</span><strong>/api/products/${appEscape(item.apiSlug)}/dashboard<br><small>No se consume todavÃ­a. Queda marcado para conectar despuÃ©s sin tocar esta vista.</small></strong></div></div>`;
         }
         const stats = document.querySelectorAll(".app-stat");
         const labels = ["Producto", "API", "Estado"];
@@ -573,10 +613,10 @@
           if (small) small.textContent = labels[index] || "-";
           if (strong) strong.textContent = values[index] || "-";
         });
-        appSetText("app-config-title", "Conexión preparada");
+        appSetText("app-config-title", "ConexiÃ³n preparada");
         const config = document.getElementById("app-product-config");
         if (config) {
-          config.innerHTML = `<div class="app-config-row" data-api-hook="/api/products/${appEscape(item.apiSlug)}/config"><span>Próximo paso</span><strong>Conectar datos reales desde API.<br><small>Este botón existe sólo en frontend y no modifica backend.</small></strong></div>`;
+          config.innerHTML = `<div class="app-config-row" data-api-hook="/api/products/${appEscape(item.apiSlug)}/config"><span>PrÃ³ximo paso</span><strong>Conectar datos reales desde API.<br><small>Este botÃ³n existe sÃ³lo en frontend y no modifica backend.</small></strong></div>`;
         }
       }
 
@@ -592,7 +632,7 @@
         const items = appProductItems();
         if (!items.length) {
           const line = lines[appState.selectedLine] || lines.ops;
-          menu.innerHTML = `<div class="app-product-menu-empty"><strong>${appEscape(line.label)}</strong><span>Sin subproductos contratados.</span><small>La API podrá llenar esta lista por slug de producto.</small></div>`;
+          menu.innerHTML = `<div class="app-product-menu-empty"><strong>${appEscape(line.label)}</strong><span>Sin subproductos contratados.</span><small>La API podrÃ¡ llenar esta lista por slug de producto.</small></div>`;
           return;
         }
         menu.innerHTML = items.map(function(item){
@@ -626,6 +666,24 @@
           appState.view = productButton.dataset.productView || homeView(appState.selectedLine);
           await appRenderPanel();
         }
+        if (event.target.closest("#pjud-control-preview")) {
+          event.preventDefault();
+          try {
+            await preparePjudControlEmail();
+          } catch (error) {
+            const node = document.getElementById("pjud-control-status");
+            if (node) node.textContent = `ERROR: ${error.message || "No se pudo generar el preview."}`;
+          }
+        }
+        if (event.target.closest("#pjud-control-send")) {
+          event.preventDefault();
+          try {
+            await sendPjudControlEmail();
+          } catch (error) {
+            const node = document.getElementById("pjud-control-status");
+            if (node) node.textContent = `ERROR: ${error.message || "No se pudo encolar el correo."}`;
+          }
+        }
       });
 
       document.addEventListener("submit", async function(event){
@@ -653,3 +711,4 @@
   <script src="footer-standard.js?v=20260604-3"></script>
 </body>
 </html>
+

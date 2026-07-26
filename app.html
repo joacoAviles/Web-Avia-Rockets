@@ -170,7 +170,7 @@
       <div class="app-layout" id="app-layout">
         <aside class="app-sidebar">
           <div class="app-sidebar-head">
-            <strong>Productos<small id="app-sidebar-line-label">OPS</small></strong>
+            <strong>Productos<small id="app-sidebar-line-label">Legal</small></strong>
             <button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button" aria-label="Contraer menÃº">â€¹</button>
           </div>
 
@@ -234,13 +234,13 @@
       const LINE_KEY = "avia_app_selected_line";
       const LINE_HOME_SUFFIX = "-home";
       const lines = {
-        ops: {
-          id: "ops",
-          label: "OPS",
-          eyebrow: "LÃ­nea OPS",
-          title: "OPS",
-          description: "OperaciÃ³n diaria: seguimiento legal, flota, vencimientos y procesos que necesitan control constante.",
-          products: ["causes", "technical-reviews"]
+        legal: {
+          id: "legal",
+          label: "Legal",
+          eyebrow: "Línea Legal",
+          title: "Legal",
+          description: "Resumen operativo, causas judiciales y revisión de asignación del procurador.",
+          products: ["legal-summary", "causes", "pjud-upload"]
         },
         intelligence: {
           id: "intelligence",
@@ -256,21 +256,29 @@
           eyebrow: "LÃ­nea Labs",
           title: "Labs",
           description: "Academy, conectores y herramientas internas para convertir procesos reales en productos utilizables dentro del login.",
-          products: ["pjud-upload", "academy", "api-lab"]
+          products: ["academy", "api-lab"]
         }
       };
 
       const catalog = {
+        "legal-summary": {
+          line: "legal",
+          icon: "RS",
+          label: "Resumen",
+          apiSlug: "legal-summary",
+          slugs: ["legal", "legal-summary", "resumen", "legal-resumen"],
+          meta: function(){ return `${appState.causes.length || 0} causas`; }
+        },
         "causes": {
-          line: "ops",
-          icon: "LG",
-          label: "Legal / Causas",
-          apiSlug: "legal",
-          slugs: ["legal", "causes", "causas", "legal-causas"],
+          line: "legal",
+          icon: "CS",
+          label: "Causas",
+          apiSlug: "causes",
+          slugs: ["causes", "causas", "legal-causas"],
           meta: function(){ return `${appState.causes.length || 0} causas`; }
         },
         "technical-reviews": {
-          line: "ops",
+          line: "legal",
           icon: "RT",
           label: "Revisiones TÃ©cnicas",
           apiSlug: "revision-tecnica",
@@ -298,14 +306,14 @@
           description: "Motor de aprendizaje con fuentes verificables, reportes de error, progreso por alumno y modos de estudio."
         },
         "pjud-upload": {
-          line: "labs",
+          line: "legal",
           icon: "PJ",
-          label: "Cargar causas PJUD",
+          label: "Procurador",
           apiSlug: "pjud-upload",
           slugs: ["pjud-upload", "labs-pjud-upload", "procurador-pjud", "cargar-causas-pjud", "pjud"],
           meta: function(){ return "Excel diario"; },
-          title: "Cargar causas PJUD",
-          description: "Sube el Excel diario del procurador. La API procesa, concilia y deja el lote listo para revisiÃ³n."
+          title: "Procurador",
+          description: "Sube el Excel diario del procurador. La API procesa, concilia y envía el informe automáticamente."
         },
         "api-lab": {
           line: "labs",
@@ -319,7 +327,7 @@
         }
       };
 
-      appState.selectedLine = localStorage.getItem(LINE_KEY) || "ops";
+      appState.selectedLine = localStorage.getItem(LINE_KEY) || "legal";
 
       function normalize(value){
         return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -370,15 +378,15 @@
       }
 
       function allowedLines(){
-        return Object.keys(lines);
+        return Object.keys(lines).filter(isLineAllowed);
       }
 
       function firstAllowedLine(){
-        return Object.keys(lines).find(isLineAllowed) || "ops";
+        return Object.keys(lines).find(isLineAllowed) || "legal";
       }
 
       function itemsForLine(lineId){
-        const line = lines[lineId] || lines.ops;
+        const line = lines[lineId] || lines.legal;
         return line.products.filter(isContracted).map(function(view){
           const item = catalog[view];
           return [view, item.label, item.meta(), item.icon, item.apiSlug];
@@ -387,7 +395,7 @@
 
       function lineForView(view){
         if (String(view || "").endsWith(LINE_HOME_SUFFIX)) return String(view).replace(LINE_HOME_SUFFIX, "");
-        return catalog[view]?.line || appState.selectedLine || "ops";
+        return catalog[view]?.line || appState.selectedLine || "legal";
       }
 
       function homeView(lineId){
@@ -421,7 +429,7 @@
           item.classList.toggle("is-active", item.dataset.headerProduct === appState.view);
         });
         const label = document.getElementById("app-sidebar-line-label");
-        if (label) label.textContent = lines[appState.selectedLine]?.label || "OPS";
+        if (label) label.textContent = lines[appState.selectedLine]?.label || "Legal";
       }
 
       function renderHeader(){
@@ -459,7 +467,7 @@
         });
         nav.querySelectorAll("[data-header-product]").forEach(function(button){
           button.addEventListener("click", async function(){
-            appState.view = button.dataset.headerProduct || "causes";
+            appState.view = button.dataset.headerProduct || "legal-summary";
             appState.selectedLine = catalog[appState.view]?.line || appState.selectedLine;
             localStorage.setItem(LINE_KEY, appState.selectedLine);
             button.closest(".app-header-menu")?.classList.remove("is-open");
@@ -487,7 +495,7 @@
       }
 
       function renderLineHome(lineId){
-        const line = lines[lineId] || lines.ops;
+        const line = lines[lineId] || lines.legal;
         appSetText("app-view-label", line.eyebrow);
         appSetText("app-product-title", line.title);
         appSetText("app-product-description", line.description);
@@ -513,7 +521,7 @@
 
       function renderPjudUploadProduct(){
         const item = catalog["pjud-upload"];
-        appSetText("app-view-label", "Labs Â· Procurador");
+        appSetText("app-view-label", "Legal · Procurador");
         appSetText("app-product-title", item.title);
         appSetText("app-product-description", "Sube el Excel diario de causas PJUD. AVIA lo compara contra las causas asignadas y prepara el resumen para correo.");
         appSetText("app-product-status", "Habilitado");
@@ -664,7 +672,7 @@
         if (!menu) return;
         const items = appProductItems();
         if (!items.length) {
-          const line = lines[appState.selectedLine] || lines.ops;
+          const line = lines[appState.selectedLine] || lines.legal;
           menu.innerHTML = `<div class="app-product-menu-empty"><strong>${appEscape(line.label)}</strong><span>Sin subproductos contratados.</span><small>La API podrÃ¡ llenar esta lista por slug de producto.</small></div>`;
           return;
         }
@@ -677,7 +685,7 @@
       appRenderPanel = async function(){
         renderHeader();
         resolveView();
-        document.body.classList.toggle("is-legal-view", appState.view === "causes");
+        document.body.classList.toggle("is-legal-view", appState.view === "causes" || appState.view === "legal-summary");
         appRenderSidebar();
         const statsWrap = document.querySelector(".app-stats");
         if (statsWrap) statsWrap.style.display = "";
@@ -687,7 +695,11 @@
         else if (appState.view === "pjud-upload") renderPjudUploadProduct();
         else if (appState.view === "intelligence-dashboard" || appState.view === "api-lab") renderPlaceholderProduct(appState.view);
         else if (String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) renderLineHome(lineForView(appState.view));
-        else appRenderLegalPanel();
+        else {
+          if (appState.view === "legal-summary") appState.legalTab = "summary";
+          if (appState.view === "causes") appState.legalTab = "causes";
+          appRenderLegalPanel();
+        }
         appRenderSidebar();
         if (!["intelligence-dashboard", "api-lab", "pjud-upload"].includes(appState.view) && !String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) appRenderStats();
       };

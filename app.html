@@ -576,7 +576,7 @@
         body.append("report_date", reportDate);
         if (result) result.textContent = "Procesando...";
         const token = appGetToken();
-        const response = await fetch(`${AVIA_APP_API}/api/v1/labs/procurador-reports/uploads`, {
+        const response = await fetch(`${AVIA_APP_API}/api/v1/legal/procurador-reports/uploads`, {
           method: "POST",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           body
@@ -597,7 +597,7 @@
         const sendButton = document.getElementById("pjud-control-send");
         if (statusNode) statusNode.textContent = "Comparando extracciones y generando respaldos por portafolio...";
         if (sendButton) sendButton.disabled = true;
-        const data = await appFetch("/api/v1/labs/procurador-reports/pjud-control-email/grouped-preview", {
+        const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
           method: "POST",
           body: JSON.stringify({})
         });
@@ -625,7 +625,7 @@
         const sendButton = document.getElementById("pjud-control-send");
         if (sendButton) sendButton.disabled = true;
         if (statusNode) statusNode.textContent = "Encolando correo...";
-        const data = await appFetch("/api/v1/labs/procurador-reports/pjud-control-email/send-all", {
+        const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/send-all", {
           method: "POST",
           body: JSON.stringify({ confirm: true, report_ids: pjudControlReportIds })
         });

@@ -430,6 +430,8 @@
         nav.querySelectorAll("[data-header-product]").forEach(function(button){
           button.addEventListener("click", async function(){
             appState.view = button.dataset.headerProduct || "causes";
+            appState.selectedLine = catalog[appState.view]?.line || appState.selectedLine;
+            localStorage.setItem(LINE_KEY, appState.selectedLine);
             await appRenderPanel();
           });
         });

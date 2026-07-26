@@ -70,47 +70,61 @@
       border-color: rgba(71, 163, 255, .34);
     }
 
-    body[data-page="app-home"] .nav-panel .app-line-nav {
-      border: 0;
-      background: transparent;
-      color: var(--muted-2);
-      cursor: pointer;
-      font: inherit;
-      font-size: .93rem;
-      font-weight: 750;
-      padding: .35rem .1rem;
-      transition: color var(--transition), text-shadow var(--transition);
+    body[data-page="app-home"] .nav-panel { align-items: center; gap: .45rem; }
+    body[data-page="app-home"] .app-header-menu { position: relative; }
+    body[data-page="app-home"] .app-header-trigger {
+      border: 0; border-radius: 999px; background: transparent; color: var(--muted-2);
+      cursor: pointer; font: inherit; font-size: .93rem; font-weight: 800; padding: .62rem .78rem;
     }
-
-    body[data-page="app-home"] .nav-panel .app-line-nav:hover {
-      color: #fff;
-      text-shadow: 0 0 16px rgba(10, 108, 255, .45);
+    body[data-page="app-home"] .app-header-trigger:hover,
+    body[data-page="app-home"] .app-header-trigger.is-active,
+    body[data-page="app-home"] .app-header-menu.is-open > .app-header-trigger {
+      color: #fff; background: rgba(255,255,255,.07);
     }
-
-    body[data-page="app-home"] .nav-panel .app-line-nav.is-active {
-      color: var(--primary-3);
+    body[data-page="app-home"] .app-header-dropdown {
+      position: absolute; top: calc(100% + .7rem); left: 0; z-index: 50; display: none;
+      min-width: 260px; gap: .35rem; padding: .55rem; border: 1px solid rgba(134,176,255,.22);
+      border-radius: 18px; background: rgba(7,20,38,.98); box-shadow: 0 24px 70px rgba(0,0,0,.38);
     }
-
-    body[data-page="app-home"] .app-config-wheel {
-      width: 48px;
-      height: 48px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, .04);
-      color: var(--text);
-      cursor: pointer;
-      font-weight: 900;
+    body[data-page="app-home"] .app-header-menu:hover .app-header-dropdown,
+    body[data-page="app-home"] .app-header-menu:focus-within .app-header-dropdown,
+    body[data-page="app-home"] .app-header-menu.is-open .app-header-dropdown { display: grid; }
+    body[data-page="app-home"] .app-header-option {
+      width: 100%; display: grid; grid-template-columns: 38px minmax(0,1fr); gap: .65rem;
+      align-items: center; border: 1px solid transparent; border-radius: 14px; background: transparent;
+      color: var(--text); cursor: pointer; font: inherit; padding: .55rem; text-align: left;
     }
-
-    body[data-page="app-home"] .app-config-wheel::before {
-      content: "";
-      display: block;
-      width: 18px;
-      height: 18px;
-      margin: auto;
-      border: 3px solid currentColor;
-      border-radius: 50%;
-      box-shadow: 0 -9px 0 -6px currentColor, 0 9px 0 -6px currentColor, 9px 0 0 -6px currentColor, -9px 0 0 -6px currentColor;
+    body[data-page="app-home"] .app-header-option:hover,
+    body[data-page="app-home"] .app-header-option.is-active {
+      border-color: rgba(71,163,255,.32); background: rgba(10,108,255,.13);
+    }
+    body[data-page="app-home"] .app-header-option strong {
+      width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px;
+      background: rgba(10,108,255,.16); color: var(--primary-3); font-size: .78rem;
+    }
+    body[data-page="app-home"] .app-header-option span { display: grid; gap: .1rem; font-weight: 800; }
+    body[data-page="app-home"] .app-header-option small { color: var(--muted); font-weight: 600; }
+    body[data-page="app-home"] .app-header-empty {
+      color: var(--muted);
+      font-size: .86rem;
+      padding: .7rem .8rem;
+      white-space: nowrap;
+    }
+    body[data-page="app-home"] .app-aurora-button {
+      width: 46px; height: 46px; flex: 0 0 46px; padding: 0; overflow: hidden;
+      border: 1px solid rgba(134,176,255,.24); border-radius: 50%;
+      background: rgba(255,255,255,.05); cursor: pointer; box-shadow: 0 0 0 3px rgba(10,108,255,.08);
+    }
+    body[data-page="app-home"] .app-aurora-button img {
+      width: 100%; height: 100%; display: block; object-fit: cover;
+    }
+    @media (max-width: 760px) {
+      body[data-page="app-home"] .app-header-menu,
+      body[data-page="app-home"] .app-header-trigger { width: 100%; }
+      body[data-page="app-home"] .app-header-trigger { text-align: left; }
+      body[data-page="app-home"] .app-header-dropdown {
+        position: static; min-width: 0; width: 100%; margin: .2rem 0 .55rem; box-shadow: none;
+      }
     }
 
     body[data-page="app-home"] .app-brand-mark {
@@ -211,7 +225,7 @@
 
   <footer class="site-footer footer-clean"></footer>
   <script src="api-config.js"></script>
-  <script src="header-standard.js?v=permissions-20260720-4"></script>
+  <script src="header-standard.js?v=header-rules-20260726-2"></script>
   <script src="app-home.js?v=legal-causas-20260720-4"></script>
   <script>
     (function(){
@@ -312,6 +326,7 @@
       }
 
       function productToken(product){
+        if (typeof product === "string") return normalize(product);
         return normalize(product?.slug || product?.product_slug || product?.code || product?.key || product?.name || product?.title);
       }
 
@@ -355,11 +370,11 @@
       }
 
       function allowedLines(){
-        return Object.keys(lines).filter(isLineAllowed);
+        return Object.keys(lines);
       }
 
       function firstAllowedLine(){
-        return allowedLines()[0] || "labs";
+        return Object.keys(lines).find(isLineAllowed) || "ops";
       }
 
       function itemsForLine(lineId){
@@ -399,6 +414,12 @@
         document.querySelectorAll("[data-app-line]").forEach(function(item){
           item.classList.toggle("is-active", item.dataset.appLine === appState.selectedLine && appState.view !== "settings");
         });
+        document.querySelectorAll("[data-header-line]").forEach(function(item){
+          item.classList.toggle("is-active", item.dataset.headerLine === appState.selectedLine && appState.view !== "settings");
+        });
+        document.querySelectorAll("[data-header-product]").forEach(function(item){
+          item.classList.toggle("is-active", item.dataset.headerProduct === appState.view);
+        });
         const label = document.getElementById("app-sidebar-line-label");
         if (label) label.textContent = lines[appState.selectedLine]?.label || "OPS";
       }
@@ -409,7 +430,9 @@
         const nav = header.querySelector(".nav-panel");
         if (!nav) return;
         const lineIds = allowedLines();
-        const signature = lineIds.join("|") || "none";
+        const signature = lineIds.map(function(lineId){
+          return `${lineId}:${itemsForLine(lineId).map(function(item){ return item[0]; }).join(",")}`;
+        }).join("|");
         if (nav.dataset.appHeader === "ready" && nav.dataset.allowedSignature === signature) return;
         nav.dataset.appHeader = "ready";
         nav.dataset.allowedSignature = signature;
@@ -417,14 +440,21 @@
         const lineButtons = lineIds.map(function(lineId){
           const line = lines[lineId];
           const options = itemsForLine(lineId).map(function(item){
-            return `<button class="avia-app-product-option" type="button" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`;
-          }).join("");
-          return `<div class="avia-app-menu-item"><button class="app-line-nav avia-app-menu-trigger" data-header-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button><div class="avia-app-dropdown">${options}</div></div>`;
+            return `<button class="app-header-option" type="button" role="menuitem" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`;
+          }).join("") || '<span class="app-header-empty">Sin productos disponibles</span>';
+          return `<div class="app-header-menu"><button class="app-header-trigger" data-header-line="${appEscape(lineId)}" type="button" aria-haspopup="menu" aria-expanded="false">${appEscape(line.label)}</button><div class="app-header-dropdown" role="menu">${options}</div></div>`;
         }).join("");
-        nav.innerHTML = lineButtons + '<button class="app-config-wheel" id="app-header-settings" type="button" aria-label="ConfiguraciÃ³n"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesiÃ³n</button>';
+        nav.innerHTML = lineButtons + '<button class="app-aurora-button" id="app-header-settings" type="button" aria-label="Abrir configuración"><img src="https://aviarockets.cl/bimi/logo.svg" alt="Aurora, asistente de AVIA Rockets"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
         nav.querySelectorAll("[data-header-line]").forEach(function(button){
-          button.addEventListener("click", async function(){
-            await selectLine(button.dataset.headerLine || "ops");
+          button.addEventListener("click", function(){
+            const menu = button.closest(".app-header-menu");
+            const opening = !menu.classList.contains("is-open");
+            nav.querySelectorAll(".app-header-menu.is-open").forEach(function(other){
+              other.classList.remove("is-open");
+              other.querySelector(".app-header-trigger")?.setAttribute("aria-expanded", "false");
+            });
+            menu.classList.toggle("is-open", opening);
+            button.setAttribute("aria-expanded", String(opening));
           });
         });
         nav.querySelectorAll("[data-header-product]").forEach(function(button){
@@ -432,6 +462,7 @@
             appState.view = button.dataset.headerProduct || "causes";
             appState.selectedLine = catalog[appState.view]?.line || appState.selectedLine;
             localStorage.setItem(LINE_KEY, appState.selectedLine);
+            button.closest(".app-header-menu")?.classList.remove("is-open");
             await appRenderPanel();
           });
         });
@@ -710,7 +741,7 @@
       setTimeout(function(){ renderHeader(); updateLineHeader(); }, 0);
     })();
   </script>
-  <script src="footer-standard.js?v=20260604-3"></script>
+  <script src="footer-standard.js?v=header-rules-20260726-2"></script>
 </body>
 </html>
 

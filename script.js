@@ -279,5 +279,5 @@ loadSiteData();
 setupContactForms();
 setupLogin();
 loadDashboard();
-loadStandardScript("header-standard.js");
-loadStandardScript("footer-standard.js");
+loadStandardScript("header-standard.js?v=header-rules-20260726-2");
+loadStandardScript("footer-standard.js?v=header-rules-20260726-2");

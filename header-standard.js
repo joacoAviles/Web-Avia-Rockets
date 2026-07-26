@@ -35,8 +35,9 @@ function aviaEnsureResponsiveStyles(){
 
 function aviaGetLoggedUser(){
   try {
+    var token = localStorage.getItem('avia_auth_token');
     var raw = localStorage.getItem('avia_auth_user');
-    if (!raw) return null;
+    if (!token || !raw) return null;
     return JSON.parse(raw);
   } catch (_) {
     return null;
@@ -290,6 +291,7 @@ function aviaNormalize(value){
 }
 
 function aviaAppProductToken(product){
+  if (typeof product === 'string') return aviaNormalize(product);
   return aviaNormalize(product && (product.slug || product.product_slug || product.code || product.key || product.name || product.title));
 }
 
@@ -414,7 +416,9 @@ function aviaApplyStandardHeader(){
   }
   header.className = 'site-header';
   var user = aviaGetLoggedUser();
-  var isLogged = Boolean(user);
+  // Public pages always offer access to the app. The authenticated app replaces
+  // this navigation after validating the current session and its permissions.
+  var isLogged = document.body?.dataset?.page === 'app-home' && Boolean(user);
   var currentLang = localStorage.getItem('avia-lang') || document.documentElement.lang || 'es';
   currentLang = currentLang === 'en' ? 'en' : 'es';
   document.documentElement.lang = currentLang;
@@ -464,7 +468,7 @@ function aviaApplyStandardHeader(){
 
   aviaUpdateHeaderLanguage(header, document.documentElement.lang, isLogged);
   aviaBroadcastLanguage(document.documentElement.lang);
-  aviaScheduleAppHeaderMenu();
+  // app.html is the only owner of the authenticated product navigation.
 }
 
 if (document.readyState === 'loading') {

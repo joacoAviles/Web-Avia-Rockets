@@ -1,7 +1,7 @@
 function aviaLoadStandardHeaderFromFooter(){
-  if (document.querySelector('script[src="header-standard.js"]')) return;
+  if (document.querySelector('script[src^="header-standard.js"]')) return;
   var script = document.createElement('script');
-  script.src = 'header-standard.js';
+  script.src = 'header-standard.js?v=header-rules-20260726-2';
   document.body.appendChild(script);
 }
 

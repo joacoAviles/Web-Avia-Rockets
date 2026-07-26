@@ -59,7 +59,14 @@ export function publicUser(user) {
     full_name: user.full_name || user.name || user.email,
     role: user.role || 'user',
     status: user.status || 'active',
-    type: user.type || 'person'
+    type: user.type || 'person',
+    products: Array.isArray(user.products) ? user.products : [],
+    permissions: user.permissions && typeof user.permissions === 'object'
+      ? {
+          products: Array.isArray(user.permissions.products) ? user.permissions.products : [],
+          lines: Array.isArray(user.permissions.lines) ? user.permissions.lines : []
+        }
+      : { products: [], lines: [] }
   };
 }
 
@@ -198,6 +205,7 @@ export function dashboardForUser(user, store) {
 
   return {
     user: publicUser(user),
+    products: Array.isArray(user.products) ? user.products : [],
     account: accountForUser(user, store),
     causes,
     recentResults: results

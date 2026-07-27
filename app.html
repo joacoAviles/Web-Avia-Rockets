@@ -394,6 +394,22 @@
         });
       }
 
+      window.appLegalNavigationItems = function(){
+        return itemsForLine("legal").map(function(item){
+          return { view: item[0], label: item[1], icon: item[3] };
+        });
+      };
+
+      window.appNavigateToProductView = async function(view){
+        if (!isContracted(view)) return;
+        appState.view = view;
+        appState.selectedLine = catalog[view]?.line || "legal";
+        if (view === "legal-summary") appState.legalTab = "summary";
+        if (view === "causes") appState.legalTab = "causes";
+        localStorage.setItem(LINE_KEY, appState.selectedLine);
+        await appRenderPanel();
+      };
+
       function lineForView(view){
         if (String(view || "").endsWith(LINE_HOME_SUFFIX)) return String(view).replace(LINE_HOME_SUFFIX, "");
         return catalog[view]?.line || appState.selectedLine || "legal";
@@ -533,6 +549,7 @@
         if (demo) {
           demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema harÃ¡ la conciliaciÃ³n y enviarÃ¡ el correo automÃ¡ticamente.</span></div>`;
         }
+        demo?.insertAdjacentHTML("afterbegin", appLegalTabsHtml());
         appSetText("app-config-title", "Cargar Excel de causas PJUD");
         const today = new Date().toISOString().slice(0, 10);
         const config = document.getElementById("app-product-config");
@@ -562,6 +579,7 @@
           ${adminEmailPanel}
           <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">OK o ERROR aparecerÃ¡ aquÃ­.</strong></div>`;
         }
+        appBindControls();
       }
 
       async function submitPjudUpload(form){
@@ -586,8 +604,14 @@
         const text = await response.text();
         try { data = text ? JSON.parse(text) : null; } catch (_) { data = null; }
         if (!response.ok) throw new Error(data?.detail || data?.message || text || `Error API ${response.status}`);
+        const uploadSummary = data?.procurator_summary || data?.procurador_summary || data?.summary || data?.totals || data;
+        if (uploadSummary && typeof uploadSummary === "object") {
+          localStorage.setItem("avia_pjud_upload_summary", JSON.stringify(uploadSummary));
+        }
         if (result) {
-          result.textContent = "OK";
+          const assigned = uploadSummary?.assigned_causes ?? uploadSummary?.assigned ?? uploadSummary?.causas_asignadas ?? uploadSummary?.matched_causes ?? uploadSummary?.matched;
+          const total = uploadSummary?.total_causes ?? uploadSummary?.total ?? uploadSummary?.causas_totales ?? uploadSummary?.rows_total ?? uploadSummary?.processed;
+          result.textContent = assigned !== undefined && total !== undefined ? `OK · ${assigned} de ${total} causas asignadas a procurador.` : "OK";
         }
       }
 
@@ -686,7 +710,7 @@
       appRenderPanel = async function(){
         renderHeader();
         resolveView();
-        document.body.classList.toggle("is-legal-view", appState.view === "causes" || appState.view === "legal-summary");
+        document.body.classList.toggle("is-legal-view", ["causes", "legal-summary", "pjud-upload"].includes(appState.view));
         appRenderSidebar();
         const statsWrap = document.querySelector(".app-stats");
         if (statsWrap) statsWrap.style.display = "";

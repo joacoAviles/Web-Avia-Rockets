@@ -1431,6 +1431,7 @@
 .legal-causes-table th:nth-child(6) { width: 16%; }
 .legal-causes-table td { word-break: break-word; }
 .legal-stage { display: inline-flex; border-radius: 999px; background: rgba(71,163,255,.12); color: #7fc0ff; padding: .3rem .55rem; font-weight: 800; }
-.legal-summary-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.legal-summary-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.legal-procurator-table { min-width: 620px; }
 @media (max-width: 1180px) { .legal-toolbar { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 720px) { .is-legal-view .app-container { width: min(100% - 1rem, 1540px); } .legal-toolbar { grid-template-columns: 1fr 1fr; } .legal-summary-grid { grid-template-columns: 1fr; } }

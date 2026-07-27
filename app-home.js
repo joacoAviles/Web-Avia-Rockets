@@ -238,6 +238,16 @@ function appFilteredCauses(){
     if (appState.legalFilters.emailGroup !== "all" && cause.email_group_id !== appState.legalFilters.emailGroup) return false;
     if (!q) return true;
     return [cause.code, cause.title, cause.court, cause.assigned_lawyer, cause.visibility_label, cause.email_group, cause.latest_movement].some((value) => String(value || "").toLowerCase().includes(q));
+  }).sort((left, right) => {
+    if (left.publicada !== right.publicada) return left.publicada ? -1 : 1;
+    const leftGroup = String(left.email_group || "").trim();
+    const rightGroup = String(right.email_group || "").trim();
+    if (!!leftGroup !== !!rightGroup) return leftGroup ? -1 : 1;
+    const groupOrder = leftGroup.localeCompare(rightGroup, "es", { sensitivity: "base" });
+    if (groupOrder) return groupOrder;
+    const yearOrder = Number(right.year || 0) - Number(left.year || 0);
+    if (yearOrder) return yearOrder;
+    return String(left.code || "").localeCompare(String(right.code || ""), "es", { numeric: true, sensitivity: "base" });
   });
 }
 
@@ -280,14 +290,22 @@ function appLegalTableHtml(){
   if (appState.legalPage > pages) appState.legalPage = pages;
   const causes = filtered.slice((appState.legalPage - 1) * perPage, appState.legalPage * perPage);
   if (!causes.length) return `<div class="legal-empty"><strong>Sin causas para estos filtros</strong></div>`;
-  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Año / Estado</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${causes.map((cause) => `<tr>
-    <td><div class="legal-cause-identity"><strong>${appEscape(cause.code)}</strong><span>${appEscape(cause.year ?? "-")}</span><span class="legal-publication-state${cause.publicada ? " is-published" : ""}">${cause.publicada ? "Publicada" : "No publicada"}</span></div></td>
-    <td>${appEscape(cause.court || "-")}</td>
-    <td>${appEscape(cause.assigned_lawyer || "-")}</td>
-    <td>${appEscape(appUniqueList(cause.visibility_label) || "-")}</td>
-    <td>${appEscape(cause.email_group || "-")}</td>
-    <td><span class="legal-stage">${appEscape((cause.latest_stage || cause.latest_procedure) || appStatusLabel(cause.user_status || cause.status))}</span><small>${cause.latest_movement ? appEscape(cause.latest_movement) : "Sin movimientos"}</small></td>
-  </tr>`).join("")}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
+  let previousGroup = "";
+  const rows = causes.map((cause) => {
+    const emailGroup = String(cause.email_group || "").trim();
+    const groupKey = `${cause.publicada ? "published" : "unpublished"}::${emailGroup || "ungrouped"}`;
+    const groupRow = groupKey === previousGroup ? "" : `<tr class="legal-email-group-row"><td colspan="6"><strong>${cause.publicada ? "Publicadas" : "No publicadas"}</strong><span>${appEscape(emailGroup || "Sin grupo de correo")}</span></td></tr>`;
+    previousGroup = groupKey;
+    return `${groupRow}<tr>
+      <td><div class="legal-cause-identity"><strong>${appEscape(cause.code)}</strong><span>${appEscape(cause.year ?? "-")}</span><span class="legal-publication-state${cause.publicada ? " is-published" : ""}">${cause.publicada ? "Publicada" : "No publicada"}</span></div></td>
+      <td>${appEscape(cause.court || "-")}</td>
+      <td>${appEscape(cause.assigned_lawyer || "-")}</td>
+      <td>${appEscape(appUniqueList(cause.visibility_label) || "-")}</td>
+      <td>${appEscape(cause.email_group || "-")}</td>
+      <td><span class="legal-stage">${appEscape((cause.latest_stage || cause.latest_procedure) || appStatusLabel(cause.user_status || cause.status))}</span><small>${cause.latest_movement ? appEscape(cause.latest_movement) : "Sin movimientos"}</small></td>
+    </tr>`;
+  }).join("");
+  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Año / Estado</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${rows}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
 }
 
 function appLegalSummaryHtml(){

@@ -747,6 +747,10 @@
 .legal-causes-table td > strong,.legal-causes-table td > small,.legal-causes-table td:last-child > span,.legal-lawyer-table td > small { display: block; }
 .legal-causes-table td > strong { color: var(--text); margin-bottom: .25rem; }
 .legal-causes-table td > small,.legal-lawyer-table td > small { color: var(--muted); margin-top: .2rem; }
+.legal-causes-table .legal-email-group-row td { padding: .7rem 1rem; background: rgba(49,130,246,.08); border-bottom-color: rgba(134,176,255,.16); }
+.legal-email-group-row td > strong,.legal-email-group-row td > span { display: inline; }
+.legal-email-group-row td > strong { color: #86c4ff; margin: 0 .55rem 0 0; font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; }
+.legal-email-group-row td > span { color: var(--text); font-size: .82rem; font-weight: 800; }
 .legal-cause-identity { display: flex; flex-wrap: wrap; gap: .35rem .55rem; align-items: center; }
 .legal-cause-identity > strong { color: var(--text); }
 .legal-cause-identity > span:not(.legal-publication-state) { color: var(--muted-2); }

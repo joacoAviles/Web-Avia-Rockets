@@ -1,6 +1,7 @@
 const AVIA_APP_API = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || "https://api.aviarockets.cl").replace(/\/$/, "");
 const AVIA_TOKEN_KEY = "avia_auth_token";
 const AVIA_USER_KEY = "avia_auth_user";
+const AVIA_PJUD_UPLOAD_SUMMARY_KEY = "avia_pjud_upload_summary";
 
 const ACADEMY_FALLBACK = {
   ok: true,
@@ -95,6 +96,37 @@ function appFormatDate(value){ if (!value) return "-"; try { return new Date(val
 function appDaysText(days){ if (days === null || days === undefined) return "Sin vencimiento"; if (days < 0) return `Vencida hace ${Math.abs(days)} días`; if (days === 0) return "Vence hoy"; return `Vence en ${days} días`; }
 function appReviewLabel(status){ return ({ok:"Al día", warning:"Por vencer", expired:"Vencida", unknown:"Sin dato", inactive:"Pausado"}[status] || status || "-"); }
 function appNormalizeTheme(value){ return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+function appCauseIsPublished(cause){ return cause?.publicada === true || Number(cause?.publicada) === 1; }
+function appCauseHasMovement(cause){
+  if (!appCauseIsPublished(cause)) return false;
+  const movement = String(cause?.latest_movement || cause?.last_movement || "").trim();
+  const normalized = appNormalizeTheme(movement).replace(/[\s_-]+/g, "");
+  return Boolean(movement) && !["sinmovimiento", "sinmovimientos", "sinmovimientosregistrados", "sinmovimientosnuevos"].includes(normalized);
+}
+function appCauseProcurator(cause){
+  const value = cause?.assigned_procurator || cause?.assigned_procurador || cause?.procurator || cause?.procurador || cause?.procurator_name || cause?.procurador_nombre;
+  if (value && typeof value === "object") return value.name || value.full_name || value.email || value.id || "";
+  return String(value || "").trim();
+}
+function appStoredPjudUploadSummary(){
+  try { return JSON.parse(localStorage.getItem(AVIA_PJUD_UPLOAD_SUMMARY_KEY) || "null"); } catch (_) { return null; }
+}
+function appFirstMetric(object, keys, fallback = 0){
+  for (const key of keys) {
+    if (object?.[key] !== undefined && object?.[key] !== null && object?.[key] !== "") return Number(object[key]);
+  }
+  return fallback;
+}
+function appLegalTabsHtml(){
+  const available = typeof window.appLegalNavigationItems === "function" ? window.appLegalNavigationItems() : [
+    { view:"legal-summary", label:"Resumen" },
+    { view:"causes", label:"Causas" },
+  ];
+  return `<nav class="legal-tabs" aria-label="Secciones legales">${available.map((item) => {
+    const active = (item.view === "legal-summary" && appState.legalTab === "summary") || (item.view === "causes" && appState.legalTab === "causes") || appState.view === item.view;
+    return `<button type="button" data-legal-view="${appEscape(item.view)}" class="${active ? "is-active" : ""}">${appEscape(item.label)}</button>`;
+  }).join("")}</nav>`;
+}
 
 async function appFetch(path, options = {}){
   const headers = new Headers(options.headers || {});
@@ -308,7 +340,7 @@ function appLegalTableHtml(){
   return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Año / Estado</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${rows}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
 }
 
-function appLegalSummaryHtml(){
+function appLegacyLegalSummaryHtml(){
   const catalogs = appState.legalCatalogs;
   const total = appState.causes.length;
   const withMovement = appState.causes.filter((cause) => cause.latest_movement).length;
@@ -323,6 +355,43 @@ function appLegalSummaryHtml(){
   return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong></article><article><small>Con movimientos</small><strong>${withMovement}</strong><span>${totalProgress}% del total</span></article><article><small>Sin movimientos</small><strong>${withoutMovement}</strong><span>${total ? Math.round(withoutMovement / total * 100) : 0}% del total</span></article></div>
     <section class="legal-overview"><div><p class="eyebrow">Avance total</p><h3>${withMovement} de ${total} causas con movimientos</h3></div><div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div><small>${totalProgress}%</small></div></section>
     <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance por abogado</p><h3>Causas con movimientos sobre total asignado</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Total</th><th>Con movimientos</th><th>Sin movimientos</th><th>Avance / Total</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>`;
+}
+
+function appLegalSummaryHtml(){
+  const catalogs = appState.legalCatalogs;
+  const total = appState.causes.length;
+  const publishedCauses = appState.causes.filter(appCauseIsPublished);
+  const published = publishedCauses.length;
+  const unpublished = total - published;
+  const withMovement = publishedCauses.filter(appCauseHasMovement).length;
+  const withoutMovement = published - withMovement;
+  const lawyers = catalogs.lawyers.map((lawyer) => {
+    const rows = appState.causes.filter((cause) => cause.assigned_lawyer === lawyer.id);
+    const publishedRows = rows.filter(appCauseIsPublished);
+    const progressed = publishedRows.filter(appCauseHasMovement).length;
+    const stalled = publishedRows.length - progressed;
+    const notPublished = rows.length - publishedRows.length;
+    const progress = publishedRows.length ? Math.round(progressed / publishedRows.length * 100) : 0;
+    return `<tr><td><strong>${appEscape(lawyer.name)}</strong></td><td>${rows.length}</td><td>${progressed} / ${publishedRows.length}</td><td>${stalled} / ${publishedRows.length}</td><td>${notPublished}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progress}% sobre publicadas</small></td></tr>`;
+  }).join("");
+  const totalProgress = published ? Math.round(withMovement / published * 100) : 0;
+  const stalledProgress = published ? Math.round(withoutMovement / published * 100) : 0;
+  const procurators = new Map();
+  appState.causes.forEach((cause) => {
+    const name = appCauseProcurator(cause);
+    if (name) procurators.set(name, (procurators.get(name) || 0) + 1);
+  });
+  const upload = appState.dashboard?.procurator_summary || appState.dashboard?.procurador_summary || appStoredPjudUploadSummary();
+  const uploadAssigned = appFirstMetric(upload, ["assigned_causes", "assigned", "causas_asignadas", "matched_causes", "matched"]);
+  const uploadTotal = appFirstMetric(upload, ["total_causes", "total", "causas_totales", "rows_total", "processed"], total);
+  const procuratorRows = procurators.size
+    ? [...procurators.entries()].map(([name, assigned]) => `<tr><td><strong>${appEscape(name)}</strong></td><td>${assigned}</td><td>${total}</td><td>${total ? Math.round(assigned / total * 100) : 0}%</td></tr>`).join("")
+    : (upload ? `<tr><td><strong>${appEscape(upload.procurator || upload.procurador || upload.name || "Procurador")}</strong></td><td>${uploadAssigned}</td><td>${uploadTotal}</td><td>${uploadTotal ? Math.round(uploadAssigned / uploadTotal * 100) : 0}%</td></tr>` : "");
+  const procuratorSection = procuratorRows ? `<section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Cobertura por procurador</p><h3>Causas asignadas desde el Excel sobre el total cargado</h3></div><span>Última carga disponible</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table legal-procurator-table"><thead><tr><th>Procurador</th><th>Asignadas</th><th>Total</th><th>Cobertura</th></tr></thead><tbody>${procuratorRows}</tbody></table></div></section>` : "";
+  return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong></article><article><small>Movimientos / publicadas</small><strong>${withMovement} / ${published}</strong><span>${totalProgress}% de las publicadas</span></article><article><small>Sin movimiento / publicadas</small><strong>${withoutMovement} / ${published}</strong><span>${stalledProgress}% de las publicadas</span></article><article><small>No publicadas</small><strong>${unpublished}</strong><span>${total ? Math.round(unpublished / total * 100) : 0}% del total</span></article></div>
+    <section class="legal-overview"><div><p class="eyebrow">Avance total</p><h3>${withMovement} de ${published} causas publicadas tienen movimientos</h3><p>${unpublished} causas no publicadas quedan fuera del cálculo de avance.</p></div><div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div><small>${totalProgress}% sobre publicadas</small></div></section>
+    <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance por abogado</p><h3>Movimientos y pendientes sobre causas publicadas</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Total asignado</th><th>Movimientos / publicadas</th><th>Sin movimiento / publicadas</th><th>No publicadas</th><th>Avance</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>
+    ${procuratorSection}`;
 }
 
 function appCauseRows(){
@@ -368,7 +437,7 @@ function appRenderLegalPanel(){
   appSetText("app-product-status", appBool(appState.dashboard?.stats?.daily_summary_email_enabled));
   appSetText("app-product-slug", "legal");
   const demo = document.getElementById("app-product-demo");
-  if (demo) demo.innerHTML = `<nav class="legal-tabs" aria-label="Secciones legales"><button type="button" data-legal-tab="summary" class="${appState.legalTab === "summary" ? "is-active" : ""}">Resumen</button><button type="button" data-legal-tab="causes" class="${appState.legalTab === "causes" ? "is-active" : ""}">Causas</button></nav>`;
+  if (demo) demo.innerHTML = appLegalTabsHtml();
   appSetText("app-config-title", appState.legalTab === "summary" ? "Resumen operativo" : `Total: ${appState.causes.length} causas`);
   const config = document.getElementById("app-product-config");
   if (!config) return;
@@ -1048,7 +1117,14 @@ function appBindAcademyControls(){
 
 function appBindControls(){
   document.querySelectorAll("[data-legal-page]").forEach((button) => button.addEventListener("click", () => { appState.legalPage = Number(button.dataset.legalPage || 1); appRenderLegalPanel(); }));
-  document.querySelectorAll("[data-legal-tab]").forEach((button) => button.addEventListener("click", async () => { appState.legalTab = button.dataset.legalTab || "summary"; history.replaceState(null, "", `#legal-${appState.legalTab}`); await appRenderPanel(); }));
+  document.querySelectorAll("[data-legal-view]").forEach((button) => button.addEventListener("click", async () => {
+    const view = button.dataset.legalView || "legal-summary";
+    if (typeof window.appNavigateToProductView === "function") return window.appNavigateToProductView(view);
+    appState.view = view;
+    appState.legalTab = view === "causes" ? "causes" : "summary";
+    history.replaceState(null, "", `#legal-${appState.legalTab}`);
+    await appRenderPanel();
+  }));
   document.querySelectorAll("[data-legal-filter]").forEach((select) => select.addEventListener("change", () => { appState.legalFilters[select.dataset.legalFilter] = select.value || "all"; appState.legalPage = 1; appRenderLegalPanel(); }));
   document.querySelector("[data-legal-clear]")?.addEventListener("click", () => { appState.search = ""; Object.keys(appState.legalFilters).forEach((key) => { appState.legalFilters[key] = "all"; }); appState.legalPage = 1; appRenderLegalPanel(); });
   document.querySelector("[data-legal-page-size]")?.addEventListener("change", (event) => { appState.legalPageSize = Number(event.target.value || 25); appState.legalPage = 1; appRenderLegalPanel(); });

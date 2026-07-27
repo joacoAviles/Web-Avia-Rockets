@@ -241,6 +241,34 @@ function appFilteredCauses(){
   });
 }
 
+function appDownloadLegalExcel(){
+  if (!window.XLSX) {
+    appShow("No se pudo preparar el archivo Excel.", true);
+    return;
+  }
+  const rows = appState.causes.map((cause) => ({
+    "Causa": cause.code || "",
+    "Año": cause.year ?? "",
+    "Estado de publicación": cause.publicada ? "Publicada" : "No publicada",
+    "Juzgado": cause.court || "",
+    "Abogado asignado": cause.assigned_lawyer || "",
+    "Quién puede ver": appUniqueList(cause.visibility_label) || "",
+    "Grupo de correo": cause.email_group || "",
+    "Etapa / Estado": (cause.latest_stage || cause.latest_procedure) || appStatusLabel(cause.user_status || cause.status),
+    "Último movimiento": cause.latest_movement || "",
+  }));
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  worksheet["!cols"] = [
+    { wch: 14 }, { wch: 10 }, { wch: 22 }, { wch: 42 }, { wch: 30 },
+    { wch: 34 }, { wch: 30 }, { wch: 36 }, { wch: 54 },
+  ];
+  if (rows.length) worksheet["!autofilter"] = { ref: `A1:I${rows.length + 1}` };
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Causas");
+  const date = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(workbook, `causas-legales-${date}.xlsx`, { compression: true });
+}
+
 function appCatalogOptions(items, selected, label = "Seleccionar"){
   return `<option value="">${appEscape(label)}</option>${items.map((item) => `<option value="${appEscape(item.id)}" ${item.id === selected ? "selected" : ""}>${appEscape(item.name)}${item.email ? ` · ${appEscape(item.email)}` : ""}</option>`).join("")}`;
 }
@@ -329,7 +357,7 @@ function appRenderLegalPanel(){
   const filterOptions = (items, selected) => items.map((item) => `<option value="${appEscape(item.id)}" ${item.id === selected ? "selected" : ""}>${appEscape(item.name)}</option>`).join("");
   const valueOptions = (values, selected) => [...new Set(values.filter(Boolean))].sort().map((value) => `<option value="${appEscape(value)}" ${value === selected ? "selected" : ""}>${appEscape(value)}</option>`).join("");
   const resultCount = appFilteredCauses().length;
-  config.innerHTML = appState.legalTab === "summary" ? appLegalSummaryHtml() : `<div class="legal-search-row"><label class="legal-search"><span>Buscar</span><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Buscar causa, código o juzgado" /></label></div><div class="legal-toolbar"><label><span>Estado</span><select data-legal-filter="status"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.user_status), appState.legalFilters.status)}</select></label><label><span>Etapa</span><select data-legal-filter="stage"><option value="all">Todas</option>${valueOptions(appState.causes.map((cause) => cause.latest_stage || cause.latest_procedure), appState.legalFilters.stage)}</select></label><label><span>Juzgado</span><select data-legal-filter="court"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.court), appState.legalFilters.court)}</select></label><label><span>Abogado</span><select data-legal-filter="lawyer"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.lawyers, appState.legalFilters.lawyer)}</select></label><label><span>Quién puede ver</span><select data-legal-filter="visibility"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.visibility_label), appState.legalFilters.visibility)}</select></label><button class="legal-clear" type="button" data-legal-clear>Limpiar filtros</button><strong class="legal-result-count">${resultCount} resultados</strong><label class="legal-page-size"><span>Ver</span><select data-legal-page-size><option value="25" ${appState.legalPageSize === 25 ? "selected" : ""}>25</option><option value="50" ${appState.legalPageSize === 50 ? "selected" : ""}>50</option><option value="100" ${appState.legalPageSize === 100 ? "selected" : ""}>100</option></select></label></div><div id="cause-list-rows">${appLegalTableHtml()}</div>`;
+  config.innerHTML = appState.legalTab === "summary" ? appLegalSummaryHtml() : `<div class="legal-search-row"><label class="legal-search"><span>Buscar</span><input id="cause-search-input" type="search" value="${appEscape(appState.search)}" placeholder="Buscar causa, código o juzgado" /></label></div><div class="legal-toolbar"><label><span>Estado</span><select data-legal-filter="status"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.user_status), appState.legalFilters.status)}</select></label><label><span>Etapa</span><select data-legal-filter="stage"><option value="all">Todas</option>${valueOptions(appState.causes.map((cause) => cause.latest_stage || cause.latest_procedure), appState.legalFilters.stage)}</select></label><label><span>Juzgado</span><select data-legal-filter="court"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.court), appState.legalFilters.court)}</select></label><label><span>Abogado</span><select data-legal-filter="lawyer"><option value="all">Todos</option>${filterOptions(appState.legalCatalogs.lawyers, appState.legalFilters.lawyer)}</select></label><label><span>Quién puede ver</span><select data-legal-filter="visibility"><option value="all">Todos</option>${valueOptions(appState.causes.map((cause) => cause.visibility_label), appState.legalFilters.visibility)}</select></label><button class="legal-clear" type="button" data-legal-clear>Limpiar filtros</button><strong class="legal-result-count">${resultCount} resultados</strong><label class="legal-page-size"><span>Ver</span><select data-legal-page-size><option value="25" ${appState.legalPageSize === 25 ? "selected" : ""}>25</option><option value="50" ${appState.legalPageSize === 50 ? "selected" : ""}>50</option><option value="100" ${appState.legalPageSize === 100 ? "selected" : ""}>100</option></select></label></div><div id="cause-list-rows">${appLegalTableHtml()}</div><div class="legal-export-row"><div><strong>Descargar todas las causas</strong><span>Incluye los ${appState.causes.length} registros disponibles en formato Excel.</span></div><button type="button" data-legal-export>Descargar Excel</button></div>`;
   appBindControls();
 }
 
@@ -1006,6 +1034,7 @@ function appBindControls(){
   document.querySelectorAll("[data-legal-filter]").forEach((select) => select.addEventListener("change", () => { appState.legalFilters[select.dataset.legalFilter] = select.value || "all"; appState.legalPage = 1; appRenderLegalPanel(); }));
   document.querySelector("[data-legal-clear]")?.addEventListener("click", () => { appState.search = ""; Object.keys(appState.legalFilters).forEach((key) => { appState.legalFilters[key] = "all"; }); appState.legalPage = 1; appRenderLegalPanel(); });
   document.querySelector("[data-legal-page-size]")?.addEventListener("change", (event) => { appState.legalPageSize = Number(event.target.value || 25); appState.legalPage = 1; appRenderLegalPanel(); });
+  document.querySelector("[data-legal-export]")?.addEventListener("click", appDownloadLegalExcel);
   document.querySelectorAll("[data-cause-field]").forEach((select) => select.addEventListener("change", async () => {
     const previous = appState.causes.find((cause) => cause.id === select.dataset.causeId)?.[select.dataset.causeField] || "";
     select.disabled = true;

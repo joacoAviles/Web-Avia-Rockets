@@ -21,6 +21,8 @@
 - Número, año y estado de publicación se leen en una sola línea y no desplazan las demás columnas.
 - El estado utiliza una insignia discreta coherente con las etiquetas existentes.
 - No se agregaron acciones ni controles de edición.
+- Al final del listado se agregó una única acción de descarga, separada visualmente de la paginación y alineada con el estilo existente.
+- La descarga fue probada con los 286 registros y produjo un libro `.xlsx` válido con 287 filas (encabezado más datos) y 9 columnas.
 - Consola del navegador sin errores.
 
 ## Historial
@@ -28,5 +30,6 @@
 1. La API se amplió para exponer el campo real `publicada` junto al año ya existente.
 2. La primera celda se ajustó para mostrar código, año y estado sin alterar la estructura general.
 3. Se comparó la referencia y la implementación en una misma imagen y no se detectaron desbordes, cortes ni cambios visuales fuera de alcance.
+4. Se verificó visualmente la ubicación del botón junto al footer y se abrió el Excel generado para confirmar encabezados, filas y ausencia de errores.
 
 final result: passed

@@ -1,25 +1,32 @@
-# QA visual — Legal
+# QA visual — Legal / Causas
 
 ## Fuentes comparadas
 
-- `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-d397cdcf-8b45-4c3d-960b-15e543cf853c.png`
-- `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-08c0aa46-491e-4d18-9590-78870acc53a0.png`
-- `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-b72caa38-7297-4ed3-9f65-64cd3953d373.png`
+- Referencia: `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-02ef4131-6a18-4914-92dd-53ed89b61442.png`
+- Implementación local: `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\legal-causas-qa-20260727.png`
+- Comparación conjunta: `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\legal-causas-comparison-20260727.png`
 
-## Evidencia de implementación
+## Estado verificado
 
-- `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\implementation-summary.png`
-- `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\implementation-causes.png`
-- `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\comparison-causes.png`
+- Vista: Legal → Causas, sesión de `fhevia@asesoriasnow.cl`.
+- Viewport: 1280 × 720 CSS px, densidad 2.
+- Datos: 286 causas obtenidas desde la API productiva.
+- Primera columna: `Causa / Año / Estado`.
+- Muestras reales verificadas: `448 / 2025 / No publicada`, `2858 / 2023 / Publicada` y `3125 / 2023 / Publicada`.
 
-## Resultado
+## Revisión visual
 
-PASSED
-
-- Se conservó el sistema visual oscuro, tipografía, bordes, radios y espaciado de AVIA Rockets.
-- `Resumen` y `Causas` son estados de navegación independientes y actualizan la URL.
-- La tabla replica la estructura funcional de la referencia con seis columnas y filtros, usando exclusivamente los 286 registros entregados por la API.
-- No hay controles de modificación en filas.
-- El menú lateral queda fuera de la vista Legal y la tabla ocupa el área de trabajo; en anchos reducidos conserva todas las columnas mediante desplazamiento horizontal.
-- Los filtros, limpieza de filtros y selector de cantidad fueron probados con datos reales.
+- Se conservan el header, el footer, la paleta oscura, la tipografía, los bordes, los radios y el espaciado existentes.
+- El cambio queda limitado a la primera columna del listado.
+- Número, año y estado de publicación se leen en una sola línea y no desplazan las demás columnas.
+- El estado utiliza una insignia discreta coherente con las etiquetas existentes.
+- No se agregaron acciones ni controles de edición.
 - Consola del navegador sin errores.
+
+## Historial
+
+1. La API se amplió para exponer el campo real `publicada` junto al año ya existente.
+2. La primera celda se ajustó para mostrar código, año y estado sin alterar la estructura general.
+3. Se comparó la referencia y la implementación en una misma imagen y no se detectaron desbordes, cortes ni cambios visuales fuera de alcance.
+
+final result: passed

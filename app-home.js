@@ -252,8 +252,8 @@ function appLegalTableHtml(){
   if (appState.legalPage > pages) appState.legalPage = pages;
   const causes = filtered.slice((appState.legalPage - 1) * perPage, appState.legalPage * perPage);
   if (!causes.length) return `<div class="legal-empty"><strong>Sin causas para estos filtros</strong></div>`;
-  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Código</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${causes.map((cause) => `<tr>
-    <td>${cause.title ? `<strong>${appEscape(cause.title)}</strong>` : ""}<small>${appEscape(cause.code)}</small></td>
+  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Año / Estado</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${causes.map((cause) => `<tr>
+    <td><div class="legal-cause-identity"><strong>${appEscape(cause.code)}</strong><span>${appEscape(cause.year ?? "-")}</span><span class="legal-publication-state${cause.publicada ? " is-published" : ""}">${cause.publicada ? "Publicada" : "No publicada"}</span></div></td>
     <td>${appEscape(cause.court || "-")}</td>
     <td>${appEscape(cause.assigned_lawyer || "-")}</td>
     <td>${appEscape(appUniqueList(cause.visibility_label) || "-")}</td>

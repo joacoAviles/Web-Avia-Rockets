@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://aviarockets.cl/app.html" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="beta-products.css" />
-  <link rel="stylesheet" href="app-home.css?v=legal-movement-procurator-20260727-3" />
+  <link rel="stylesheet" href="app-home.css?v=legal-causas-20260720-2" />
   <link rel="stylesheet" href="academy-responsive.css?v=academy-mobile-20260622-1" />
   <style>
     body[data-page="app-home"] .app-sidebar-toggle,
@@ -70,61 +70,47 @@
       border-color: rgba(71, 163, 255, .34);
     }
 
-    body[data-page="app-home"] .nav-panel { align-items: center; gap: .45rem; }
-    body[data-page="app-home"] .app-header-menu { position: relative; }
-    body[data-page="app-home"] .app-header-trigger {
-      border: 0; border-radius: 999px; background: transparent; color: var(--muted-2);
-      cursor: pointer; font: inherit; font-size: .93rem; font-weight: 800; padding: .62rem .78rem;
+    body[data-page="app-home"] .nav-panel .app-line-nav {
+      border: 0;
+      background: transparent;
+      color: var(--muted-2);
+      cursor: pointer;
+      font: inherit;
+      font-size: .93rem;
+      font-weight: 750;
+      padding: .35rem .1rem;
+      transition: color var(--transition), text-shadow var(--transition);
     }
-    body[data-page="app-home"] .app-header-trigger:hover,
-    body[data-page="app-home"] .app-header-trigger.is-active,
-    body[data-page="app-home"] .app-header-menu.is-open > .app-header-trigger {
-      color: #fff; background: rgba(255,255,255,.07);
+
+    body[data-page="app-home"] .nav-panel .app-line-nav:hover {
+      color: #fff;
+      text-shadow: 0 0 16px rgba(10, 108, 255, .45);
     }
-    body[data-page="app-home"] .app-header-dropdown {
-      position: absolute; top: calc(100% + .7rem); left: 0; z-index: 50; display: none;
-      min-width: 260px; gap: .35rem; padding: .55rem; border: 1px solid rgba(134,176,255,.22);
-      border-radius: 18px; background: rgba(7,20,38,.98); box-shadow: 0 24px 70px rgba(0,0,0,.38);
+
+    body[data-page="app-home"] .nav-panel .app-line-nav.is-active {
+      color: var(--primary-3);
     }
-    body[data-page="app-home"] .app-header-menu:hover .app-header-dropdown,
-    body[data-page="app-home"] .app-header-menu:focus-within .app-header-dropdown,
-    body[data-page="app-home"] .app-header-menu.is-open .app-header-dropdown { display: grid; }
-    body[data-page="app-home"] .app-header-option {
-      width: 100%; display: grid; grid-template-columns: 38px minmax(0,1fr); gap: .65rem;
-      align-items: center; border: 1px solid transparent; border-radius: 14px; background: transparent;
-      color: var(--text); cursor: pointer; font: inherit; padding: .55rem; text-align: left;
+
+    body[data-page="app-home"] .app-config-wheel {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 900;
     }
-    body[data-page="app-home"] .app-header-option:hover,
-    body[data-page="app-home"] .app-header-option.is-active {
-      border-color: rgba(71,163,255,.32); background: rgba(10,108,255,.13);
-    }
-    body[data-page="app-home"] .app-header-option strong {
-      width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px;
-      background: rgba(10,108,255,.16); color: var(--primary-3); font-size: .78rem;
-    }
-    body[data-page="app-home"] .app-header-option span { display: grid; gap: .1rem; font-weight: 800; }
-    body[data-page="app-home"] .app-header-option small { color: var(--muted); font-weight: 600; }
-    body[data-page="app-home"] .app-header-empty {
-      color: var(--muted);
-      font-size: .86rem;
-      padding: .7rem .8rem;
-      white-space: nowrap;
-    }
-    body[data-page="app-home"] .app-aurora-button {
-      width: 46px; height: 46px; flex: 0 0 46px; padding: 0; overflow: hidden;
-      border: 1px solid rgba(134,176,255,.24); border-radius: 50%;
-      background: rgba(255,255,255,.05); cursor: pointer; box-shadow: 0 0 0 3px rgba(10,108,255,.08);
-    }
-    body[data-page="app-home"] .app-aurora-button img {
-      width: 100%; height: 100%; display: block; object-fit: cover;
-    }
-    @media (max-width: 760px) {
-      body[data-page="app-home"] .app-header-menu,
-      body[data-page="app-home"] .app-header-trigger { width: 100%; }
-      body[data-page="app-home"] .app-header-trigger { text-align: left; }
-      body[data-page="app-home"] .app-header-dropdown {
-        position: static; min-width: 0; width: 100%; margin: .2rem 0 .55rem; box-shadow: none;
-      }
+
+    body[data-page="app-home"] .app-config-wheel::before {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 18px;
+      margin: auto;
+      border: 3px solid currentColor;
+      border-radius: 50%;
+      box-shadow: 0 -9px 0 -6px currentColor, 0 9px 0 -6px currentColor, 9px 0 0 -6px currentColor, -9px 0 0 -6px currentColor;
     }
 
     body[data-page="app-home"] .app-brand-mark {
@@ -170,7 +156,7 @@
       <div class="app-layout" id="app-layout">
         <aside class="app-sidebar">
           <div class="app-sidebar-head">
-            <strong>Productos<small id="app-sidebar-line-label">Legal</small></strong>
+            <strong>Productos<small id="app-sidebar-line-label">OPS</small></strong>
             <button class="app-sidebar-toggle" id="app-sidebar-toggle" type="button" aria-label="Contraer menÃº">â€¹</button>
           </div>
 
@@ -225,9 +211,8 @@
 
   <footer class="site-footer footer-clean"></footer>
   <script src="api-config.js"></script>
-  <script src="header-standard.js?v=header-rules-20260726-2"></script>
-  <script src="vendor-xlsx.full.min.js?v=0.20.3"></script>
-  <script src="app-home.js?v=legal-publication-filter-20260727-3"></script>
+  <script src="header-standard.js?v=permissions-20260720-4"></script>
+  <script src="app-home.js?v=legal-causas-20260720-4"></script>
   <script>
     (function(){
       if (typeof appState === "undefined") return;
@@ -235,13 +220,13 @@
       const LINE_KEY = "avia_app_selected_line";
       const LINE_HOME_SUFFIX = "-home";
       const lines = {
-        legal: {
-          id: "legal",
-          label: "Legal",
-          eyebrow: "Línea Legal",
-          title: "Legal",
-          description: "Resumen operativo, causas judiciales y revisión de asignación del procurador.",
-          products: ["legal-summary", "causes", "pjud-upload"]
+        ops: {
+          id: "ops",
+          label: "OPS",
+          eyebrow: "LÃ­nea OPS",
+          title: "OPS",
+          description: "OperaciÃ³n diaria: seguimiento legal, flota, vencimientos y procesos que necesitan control constante.",
+          products: ["causes", "technical-reviews"]
         },
         intelligence: {
           id: "intelligence",
@@ -257,29 +242,21 @@
           eyebrow: "LÃ­nea Labs",
           title: "Labs",
           description: "Academy, conectores y herramientas internas para convertir procesos reales en productos utilizables dentro del login.",
-          products: ["academy", "api-lab"]
+          products: ["pjud-upload", "academy", "api-lab"]
         }
       };
 
       const catalog = {
-        "legal-summary": {
-          line: "legal",
-          icon: "RS",
-          label: "Resumen",
-          apiSlug: "legal-summary",
-          slugs: ["legal", "legal-summary", "resumen", "legal-resumen"],
-          meta: function(){ return `${appState.causes.length || 0} causas`; }
-        },
         "causes": {
-          line: "legal",
-          icon: "CS",
-          label: "Causas",
-          apiSlug: "causes",
-          slugs: ["causes", "causas", "legal-causas"],
+          line: "ops",
+          icon: "LG",
+          label: "Legal / Causas",
+          apiSlug: "legal",
+          slugs: ["legal", "causes", "causas", "legal-causas"],
           meta: function(){ return `${appState.causes.length || 0} causas`; }
         },
         "technical-reviews": {
-          line: "legal",
+          line: "ops",
           icon: "RT",
           label: "Revisiones TÃ©cnicas",
           apiSlug: "revision-tecnica",
@@ -307,14 +284,14 @@
           description: "Motor de aprendizaje con fuentes verificables, reportes de error, progreso por alumno y modos de estudio."
         },
         "pjud-upload": {
-          line: "legal",
+          line: "labs",
           icon: "PJ",
-          label: "Procurador",
+          label: "Cargar causas PJUD",
           apiSlug: "pjud-upload",
           slugs: ["pjud-upload", "labs-pjud-upload", "procurador-pjud", "cargar-causas-pjud", "pjud"],
           meta: function(){ return "Excel diario"; },
-          title: "Procurador",
-          description: "Sube el Excel diario del procurador. La API procesa, concilia y envía el informe automáticamente."
+          title: "Cargar causas PJUD",
+          description: "Sube el Excel diario del procurador. La API procesa, concilia y deja el lote listo para revisiÃ³n."
         },
         "api-lab": {
           line: "labs",
@@ -328,14 +305,13 @@
         }
       };
 
-      appState.selectedLine = localStorage.getItem(LINE_KEY) || "legal";
+      appState.selectedLine = localStorage.getItem(LINE_KEY) || "ops";
 
       function normalize(value){
         return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
       }
 
       function productToken(product){
-        if (typeof product === "string") return normalize(product);
         return normalize(product?.slug || product?.product_slug || product?.code || product?.key || product?.name || product?.title);
       }
 
@@ -383,36 +359,20 @@
       }
 
       function firstAllowedLine(){
-        return Object.keys(lines).find(isLineAllowed) || "legal";
+        return allowedLines()[0] || "labs";
       }
 
       function itemsForLine(lineId){
-        const line = lines[lineId] || lines.legal;
+        const line = lines[lineId] || lines.ops;
         return line.products.filter(isContracted).map(function(view){
           const item = catalog[view];
           return [view, item.label, item.meta(), item.icon, item.apiSlug];
         });
       }
 
-      window.appLegalNavigationItems = function(){
-        return itemsForLine("legal").map(function(item){
-          return { view: item[0], label: item[1], icon: item[3] };
-        });
-      };
-
-      window.appNavigateToProductView = async function(view){
-        if (!isContracted(view)) return;
-        appState.view = view;
-        appState.selectedLine = catalog[view]?.line || "legal";
-        if (view === "legal-summary") appState.legalTab = "summary";
-        if (view === "causes") appState.legalTab = "causes";
-        localStorage.setItem(LINE_KEY, appState.selectedLine);
-        await appRenderPanel();
-      };
-
       function lineForView(view){
         if (String(view || "").endsWith(LINE_HOME_SUFFIX)) return String(view).replace(LINE_HOME_SUFFIX, "");
-        return catalog[view]?.line || appState.selectedLine || "legal";
+        return catalog[view]?.line || appState.selectedLine || "ops";
       }
 
       function homeView(lineId){
@@ -439,14 +399,8 @@
         document.querySelectorAll("[data-app-line]").forEach(function(item){
           item.classList.toggle("is-active", item.dataset.appLine === appState.selectedLine && appState.view !== "settings");
         });
-        document.querySelectorAll("[data-header-line]").forEach(function(item){
-          item.classList.toggle("is-active", item.dataset.headerLine === appState.selectedLine && appState.view !== "settings");
-        });
-        document.querySelectorAll("[data-header-product]").forEach(function(item){
-          item.classList.toggle("is-active", item.dataset.headerProduct === appState.view);
-        });
         const label = document.getElementById("app-sidebar-line-label");
-        if (label) label.textContent = lines[appState.selectedLine]?.label || "Legal";
+        if (label) label.textContent = lines[appState.selectedLine]?.label || "OPS";
       }
 
       function renderHeader(){
@@ -455,9 +409,7 @@
         const nav = header.querySelector(".nav-panel");
         if (!nav) return;
         const lineIds = allowedLines();
-        const signature = lineIds.map(function(lineId){
-          return `${lineId}:${itemsForLine(lineId).map(function(item){ return item[0]; }).join(",")}`;
-        }).join("|");
+        const signature = lineIds.join("|") || "none";
         if (nav.dataset.appHeader === "ready" && nav.dataset.allowedSignature === signature) return;
         nav.dataset.appHeader = "ready";
         nav.dataset.allowedSignature = signature;
@@ -465,29 +417,21 @@
         const lineButtons = lineIds.map(function(lineId){
           const line = lines[lineId];
           const options = itemsForLine(lineId).map(function(item){
-            return `<button class="app-header-option" type="button" role="menuitem" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`;
-          }).join("") || '<span class="app-header-empty">Sin productos disponibles</span>';
-          return `<div class="app-header-menu"><button class="app-header-trigger" data-header-line="${appEscape(lineId)}" type="button" aria-haspopup="menu" aria-expanded="false">${appEscape(line.label)}</button><div class="app-header-dropdown" role="menu">${options}</div></div>`;
+            return `<button class="avia-app-product-option" type="button" data-header-product="${appEscape(item[0])}"><strong>${appEscape(item[3])}</strong><span>${appEscape(item[1])}<small>${appEscape(item[2])}</small></span></button>`;
+          }).join("");
+          return `<div class="avia-app-menu-item"><button class="app-line-nav avia-app-menu-trigger" data-header-line="${appEscape(lineId)}" type="button">${appEscape(line.label)}</button><div class="avia-app-dropdown">${options}</div></div>`;
         }).join("");
-        nav.innerHTML = lineButtons + '<button class="app-aurora-button" id="app-header-settings" type="button" aria-label="Abrir configuración"><img src="https://aviarockets.cl/bimi/logo.svg" alt="Aurora, asistente de AVIA Rockets"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesión</button>';
+        nav.innerHTML = lineButtons + '<button class="app-config-wheel" id="app-header-settings" type="button" aria-label="ConfiguraciÃ³n"></button><button class="btn btn-primary btn-nav" id="app-header-logout" type="button">Cerrar sesiÃ³n</button>';
         nav.querySelectorAll("[data-header-line]").forEach(function(button){
-          button.addEventListener("click", function(){
-            const menu = button.closest(".app-header-menu");
-            const opening = !menu.classList.contains("is-open");
-            nav.querySelectorAll(".app-header-menu.is-open").forEach(function(other){
-              other.classList.remove("is-open");
-              other.querySelector(".app-header-trigger")?.setAttribute("aria-expanded", "false");
-            });
-            menu.classList.toggle("is-open", opening);
-            button.setAttribute("aria-expanded", String(opening));
+          button.addEventListener("click", async function(){
+            await selectLine(button.dataset.headerLine || "ops");
           });
         });
         nav.querySelectorAll("[data-header-product]").forEach(function(button){
           button.addEventListener("click", async function(){
-            appState.view = button.dataset.headerProduct || "legal-summary";
+            appState.view = button.dataset.headerProduct || "causes";
             appState.selectedLine = catalog[appState.view]?.line || appState.selectedLine;
             localStorage.setItem(LINE_KEY, appState.selectedLine);
-            button.closest(".app-header-menu")?.classList.remove("is-open");
             await appRenderPanel();
           });
         });
@@ -512,7 +456,7 @@
       }
 
       function renderLineHome(lineId){
-        const line = lines[lineId] || lines.legal;
+        const line = lines[lineId] || lines.ops;
         appSetText("app-view-label", line.eyebrow);
         appSetText("app-product-title", line.title);
         appSetText("app-product-description", line.description);
@@ -538,7 +482,7 @@
 
       function renderPjudUploadProduct(){
         const item = catalog["pjud-upload"];
-        appSetText("app-view-label", "Legal · Procurador");
+        appSetText("app-view-label", "Labs Â· Procurador");
         appSetText("app-product-title", item.title);
         appSetText("app-product-description", "Sube el Excel diario de causas PJUD. AVIA lo compara contra las causas asignadas y prepara el resumen para correo.");
         appSetText("app-product-status", "Habilitado");
@@ -549,7 +493,6 @@
         if (demo) {
           demo.innerHTML = `<div class="app-line-hook"><strong>Carga diaria PJUD</strong><span>Selecciona la fecha del informe y el Excel exportado. El sistema harÃ¡ la conciliaciÃ³n y enviarÃ¡ el correo automÃ¡ticamente.</span></div>`;
         }
-        demo?.insertAdjacentHTML("afterbegin", appLegalTabsHtml());
         appSetText("app-config-title", "Cargar Excel de causas PJUD");
         const today = new Date().toISOString().slice(0, 10);
         const config = document.getElementById("app-product-config");
@@ -579,7 +522,6 @@
           ${adminEmailPanel}
           <div class="app-config-row"><span>Resultado</span><strong id="pjud-upload-result">OK o ERROR aparecerÃ¡ aquÃ­.</strong></div>`;
         }
-        appBindControls();
       }
 
       async function submitPjudUpload(form){
@@ -595,7 +537,7 @@
         body.append("report_date", reportDate);
         if (result) result.textContent = "Procesando...";
         const token = appGetToken();
-        const response = await fetch(`${AVIA_APP_API}/api/v1/legal/procurador-reports/uploads`, {
+        const response = await fetch(`${AVIA_APP_API}/api/v1/labs/procurador-reports/uploads`, {
           method: "POST",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           body
@@ -611,7 +553,7 @@
         if (result) {
           const assigned = uploadSummary?.assigned_causes ?? uploadSummary?.assigned ?? uploadSummary?.causas_asignadas ?? uploadSummary?.matched_causes ?? uploadSummary?.matched;
           const total = uploadSummary?.total_causes ?? uploadSummary?.total ?? uploadSummary?.causas_totales ?? uploadSummary?.rows_total ?? uploadSummary?.processed;
-          result.textContent = assigned !== undefined && total !== undefined ? `OK · ${assigned} de ${total} causas asignadas a procurador.` : "OK";
+          result.textContent = assigned !== undefined && total !== undefined ? `OK Â· ${assigned} de ${total} causas asignadas a procurador.` : "OK";
         }
       }
 
@@ -622,7 +564,7 @@
         const sendButton = document.getElementById("pjud-control-send");
         if (statusNode) statusNode.textContent = "Comparando extracciones y generando respaldos por portafolio...";
         if (sendButton) sendButton.disabled = true;
-        const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
+        const data = await appFetch("/api/v1/labs/procurador-reports/pjud-control-email/grouped-preview", {
           method: "POST",
           body: JSON.stringify({})
         });
@@ -630,7 +572,7 @@
         const previewRow = document.getElementById("pjud-control-preview-row");
         const previewText = document.getElementById("pjud-control-preview-text");
         if (previewText) previewText.textContent = data.reports.map((report, index) =>
-          `CORREO ${index + 1} Â· ${report.portfolio_name}\n` +
+          `CORREO ${index + 1} Â· ${report.portfolio_name}${report.group_label ? ` Â· ${report.group_label}` : ""}\n` +
           `Para: ${report.recipients.join(", ")}\n` +
           `BCC: ${[...report.bcc, "keanuavia@gmail.com"].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
           `Asunto: ${report.subject}\n\n${report.text_preview}`
@@ -650,7 +592,7 @@
         const sendButton = document.getElementById("pjud-control-send");
         if (sendButton) sendButton.disabled = true;
         if (statusNode) statusNode.textContent = "Encolando correo...";
-        const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/send-all", {
+        const data = await appFetch("/api/v1/labs/procurador-reports/pjud-control-email/send-all", {
           method: "POST",
           body: JSON.stringify({ confirm: true, report_ids: pjudControlReportIds })
         });
@@ -697,7 +639,7 @@
         if (!menu) return;
         const items = appProductItems();
         if (!items.length) {
-          const line = lines[appState.selectedLine] || lines.legal;
+          const line = lines[appState.selectedLine] || lines.ops;
           menu.innerHTML = `<div class="app-product-menu-empty"><strong>${appEscape(line.label)}</strong><span>Sin subproductos contratados.</span><small>La API podrÃ¡ llenar esta lista por slug de producto.</small></div>`;
           return;
         }
@@ -710,7 +652,7 @@
       appRenderPanel = async function(){
         renderHeader();
         resolveView();
-        document.body.classList.toggle("is-legal-view", ["causes", "legal-summary", "pjud-upload"].includes(appState.view));
+        document.body.classList.toggle("is-legal-view", appState.view === "causes");
         appRenderSidebar();
         const statsWrap = document.querySelector(".app-stats");
         if (statsWrap) statsWrap.style.display = "";
@@ -720,11 +662,7 @@
         else if (appState.view === "pjud-upload") renderPjudUploadProduct();
         else if (appState.view === "intelligence-dashboard" || appState.view === "api-lab") renderPlaceholderProduct(appState.view);
         else if (String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) renderLineHome(lineForView(appState.view));
-        else {
-          if (appState.view === "legal-summary") appState.legalTab = "summary";
-          if (appState.view === "causes") appState.legalTab = "causes";
-          appRenderLegalPanel();
-        }
+        else appRenderLegalPanel();
         appRenderSidebar();
         if (!["intelligence-dashboard", "api-lab", "pjud-upload"].includes(appState.view) && !String(appState.view || "").endsWith(LINE_HOME_SUFFIX)) appRenderStats();
       };
@@ -778,7 +716,7 @@
       setTimeout(function(){ renderHeader(); updateLineHeader(); }, 0);
     })();
   </script>
-  <script src="footer-standard.js?v=header-rules-20260726-2"></script>
+  <script src="footer-standard.js?v=20260604-3"></script>
 </body>
 </html>
 

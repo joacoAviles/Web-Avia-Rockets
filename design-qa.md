@@ -25,6 +25,7 @@
 - La descarga fue probada con los 286 registros y produjo un libro `.xlsx` válido con 287 filas (encabezado más datos) y 9 columnas.
 - La vista inicial prioriza las causas publicadas; dentro de cada estado de publicación, los registros quedan ordenados y encabezados por su grupo de correo real.
 - Los grupos con correo aparecen antes de los registros sin grupo, que se identifican explícitamente como `Sin grupo de correo`.
+- El filtro `Estado` presenta únicamente `Todos`, `Publicado` y `No publicado`; se comprobó que ambas opciones devuelven exclusivamente el estado de publicación seleccionado.
 - Consola del navegador sin errores.
 
 ## Historial

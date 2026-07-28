@@ -99,9 +99,22 @@ function appNormalizeTheme(value){ return String(value || "").normalize("NFD").r
 function appCauseIsPublished(cause){ return cause?.publicada === true || Number(cause?.publicada) === 1; }
 function appCauseHasMovement(cause){
   if (!appCauseIsPublished(cause)) return false;
-  const movement = String(cause?.latest_movement || cause?.last_movement || "").trim();
-  const normalized = appNormalizeTheme(movement).replace(/[\s_-]+/g, "");
-  return Boolean(movement) && !["sinmovimiento", "sinmovimientos", "sinmovimientosregistrados", "sinmovimientosnuevos"].includes(normalized);
+  const explicit = cause?.daily_has_movement ?? cause?.has_movement_today ?? cause?.latest_has_movement ?? cause?.has_movement;
+  if (typeof explicit === "boolean") return explicit;
+  if (explicit === 0 || explicit === 1) return explicit === 1;
+  const dailyResult = cause?.latest_result?.has_changes ?? cause?.last_has_changes ?? cause?.comparison?.changed;
+  if (typeof dailyResult === "boolean") return dailyResult;
+  const resultText = [
+    cause?.latest_result?.summary,
+    cause?.latest_result?.result_text,
+    cause?.last_result,
+    cause?.daily_result,
+    cause?.movement_status,
+  ].filter(Boolean).join(" ");
+  const normalized = appNormalizeTheme(resultText).replace(/[\s_-]+/g, "");
+  if (/sin(movimiento|movimientos|cambio|cambios|novedad|novedades)/.test(normalized)) return false;
+  if (/(conmovimiento|movimientodetectado|movimientosdetectados|cambiodetectado|cambiosdetectados)/.test(normalized)) return true;
+  return false;
 }
 function appCauseProcurator(cause){
   const value = cause?.assigned_procurator || cause?.assigned_procurador || cause?.procurator || cause?.procurador || cause?.procurator_name || cause?.procurador_nombre;
@@ -376,18 +389,14 @@ function appLegalSummaryHtml(){
   }).join("");
   const totalProgress = published ? Math.round(withMovement / published * 100) : 0;
   const stalledProgress = published ? Math.round(withoutMovement / published * 100) : 0;
-  const procurators = new Map();
-  appState.causes.forEach((cause) => {
-    const name = appCauseProcurator(cause);
-    if (name) procurators.set(name, (procurators.get(name) || 0) + 1);
-  });
+  const procuratorAssignedCauses = appState.causes.filter((cause) => Boolean(appCauseProcurator(cause))).length;
   const upload = appState.dashboard?.procurator_summary || appState.dashboard?.procurador_summary || appStoredPjudUploadSummary();
-  const uploadAssigned = appFirstMetric(upload, ["assigned_causes", "assigned", "causas_asignadas", "matched_causes", "matched"]);
-  const uploadTotal = appFirstMetric(upload, ["total_causes", "total", "causas_totales", "rows_total", "processed"], total);
-  const procuratorRows = procurators.size
-    ? [...procurators.entries()].map(([name, assigned]) => `<tr><td><strong>${appEscape(name)}</strong></td><td>${assigned}</td><td>${total}</td><td>${total ? Math.round(assigned / total * 100) : 0}%</td></tr>`).join("")
-    : (upload ? `<tr><td><strong>${appEscape(upload.procurator || upload.procurador || upload.name || "Procurador")}</strong></td><td>${uploadAssigned}</td><td>${uploadTotal}</td><td>${uploadTotal ? Math.round(uploadAssigned / uploadTotal * 100) : 0}%</td></tr>` : "");
-  const procuratorSection = procuratorRows ? `<section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Cobertura por procurador</p><h3>Causas asignadas desde el Excel sobre el total cargado</h3></div><span>Última carga disponible</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table legal-procurator-table"><thead><tr><th>Procurador</th><th>Asignadas</th><th>Total</th><th>Cobertura</th></tr></thead><tbody>${procuratorRows}</tbody></table></div></section>` : "";
+  const uploadedAssignedRaw = upload && ["assigned_causes", "assigned", "causas_asignadas", "matched_causes", "matched"].find((key) => upload?.[key] !== undefined && upload?.[key] !== null && upload?.[key] !== "");
+  const assignedProcurator = uploadedAssignedRaw ? Number(upload[uploadedAssignedRaw]) : (procuratorAssignedCauses || null);
+  const procuratorName = upload?.procurator || upload?.procurador || upload?.name || "Procurador";
+  const procuratorAssignedLabel = assignedProcurator === null ? "N" : assignedProcurator;
+  const procuratorProgress = assignedProcurator === null || !total ? null : Math.round(assignedProcurator / total * 100);
+  const procuratorSection = `<section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance del procurador</p><h3>Causas asignadas sobre el total de causas</h3></div><span>1 procurador</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table legal-procurator-table"><thead><tr><th>Procurador</th><th>Asignadas / Total</th><th>Avance</th></tr></thead><tbody><tr><td><strong>${appEscape(procuratorName)}</strong></td><td>${procuratorAssignedLabel} / ${total}</td><td>${procuratorProgress === null ? "Pendiente de carga" : `<div class="legal-progress"><span style="width:${procuratorProgress}%"></span></div><small>${procuratorProgress}% del total</small>`}</td></tr></tbody></table></div></section>`;
   return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong></article><article><small>Movimientos / publicadas</small><strong>${withMovement} / ${published}</strong><span>${totalProgress}% de las publicadas</span></article><article><small>Sin movimiento / publicadas</small><strong>${withoutMovement} / ${published}</strong><span>${stalledProgress}% de las publicadas</span></article><article><small>No publicadas</small><strong>${unpublished}</strong><span>${total ? Math.round(unpublished / total * 100) : 0}% del total</span></article></div>
     <section class="legal-overview"><div><p class="eyebrow">Avance total</p><h3>${withMovement} de ${published} causas publicadas tienen movimientos</h3><p>${unpublished} causas no publicadas quedan fuera del cálculo de avance.</p></div><div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div><small>${totalProgress}% sobre publicadas</small></div></section>
     <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance por abogado</p><h3>Movimientos y pendientes sobre causas publicadas</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Total asignado</th><th>Movimientos / publicadas</th><th>Sin movimiento / publicadas</th><th>No publicadas</th><th>Avance</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>

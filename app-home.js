@@ -365,8 +365,18 @@ function appLegacyLegalSummaryHtml(){
     return `<tr><td><strong>${appEscape(lawyer.name)}</strong></td><td>${rows.length}</td><td>${progressed}</td><td>${rows.length - progressed}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progressed} / ${rows.length} · ${progress}%</small></td></tr>`;
   }).join("");
   const totalProgress = total ? Math.round(withMovement / total * 100) : 0;
+  const procuradorProgress = Array.isArray(appState.dashboard?.procurador_progress) ? appState.dashboard.procurador_progress : [];
+  const procuradorRows = procuradorProgress.length ? procuradorProgress.map((item) => {
+    const assigned = Number(item.assigned_count || 0);
+    const baseTotal = Number(item.total_base || 0);
+    const progress = baseTotal ? Math.round(assigned / baseTotal * 100) : 0;
+    const label = item.name || item.email || "Procurador";
+    const status = item.batch_id ? `${assigned} / ${baseTotal}` : `Pendiente de carga en la hoja resumen`;
+    return `<tr><td><strong>${appEscape(label)}</strong><small>${item.report_date ? `Ultima carga: ${appEscape(item.report_date)}` : "Sin carga procesada"}</small></td><td>${appEscape(status)}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progress}% - pendientes ${appEscape(item.pending_count ?? "-")}</small></td></tr>`;
+  }).join("") : `<tr><td><strong>Procurador</strong></td><td>N / ${total || "-"}</td><td>Pendiente de carga en la hoja resumen.</td></tr>`;
   return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong></article><article><small>Con movimientos</small><strong>${withMovement}</strong><span>${totalProgress}% del total</span></article><article><small>Sin movimientos</small><strong>${withoutMovement}</strong><span>${total ? Math.round(withoutMovement / total * 100) : 0}% del total</span></article></div>
     <section class="legal-overview"><div><p class="eyebrow">Avance total</p><h3>${withMovement} de ${total} causas con movimientos</h3></div><div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div><small>${totalProgress}%</small></div></section>
+    <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">AVANCE DEL PROCURADOR</p><h3>Causas asignadas sobre el total de causas</h3></div><span>${procuradorProgress.length || 1} procurador</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Procurador</th><th>Asignadas / Total</th><th>Avance</th></tr></thead><tbody>${procuradorRows}</tbody></table></div></section>
     <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance por abogado</p><h3>Causas con movimientos sobre total asignado</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Total</th><th>Con movimientos</th><th>Sin movimientos</th><th>Avance / Total</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>`;
 }
 

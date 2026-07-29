@@ -650,7 +650,7 @@
             data.reports.map((report, index) =>
               `CORREO ${index + 1} Â· ${report.portfolio_name}${report.group_label ? ` Â· ${report.group_label}` : ""}\n` +
               `Para: ${report.recipients.join(", ")}\n` +
-              `BCC: ${[...report.bcc, "keanuavia@gmail.com"].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
+              `BCC: ${[...report.bcc].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
               `Asunto: ${report.subject}\n\n${report.text_preview}`
             ).join("\n\n" + "=".repeat(80) + "\n\n");
           if (previewRow) previewRow.hidden = false;

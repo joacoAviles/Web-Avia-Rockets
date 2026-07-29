@@ -641,6 +641,9 @@
           const firstSummary = data.reports[0]?.summary || {};
           const reportDate = firstSummary.report_date || data.report_date || "-";
           const baseDate = firstSummary.base_dates?.[0] || "-";
+          const generalChanges = data.reports
+            .filter((report) => report.group_type === "general")
+            .reduce((total, report) => total + Number(report.summary?.con_cambios || 0), 0);
           if (previewText) previewText.textContent =
             `COMPARACIÃ“N: ${reportDate} contra ${baseDate}\n` +
             `MÃ‰TODO: Ãºltimo dÃ­a disponible vs. penÃºltimo, sin horas fijas.\n\n` +
@@ -652,7 +655,7 @@
             ).join("\n\n" + "=".repeat(80) + "\n\n");
           if (previewRow) previewRow.hidden = false;
           if (statusNode) {
-            statusNode.textContent = `${reportDate} vs ${baseDate} Â· ${data.totals.emails} correos respaldados Â· ${data.totals.con_cambios} cambios.`;
+            statusNode.textContent = `${reportDate} vs ${baseDate} Â· ${data.totals.emails} correos respaldados Â· ${generalChanges} cambios en correos generales.`;
           }
           if (sendButton) sendButton.disabled = !pjudControlReportIds.length || data.reports.every((report) => report.status !== "draft");
         } finally {

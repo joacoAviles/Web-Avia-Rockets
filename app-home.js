@@ -399,14 +399,30 @@ function appLegalSummaryHtml(){
   }).join("");
   const totalProgress = published ? Math.round(withMovement / published * 100) : 0;
   const stalledProgress = published ? Math.round(withoutMovement / published * 100) : 0;
-  const procuratorAssignedCauses = appState.causes.filter((cause) => Boolean(appCauseProcurator(cause))).length;
-  const upload = appState.dashboard?.procurator_summary || appState.dashboard?.procurador_summary || appStoredPjudUploadSummary();
-  const uploadedAssignedRaw = upload && ["assigned_causes", "assigned", "causas_asignadas", "matched_causes", "matched"].find((key) => upload?.[key] !== undefined && upload?.[key] !== null && upload?.[key] !== "");
-  const assignedProcurator = uploadedAssignedRaw ? Number(upload[uploadedAssignedRaw]) : (procuratorAssignedCauses || null);
-  const procuratorName = upload?.procurator || upload?.procurador || upload?.name || "Procurador";
-  const procuratorAssignedLabel = assignedProcurator === null ? "N" : assignedProcurator;
-  const procuratorProgress = assignedProcurator === null || !total ? null : Math.round(assignedProcurator / total * 100);
-  const procuratorSection = `<section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance del procurador</p><h3>Causas asignadas sobre el total de causas</h3></div><span>1 procurador</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table legal-procurator-table"><thead><tr><th>Procurador</th><th>Asignadas / Total</th><th>Avance</th></tr></thead><tbody><tr><td><strong>${appEscape(procuratorName)}</strong></td><td>${procuratorAssignedLabel} / ${total}</td><td>${procuratorProgress === null ? "Pendiente de carga" : `<div class="legal-progress"><span style="width:${procuratorProgress}%"></span></div><small>${procuratorProgress}% del total</small>`}</td></tr></tbody></table></div></section>`;
+  const dashboardProcurators = Array.isArray(appState.dashboard?.procurador_progress)
+    ? appState.dashboard.procurador_progress
+    : [];
+  const fallbackAssignedCauses = appState.causes.filter((cause) => Boolean(appCauseProcurator(cause))).length;
+  const fallbackUpload = appState.dashboard?.procurator_summary || appState.dashboard?.procurador_summary || appStoredPjudUploadSummary();
+  const fallbackAssignedKey = fallbackUpload && ["assigned_causes", "assigned", "causas_asignadas", "matched_causes", "matched"].find((key) => fallbackUpload?.[key] !== undefined && fallbackUpload?.[key] !== null && fallbackUpload?.[key] !== "");
+  const fallbackAssigned = fallbackAssignedKey ? Number(fallbackUpload[fallbackAssignedKey]) : (fallbackAssignedCauses || null);
+  const procuratorRows = dashboardProcurators.length
+    ? dashboardProcurators.map((item) => {
+      const assigned = Number(item.assigned_count ?? 0);
+      const baseTotal = Number(item.total_base ?? total);
+      const pending = item.pending_count === undefined || item.pending_count === null ? Math.max(baseTotal - assigned, 0) : Number(item.pending_count);
+      const progress = baseTotal ? Math.round(assigned / baseTotal * 100) : 0;
+      const name = item.name || item.email || "Procuradora";
+      return `<tr><td><strong>${appEscape(name)}</strong><small>${item.report_date ? `Última carga: ${appEscape(item.report_date)}` : "Carga procesada"}</small></td><td>${assigned} / ${baseTotal}</td><td><div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progress}% del total · ${pending} pendientes</small></td></tr>`;
+    }).join("")
+    : (() => {
+      const name = fallbackUpload?.procurator || fallbackUpload?.procurador || fallbackUpload?.name || "Procuradora";
+      const assignedLabel = fallbackAssigned === null ? "N" : fallbackAssigned;
+      const progress = fallbackAssigned === null || !total ? null : Math.round(fallbackAssigned / total * 100);
+      return `<tr><td><strong>${appEscape(name)}</strong></td><td>${assignedLabel} / ${total}</td><td>${progress === null ? "Pendiente de carga" : `<div class="legal-progress"><span style="width:${progress}%"></span></div><small>${progress}% del total</small>`}</td></tr>`;
+    })();
+  const procuratorCount = dashboardProcurators.length || 1;
+  const procuratorSection = `<section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance de la procuradora</p><h3>Causas asignadas sobre el total de causas</h3></div><span>${procuratorCount} ${procuratorCount === 1 ? "procuradora" : "procuradores"}</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table legal-procurator-table"><thead><tr><th>Procuradora</th><th>Asignadas / Total</th><th>Avance</th></tr></thead><tbody>${procuratorRows}</tbody></table></div></section>`;
   return `<div class="legal-summary-grid"><article><small>Total de causas</small><strong>${total}</strong></article><article><small>Movimientos / publicadas</small><strong>${withMovement} / ${published}</strong><span>${totalProgress}% de las publicadas</span></article><article><small>Sin movimiento / publicadas</small><strong>${withoutMovement} / ${published}</strong><span>${stalledProgress}% de las publicadas</span></article><article><small>No publicadas</small><strong>${unpublished}</strong><span>${total ? Math.round(unpublished / total * 100) : 0}% del total</span></article></div>
     <section class="legal-overview"><div><p class="eyebrow">Avance total</p><h3>${withMovement} de ${published} causas publicadas tienen movimientos</h3><p>${unpublished} causas no publicadas quedan fuera del cálculo de avance.</p></div><div><div class="legal-overview-bar"><span style="width:${totalProgress}%"></span></div><small>${totalProgress}% sobre publicadas</small></div></section>
     <section class="legal-lawyer-section"><div class="legal-section-head"><div><p class="eyebrow">Avance por abogado</p><h3>Movimientos y pendientes sobre causas publicadas</h3></div><span>${catalogs.lawyers.length} abogados</span></div><div class="legal-table-scroll"><table class="legal-lawyer-table"><thead><tr><th>Abogado</th><th>Total asignado</th><th>Movimientos / publicadas</th><th>Sin movimiento / publicadas</th><th>No publicadas</th><th>Avance</th></tr></thead><tbody>${lawyers}</tbody></table></div></section>

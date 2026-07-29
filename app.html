@@ -563,7 +563,7 @@
             <strong class="app-upload-panel">
               <button class="btn btn-secondary" id="pjud-control-preview" type="button">Preparar correos por grupo</button>
               <button class="btn btn-primary" id="pjud-control-send" type="button" disabled>Enviar todos los correos</button>
-              <small id="pjud-control-status">Compara automÃ¡ticamente el Ãºltimo dÃ­a cargado contra el penÃºltimo y respalda un correo por portafolio.</small>
+              <small id="pjud-control-status">Compara el Ãºltimo dÃ­a disponible contra el penÃºltimo, tomando la revisiÃ³n mÃ¡s reciente de cada causa sin usar horas fijas.</small>
             </strong>
           </div>
           <div class="app-config-row" id="pjud-control-preview-row" hidden>
@@ -622,27 +622,45 @@
 
       async function preparePjudControlEmail(){
         const statusNode = document.getElementById("pjud-control-status");
+        const previewButton = document.getElementById("pjud-control-preview");
         const sendButton = document.getElementById("pjud-control-send");
-        if (statusNode) statusNode.textContent = "Comparando extracciones y generando respaldos por portafolio...";
-        if (sendButton) sendButton.disabled = true;
-        const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
-          method: "POST",
-          body: JSON.stringify({})
-        });
-        pjudControlReportIds = data.reports.map((report) => report.report_id);
-        const previewRow = document.getElementById("pjud-control-preview-row");
-        const previewText = document.getElementById("pjud-control-preview-text");
-        if (previewText) previewText.textContent = data.reports.map((report, index) =>
-          `CORREO ${index + 1} Â· ${report.portfolio_name}${report.group_label ? ` Â· ${report.group_label}` : ""}\n` +
-          `Para: ${report.recipients.join(", ")}\n` +
-          `BCC: ${[...report.bcc, "keanuavia@gmail.com"].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
-          `Asunto: ${report.subject}\n\n${report.text_preview}`
-        ).join("\n\n" + "=".repeat(80) + "\n\n");
-        if (previewRow) previewRow.hidden = false;
-        if (statusNode) {
-          statusNode.textContent = `${data.totals.emails} correos respaldados Â· ${data.totals.causas} asignaciones de causas Â· ${data.totals.con_cambios} cambios.`;
+        if (previewButton) {
+          previewButton.disabled = true;
+          previewButton.textContent = "Comparando...";
         }
-        if (sendButton) sendButton.disabled = !pjudControlReportIds.length || data.reports.every((report) => report.status !== "draft");
+        if (statusNode) statusNode.textContent = "Comparando el Ãºltimo dÃ­a disponible contra el penÃºltimo. Esto puede tardar cerca de un minuto...";
+        if (sendButton) sendButton.disabled = true;
+        try {
+          const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
+            method: "POST",
+            body: JSON.stringify({})
+          });
+          pjudControlReportIds = data.reports.map((report) => report.report_id);
+          const previewRow = document.getElementById("pjud-control-preview-row");
+          const previewText = document.getElementById("pjud-control-preview-text");
+          const firstSummary = data.reports[0]?.summary || {};
+          const reportDate = firstSummary.report_date || data.report_date || "-";
+          const baseDate = firstSummary.base_dates?.[0] || "-";
+          if (previewText) previewText.textContent =
+            `COMPARACIÃ“N: ${reportDate} contra ${baseDate}\n` +
+            `MÃ‰TODO: Ãºltimo dÃ­a disponible vs. penÃºltimo, sin horas fijas.\n\n` +
+            data.reports.map((report, index) =>
+              `CORREO ${index + 1} Â· ${report.portfolio_name}${report.group_label ? ` Â· ${report.group_label}` : ""}\n` +
+              `Para: ${report.recipients.join(", ")}\n` +
+              `BCC: ${[...report.bcc, "keanuavia@gmail.com"].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
+              `Asunto: ${report.subject}\n\n${report.text_preview}`
+            ).join("\n\n" + "=".repeat(80) + "\n\n");
+          if (previewRow) previewRow.hidden = false;
+          if (statusNode) {
+            statusNode.textContent = `${reportDate} vs ${baseDate} Â· ${data.totals.emails} correos respaldados Â· ${data.totals.con_cambios} cambios.`;
+          }
+          if (sendButton) sendButton.disabled = !pjudControlReportIds.length || data.reports.every((report) => report.status !== "draft");
+        } finally {
+          if (previewButton) {
+            previewButton.disabled = false;
+            previewButton.textContent = "Preparar correos por grupo";
+          }
+        }
       }
 
       async function sendPjudControlEmail(){

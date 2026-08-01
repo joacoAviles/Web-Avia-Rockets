@@ -561,7 +561,8 @@
           <div class="app-config-row" id="pjud-control-email-panel">
             <span>Correos de control legal<br><small>Disponible sólo para admin@aviarockets.cl.</small></span>
             <strong class="app-upload-panel">
-              <button class="btn btn-secondary" id="pjud-control-preview" type="button">Preparar correos por grupo</button>
+              <button class="btn btn-secondary" id="pjud-control-preview" type="button">Preparar correos diarios</button>
+              <button class="btn btn-secondary" id="pjud-control-weekly-preview" type="button">Preparar resumen semanal</button>
               <button class="btn btn-primary" id="pjud-control-send" type="button" disabled>Enviar todos los correos</button>
               <small id="pjud-control-status">Compara el último día disponible contra el penúltimo, tomando la revisión más reciente de cada causa sin usar horas fijas.</small>
             </strong>
@@ -620,20 +621,22 @@
 
       let pjudControlReportIds = [];
 
-      async function preparePjudControlEmail(){
+      async function preparePjudControlEmail(mode = "daily"){
         const statusNode = document.getElementById("pjud-control-status");
         const previewButton = document.getElementById("pjud-control-preview");
+        const weeklyButton = document.getElementById("pjud-control-weekly-preview");
         const sendButton = document.getElementById("pjud-control-send");
         if (previewButton) {
           previewButton.disabled = true;
           previewButton.textContent = "Comparando...";
         }
-        if (statusNode) statusNode.textContent = "Comparando el último día disponible contra el penúltimo. Esto puede tardar cerca de un minuto...";
+        if (weeklyButton) weeklyButton.disabled = true;
+        if (statusNode) statusNode.textContent = mode === "weekly" ? "Consolidando la semana anterior..." : "Comparando el último día disponible contra la base válida anterior. Esto puede tardar cerca de un minuto...";
         if (sendButton) sendButton.disabled = true;
         try {
           const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
             method: "POST",
-            body: JSON.stringify({})
+            body: JSON.stringify({ mode })
           });
           pjudControlReportIds = data.reports.map((report) => report.report_id);
           const previewRow = document.getElementById("pjud-control-preview-row");
@@ -650,7 +653,8 @@
             data.reports.map((report, index) =>
               `CORREO ${index + 1} · ${report.portfolio_name}${report.group_label ? ` · ${report.group_label}` : ""}\n` +
               `Para: ${report.recipients.join(", ")}\n` +
-              `BCC: ${[...report.bcc].filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
+              `CC: ${(report.cc || []).join(", ")}\n` +
+              `BCC: ${(report.bcc || []).filter((value, position, values) => values.indexOf(value) === position).join(", ")}\n` +
               `Asunto: ${report.subject}\n\n${report.text_preview}`
             ).join("\n\n" + "=".repeat(80) + "\n\n");
           if (previewRow) previewRow.hidden = false;
@@ -661,8 +665,9 @@
         } finally {
           if (previewButton) {
             previewButton.disabled = false;
-            previewButton.textContent = "Preparar correos por grupo";
+            previewButton.textContent = "Preparar correos diarios";
           }
+          if (weeklyButton) weeklyButton.disabled = false;
         }
       }
 
@@ -763,10 +768,19 @@
         if (event.target.closest("#pjud-control-preview")) {
           event.preventDefault();
           try {
-            await preparePjudControlEmail();
+            await preparePjudControlEmail("daily");
           } catch (error) {
             const node = document.getElementById("pjud-control-status");
             if (node) node.textContent = `ERROR: ${error.message || "No se pudo generar el preview."}`;
+          }
+        }
+        if (event.target.closest("#pjud-control-weekly-preview")) {
+          event.preventDefault();
+          try {
+            await preparePjudControlEmail("weekly");
+          } catch (error) {
+            const node = document.getElementById("pjud-control-status");
+            if (node) node.textContent = `ERROR: ${error.message || "No se pudo generar el resumen semanal."}`;
           }
         }
         if (event.target.closest("#pjud-control-send")) {

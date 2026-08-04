@@ -564,6 +564,12 @@
               <button class="btn btn-secondary" id="pjud-control-preview" type="button">Preparar correos diarios</button>
               <button class="btn btn-secondary" id="pjud-control-weekly-preview" type="button">Preparar resumen semanal</button>
               <button class="btn btn-primary" id="pjud-control-send" type="button" disabled>Enviar todos los correos</button>
+              <div id="pjud-control-progress-wrap" hidden style="width:100%;margin-top:8px">
+                <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:5px"><small id="pjud-control-progress-label">0 de 0 causas</small><small id="pjud-control-progress-percent">0%</small></div>
+                <div role="progressbar" id="pjud-control-progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.12)">
+                  <div id="pjud-control-progress-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#277cff,#54d6ff);transition:width .35s ease"></div>
+                </div>
+              </div>
               <small id="pjud-control-status">Compara el último día disponible contra el penúltimo, tomando la revisión más reciente de cada causa sin usar horas fijas.</small>
             </strong>
           </div>
@@ -621,6 +627,22 @@
 
       let pjudControlReportIds = [];
 
+      function updatePjudControlProgress(processed, total){
+        const safeTotal = Math.max(1, Number(total) || 1);
+        const safeProcessed = Math.max(0, Math.min(safeTotal, Number(processed) || 0));
+        const percent = Math.round((safeProcessed / safeTotal) * 100);
+        const wrap = document.getElementById("pjud-control-progress-wrap");
+        const bar = document.getElementById("pjud-control-progress");
+        const fill = document.getElementById("pjud-control-progress-fill");
+        const label = document.getElementById("pjud-control-progress-label");
+        const percentNode = document.getElementById("pjud-control-progress-percent");
+        if (wrap) wrap.hidden = false;
+        if (bar) bar.setAttribute("aria-valuenow", String(percent));
+        if (fill) fill.style.width = `${percent}%`;
+        if (label) label.textContent = `${safeProcessed} de ${safeTotal} causas`;
+        if (percentNode) percentNode.textContent = `${percent}%`;
+      }
+
       async function preparePjudControlEmail(mode = "daily"){
         const statusNode = document.getElementById("pjud-control-status");
         const previewButton = document.getElementById("pjud-control-preview");
@@ -633,12 +655,22 @@
         if (weeklyButton) weeklyButton.disabled = true;
         if (statusNode) statusNode.textContent = mode === "weekly" ? "Consolidando la semana anterior..." : "Comparando el último día disponible contra la base válida anterior. Esto puede tardar cerca de un minuto...";
         if (sendButton) sendButton.disabled = true;
+        const publishedCauses = (appState.causes || []).filter((cause) => cause.publicada === true || normalize(cause.status) === "publicada");
+        const totalCauses = publishedCauses.length || (appState.causes || []).length || 1;
+        let visualProcessed = 0;
+        updatePjudControlProgress(0, totalCauses);
+        const progressTimer = window.setInterval(() => {
+          visualProcessed = Math.min(totalCauses - 1, visualProcessed + Math.max(1, Math.ceil(totalCauses / 40)));
+          updatePjudControlProgress(visualProcessed, totalCauses);
+        }, 900);
         try {
           const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
             method: "POST",
             body: JSON.stringify({ mode })
           });
           pjudControlReportIds = data.reports.map((report) => report.report_id);
+          const processedCauses = Number(data.totals?.causas_procesadas || totalCauses);
+          updatePjudControlProgress(processedCauses, processedCauses);
           const previewRow = document.getElementById("pjud-control-preview-row");
           const previewText = document.getElementById("pjud-control-preview-text");
           const firstSummary = data.reports[0]?.summary || {};
@@ -659,10 +691,12 @@
             ).join("\n\n" + "=".repeat(80) + "\n\n");
           if (previewRow) previewRow.hidden = false;
           if (statusNode) {
-            statusNode.textContent = `${reportDate} vs ${baseDate} · ${data.totals.emails} correos respaldados · ${generalChanges} cambios en correos generales.`;
+            const recovered = Number(data.extraction_recovery?.requeued || 0);
+            statusNode.textContent = `${reportDate} vs ${baseDate} · ${processedCauses} causas procesadas · ${data.totals.emails} correos respaldados · ${generalChanges} cambios${recovered ? ` · ${recovered} extracciones fallidas liberadas para reintento` : ""}.`;
           }
           if (sendButton) sendButton.disabled = !pjudControlReportIds.length || data.reports.every((report) => report.status !== "draft");
         } finally {
+          window.clearInterval(progressTimer);
           if (previewButton) {
             previewButton.disabled = false;
             previewButton.textContent = "Preparar correos diarios";

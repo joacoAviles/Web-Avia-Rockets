@@ -656,7 +656,11 @@
         if (statusNode) statusNode.textContent = mode === "weekly" ? "Consolidando la semana anterior..." : "Comparando el último día disponible contra la base válida anterior. Esto puede tardar cerca de un minuto...";
         if (sendButton) sendButton.disabled = true;
         const publishedCauses = (appState.causes || []).filter((cause) => cause.publicada === true || normalize(cause.status) === "publicada");
-        const totalCauses = publishedCauses.length || (appState.causes || []).length || 1;
+        let totalCauses = publishedCauses.length || (appState.causes || []).length || 1;
+        try {
+          const context = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/preparation-context");
+          totalCauses = Number(context?.total_causes || totalCauses);
+        } catch (_) {}
         let visualProcessed = 0;
         updatePjudControlProgress(0, totalCauses);
         const progressTimer = window.setInterval(() => {

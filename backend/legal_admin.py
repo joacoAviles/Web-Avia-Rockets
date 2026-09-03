@@ -76,10 +76,21 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
         lawyers=await rows('SELECT * FROM legal.client_lawyers WHERE client_id=:c ORDER BY name'),
         groups=await rows("SELECT id,name FROM legal.legal_portfolios WHERE client_id=:c AND status='active' ORDER BY display_order,name"),
         causes=await rows("""SELECT pc.id,pc.case_id,pc.portfolio_id,pc.lawyer_id,
-          c.rol AS code,c.year,c.court,c.party AS title,c.publicada,
+          c.rol AS code,c.year,c.court,COALESCE(NULLIF(BTRIM(c.party),''),historical_title.title) AS title,c.publicada,
           COALESCE(s.castigo,false) AS castigo,COALESCE(s.version,0) AS version,COALESCE(s.fields,'{}'::jsonb) AS fields
           FROM legal.legal_portfolio_cases pc JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id
-          JOIN legal.causes c ON c.id=pc.case_id LEFT JOIN legal.client_cause_settings s ON s.client_id=p.client_id AND s.cause_id=c.id
+          JOIN legal.causes c ON c.id=pc.case_id
+          LEFT JOIN LATERAL (
+            SELECT source.title FROM (
+              SELECT NULLIF(BTRIM(ch.raw_case_payload #>> '{metadata,caratulado}'),'') AS title,COALESCE(ch.finished_at,ch.created_at) AS observed_at
+              FROM legal.pjud_case_checks ch WHERE ch.cause_id=c.id
+              UNION ALL SELECT NULLIF(BTRIM(ri.result_payload #>> '{metadata,caratulado}'),''),COALESCE(ri.completed_at,ri.updated_at,ri.created_at)
+              FROM legal.pjud_run_items ri WHERE ri.cause_id=c.id
+              UNION ALL SELECT NULLIF(BTRIM(dr.raw_data_json ->> 'caratulado'),''),dr.created_at
+              FROM legal.procurador_daily_rows dr WHERE dr.matched_cause_id=c.id
+            ) source WHERE source.title IS NOT NULL ORDER BY source.observed_at DESC NULLS LAST LIMIT 1
+          ) historical_title ON TRUE
+          LEFT JOIN legal.client_cause_settings s ON s.client_id=p.client_id AND s.cause_id=c.id
           WHERE p.client_id=:c ORDER BY c.publicada DESC,c.year DESC,c.rol"""))
 
 @router.put('/clients/{client_id}/cases/{case_link_id}')

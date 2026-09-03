@@ -28,4 +28,11 @@ assert(file.startsWith('causas-legales-')&&file.endsWith('.xlsx'));
 const admin=fs.readFileSync('legal-admin.js','utf8');
 assert(admin.includes('legal-admin-readonly')&&admin.includes('Solo lectura'));
 assert(!admin.includes("adminField('title'"),'Title must not be editable');
+const dashboardApi=fs.readFileSync('backend/web_compat.py','utf8');
+const adminApi=fs.readFileSync('backend/legal_admin.py','utf8');
+for(const api of [dashboardApi,adminApi]){
+  assert(api.includes("{metadata,caratulado}"),'PJUD historical title fallback missing');
+  assert(api.includes("raw_data_json ->> 'caratulado'"),'Daily import title fallback missing');
+  assert(api.includes('ORDER BY source.observed_at DESC'),'Latest historical title must win');
+}
 console.log('PASS: title is visible in table/editor and exported to Excel as read-only.');

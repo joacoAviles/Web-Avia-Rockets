@@ -49,6 +49,10 @@ function adminCases(){
   const update=()=>{
     const q=document.getElementById('admin-search').value.toLocaleLowerCase('es');
     const rows=legalAdmin.data.causes.map(c=>({...c,...c.fields})).filter(c=>`${c.code} ${c.year} ${c.court}`.toLocaleLowerCase('es').includes(q));
+    if(!rows.some(c=>c.id===legalAdmin.selected)){
+      legalAdmin.selected=null;
+      document.getElementById('admin-case-editor').innerHTML='';
+    }
     document.getElementById('admin-case').innerHTML=adminOptions(rows.map(c=>({id:c.id,name:`${c.code} / ${c.year} — ${c.court} — ${legalAdmin.data.groups.find(g=>g.id===c.portfolio_id)?.name||'Grupo inactivo'}`})),legalAdmin.selected,'Selecciona una causa');
   };
   document.getElementById('admin-search').oninput=update;update();

@@ -47,9 +47,7 @@ async def dashboard_compat(
     result = await db.execute(
         text(
             """
-            SELECT c.id, c.court, c.rol, c.year,
-                   COALESCE(NULLIF(BTRIM(c.party), ''), historical_title.title) AS party,
-                   c.status, c.publicada,
+            SELECT c.id, c.court, c.rol, c.year, c.party, c.status, c.publicada,
                    c.last_checked_at, c.last_summary,
                    lm.title AS latest_movement, lm.etapa, lm.tramite,
                    lm.descripcion, lm.movement_date, lm.book_name,
@@ -65,24 +63,6 @@ async def dashboard_compat(
              AND assignment.assignment_status = 'active'
              AND (assignment.valid_until IS NULL OR assignment.valid_until >= CURRENT_DATE)
             LEFT JOIN platform.users assigned_user ON assigned_user.id = assignment.procurador_user_id
-            LEFT JOIN LATERAL (
-                SELECT source.title
-                FROM (
-                    SELECT NULLIF(BTRIM(ch.raw_case_payload #>> '{metadata,caratulado}'), '') AS title,
-                           COALESCE(ch.finished_at, ch.created_at) AS observed_at
-                    FROM legal.pjud_case_checks ch WHERE ch.cause_id = c.id
-                    UNION ALL
-                    SELECT NULLIF(BTRIM(ri.result_payload #>> '{metadata,caratulado}'), ''),
-                           COALESCE(ri.completed_at, ri.updated_at, ri.created_at)
-                    FROM legal.pjud_run_items ri WHERE ri.cause_id = c.id
-                    UNION ALL
-                    SELECT NULLIF(BTRIM(dr.raw_data_json ->> 'caratulado'), ''), dr.created_at
-                    FROM legal.procurador_daily_rows dr WHERE dr.matched_cause_id = c.id
-                ) source
-                WHERE source.title IS NOT NULL
-                ORDER BY source.observed_at DESC NULLS LAST
-                LIMIT 1
-            ) historical_title ON TRUE
             LEFT JOIN LATERAL (
                 SELECT m.title, m.etapa, m.tramite, m.descripcion,
                        m.movement_date, b.name AS book_name

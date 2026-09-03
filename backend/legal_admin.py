@@ -69,7 +69,7 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
         groups=await rows("SELECT id,name FROM legal.legal_portfolios WHERE client_id=:c AND status='active' ORDER BY display_order,name"),
         recipients=await rows("SELECT r.id,r.email,r.name,r.recipient_type,p.name AS group_name FROM legal.legal_portfolio_recipients r JOIN legal.legal_portfolios p ON p.id=r.portfolio_id WHERE p.client_id=:c AND r.is_active ORDER BY r.email"),
         causes=await rows("""SELECT pc.id,pc.case_id,pc.portfolio_id,pc.lawyer_id,pc.quick_note,pc.client_comment,pc.private_note,pc.priority,pc.status AS assignment_status,
-          c.rol AS code,c.year,c.court,c.party AS title,c.pjud_competencia AS competencia,c.pjud_corte AS corte,c.pjud_tipo AS tipo,c.publicada,
+          c.rol AS code,c.year,c.court,c.party AS title,COALESCE(pc.competencia,c.pjud_competencia) AS competencia,COALESCE(pc.corte,c.pjud_corte) AS corte,c.pjud_tipo AS tipo,c.publicada,
           COALESCE(s.castigo,false) AS castigo,COALESCE(s.version,0) AS version,COALESCE(s.fields,'{}'::jsonb) AS fields,
           ARRAY(SELECT r.id FROM legal.legal_portfolio_recipients r JOIN legal.legal_portfolios rp ON rp.id=r.portfolio_id
             WHERE rp.client_id=p.client_id AND r.is_active AND (
@@ -103,7 +103,7 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
     fields={k:getattr(payload,k) for k in ['code','year','court','title','competencia','corte','tipo']}
     try:
         await db.execute(text('UPDATE legal.client_cause_settings SET fields=CAST(:f AS jsonb),castigo=:s,version=version+1 WHERE client_id=:c AND cause_id=:i'),{'f':json.dumps(fields),'s':payload.publication=='castigo','c':client_id,'i':before['case_id']})
-        await db.execute(text('''UPDATE legal.legal_portfolio_cases SET portfolio_id=:p,lawyer_id=:l,responsible_name=:n,quick_note=:q,client_comment=:cc,private_note=:pn,priority=:pr,status=:st,settings=COALESCE(settings,'{}'::jsonb)||CAST(:flags AS jsonb),updated_at=now() WHERE id=:i'''),dict(p=group,l=payload.lawyer_id,n=lawyer,q=payload.quick_note,cc=payload.client_comment,pn=payload.private_note,pr=payload.priority,st=payload.assignment_status,i=case_link_id,flags='{"admin_edited":true}'))
+        await db.execute(text('''UPDATE legal.legal_portfolio_cases SET portfolio_id=:p,lawyer_id=:l,responsible_name=:n,competencia=:co,corte=:ct,quick_note=:q,client_comment=:cc,private_note=:pn,priority=:pr,status=:st,settings=COALESCE(settings,'{}'::jsonb)||CAST(:flags AS jsonb),updated_at=now() WHERE id=:i'''),dict(p=group,l=payload.lawyer_id,n=lawyer,co=payload.competencia,ct=payload.corte,q=payload.quick_note,cc=payload.client_comment,pn=payload.private_note,pr=payload.priority,st=payload.assignment_status,i=case_link_id,flags='{"admin_edited":true}'))
         if payload.publication=='castigo':
             await db.execute(text('UPDATE legal.legal_portfolio_cases pc SET include_in_batch_email=false,updated_at=now() FROM legal.legal_portfolios p WHERE pc.portfolio_id=p.id AND p.client_id=:c AND pc.case_id=:i'),{'c':client_id,'i':before['case_id']})
         await db.execute(text('UPDATE legal.legal_portfolio_case_recipients SET is_active=false,updated_at=now() WHERE portfolio_case_id=:i'),{'i':case_link_id})

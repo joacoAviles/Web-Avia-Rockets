@@ -8,6 +8,15 @@ function adminOptions(rows,value,empty='Sin asignar') {
 function adminField(key,label,value,type='text',required=false) {
   return `<label><span>${label}</span><input name="${key}" type="${type}" value="${adminEscape(value)}" ${required?'required':''} ${type==='number'?'min="1800" max="2200"':''}></label>`;
 }
+function adminRecipientChoices(c){
+  const contacts=new Map();
+  for(const r of legalAdmin.data.recipients){
+    const key=`${r.email.toLowerCase()}::${r.recipient_type}`;
+    if(!contacts.has(key))contacts.set(key,{...r,checked:false});
+    if((c.recipient_ids||[]).includes(r.id))contacts.get(key).checked=true;
+  }
+  return [...contacts.values()].map(r=>`<label><input type="checkbox" name="recipient_ids" value="${adminEscape(r.id)}" ${r.checked?'checked':''}>${adminEscape(r.name||r.email)} — ${adminEscape(r.email)} (${adminEscape(r.recipient_type)})</label>`).join('')||'No hay contactos registrados.';
+}
 async function appLegalAdminOpen(){
   if(appState.user?.role!=='admin') return;
   const config=document.getElementById('app-product-config');
@@ -59,7 +68,7 @@ function adminCaseEditor(){
     <label>Asignación<select name="assignment_status">${['active','paused','archived'].map((s,i)=>`<option value="${s}" ${c.assignment_status===s?'selected':''}>${['Activa','Pausada','Archivada'][i]}</option>`).join('')}</select></label>
     <label>Prioridad<select name="priority">${['low','normal','high','urgent'].map((s,i)=>`<option value="${s}" ${c.priority===s?'selected':''}>${['Baja','Normal','Alta','Urgente'][i]}</option>`).join('')}</select></label>
     ${['quick_note','client_comment','private_note'].map((k,i)=>`<label>${['Nota','Comentario del cliente','Nota privada'][i]}<textarea name="${k}" maxlength="5000">${adminEscape(c[k])}</textarea></label>`).join('')}</div>
-    <fieldset><legend>Quién puede ver / destinatarios de esta asignación</legend><p>Solo contactos existentes del cliente. Esta lista también define los destinatarios individuales de correo.</p><div class="legal-admin-recipients">${legalAdmin.data.recipients.map(r=>`<label><input type="checkbox" name="recipient_ids" value="${r.id}" ${(c.recipient_ids||[]).includes(r.id)?'checked':''}>${adminEscape(r.name||r.email)} — ${adminEscape(r.email)} (${adminEscape(r.recipient_type)})</label>`).join('')||'No hay contactos registrados.'}</div></fieldset>
+    <fieldset><legend>Quién puede ver / destinatarios de esta asignación</legend><p>Solo contactos existentes del cliente. Esta lista también define los destinatarios individuales de correo.</p><div class="legal-admin-recipients">${adminRecipientChoices(c)}</div></fieldset>
     <p>Castigo afecta únicamente a este cliente y excluye la causa de sus correos por lote. No permite publicar ni rehabilitar manualmente una causa.</p>
     <button type="submit" class="btn btn-primary">Guardar esta causa</button></form>`;
   document.getElementById('admin-case-form').onsubmit=async e=>{

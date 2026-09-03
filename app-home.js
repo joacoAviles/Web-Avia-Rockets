@@ -96,7 +96,8 @@ function appFormatDate(value){ if (!value) return "-"; try { return new Date(val
 function appDaysText(days){ if (days === null || days === undefined) return "Sin vencimiento"; if (days < 0) return `Vencida hace ${Math.abs(days)} días`; if (days === 0) return "Vence hoy"; return `Vence en ${days} días`; }
 function appReviewLabel(status){ return ({ok:"Al día", warning:"Por vencer", expired:"Vencida", unknown:"Sin dato", inactive:"Pausado"}[status] || status || "-"); }
 function appNormalizeTheme(value){ return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
-function appCauseIsPublished(cause){ return cause?.publicada === true || Number(cause?.publicada) === 1; }
+function appCauseIsPublished(cause){ return !cause?.client_castigo && (cause?.publicada === true || Number(cause?.publicada) === 1); }
+function appPublicationLabel(cause){ return cause.client_castigo ? 'Castigada' : appCauseIsPublished(cause) ? 'Publicada' : 'No publicada'; }
 function appCauseHasMovement(cause){
   if (!appCauseIsPublished(cause)) return false;
   const explicit = cause?.daily_has_movement ?? cause?.has_movement_today ?? cause?.latest_has_movement ?? cause?.has_movement;
@@ -138,7 +139,7 @@ function appLegalTabsHtml(){
   return `<nav class="legal-tabs" aria-label="Secciones legales">${available.map((item) => {
     const active = (item.view === "legal-summary" && appState.legalTab === "summary") || (item.view === "causes" && appState.legalTab === "causes") || appState.view === item.view;
     return `<button type="button" data-legal-view="${appEscape(item.view)}" class="${active ? "is-active" : ""}">${appEscape(item.label)}</button>`;
-  }).join("")}</nav>`;
+  }).join("")}${appState.user?.role === 'admin' ? '<button type="button" data-legal-admin>Administración</button>' : ''}</nav>`;
 }
 
 async function appFetch(path, options = {}){
@@ -275,8 +276,9 @@ function appSummaryHtml(){
 function appFilteredCauses(){
   const q = appState.search.trim().toLowerCase();
   return appState.causes.filter((cause) => {
-    if (appState.legalFilters.status === "published" && !cause.publicada) return false;
-    if (appState.legalFilters.status === "unpublished" && cause.publicada) return false;
+    if (appState.legalFilters.status === "published" && !appCauseIsPublished(cause)) return false;
+    if (appState.legalFilters.status === "unpublished" && (appCauseIsPublished(cause) || cause.client_castigo)) return false;
+    if (appState.legalFilters.status === "castigo" && !cause.client_castigo) return false;
     if (appState.legalFilters.stage !== "all" && (cause.latest_stage || cause.latest_procedure || "") !== appState.legalFilters.stage) return false;
     if (appState.legalFilters.court !== "all" && cause.court !== appState.legalFilters.court) return false;
     if (appState.legalFilters.lawyer !== "all" && cause.assigned_lawyer !== appState.legalFilters.lawyer) return false;
@@ -285,6 +287,7 @@ function appFilteredCauses(){
     return [cause.code, cause.title, cause.court, cause.assigned_lawyer, cause.visibility_label, cause.email_group, cause.latest_movement].some((value) => String(value || "").toLowerCase().includes(q));
   }).sort((left, right) => {
     if (left.publicada !== right.publicada) return left.publicada ? -1 : 1;
+    if (!!left.client_castigo !== !!right.client_castigo) return left.client_castigo ? 1 : -1;
     const leftGroup = String(left.email_group || "").trim();
     const rightGroup = String(right.email_group || "").trim();
     if (!!leftGroup !== !!rightGroup) return leftGroup ? -1 : 1;
@@ -304,7 +307,7 @@ function appDownloadLegalExcel(){
   const rows = appState.causes.map((cause) => ({
     "Causa": cause.code || "",
     "Año": cause.year ?? "",
-    "Estado de publicación": cause.publicada ? "Publicada" : "No publicada",
+    "Estado de publicación": appPublicationLabel(cause),
     "Juzgado": cause.court || "",
     "Abogado asignado": cause.assigned_lawyer || "",
     "Quién puede ver": appUniqueList(cause.visibility_label) || "",
@@ -338,11 +341,11 @@ function appLegalTableHtml(){
   let previousGroup = "";
   const rows = causes.map((cause) => {
     const emailGroup = String(cause.email_group || "").trim();
-    const groupKey = `${cause.publicada ? "published" : "unpublished"}::${emailGroup || "ungrouped"}`;
-    const groupRow = groupKey === previousGroup ? "" : `<tr class="legal-email-group-row"><td colspan="6"><strong>${cause.publicada ? "Publicadas" : "No publicadas"}</strong><span>${appEscape(emailGroup || "Sin grupo de correo")}</span></td></tr>`;
+    const groupKey = `${appPublicationLabel(cause)}::${emailGroup || "ungrouped"}`;
+    const groupRow = groupKey === previousGroup ? "" : `<tr class="legal-email-group-row"><td colspan="6"><strong>${appPublicationLabel(cause)}s</strong><span>${appEscape(emailGroup || "Sin grupo de correo")}</span></td></tr>`;
     previousGroup = groupKey;
     return `${groupRow}<tr>
-      <td><div class="legal-cause-identity"><strong>${appEscape(cause.code)}</strong><span>${appEscape(cause.year ?? "-")}</span><span class="legal-publication-state${cause.publicada ? " is-published" : ""}">${cause.publicada ? "Publicada" : "No publicada"}</span></div></td>
+      <td><div class="legal-cause-identity"><strong>${appEscape(cause.code)}</strong><span>${appEscape(cause.year ?? "-")}</span><span class="legal-publication-state${appCauseIsPublished(cause) ? " is-published" : ""}">${appPublicationLabel(cause)}</span></div></td>
       <td>${appEscape(cause.court || "-")}</td>
       <td>${appEscape(cause.assigned_lawyer || "-")}</td>
       <td>${appEscape(appUniqueList(cause.visibility_label) || "-")}</td>
@@ -1151,6 +1154,12 @@ function appBindAcademyControls(){
 }
 
 function appBindControls(){
+  const adminButton = document.querySelector('[data-legal-admin]');
+  if (adminButton) adminButton.onclick = appLegalAdminOpen;
+  const stateSelect = document.querySelector('[data-legal-filter="status"]');
+  if (stateSelect && !stateSelect.querySelector('[value="castigo"]')) {
+    stateSelect.add(new Option('Castigado', 'castigo', false, appState.legalFilters.status === 'castigo'));
+  }
   document.querySelectorAll("[data-legal-page]").forEach((button) => button.addEventListener("click", () => { appState.legalPage = Number(button.dataset.legalPage || 1); appRenderLegalPanel(); }));
   document.querySelectorAll("[data-legal-view]").forEach((button) => button.addEventListener("click", async () => {
     const view = button.dataset.legalView || "legal-summary";

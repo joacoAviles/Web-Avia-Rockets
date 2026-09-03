@@ -309,6 +309,7 @@ function appDownloadLegalExcel(){
     "Año": cause.year ?? "",
     "Estado de publicación": appPublicationLabel(cause),
     "Juzgado": cause.court || "",
+    "Carátula": cause.title || "",
     "Abogado asignado": cause.assigned_lawyer || "",
     "Quién puede ver": appUniqueList(cause.visibility_label) || "",
     "Grupo de correo": cause.email_group || "",
@@ -317,10 +318,10 @@ function appDownloadLegalExcel(){
   }));
   const worksheet = XLSX.utils.json_to_sheet(rows);
   worksheet["!cols"] = [
-    { wch: 14 }, { wch: 10 }, { wch: 22 }, { wch: 42 }, { wch: 30 },
-    { wch: 34 }, { wch: 30 }, { wch: 36 }, { wch: 54 },
+    { wch: 14 }, { wch: 10 }, { wch: 22 }, { wch: 42 }, { wch: 48 },
+    { wch: 30 }, { wch: 34 }, { wch: 30 }, { wch: 36 }, { wch: 54 },
   ];
-  if (rows.length) worksheet["!autofilter"] = { ref: `A1:I${rows.length + 1}` };
+  if (rows.length) worksheet["!autofilter"] = { ref: `A1:J${rows.length + 1}` };
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Causas");
   const date = new Date().toISOString().slice(0, 10);
@@ -342,18 +343,19 @@ function appLegalTableHtml(){
   const rows = causes.map((cause) => {
     const emailGroup = String(cause.email_group || "").trim();
     const groupKey = `${appPublicationLabel(cause)}::${emailGroup || "ungrouped"}`;
-    const groupRow = groupKey === previousGroup ? "" : `<tr class="legal-email-group-row"><td colspan="6"><strong>${appPublicationLabel(cause)}s</strong><span>${appEscape(emailGroup || "Sin grupo de correo")}</span></td></tr>`;
+    const groupRow = groupKey === previousGroup ? "" : `<tr class="legal-email-group-row"><td colspan="7"><strong>${appPublicationLabel(cause)}s</strong><span>${appEscape(emailGroup || "Sin grupo de correo")}</span></td></tr>`;
     previousGroup = groupKey;
     return `${groupRow}<tr>
       <td><div class="legal-cause-identity"><strong>${appEscape(cause.code)}</strong><span>${appEscape(cause.year ?? "-")}</span><span class="legal-publication-state${appCauseIsPublished(cause) ? " is-published" : ""}">${appPublicationLabel(cause)}</span></div></td>
       <td>${appEscape(cause.court || "-")}</td>
+      <td>${appEscape(cause.title || "-")}</td>
       <td>${appEscape(cause.assigned_lawyer || "-")}</td>
       <td>${appEscape(appUniqueList(cause.visibility_label) || "-")}</td>
       <td>${appEscape(cause.email_group || "-")}</td>
       <td><span class="legal-stage">${appEscape((cause.latest_stage || cause.latest_procedure) || appStatusLabel(cause.user_status || cause.status))}</span><small>${cause.latest_movement ? appEscape(cause.latest_movement) : "Sin movimientos"}</small></td>
     </tr>`;
   }).join("");
-  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Año / Estado</th><th>Juzgado</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${rows}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
+  return `<div class="legal-table-scroll"><table class="legal-causes-table"><thead><tr><th>Causa / Año / Estado</th><th>Juzgado</th><th>Carátula</th><th>Abogado asignado</th><th>Quién puede ver</th><th>Grupo de correo</th><th>Etapa / Estado</th></tr></thead><tbody>${rows}</tbody></table></div><div class="legal-pagination"><span>Mostrando ${(appState.legalPage - 1) * perPage + 1}–${Math.min(appState.legalPage * perPage, filtered.length)} de ${filtered.length}</span><div><button type="button" data-legal-page="${appState.legalPage - 1}" ${appState.legalPage === 1 ? "disabled" : ""}>Anterior</button><strong>Página ${appState.legalPage} de ${pages}</strong><button type="button" data-legal-page="${appState.legalPage + 1}" ${appState.legalPage === pages ? "disabled" : ""}>Siguiente</button></div></div>`;
 }
 
 function appLegacyLegalSummaryHtml(){

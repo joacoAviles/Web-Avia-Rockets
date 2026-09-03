@@ -41,6 +41,8 @@ async def run():
                 assert len(clients)==1, 'Expected only explicitly approved NOW client'
                 cid=clients[0]['id']; ctx=await admin.context(cid,user,db)
                 assert ctx['causes'] and ctx['groups']; count+=1
+                assert all('title' in c for c in ctx['causes']), 'Cause title missing from editor context'
+                count+=1
                 assert all(l['email'] for l in ctx['lawyers']), 'Existing real emails should be loaded'
                 count+=1
                 async def rejected(code,fn):

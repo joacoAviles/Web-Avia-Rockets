@@ -56,6 +56,7 @@ function adminCaseEditor(){
   const c={...raw,...raw.fields}, state=c.castigo?'castigo':c.publicada?'published':'unpublished';
   root.innerHTML=`<form id="admin-case-form"><div class="legal-admin-grid">
     ${adminField('code','Número de causa',c.code,'text',true)}${adminField('year','Año',c.year,'number',true)}${adminField('court','Juzgado',c.court,'text',true)}
+    <div class="legal-admin-readonly"><span>Carátula</span><strong>${adminEscape(c.title||'Sin carátula registrada')}</strong><small>Solo lectura</small></div>
     <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,c.portfolio_id,'Seleccionar grupo')}</select></label>
     <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,c.lawyer_id)}</select></label>
     <label>Estado de este cliente<select name="publication"><option value="${state}">${state==='castigo'?'Castigada':state==='published'?'Publicada':'No publicada'}</option>${state==='published'?'<option value="castigo">Castigar para este cliente</option>':''}</select></label>

@@ -76,7 +76,7 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
         lawyers=await rows('SELECT * FROM legal.client_lawyers WHERE client_id=:c ORDER BY name'),
         groups=await rows("SELECT id,name FROM legal.legal_portfolios WHERE client_id=:c AND status='active' ORDER BY display_order,name"),
         causes=await rows("""SELECT pc.id,pc.case_id,pc.portfolio_id,pc.lawyer_id,
-          c.rol AS code,c.year,c.court,c.publicada,
+          c.rol AS code,c.year,c.court,c.party AS title,c.publicada,
           COALESCE(s.castigo,false) AS castigo,COALESCE(s.version,0) AS version,COALESCE(s.fields,'{}'::jsonb) AS fields
           FROM legal.legal_portfolio_cases pc JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id
           JOIN legal.causes c ON c.id=pc.case_id LEFT JOIN legal.client_cause_settings s ON s.client_id=p.client_id AND s.cause_id=c.id

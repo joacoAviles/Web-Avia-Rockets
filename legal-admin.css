@@ -7,5 +7,8 @@
 .legal-admin-recipients { display:grid; gap:.5rem; max-height:260px; overflow:auto; }
 .legal-admin-recipients label { display:flex; align-items:center; gap:.5rem; }
 .legal-admin #admin-status { color:#9ed0ff; }
+.legal-admin-readonly { display:grid; gap:.5rem; padding:.75rem; border:1px solid rgba(134,176,255,.18); border-radius:10px; background:rgba(255,255,255,.025); }
+.legal-admin-readonly strong { color:var(--text); line-height:1.4; }
+.legal-admin-readonly small { color:var(--muted); }
 .legal-admin button:disabled { opacity:.5; cursor:wait; }
 @media(max-width:800px) { .legal-admin-grid { grid-template-columns:1fr; } }

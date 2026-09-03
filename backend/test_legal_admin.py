@@ -8,6 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4, UUID
 import sys
+import ast
 
 sys.path.insert(0, os.environ['API_SOURCE'])
 from fastapi import HTTPException
@@ -33,12 +34,15 @@ async def run():
             for sql in Path(__file__).with_name('legal_admin.sql').read_text(encoding='utf-8').split(';'):
                 if sql.strip() and sql.strip() not in ('BEGIN','COMMIT'):
                     await conn.execute(text(sql))
+            await conn.execute(text(Path(__file__).with_name('legal_admin_emails.sql').read_text(encoding='utf-8')))
             async with AsyncSession(bind=conn,join_transaction_mode='create_savepoint',expire_on_commit=False) as db:
                 user=SimpleNamespace(**dict((await db.execute(text("SELECT id,organization_id,email,full_name,role,is_active,product_access FROM platform.users WHERE lower(email)='fhevia@asesoriasnow.cl'"))).mappings().one()))
                 clients=await admin.clients(user,db)
                 assert len(clients)==1, 'Expected only explicitly approved NOW client'
                 cid=clients[0]['id']; ctx=await admin.context(cid,user,db)
                 assert ctx['causes'] and ctx['groups']; count+=1
+                assert all(l['email'] for l in ctx['lawyers']), 'Existing real emails should be loaded'
+                count+=1
                 async def rejected(code,fn):
                     nonlocal count
                     try: await fn()
@@ -59,7 +63,10 @@ async def run():
                 lid=UUID(fresh['id'])
                 await admin.edit_lawyer(cid,lid,admin.LawyerInput(name='QA edited '+str(uuid4()),email='test@example.invalid'),user,db);count+=1
                 await rejected(409,lambda:admin.edit_lawyer(cid,lid,admin.LawyerInput(name='Stale',version=1),user,db))
-                case=next(c for c in ctx['causes'] if c['publicada'] and not c['castigo'] and c['assignment_status']=='active')
+                initial_dashboard=await dashboard.dashboard_compat(user,db)
+                shown_ids={(c['id'],c['email_group_id']) for c in initial_dashboard['causes']}
+                eligible=set((await db.execute(text("SELECT pc.id FROM legal.legal_portfolio_cases pc JOIN legal.causes c ON c.id=pc.case_id WHERE pc.status='active' AND pc.include_in_batch_email AND c.status='active' AND c.publicada"))).scalars())
+                case=next(c for c in ctx['causes'] if c['id'] in eligible and not c['castigo'] and c['lawyer_id'] and (str(c['case_id']),str(c['portfolio_id'])) in shown_ids)
                 other_clients=[]
                 for _ in range(2):
                     other=uuid4(); portfolio=uuid4(); org=uuid4(); other_clients.append(other)
@@ -69,9 +76,31 @@ async def run():
                     await db.execute(text("INSERT INTO legal.legal_portfolio_cases(id,portfolio_id,case_id,corte,status,priority,include_in_batch_email,display_order,settings,created_at,updated_at) VALUES(:i,:p,:c,'QA rollback court','active','normal',true,0,'{}',now(),now())"),{'i':uuid4(),'p':portfolio,'c':case['case_id']})
                 await db.commit()
                 before=dict((await db.execute(text('SELECT * FROM legal.causes WHERE id=:i'),{'i':case['case_id']})).mappings().one())
-                data={k:case.get(k) or '' for k in ['code','court','title','competencia','corte','tipo','quick_note','client_comment','private_note']}
-                data.update(year=case['year'],version=case['version'],portfolio_id=case['portfolio_id'],lawyer_id=lid,recipient_ids=case['recipient_ids'],priority=case['priority'],assignment_status='active',publication='castigo')
-                data['title']='QA rollback correction'
+                await db.execute(text("UPDATE legal.legal_portfolio_cases SET quick_note='QA protected note',client_comment='QA protected comment',private_note='QA private',priority='high' WHERE id=:i"),{'i':case['id']})
+                protected=dict((await db.execute(text('SELECT competencia,corte,quick_note,client_comment,private_note,priority,status FROM legal.legal_portfolio_cases WHERE id=:i'),{'i':case['id']})).mappings().one())
+                data={k:case.get(k) or '' for k in ['code','court']}
+                data.update(year=case['year'],version=case['version'],portfolio_id=case['portfolio_id'],lawyer_id=lid,publication='published')
+                data['code']='QA-rollback'
+                for key in ['title','competencia','corte','tipo','recipient_ids','quick_note','client_comment','private_note','priority','assignment_status']:
+                    try: admin.CauseInput(**(data|{key:'prohibited'}))
+                    except ValidationError: count+=1
+                    else: raise AssertionError('Protected field accepted: '+key)
+                await admin.edit_case(cid,case['id'],admin.CauseInput(**data),user,db)
+                assert protected==dict((await db.execute(text('SELECT competencia,corte,quick_note,client_comment,private_note,priority,status FROM legal.legal_portfolio_cases WHERE id=:i'),{'i':case['id']})).mappings().one()); count+=1
+                mail_source=Path(os.environ['API_SOURCE'])/'app/labs/pjud_control_email.py'
+                tree=ast.parse(mail_source.read_text(encoding='utf-8'))
+                mail_sql=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='PORTFOLIO_GROUPS_SQL' for t in n.targets))
+                async def mail_row():
+                    rows=(await db.execute(text(mail_sql),{'organization_id':before['organization_id']})).mappings().all()
+                    return next(r for r in rows if r['portfolio_case_id']==str(case['id']))
+                mr=await mail_row()
+                assert mr['assigned_lawyer_email']=='test@example.invalid';count+=1
+                await admin.edit_lawyer(cid,lid,admin.LawyerInput(name='QA renamed',email='updated@example.invalid',version=2),user,db)
+                mr=await mail_row()
+                assert mr['assigned_lawyer_email']=='updated@example.invalid' and mr['responsible_name']=='QA renamed'
+                assert all(r['email']!='test@example.invalid' for r in mr['case_recipients']);count+=1
+                assert any(r['email']=='updated@example.invalid' for r in mr['case_recipients']);count+=1
+                data.update(version=case['version']+1,publication='castigo')
                 payload=admin.CauseInput(**data)
                 await admin.edit_case(cid,case['id'],payload,user,db);count+=1
                 after=dict((await db.execute(text('SELECT * FROM legal.causes WHERE id=:i'),{'i':case['case_id']})).mappings().one())
@@ -87,11 +116,10 @@ async def run():
                 await rejected(409,lambda:admin.edit_case(cid,case['id'],payload,user,db))
                 await rejected(409,lambda:admin.delete_lawyer(cid,lid,user,db))
                 result=await dashboard.dashboard_compat(user,db)
-                shown=next((c for c in result['causes'] if c['id']==str(case['case_id'])),None)
-                if shown:
-                    assert shown['client_castigo'] and not shown['publicada'] and shown['pjud_publicada']
-                    assert shown['title']=='QA rollback correction';count+=1
-                data.update(version=case['version']+1,publication='published')
+                shown=next(c for c in result['causes'] if c['id']==str(case['case_id']))
+                assert shown['client_castigo'] and not shown['publicada'] and shown['pjud_publicada']
+                assert shown['code']=='QA-rollback' and shown['assigned_lawyer']=='QA renamed';count+=1
+                data.update(version=case['version']+2,publication='published')
                 await rejected(422,lambda:admin.edit_case(cid,case['id'],admin.CauseInput(**data),user,db))
                 empty=await admin.create_lawyer(cid,admin.LawyerInput(name='QA delete '+str(uuid4())),user,db)
                 await admin.delete_lawyer(cid,UUID(empty['id']),user,db);count+=1

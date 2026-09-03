@@ -75,7 +75,7 @@ async def dashboard_compat(
             LEFT JOIN LATERAL (
                 SELECT pc.responsible_name,
                        p.client_id,
-                       COALESCE((pc.settings->>'admin_edited')::boolean,false) AS admin_edited,
+                       COALESCE((pc.settings->>'admin_lawyer_edited')::boolean,(pc.settings->>'admin_edited')::boolean,false) AS admin_edited,
                        p.id AS portfolio_id,
                        p.name AS portfolio_name,
                        CASE WHEN COALESCE((pc.settings->>'admin_edited')::boolean,false)

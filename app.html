@@ -260,7 +260,7 @@
           eyebrow: "LÃ­nea Labs",
           title: "Labs",
           description: "Academy, conectores y herramientas internas para convertir procesos reales en productos utilizables dentro del login.",
-          products: ["academy", "api-lab"]
+          products: ["academy", "portada", "api-lab"]
         }
       };
 
@@ -319,6 +319,11 @@
           title: "Procurador",
           description: "Sube el Excel diario del procurador. La API procesa, concilia y envía el informe automáticamente."
         },
+        "portada": {
+          line: "labs", icon: "PO", label: "Portada", apiSlug: "labs-portada",
+          slugs: ["labs-portada", "portada"], meta: function(){ return "Editor visual"; },
+          title: "Portada", description: "Crea portadas y administra perfiles visuales sin tocar código."
+        },
         "api-lab": {
           line: "labs",
           icon: "API",
@@ -367,6 +372,7 @@
       }
 
       function isLineAllowed(lineId){
+        if (lineId === "labs" && ["keanuavia@gmail.com", "r.labbe.a@gmail.com", "admin@aviarockets.cl"].includes(normalize(appState.user?.email))) return true;
         if (!hasContractedProducts()) return false;
         const lineTokens = permissionLineTokens();
         if (lineTokens.includes(normalize(lineId))) return true;
@@ -374,6 +380,7 @@
       }
 
       function isContracted(view){
+        if (view === "portada" && ["keanuavia@gmail.com", "r.labbe.a@gmail.com", "admin@aviarockets.cl"].includes(normalize(appState.user?.email))) return true;
         if (!hasContractedProducts()) return false;
         const item = catalog[view];
         if (!item) return false;
@@ -801,6 +808,7 @@
         if (productButton) {
           event.preventDefault();
           appState.view = productButton.dataset.productView || homeView(appState.selectedLine);
+          if (appState.view === "portada") { window.location.href = "portada.html"; return; }
           await appRenderPanel();
         }
         if (event.target.closest("#pjud-control-preview")) {

@@ -10,5 +10,12 @@
 .legal-admin-readonly { display:grid; gap:.5rem; padding:.75rem; border:1px solid rgba(134,176,255,.18); border-radius:10px; background:rgba(255,255,255,.025); }
 .legal-admin-readonly strong { color:var(--text); line-height:1.4; }
 .legal-admin-readonly small { color:var(--muted); }
+.legal-admin-cc { display:grid; gap:1rem; margin-top:1rem; }
+.legal-admin-cc h3 { margin:0 0 .25rem; color:var(--text); }
+.legal-admin-cc-list { display:grid; gap:.6rem; }
+.legal-admin-cc-row { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:1rem; padding:.8rem 1rem; border:1px solid rgba(134,176,255,.18); border-radius:10px; background:rgba(255,255,255,.025); }
+.legal-admin-cc-row div { display:grid; gap:.2rem; min-width:0; }
+.legal-admin-cc-row strong,.legal-admin-cc-row span { overflow-wrap:anywhere; }
+.legal-admin-cc-row span,.legal-admin-empty { color:var(--muted); }
 .legal-admin button:disabled { opacity:.5; cursor:wait; }
 @media(max-width:800px) { .legal-admin-grid { grid-template-columns:1fr; } }

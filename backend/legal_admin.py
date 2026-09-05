@@ -27,6 +27,11 @@ class CauseInput(BaseModel):
     lawyer_id: UUID | None = None
     publication: Literal['published','unpublished','castigo']
 
+class PortfolioCcInput(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    name: str | None = Field(default=None, max_length=200)
+    email: str = Field(min_length=3, max_length=254, pattern=r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
+
 def require_admin(user):
     access=user.product_access or {}
     if user.role != 'admin' or not user.is_active or not any(access.get(k) in (True,1) for k in ('legal','causes')):
@@ -75,6 +80,11 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
     return dict(
         lawyers=await rows('SELECT * FROM legal.client_lawyers WHERE client_id=:c ORDER BY name'),
         groups=await rows("SELECT id,name FROM legal.legal_portfolios WHERE client_id=:c AND status='active' ORDER BY display_order,name"),
+        portfolio_cc=await rows("""SELECT r.id,r.portfolio_id,r.email,r.name,r.display_order
+          FROM legal.legal_portfolio_recipients r
+          JOIN legal.legal_portfolios p ON p.id=r.portfolio_id
+          WHERE p.client_id=:c AND p.status='active' AND r.recipient_type='cc' AND r.is_active
+          ORDER BY p.display_order,r.display_order,lower(r.email)"""),
         causes=await rows("""SELECT pc.id,pc.case_id,pc.portfolio_id,pc.lawyer_id,
           c.rol AS code,c.year,c.court,c.party AS title,c.publicada,
           COALESCE(s.castigo,false) AS castigo,COALESCE(s.version,0) AS version,COALESCE(s.fields,'{}'::jsonb) AS fields
@@ -82,6 +92,45 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
           JOIN legal.causes c ON c.id=pc.case_id
           LEFT JOIN legal.client_cause_settings s ON s.client_id=p.client_id AND s.cause_id=c.id
           WHERE p.client_id=:c ORDER BY c.publicada DESC,c.year DESC,c.rol"""))
+
+@router.post('/clients/{client_id}/portfolios/{portfolio_id}/cc',status_code=201)
+async def add_portfolio_cc(client_id:UUID,portfolio_id:UUID,payload:PortfolioCcInput,user=Depends(current_user),db=Depends(get_db)):
+    await authorize(db,user,client_id)
+    portfolio=(await db.execute(text("SELECT id FROM legal.legal_portfolios WHERE id=:p AND client_id=:c AND status='active' FOR SHARE"),dict(p=portfolio_id,c=client_id))).scalar()
+    if not portfolio: raise HTTPException(404,'Portafolio no encontrado para este cliente')
+    email=payload.email.lower()
+    old=(await db.execute(text("SELECT * FROM legal.legal_portfolio_recipients WHERE portfolio_id=:p AND lower(trim(email))=:e AND recipient_type='cc' FOR UPDATE"),dict(p=portfolio_id,e=email))).mappings().first()
+    try:
+        if old:
+            rid=old['id']
+            await db.execute(text("UPDATE legal.legal_portfolio_recipients SET email=:e,name=:n,is_active=true,updated_at=now() WHERE id=:i"),dict(e=email,n=payload.name or None,i=rid))
+            action='portfolio_cc.reactivate' if not old['is_active'] else 'portfolio_cc.update'
+        else:
+            rid=(await db.execute(text("""INSERT INTO legal.legal_portfolio_recipients
+              (id,portfolio_id,email,name,recipient_type,is_active,display_order,created_at,updated_at)
+              SELECT gen_random_uuid(),:p,:e,:n,'cc',true,COALESCE(MAX(display_order),-1)+1,now(),now()
+              FROM legal.legal_portfolio_recipients WHERE portfolio_id=:p RETURNING id"""),dict(p=portfolio_id,e=email,n=payload.name or None))).scalar_one()
+            action='portfolio_cc.create'
+        after={'id':str(rid),'portfolio_id':str(portfolio_id),'email':email,'name':payload.name or None,'recipient_type':'cc','is_active':True}
+        await audit(db,user,client_id,rid,action,dict(old) if old else None,after)
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(409,'Este correo ya está registrado como CC del portafolio')
+    return {'id':str(rid)}
+
+@router.delete('/clients/{client_id}/portfolios/{portfolio_id}/cc/{recipient_id}')
+async def remove_portfolio_cc(client_id:UUID,portfolio_id:UUID,recipient_id:UUID,user=Depends(current_user),db=Depends(get_db)):
+    await authorize(db,user,client_id)
+    old=(await db.execute(text("""SELECT r.* FROM legal.legal_portfolio_recipients r
+      JOIN legal.legal_portfolios p ON p.id=r.portfolio_id
+      WHERE r.id=:i AND r.portfolio_id=:p AND p.client_id=:c AND p.status='active'
+        AND r.recipient_type='cc' AND r.is_active FOR UPDATE OF r"""),dict(i=recipient_id,p=portfolio_id,c=client_id))).mappings().first()
+    if not old: raise HTTPException(404,'Destinatario CC no encontrado para este portafolio')
+    await db.execute(text('UPDATE legal.legal_portfolio_recipients SET is_active=false,updated_at=now() WHERE id=:i'),{'i':recipient_id})
+    await audit(db,user,client_id,recipient_id,'portfolio_cc.remove',dict(old),dict(old)|{'is_active':False})
+    await db.commit()
+    return {'ok':True}
 
 @router.put('/clients/{client_id}/cases/{case_link_id}')
 async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Depends(current_user),db=Depends(get_db)):

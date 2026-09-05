@@ -45,6 +45,17 @@ async def run():
                 count+=1
                 assert all(l['email'] for l in ctx['lawyers']), 'Existing real emails should be loaded'
                 count+=1
+                assert all(r['portfolio_id'] in {g['id'] for g in ctx['groups']} for r in ctx['portfolio_cc'])
+                count+=1
+                cc_portfolio=ctx['groups'][0]['id']
+                cc_email=f'cc-{uuid4()}@example.invalid'
+                created_cc=await admin.add_portfolio_cc(cid,cc_portfolio,admin.PortfolioCcInput(name='QA CC',email=cc_email),user,db)
+                refreshed=await admin.context(cid,user,db)
+                added=next(r for r in refreshed['portfolio_cc'] if r['id']==UUID(created_cc['id']))
+                assert added['portfolio_id']==cc_portfolio and added['email']==cc_email;count+=1
+                await admin.remove_portfolio_cc(cid,cc_portfolio,UUID(created_cc['id']),user,db)
+                refreshed=await admin.context(cid,user,db)
+                assert all(r['id']!=UUID(created_cc['id']) for r in refreshed['portfolio_cc']);count+=1
                 async def rejected(code,fn):
                     nonlocal count
                     try: await fn()

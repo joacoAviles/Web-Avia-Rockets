@@ -1,6 +1,225 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Avia Rockets · Portada</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="portada.css"></head><body>
-<header><a class="brand" href="app.html">AVIA <b>ROCKETS</b></a><span>Labs / Portada</span><span class="identity" id="email"></span></header>
-<main><nav><button data-tab="editor" class="active">Portada</button><button data-tab="config">Configuración de portada</button></nav>
-<section id="editor" class="tab active"><aside><label>Perfil<select id="profile"></select></label><label>Formato<select id="format"><option value="vertical">Vertical</option><option value="horizontal">Horizontal</option><option value="square">Cuadrado</option></select></label><label>Título<textarea id="title">START BROKEN.</textarea></label><label>Subtítulo<textarea id="subtitle">finish sharp</textarea></label><label class="check"><input type="checkbox" id="guides" checked> Mostrar zonas seguras</label><div id="layers"></div><button id="export" class="primary">Exportar PNG</button><p id="message"></p></aside><div class="stage"><canvas id="canvas"></canvas><p>Arrastra para mover · usa el control de la esquina para redimensionar</p></div></section>
-<section id="config" class="tab"><aside><div class="actions"><button id="new">Nuevo</button><button id="duplicate">Duplicar</button><button id="save" class="primary">Guardar</button></div><label>Nombre<input id="cfgName"></label><label>Red social<input id="cfgNetwork"></label><label>Formato<select id="cfgFormat"><option value="vertical">Vertical</option><option value="horizontal">Horizontal</option><option value="square">Cuadrado</option></select></label><label>Estado<select id="cfgStatus"><option value="draft">Borrador</option><option value="published">Publicado</option><option value="archived">Archivado</option></select></label><label>Fondo<input id="cfgBackground" type="color"></label><fieldset><legend>Zona segura (%)</legend><div class="quad"><input id="safeLeft" type="number" title="Izquierda"><input id="safeTop" type="number" title="Arriba"><input id="safeRight" type="number" title="Derecha"><input id="safeBottom" type="number" title="Abajo"></div></fieldset><h3>Capas</h3><div id="cfgLayers"></div><div class="actions"><button data-add="text">+ Texto</button><button data-add="rect">+ Forma</button><button data-add="grid">+ Grid</button><button data-add="topography">+ Topografía</button><button data-add="image">+ Imagen/logo</button></div><button id="delete" class="danger">Borrar perfil</button></aside><div class="stage"><canvas id="configCanvas"></canvas><p>Todo el diseño se guarda en la definición del perfil.</p></div></section></main>
-<script type="module" src="portada.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Creador de portadas · AVIA Labs</title>
+    <link rel="icon" href="assets/avia-rockets-logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="portada.css?v=20260906-3" />
+  </head>
+  <body class="cover-app">
+    <header class="cover-header">
+      <a class="brand" href="app.html"
+        ><img src="assets/avia-rockets-logo.svg" alt="" /><span
+          ><strong>AVIA</strong><small>ROCKETS</small></span
+        ></a
+      >
+      <a class="back-link" href="app.html">← Volver a Labs</a
+      ><span class="identity" id="email"></span>
+    </header>
+    <main class="cover-main">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">AVIA Labs / Estudio creativo</p>
+          <h1>Creador de portadas</h1>
+          <p>
+            Tu contenido, con tu identidad. Diseña, guarda y vuelve a editar.
+          </p>
+        </div>
+        <button id="demo">Crear ejemplo hola / chao</button>
+      </div>
+      <div class="project-bar">
+        <label
+          >Proyecto<select id="profile" aria-label="Proyecto guardado"></select
+        ></label>
+        <div class="actions">
+          <button id="undo" disabled title="Deshacer">↶ Deshacer</button
+          ><button id="redo" disabled title="Rehacer">↷ Rehacer</button
+          ><button id="new">Nuevo</button
+          ><button id="duplicate">Duplicar</button
+          ><button id="save" class="primary">Guardar proyecto</button
+          ><button id="export" class="primary">Exportar PNG</button>
+        </div>
+      </div>
+      <div class="status-bar">
+        <p id="message" role="status" aria-live="polite">Cargando proyectos…</p>
+        <span
+          >Guardado local en este navegador · descarga un respaldo para
+          trasladarlo</span
+        >
+      </div>
+      <div class="workspace">
+        <aside class="controls" aria-label="Herramientas de portada">
+          <nav class="editor-tabs" aria-label="Herramientas">
+            <button data-tab="content" class="active" aria-pressed="true">
+              Contenido</button
+            ><button data-tab="design" aria-pressed="false">
+              Diseño y capas</button
+            ><button data-tab="brands" aria-pressed="false">Marcas</button>
+          </nav>
+          <section id="content" class="tab active">
+            <h2>Tu portada</h2>
+            <label
+              >Nombre del proyecto<input id="name" maxlength="120"
+            /></label>
+            <label
+              >Formato<select id="format">
+                <option value="vertical">Historia / Reel · 1080 × 1920</option>
+                <option value="horizontal">
+                  Miniatura YouTube HD · 1280 × 720
+                </option>
+                <option value="youtube4k">
+                  Miniatura YouTube 4K · 3840 × 2160
+                </option>
+                <option value="channel">Banner de canal · 2560 × 1440</option>
+                <option value="portrait">
+                  Publicación vertical · 1080 × 1350
+                </option>
+                <option value="custom">Medidas personalizadas</option>
+                <option value="square">Cuadrado · 1080 × 1080</option>
+              </select></label
+            >
+            <div id="customSize" class="field-grid" hidden>
+              <label
+                >Ancho (px)<input
+                  id="customWidth"
+                  type="number"
+                  min="64"
+                  max="4096"
+                  step="1" /></label
+              ><label
+                >Alto (px)<input
+                  id="customHeight"
+                  type="number"
+                  min="64"
+                  max="4096"
+                  step="1"
+              /></label>
+            </div>
+            <p id="formatHelp" class="hint"></p>
+            <label
+              >Marca / canal<input
+                id="brand"
+                maxlength="120"
+                placeholder="Nombre de tu marca"
+            /></label>
+            <label
+              >Título<textarea id="title" maxlength="2000"></textarea>
+            </label>
+            <label
+              >Subtítulo<textarea id="subtitle" maxlength="2000"></textarea>
+            </label>
+            <label>Fondo<input id="background" type="color" /></label>
+            <details>
+              <summary>Organización del proyecto</summary>
+              <label>Red social<input id="network" maxlength="120" /></label
+              ><label
+                >Estado<select id="status">
+                  <option value="draft">Borrador</option>
+                  <option value="published">Listo</option>
+                  <option value="archived">Archivado</option>
+                </select></label
+              >
+            </details>
+            <h3>Imágenes y logos</h3>
+            <p class="hint">
+              PNG, JPG, WebP o SVG · hasta 10 MB. Se guardan dentro del
+              proyecto.
+            </p>
+            <label class="upload"
+              >Importar imágenes o logos<input
+                id="imageImport"
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                multiple
+            /></label>
+            <h3>Reutilizar tu trabajo</h3>
+            <div class="actions">
+              <button id="backup">Descargar proyecto</button
+              ><label class="upload compact"
+                >Importar proyecto<input
+                  id="projectImport"
+                  type="file"
+                  accept=".json,application/json"
+              /></label>
+            </div>
+            <p class="hint">
+              El respaldo conserva textos, imágenes, posiciones, colores y
+              patrones de sombra.
+            </p>
+            <button id="delete" class="danger">Eliminar proyecto</button>
+          </section>
+          <section id="brands" class="tab">
+            <h2>Diseños para tus marcas</h2>
+            <p class="hint">
+              Guarda el diseño actual como plantilla. Conserva la marca, logos,
+              fuentes y estilos para crear nuevas portadas sin modificar el
+              original.
+            </p>
+            <label>Plantillas guardadas<select id="templates"></select></label>
+            <div class="actions">
+              <button id="saveTemplate">Guardar como plantilla</button
+              ><button id="useTemplate" class="primary">
+                Crear desde plantilla</button
+              ><button id="deleteTemplate">Eliminar plantilla</button>
+            </div>
+            <h3>Tipografías de marca</h3>
+            <p class="hint">
+              Incluye Bebas Neue, Montserrat, Oswald y Playfair Display. También
+              puedes importar fuentes TTF, OTF, WOFF o WOFF2 (hasta 5 MB). Se
+              incluyen en el respaldo del proyecto.
+            </p>
+            <label class="upload"
+              >Importar tipografía<input
+                id="fontImport"
+                type="file"
+                accept=".ttf,.otf,.woff,.woff2"
+            /></label>
+            <p id="fontList" class="hint"></p>
+          </section>
+          <section id="design" class="tab">
+            <h2>Configuración de portada</h2>
+            <p class="hint">
+              Las capas de arriba se dibujan al frente. Selecciona una para
+              editarla.
+            </p>
+            <div class="actions">
+              <button data-add="text">+ Texto</button
+              ><button data-add="rect">+ Forma</button
+              ><button data-add="grid">+ Malla</button
+              ><button data-add="topography">+ Topografía</button>
+            </div>
+            <div id="layers" class="layers" aria-label="Capas"></div>
+            <div id="inspector"></div>
+            <details>
+              <summary>Zonas seguras</summary>
+              <div class="field-grid" id="safeControls"></div>
+            </details>
+          </section>
+        </aside>
+        <section class="preview-panel" aria-label="Vista previa de portada">
+          <div class="preview-bar">
+            <span id="dimensions"></span
+            ><label class="check"
+              ><input type="checkbox" id="guides" checked /> Zonas
+              seguras</label
+            >
+          </div>
+          <div class="stage">
+            <canvas
+              id="canvas"
+              tabindex="0"
+              aria-label="Portada editable. Puedes cambiar las posiciones con los campos de Diseño y capas."
+            ></canvas>
+          </div>
+          <p class="preview-note">
+            Arrastra una capa para moverla · arrastra su esquina para cambiar el
+            tamaño.<br />Las guías y controles no aparecen en el PNG.
+          </p>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="portada.js?v=20260906-3"></script>
+  </body>
+</html>

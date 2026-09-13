@@ -17,5 +17,6 @@
 .legal-admin-cc-row div { display:grid; gap:.2rem; min-width:0; }
 .legal-admin-cc-row strong,.legal-admin-cc-row span { overflow-wrap:anywhere; }
 .legal-admin-cc-row span,.legal-admin-empty { color:var(--muted); }
+.legal-admin-actions { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; }
 .legal-admin button:disabled { opacity:.5; cursor:wait; }
 @media(max-width:800px) { .legal-admin-grid { grid-template-columns:1fr; } }

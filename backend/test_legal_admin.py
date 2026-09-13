@@ -64,7 +64,7 @@ async def run():
                     await db.rollback(); count+=1
                 await rejected(403,lambda:admin.context(uuid4(),user,db))
                 await rejected(403,lambda:admin.clients(SimpleNamespace(role='viewer',is_active=True,product_access={'legal':True}),db))
-                for old,pub,target,allowed in [(False,True,'castigo',True),(False,False,'published',False),(True,True,'published',False),(False,True,'unpublished',False),(False,False,'unpublished',True)]:
+                for old,pub,target,allowed in [(False,True,'castigo',True),(False,False,'published',False),(True,True,'published',True),(True,False,'unpublished',True),(False,True,'unpublished',False),(False,False,'unpublished',True)]:
                     try: admin.validate_transition(old,pub,target)
                     except HTTPException: assert not allowed
                     else: assert allowed
@@ -133,7 +133,11 @@ async def run():
                 assert shown['client_castigo'] and not shown['publicada'] and shown['pjud_publicada']
                 assert shown['code']=='QA-rollback' and shown['assigned_lawyer']=='QA renamed';count+=1
                 data.update(version=case['version']+2,publication='published')
-                await rejected(422,lambda:admin.edit_case(cid,case['id'],admin.CauseInput(**data),user,db))
+                await admin.edit_case(cid,case['id'],admin.CauseInput(**data),user,db);count+=1
+                assert (await db.execute(text('SELECT include_in_batch_email FROM legal.legal_portfolio_cases WHERE id=:i'),{'i':case['id']})).scalar_one();count+=1
+                await admin.unassign_case(cid,case['id'],user,db);count+=1
+                assert not (await db.execute(text('SELECT 1 FROM legal.legal_portfolio_cases WHERE id=:i'),{'i':case['id']})).first();count+=1
+                assert (await db.execute(text('SELECT 1 FROM legal.causes WHERE id=:i'),{'i':case['case_id']})).first();count+=1
                 empty=await admin.create_lawyer(cid,admin.LawyerInput(name='QA delete '+str(uuid4())),user,db)
                 await admin.delete_lawyer(cid,UUID(empty['id']),user,db);count+=1
                 print(f'PASS: {count} checks; {len(ctx["causes"])} client assignments; {len(result["causes"])} dashboard causes. All test writes roll back.')

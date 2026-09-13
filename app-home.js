@@ -305,7 +305,7 @@ function appDownloadLegalExcel(){
     return;
   }
   const rows = appState.causes.map((cause) => ({
-    "Causa": cause.code || "",
+    "Causa": appLegalExportCode(cause),
     "Año": cause.year ?? "",
     "Estado de publicación": appPublicationLabel(cause),
     "Juzgado": cause.court || "",
@@ -326,6 +326,13 @@ function appDownloadLegalExcel(){
   XLSX.utils.book_append_sheet(workbook, worksheet, "Causas");
   const date = new Date().toISOString().slice(0, 10);
   XLSX.writeFile(workbook, `causas-legales-${date}.xlsx`, { compression: true });
+}
+
+function appLegalExportCode(cause){
+  const year=String(cause?.year ?? '').trim();
+  let code=String(cause?.code ?? '').trim().replace(/^c-/i,'');
+  if(year && code.toLowerCase().endsWith(`-${year.toLowerCase()}`)) code=code.slice(0,-year.length-1);
+  return code && year ? `c-${code}-${year}` : code ? `c-${code}` : '';
 }
 
 function appCatalogOptions(items, selected, label = "Seleccionar"){

@@ -60,15 +60,16 @@ function adminCaseEditor(){
     <div class="legal-admin-readonly"><span>Carátula</span><strong>${adminEscape(c.title||'Sin carátula registrada')}</strong><small>Solo lectura</small></div>
     <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,c.portfolio_id,'Seleccionar grupo')}</select></label>
     <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,c.lawyer_id)}</select></label>
-    <label>Estado de este cliente<select name="publication"><option value="${state}">${state==='castigo'?'Castigada':state==='published'?'Publicada':'No publicada'}</option>${state==='published'?'<option value="castigo">Castigar para este cliente</option>':''}</select></label>
+    <label>Estado de este cliente<select name="publication"><option value="${state}">${state==='castigo'?'Castigada':state==='published'?'Publicada':'No publicada'}</option>${state==='published'?'<option value="castigo">Castigar para este cliente</option>':state==='castigo'?`<option value="${c.publicada?'published':'unpublished'}">Revertir castigo</option>`:''}</select></label>
     </div>
-    <p>Castigo afecta únicamente a este cliente y excluye la causa de sus correos por lote. No permite publicar ni rehabilitar manualmente una causa.</p>
-    <button type="submit" class="btn btn-primary">Guardar esta causa</button></form>`;
+    <p>Castigo afecta únicamente a este cliente y excluye la causa de sus correos por lote. Puede revertirse sin alterar el estado global de PJUD.</p>
+    <div class="legal-admin-actions"><button type="submit" class="btn btn-primary">Guardar esta causa</button><button type="button" id="admin-unassign-case" class="btn btn-secondary">Quitar causa del cliente</button></div></form>`;
   document.getElementById('admin-case-form').onsubmit=async e=>{
     e.preventDefault();const f=new FormData(e.currentTarget);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.version=c.version;payload.lawyer_id=payload.lawyer_id||null;
     if(!confirm(payload.publication==='castigo'&&!c.castigo?'¿Guardar los cambios y castigar esta causa solo para este cliente?':'¿Guardar los cambios de esta causa para este cliente?'))return;
     await adminSave(e.currentTarget,()=>appFetch(adminUrl(`/cases/${c.id}`),{method:'PUT',body:JSON.stringify(payload)}),'Causa guardada.');
   };
+  document.getElementById('admin-unassign-case').onclick=async()=>{const form=document.getElementById('admin-case-form');if(!confirm(`¿Quitar la causa ${c.code} / ${c.year} de este cliente? La causa global y sus movimientos no se borrarán.`))return;await adminSave(form,()=>appFetch(adminUrl(`/cases/${c.id}`),{method:'DELETE'}),'Causa quitada del cliente.');};
 }
 async function adminSave(form,operation,message){
   const buttons=form.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);

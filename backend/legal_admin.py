@@ -44,8 +44,10 @@ async def authorize(db,user,client_id):
 
 def validate_transition(was_castigo,published,target):
     current='castigo' if was_castigo else ('published' if published else 'unpublished')
-    if target != current and not (current=='published' and target=='castigo'):
-        raise HTTPException(422,'Solo se permite Publicada → Castigo. No se permite publicar manualmente.')
+    restored='published' if published else 'unpublished'
+    allowed=target==current or (current=='published' and target=='castigo') or (current=='castigo' and target==restored)
+    if not allowed:
+        raise HTTPException(422,'Solo se permite castigar una causa publicada o revertir su castigo. No se permite publicar manualmente.')
 
 async def audit(db,user,client_id,rid,action,before,after):
     await db.execute(text('INSERT INTO legal.admin_edit_audit(client_id,user_id,resource_id,action,before_data,after_data) VALUES (:c,:u,:r,:a,CAST(:b AS jsonb),CAST(:n AS jsonb))'),dict(c=client_id,u=user.id,r=rid,a=action,b=json.dumps(before,default=str),n=json.dumps(after,default=str)))
@@ -155,13 +157,24 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
         await db.execute(text('UPDATE legal.client_cause_settings SET fields=CAST(:f AS jsonb),castigo=:s,version=version+1 WHERE client_id=:c AND cause_id=:i'),{'f':json.dumps(fields),'s':payload.publication=='castigo','c':client_id,'i':before['case_id']})
         await db.execute(text('''UPDATE legal.legal_portfolio_cases SET portfolio_id=:p,lawyer_id=:l,responsible_name=:n,settings=COALESCE(settings,'{}'::jsonb)||CAST(:flags AS jsonb),updated_at=now() WHERE id=:i'''),dict(p=group,l=payload.lawyer_id,n=lawyer_name,i=case_link_id,flags=json.dumps({'admin_lawyer_edited':True,'assigned_lawyer_email':lawyer_email})))
         await sync_assigned_contact(db,case_link_id,(before['settings'] or {}).get('assigned_lawyer_email'),lawyer_email,lawyer_name)
-        if payload.publication=='castigo':
-            await db.execute(text('UPDATE legal.legal_portfolio_cases pc SET include_in_batch_email=false,updated_at=now() FROM legal.legal_portfolios p WHERE pc.portfolio_id=p.id AND p.client_id=:c AND pc.case_id=:i'),{'c':client_id,'i':before['case_id']})
+        await db.execute(text('UPDATE legal.legal_portfolio_cases pc SET include_in_batch_email=:enabled,updated_at=now() FROM legal.legal_portfolios p WHERE pc.portfolio_id=p.id AND p.client_id=:c AND pc.case_id=:i'),{'enabled':payload.publication!='castigo','c':client_id,'i':before['case_id']})
         await audit(db,user,client_id,case_link_id,'case.update',dict(before)|dict(settings),payload.model_dump())
         await db.commit()
     except IntegrityError:
         await db.rollback()
         raise HTTPException(409,'La asignación ya existe en ese grupo. No se guardaron cambios.')
+    return {'ok':True}
+
+@router.delete('/clients/{client_id}/cases/{case_link_id}')
+async def unassign_case(client_id:UUID,case_link_id:UUID,user=Depends(current_user),db=Depends(get_db)):
+    await authorize(db,user,client_id)
+    old=(await db.execute(text('''SELECT pc.*,c.rol,c.year,c.court FROM legal.legal_portfolio_cases pc
+      JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id JOIN legal.causes c ON c.id=pc.case_id
+      WHERE pc.id=:i AND p.client_id=:c FOR UPDATE OF pc'''),{'i':case_link_id,'c':client_id})).mappings().first()
+    if not old: raise HTTPException(404,'Causa no asignada a este cliente')
+    await audit(db,user,client_id,case_link_id,'case.unassign',dict(old),None)
+    await db.execute(text('DELETE FROM legal.legal_portfolio_cases WHERE id=:i'),{'i':case_link_id})
+    await db.commit()
     return {'ok':True}
 
 @router.post('/clients/{client_id}/lawyers',status_code=201)

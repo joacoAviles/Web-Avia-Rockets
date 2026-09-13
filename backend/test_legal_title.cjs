@@ -19,9 +19,10 @@ const context={
   XLSX:{utils:{json_to_sheet:r=>(rows=r,{}),book_new:()=>({}),book_append_sheet:()=>{}},writeFile:(_,f)=>file=f}
 };
 context.window=context;
-vm.createContext(context);vm.runInContext(namedFunction('appDownloadLegalExcel'),context);
+vm.createContext(context);vm.runInContext(namedFunction('appLegalExportCode'),context);vm.runInContext(namedFunction('appDownloadLegalExcel'),context);
 context.appDownloadLegalExcel();
 assert.strictEqual(rows[0]['Carátula'],'Carátula SQL');
+assert.strictEqual(rows[0]['Causa'],'c-7404-2023');
 assert(source.includes('<th>Carátula</th>'),'Carátula column missing');
 assert(source.includes('appEscape(cause.title || "-")'),'Carátula row missing');
 assert(file.startsWith('causas-legales-')&&file.endsWith('.xlsx'));

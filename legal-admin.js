@@ -37,7 +37,16 @@ function adminRender(){
 function adminCases(){
   legalAdmin.section='cases';
   document.getElementById('admin-cases-tab').classList.add('is-active');document.getElementById('admin-lawyers-tab').classList.remove('is-active');document.getElementById('admin-cc-tab').classList.remove('is-active');
-  document.getElementById('admin-work').innerHTML='<label>Buscar causa<input id="admin-search" type="search" placeholder="Número, año o juzgado"></label><label>Causa y asignación<select id="admin-case"></select></label><div id="admin-case-editor"></div>';
+  document.getElementById('admin-work').innerHTML=`<section class="legal-admin-add"><div><h3>Agregar causa al cliente</h3><p>Si la causa ya existe, se reutiliza. Si no existe, se crea como no publicada; solo el proceso PJUD puede publicarla.</p></div>
+    <form id="admin-add-case-form"><div class="legal-admin-grid">
+      ${adminField('code','Número de causa','','text',true)}${adminField('year','Año','', 'number',true)}${adminField('court','Juzgado','','text',true)}
+      ${adminField('corte','Corte de Apelaciones','','text',true)}
+      <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,legalAdmin.data.groups[0]?.id,'Seleccionar grupo')}</select></label>
+      <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,'')}</select></label>
+    </div><button type="submit" class="btn btn-primary">Agregar causa</button></form></section>
+    <div class="legal-admin-existing"><h3>Editar o quitar una causa asignada</h3><label>Buscar causa<input id="admin-search" type="search" placeholder="Número, año o juzgado"></label><label>Causa y asignación<select id="admin-case"></select></label><div id="admin-case-editor"></div></div>`;
+  const addForm=document.getElementById('admin-add-case-form');
+  addForm.onsubmit=async e=>{e.preventDefault();const f=new FormData(addForm);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.lawyer_id=payload.lawyer_id||null;if(!confirm(`¿Agregar la causa C-${payload.code}-${payload.year} a este cliente?`))return;await adminSave(addForm,()=>appFetch(adminUrl('/cases'),{method:'POST',body:JSON.stringify(payload)}),'Causa agregada al cliente.');};
   const update=()=>{
     const q=document.getElementById('admin-search').value.toLocaleLowerCase('es');
     const rows=legalAdmin.data.causes.map(c=>({...c,...c.fields})).filter(c=>`${c.code} ${c.year} ${c.court}`.toLocaleLowerCase('es').includes(q));

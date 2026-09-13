@@ -18,5 +18,9 @@
 .legal-admin-cc-row strong,.legal-admin-cc-row span { overflow-wrap:anywhere; }
 .legal-admin-cc-row span,.legal-admin-empty { color:var(--muted); }
 .legal-admin-actions { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; }
+.legal-admin-add { display:grid; gap:.75rem; margin-bottom:1.25rem; padding:1rem; border:1px solid rgba(134,176,255,.22); border-radius:12px; background:rgba(48,126,255,.05); }
+.legal-admin-add h3,.legal-admin-existing h3 { margin:0; color:var(--text); }
+.legal-admin-add p { margin:.25rem 0 0; }
+.legal-admin-existing { display:grid; gap:1rem; padding-top:.25rem; }
 .legal-admin button:disabled { opacity:.5; cursor:wait; }
 @media(max-width:800px) { .legal-admin-grid { grid-template-columns:1fr; } }

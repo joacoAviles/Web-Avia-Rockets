@@ -27,6 +27,15 @@ class CauseInput(BaseModel):
     lawyer_id: UUID | None = None
     publication: Literal['published','unpublished','castigo']
 
+class CauseAssignInput(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    code: str = Field(min_length=1, max_length=60)
+    year: int = Field(ge=1800, le=2200)
+    court: str = Field(min_length=1, max_length=255)
+    corte: str = Field(min_length=1, max_length=255)
+    portfolio_id: UUID
+    lawyer_id: UUID | None = None
+
 class PortfolioCcInput(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     name: str | None = Field(default=None, max_length=200)
@@ -164,6 +173,57 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
         await db.rollback()
         raise HTTPException(409,'La asignación ya existe en ese grupo. No se guardaron cambios.')
     return {'ok':True}
+
+@router.post('/clients/{client_id}/cases',status_code=201)
+async def assign_case(client_id:UUID,payload:CauseAssignInput,user=Depends(current_user),db=Depends(get_db)):
+    """Assign an existing global cause, or create it unpublished when it does not exist.
+
+    Publication remains owned by the PJUD process; this endpoint cannot publish a cause.
+    """
+    await authorize(db,user,client_id)
+    portfolio=(await db.execute(text("SELECT id FROM legal.legal_portfolios WHERE id=:p AND client_id=:c AND status='active' FOR SHARE"),dict(p=payload.portfolio_id,c=client_id))).scalar()
+    if not portfolio: raise HTTPException(422,'Grupo ajeno al cliente o inactivo')
+    lawyer=None
+    if payload.lawyer_id:
+        lawyer=(await db.execute(text('SELECT id,name,email FROM legal.client_lawyers WHERE id=:i AND client_id=:c FOR SHARE'),dict(i=payload.lawyer_id,c=client_id))).mappings().first()
+        if not lawyer: raise HTTPException(422,'Abogado ajeno al cliente')
+    code=payload.code.strip().upper()
+    if code.startswith('C-'): code=code[2:].strip()
+    organization_id=(await db.execute(text('SELECT organization_id FROM legal.legal_clients WHERE id=:c'),{'c':client_id})).scalar_one()
+    cause=(await db.execute(text("""SELECT * FROM legal.causes
+      WHERE organization_id=:o AND year=:y
+        AND regexp_replace(upper(trim(rol)),'^C-','','i')=:r
+        AND lower(trim(court))=lower(trim(:court))
+      ORDER BY created_at LIMIT 1 FOR UPDATE"""),dict(o=organization_id,y=payload.year,r=code,court=payload.court))).mappings().first()
+    created=False
+    try:
+        if not cause:
+            cause=(await db.execute(text("""INSERT INTO legal.causes
+              (id,organization_id,court,rol,year,status,created_at,updated_at,public_visibility_status,publicada)
+              VALUES(gen_random_uuid(),:o,:court,:r,:y,'active',now(),now(),'hidden',false)
+              RETURNING *"""),dict(o=organization_id,court=payload.court,r=code,y=payload.year))).mappings().one()
+            created=True
+        flags={'admin_assigned':True,'assigned_lawyer_email':lawyer['email'] if lawyer else None}
+        link_id=(await db.execute(text("""INSERT INTO legal.legal_portfolio_cases
+          (portfolio_id,case_id,corte,responsible_name,include_in_batch_email,status,settings,lawyer_id,created_at,updated_at)
+          VALUES(:p,:case,:corte,:name,true,'active',CAST(:settings AS jsonb),:lawyer,now(),now()) RETURNING id"""),dict(
+            p=payload.portfolio_id,case=cause['id'],corte=payload.corte,name=lawyer['name'] if lawyer else None,
+            settings=json.dumps(flags),lawyer=payload.lawyer_id))).scalar_one()
+        await db.execute(text('INSERT INTO legal.client_cause_settings(client_id,cause_id,version) VALUES (:c,:i,0) ON CONFLICT DO NOTHING'),dict(c=client_id,i=cause['id']))
+        if lawyer and lawyer['email']:
+            await db.execute(text("""INSERT INTO legal.legal_portfolio_case_recipients
+              (id,portfolio_case_id,email,name,recipient_type,is_active,created_at,updated_at)
+              VALUES(gen_random_uuid(),:i,:email,:name,'to',true,now(),now())
+              ON CONFLICT(portfolio_case_id,email,recipient_type) DO UPDATE SET name=EXCLUDED.name,is_active=true,updated_at=now()"""),dict(i=link_id,email=lawyer['email'].lower(),name=lawyer['name']))
+        after={'id':str(link_id),'case_id':str(cause['id']),'code':code,'year':payload.year,'court':payload.court,
+               'corte':payload.corte,'portfolio_id':str(payload.portfolio_id),'lawyer_id':str(payload.lawyer_id) if payload.lawyer_id else None,
+               'global_cause_created':created,'publicada':False if created else cause['publicada']}
+        await audit(db,user,client_id,link_id,'case.assign',None,after)
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(409,'Esta causa ya está asignada al grupo seleccionado.')
+    return after
 
 @router.delete('/clients/{client_id}/cases/{case_link_id}')
 async def unassign_case(client_id:UUID,case_link_id:UUID,user=Depends(current_user),db=Depends(get_db)):

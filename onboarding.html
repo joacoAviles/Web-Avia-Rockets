@@ -1,0 +1,32 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Bienvenido | AVIA Rockets</title><style>body{font-family:system-ui;background:#071426;color:#eaf2ff;margin:0}main{max-width:540px;margin:8vh auto;padding:28px;border:1px solid #425373;border-radius:24px}a{color:#9fc7ff}form{display:grid;gap:16px}label{display:grid;gap:7px}input,button{font:inherit;padding:12px;border-radius:9px;border:1px solid #6c809f}button{cursor:pointer;background:#0a6cff;color:white}label.check{display:block}p[role=status]{min-height:1.5em}button:disabled{opacity:.6}</style></head><body><main><a href="/">AVIA Rockets</a><h1>Una cuenta para tus productos</h1><p>Completa tu perfil una vez. Después podrás entrar desde cualquiera de nuestros productos.</p><form id="profile" hidden>
+<label>Tu nombre<input name="full_name" autocomplete="name" required minlength="2" maxlength="200"></label>
+<label>Código de referido (opcional)<input name="referral_code" maxlength="12" autocomplete="off" autocapitalize="characters"></label>
+<label class="check"><input name="accept_terms" type="checkbox" required> Acepto los <a id="terms" target="_blank" rel="noopener">términos</a> y he leído la <a id="privacy" target="_blank" rel="noopener">política de privacidad</a>.</label>
+<button type="submit">Guardar y continuar</button></form><p id="status" role="status">Cargando tu perfil…</p><a href="/login.html">Volver al acceso</a></main><script src="identity-client.js"></script><script>
+const form=document.getElementById('profile'), status=document.getElementById('status');
+let config;
+(async()=>{
+ config=await AVIAIdentity.ready;
+ if(!config.google_enabled || !config.terms_url || !config.privacy_url) throw new Error('El registro común todavía no está disponible.');
+ const profile=await AVIAIdentity.request('/onboarding',undefined,true);
+ if(profile.completed) { location.assign(AVIAIdentity.context.next); return; }
+ form.elements.full_name.value=profile.full_name || '';
+ form.elements.referral_code.value=AVIAIdentity.context.referral_code;
+ document.getElementById('terms').href=config.terms_url;
+ document.getElementById('privacy').href=config.privacy_url;
+ form.hidden=false; status.textContent='';
+})().catch(error=>{status.textContent=error.message;});
+form.addEventListener('submit',async event=>{
+ event.preventDefault(); if(!form.reportValidity()) return;
+ const button=form.querySelector('button');button.disabled=true;status.textContent='Guardando…';
+ try {
+  AVIAIdentity.setReferral(form.elements.referral_code.value);
+  await AVIAIdentity.request('/onboarding',{
+   full_name:form.elements.full_name.value.trim(), referral_code:AVIAIdentity.context.referral_code,
+   accept_terms:form.elements.accept_terms.checked, terms_version:config.terms_version
+  },true);
+  sessionStorage.removeItem('avia_identity_context');
+  location.assign(AVIAIdentity.context.next);
+ } catch(error) {status.textContent=error.message;button.disabled=false;}
+});
+</script></body></html>

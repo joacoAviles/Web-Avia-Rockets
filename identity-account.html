@@ -1,0 +1,9 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mi cuenta | AVIA Rockets</title><style>body{font-family:system-ui;background:#071426;color:#eaf2ff;margin:0}main{max-width:540px;margin:8vh auto;padding:28px;border:1px solid #425373;border-radius:24px}a{color:#9fc7ff}form{display:grid;gap:16px}label{display:grid;gap:7px}input,button{font:inherit;padding:12px;border-radius:9px;border:1px solid #6c809f}button{cursor:pointer;background:#0a6cff;color:white}label.check{display:block}p[role=status]{min-height:1.5em}button:disabled{opacity:.6}</style></head><body><main><a href="/app.html">Volver a mis productos</a><h1>Tu cuenta AVIA Rockets</h1><p>Un perfil y un código de referido para todos tus productos.</p><p id="code"></p><label>Tu enlace de referido<input id="invite" readonly></label><button id="link" type="button">Vincular mi cuenta de Google</button><p id="status" role="status">Cargando…</p></main><script src="identity-client.js"></script><script>
+const status=document.getElementById('status'),button=document.getElementById('link');
+(async()=>{const profile=await AVIAIdentity.request('/onboarding',undefined,true);
+ document.getElementById('code').textContent='Tu código: '+profile.code;
+ document.getElementById('invite').value=location.origin+'/register.html?ref='+encodeURIComponent(profile.code);
+ status.textContent='';
+})().catch(error=>{status.textContent=error.message;button.disabled=true;});
+button.addEventListener('click',async()=>{button.disabled=true;try{await AVIAIdentity.startGoogle(true);}catch(error){status.textContent=error.message;button.disabled=false;}});
+</script></body></html>

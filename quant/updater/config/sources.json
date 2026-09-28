@@ -1,0 +1,72 @@
+[
+  {
+    "id": "yahoo",
+    "name": "Yahoo Finance / ICE",
+    "url": "https://help.yahoo.com/kb/SLN2310.html",
+    "facts": "Santiago .SN: retraso publicado de 15 minutos, proveedor ICE. Históricos internacionales y estados financieros: Morningstar. Perfiles y estimaciones: S&P Global. Datos informativos, no feed de ejecución ni permiso de redistribución.",
+    "access": "Adaptador yfinance personal, no API contractual; disponibilidad variable"
+  },
+  {
+    "id": "tradingview",
+    "name": "TradingView",
+    "url": "https://www.tradingview.com/data-coverage/",
+    "facts": "Santiago: datos gratuitos con 20 minutos de retraso. Tiempo real sujeto a contratación. La API de brokers no es una API de descarga para usuarios.",
+    "access": "Referencia funcional; sin extracción de feeds privados"
+  },
+  {
+    "id": "tv-api",
+    "name": "TradingView: API",
+    "url": "https://www.tradingview.com/support/solutions/43000474413-i-need-access-to-your-api-in-order-to-get-data-or-indicator-values/",
+    "facts": "No ofrece API pública de datos/indicadores; su REST está dirigida a integraciones de brokers.",
+    "access": "Sin conector de datos"
+  },
+  {
+    "id": "bolsa",
+    "name": "Bolsa de Santiago",
+    "url": "https://servicioscms.bolsadesantiago.com/Corporativo/Documentos/Soluciones%20tecnologicas/Brochure%20nuevos%20Soluciones%20Tecnol%C3%B3gicas/market%20data%20%282%29.pdf",
+    "facts": "Documenta market data directo por FIX. La documentación comercial encontrada es histórica; hay que confirmar protocolo vigente de nuam, contratación y derechos.",
+    "access": "Pendiente de contrato/especificación actual"
+  },
+  {
+    "id": "zesty",
+    "name": "Zesty Chile",
+    "url": "https://help.zestyfinance.com/es/collections/19689714-invertir-en-zesty",
+    "facts": "Ayuda pública: Chile usa órdenes límite y duración del día. Distingue Vector para Chile de Alpaca para EE.UU. No se localizó una API pública de clientes.",
+    "access": "Adaptador de órdenes preparado, no conectado"
+  },
+  {
+    "id": "cmf",
+    "name": "CMF",
+    "url": "https://www.cmfchile.cl/",
+    "facts": "Referencia oficial de emisores y divulgaciones; ingestión automática pendiente.",
+    "access": "Enlace oficial"
+  },
+  {
+    "id": "tv-symbols",
+    "name": "Universo público TradingView Chile",
+    "url": "https://www.tradingview.com/markets/stocks-chile/market-movers-all-stocks/",
+    "facts": "La página pública completa, tras Load more, expuso 121 identificadores BCS. Se consideran candidatos, no un censo completo ni equivalencias Yahoo verificadas.",
+    "access": "Snapshot de identificadores públicos; mapeo verificado al consultar Yahoo"
+  },
+  {
+    "id": "yahoo-premium",
+    "name": "Yahoo · funciones premium",
+    "url": "https://finance.yahoo.com/subscriptions/",
+    "facts": "Referencia funcional de gráficos, investigación y seguimiento de cartera. Avia no incluye informes de pago ni garantiza cobertura chilena de cada campo.",
+    "access": "Investigación de funciones, sin contenido de suscripción"
+  },
+  {
+    "id": "tv-premium",
+    "name": "TradingView · planes y funciones",
+    "url": "https://www.tradingview.com/pricing/",
+    "facts": "Comparación funcional de herramientas y límites; no licencia para Pine, datos o contenido privado.",
+    "access": "Referencia pública"
+  },
+  {
+    "id": "tv-fundamentals",
+    "name": "TradingView · fundamentales / FactSet",
+    "url": "https://www.tradingview.com/blog/en/fundamental-analysis-is-now-available-on-tradingview-15448/",
+    "facts": "TradingView identifica FactSet como proveedor financiero con metodología propia. Se revisó documentación pública; no su backend privado. Avia usa actualmente Yahoo y no promete cifras idénticas a FactSet.",
+    "access": "Investigación verificada; sin feed FactSet contratado"
+  }
+]

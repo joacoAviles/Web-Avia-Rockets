@@ -1,0 +1,37 @@
+name: Update Quant public market data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/10 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: quant-public-market
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: quant/updater/requirements.lock.txt
+      - run: pip install -r quant/updater/requirements.lock.txt
+      - name: Query the existing market API adapter
+        run: python quant/updater/scripts/export_public_market.py
+      - name: Publish only public observations
+        run: |
+          git fetch origin quant-market-data
+          git worktree add --detach ../quant-data FETCH_HEAD
+          cp -R quant/updater/public-api/. ../quant-data/
+          cd ../quant-data
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add '*.json' bars
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh public Quant observations'
+            git push origin HEAD:quant-market-data
+          fi

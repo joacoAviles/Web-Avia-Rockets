@@ -1,0 +1,52 @@
+[
+  {
+    "module": "Mercado Chile",
+    "scope": "Cotizaciones, volumen, cambios, cobertura y actualización",
+    "status": "Adaptador Yahoo con cache; datos retrasados, no live"
+  },
+  {
+    "module": "Gráficos",
+    "scope": "Velas/línea, volumen, zoom, SMA/EMA/Bollinger, comparación, replay, dibujo y CSV",
+    "status": "Implementación propia"
+  },
+  {
+    "module": "Screener y listas",
+    "scope": "Filtros, ordenación, favoritos y mapa de variación",
+    "status": "Local; cobertura explícita"
+  },
+  {
+    "module": "Ficha financiera",
+    "scope": "Ratios, estados financieros, dividendos, splits, noticias y enlaces",
+    "status": "Según disponibilidad Yahoo; vacíos visibles"
+  },
+  {
+    "module": "Laboratorio",
+    "scope": "A–E, indicadores clásicos, reglas propias y backtests",
+    "status": "Servicio independiente; no ejecución de Pine propietario"
+  },
+  {
+    "module": "Cartera y ledger",
+    "scope": "Registro manual de operaciones realizadas, posiciones y valoración",
+    "status": "Local; no sincronizado con broker"
+  },
+  {
+    "module": "Alertas",
+    "scope": "Umbrales, evaluación periódica e historial",
+    "status": "Datos retrasados; proceso local debe seguir abierto"
+  },
+  {
+    "module": "Trading real Chile",
+    "scope": "Ticket límite DAY, revisión, borrador y contrato broker",
+    "status": "Bloqueado: falta API oficial/autorizada Zesty"
+  },
+  {
+    "module": "Profundidad y tick",
+    "scope": "Order book, tape, footprint y volumen por precio intradía",
+    "status": "Bloqueado: sin feed L2/ticks licenciado"
+  },
+  {
+    "module": "Paridad premium restante",
+    "scope": "Multi-chart avanzado, Pine, patrones automáticos, analistas premium y calendarios completos",
+    "status": "Pendiente; no afirmar equivalencia ni acceso gratis a contenido de pago"
+  }
+]

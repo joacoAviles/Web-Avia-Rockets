@@ -1,0 +1,637 @@
+[
+  {
+    "symbol": "AGUAS-A.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ANDINA-B.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ANTARCHILE.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "BCI.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "BSANTANDER.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CAP.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CCU.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CENCOSUD.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CENCOSHOPP.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CHILE.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CMPC.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "COLBUN.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "CONCHATORO.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "COPEC.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ECL.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ENELAM.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ENELCHILE.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ENTEL.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "FALABELLA.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "IAM.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ILC.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ITAUCORP.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "LTM.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "MALLPLAZA.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ORO-BLANCO.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "PARAUCO.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "QUINENCO.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "RIPLEY.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "SALFACORP.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "SECURITY.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "SK.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "SMU.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "SONDA.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "SQM-B.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "VAPORES.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "ZOFRI.SN",
+    "origin": "universo hist\u00f3rico de investigaci\u00f3n",
+    "mapping": "legacy"
+  },
+  {
+    "symbol": "AAISA.SN",
+    "origin": "TradingView identificador p\u00fablico AAISA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ABC.SN",
+    "origin": "TradingView identificador p\u00fablico ABC",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ALMENDRAL.SN",
+    "origin": "TradingView identificador p\u00fablico ALMENDRAL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "AZUL-AZUL.SN",
+    "origin": "TradingView identificador p\u00fablico AZUL_AZUL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "BANVIDA.SN",
+    "origin": "TradingView identificador p\u00fablico BANVIDA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "BESALCO.SN",
+    "origin": "TradingView identificador p\u00fablico BESALCO",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "BICE.SN",
+    "origin": "TradingView identificador p\u00fablico BICE",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "BINT.SN",
+    "origin": "TradingView identificador p\u00fablico BINT",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "BLUMAR.SN",
+    "origin": "TradingView identificador p\u00fablico BLUMAR",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "BUYDEPAX.SN",
+    "origin": "TradingView identificador p\u00fablico BUYDEPAX",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CAMANCHACA.SN",
+    "origin": "TradingView identificador p\u00fablico CAMANCHACA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CAROZZI.SN",
+    "origin": "TradingView identificador p\u00fablico CAROZZI",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CENCOMALLS.SN",
+    "origin": "TradingView identificador p\u00fablico CENCOMALLS",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CGE.SN",
+    "origin": "TradingView identificador p\u00fablico CGE",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CGET.SN",
+    "origin": "TradingView identificador p\u00fablico CGET",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CIC.SN",
+    "origin": "TradingView identificador p\u00fablico CIC",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CINTAC.SN",
+    "origin": "TradingView identificador p\u00fablico CINTAC",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "COLO-COLO.SN",
+    "origin": "TradingView identificador p\u00fablico COLO_COLO",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CONSOGRAL.SN",
+    "origin": "TradingView identificador p\u00fablico CONSOGRAL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "COPEVAL.SN",
+    "origin": "TradingView identificador p\u00fablico COPEVAL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CRISTALES.SN",
+    "origin": "TradingView identificador p\u00fablico CRISTALES",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CRUZADOS.SN",
+    "origin": "TradingView identificador p\u00fablico CRUZADOS",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CTC.SN",
+    "origin": "TradingView identificador p\u00fablico CTC",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "CUPRUM.SN",
+    "origin": "TradingView identificador p\u00fablico CUPRUM",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "DUNCANFOX.SN",
+    "origin": "TradingView identificador p\u00fablico DUNCANFOX",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "EDELMAG.SN",
+    "origin": "TradingView identificador p\u00fablico EDELMAG",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "EDELPA.SN",
+    "origin": "TradingView identificador p\u00fablico EDELPA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "EISA.SN",
+    "origin": "TradingView identificador p\u00fablico EISA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ELECMETAL.SN",
+    "origin": "TradingView identificador p\u00fablico ELECMETAL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "EMILIANA.SN",
+    "origin": "TradingView identificador p\u00fablico EMILIANA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ENAEX.SN",
+    "origin": "TradingView identificador p\u00fablico ENAEX",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ENELDXCH.SN",
+    "origin": "TradingView identificador p\u00fablico ENELDXCH",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ENELGXCH.SN",
+    "origin": "TradingView identificador p\u00fablico ENELGXCH",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ENJOY.SN",
+    "origin": "TradingView identificador p\u00fablico ENJOY",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ENLASA.SN",
+    "origin": "TradingView identificador p\u00fablico ENLASA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ESTACIONAM.SN",
+    "origin": "TradingView identificador p\u00fablico ESTACIONAM",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ESVAL-A.SN",
+    "origin": "TradingView identificador p\u00fablico ESVAL_A",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "FORUS.SN",
+    "origin": "TradingView identificador p\u00fablico FORUS",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "FOSFOROS.SN",
+    "origin": "TradingView identificador p\u00fablico FOSFOROS",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "FROWARD.SN",
+    "origin": "TradingView identificador p\u00fablico FROWARD",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "GASCO.SN",
+    "origin": "TradingView identificador p\u00fablico GASCO",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "GASCOINV.SN",
+    "origin": "TradingView identificador p\u00fablico GASCOINV",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "GOLF.SN",
+    "origin": "TradingView identificador p\u00fablico GOLF",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "HABITAT.SN",
+    "origin": "TradingView identificador p\u00fablico HABITAT",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "HIPERMARC.SN",
+    "origin": "TradingView identificador p\u00fablico HIPERMARC",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "HITES.SN",
+    "origin": "TradingView identificador p\u00fablico HITES",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "IANSA.SN",
+    "origin": "TradingView identificador p\u00fablico IANSA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "INDISA.SN",
+    "origin": "TradingView identificador p\u00fablico INDISA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "INGEVEC.SN",
+    "origin": "TradingView identificador p\u00fablico INGEVEC",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "INVERCAP.SN",
+    "origin": "TradingView identificador p\u00fablico INVERCAP",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "ITAUCL.SN",
+    "origin": "TradingView identificador p\u00fablico ITAUCL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "LAS-CONDES.SN",
+    "origin": "TradingView identificador p\u00fablico LAS_CONDES",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "LIPIGAS.SN",
+    "origin": "TradingView identificador p\u00fablico LIPIGAS",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MANQUEHUE.SN",
+    "origin": "TradingView identificador p\u00fablico MANQUEHUE",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MARINSA.SN",
+    "origin": "TradingView identificador p\u00fablico MARINSA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MASISA.SN",
+    "origin": "TradingView identificador p\u00fablico MASISA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MINERA.SN",
+    "origin": "TradingView identificador p\u00fablico MINERA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MOLLER.SN",
+    "origin": "TradingView identificador p\u00fablico MOLLER",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MOLYMET.SN",
+    "origin": "TradingView identificador p\u00fablico MOLYMET",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "MULTI-X.SN",
+    "origin": "TradingView identificador p\u00fablico MULTI_X",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "NAVARINO.SN",
+    "origin": "TradingView identificador p\u00fablico NAVARINO",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "NAVIERA.SN",
+    "origin": "TradingView identificador p\u00fablico NAVIERA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "NTGCLGAS.SN",
+    "origin": "TradingView identificador p\u00fablico NTGCLGAS",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "NUAM.SN",
+    "origin": "TradingView identificador p\u00fablico NUAM",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "NUTRAVALOR.SN",
+    "origin": "TradingView identificador p\u00fablico NUTRAVALOR",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "OXIQUIM.SN",
+    "origin": "TradingView identificador p\u00fablico OXIQUIM",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PAMPA.SN",
+    "origin": "TradingView identificador p\u00fablico PAMPA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PASUR.SN",
+    "origin": "TradingView identificador p\u00fablico PASUR",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PAZ.SN",
+    "origin": "TradingView identificador p\u00fablico PAZ",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PEHUENCHE.SN",
+    "origin": "TradingView identificador p\u00fablico PEHUENCHE",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PLANVITAL.SN",
+    "origin": "TradingView identificador p\u00fablico PLANVITAL",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "POLPAICO.SN",
+    "origin": "TradingView identificador p\u00fablico POLPAICO",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "POTASIOS-A.SN",
+    "origin": "TradingView identificador p\u00fablico POTASIOS_A",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PROVIDA.SN",
+    "origin": "TradingView identificador p\u00fablico PROVIDA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "PUCOBRE.SN",
+    "origin": "TradingView identificador p\u00fablico PUCOBRE",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "QUEMCHI.SN",
+    "origin": "TradingView identificador p\u00fablico QUEMCHI",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "QUILICURA.SN",
+    "origin": "TradingView identificador p\u00fablico QUILICURA",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SALMOCAM.SN",
+    "origin": "TradingView identificador p\u00fablico SALMOCAM (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SCHWAGER.SN",
+    "origin": "TradingView identificador p\u00fablico SCHWAGER (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SCOTIABKCL.SN",
+    "origin": "TradingView identificador p\u00fablico SCOTIABKCL (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SIEMEL.SN",
+    "origin": "TradingView identificador p\u00fablico SIEMEL (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SMSAAM.SN",
+    "origin": "TradingView identificador p\u00fablico SMSAAM (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SOCOVESA.SN",
+    "origin": "TradingView identificador p\u00fablico SOCOVESA (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "SOQUICOM.SN",
+    "origin": "TradingView identificador p\u00fablico SOQUICOM (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "TRICAHUE.SN",
+    "origin": "TradingView identificador p\u00fablico TRICAHUE (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "TRICOT.SN",
+    "origin": "TradingView identificador p\u00fablico TRICOT (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "VENTANAS.SN",
+    "origin": "TradingView identificador p\u00fablico VENTANAS (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "VICONTO.SN",
+    "origin": "TradingView identificador p\u00fablico VICONTO (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "VOLCAN.SN",
+    "origin": "TradingView identificador p\u00fablico VOLCAN (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "VSPT.SN",
+    "origin": "TradingView identificador p\u00fablico VSPT (Load more)",
+    "mapping": "candidate"
+  },
+  {
+    "symbol": "WATTS.SN",
+    "origin": "TradingView identificador p\u00fablico WATTS (Load more)",
+    "mapping": "candidate"
+  }
+]

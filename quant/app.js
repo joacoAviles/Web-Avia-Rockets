@@ -67,7 +67,7 @@ async function api(path, body) {
         },
   );
   if (!r.ok && (r.status >= 500 || r.status === 404)) {
-    const message = "La página está disponible, pero la API no responde. Los datos privados no se pueden consultar ni guardar por ahora.";
+    const message = "El servicio de cuentas y modelos no responde. Puedes consultar los precios disponibles, pero no confirmar cambios en tu cartera.";
     $('api-status').textContent = message;
     $('api-status').hidden = false;
     throw Error(message);
@@ -190,7 +190,6 @@ function updateSymbols() {
 }
 async function loadMarket() {
   const m = await api("/market");
-  $('api-status').hidden = true;
   S.quotes = m.quotes;
   const old = $("symbol").options.length;
   if (!old) updateSymbols();
@@ -370,8 +369,8 @@ on("csv-market", () =>
   ),
 );
 on("refresh-market", async () => {
-  await api("/market/refresh", {});
-  toast("Actualización solicitada");
+  const refresh = await api("/market/refresh", {});
+  toast(refresh.mode === "published_api_snapshot" ? "Consultando últimos precios de la API" : "Actualización solicitada");
   await loadMarket();
 });
 const NS = "http://www.w3.org/2000/svg";

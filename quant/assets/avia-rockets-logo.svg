@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="AVIA Rockets Arc Board 10F">
+  <defs>
+    <linearGradient id="arcBlue" x1="24" y1="92" x2="94" y2="25" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0A6CFF"/>
+      <stop offset="1" stop-color="#1E8BFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="26" fill="#071426"/>
+  <path d="M27 91H18V31C18 23.8 23.8 18 31 18H91V27H31C28.8 27 27 28.8 27 31V91Z" fill="#FFFFFF"/>
+  <path d="M93 29H102V89C102 96.2 96.2 102 89 102H29V93H89C91.2 93 93 91.2 93 89V29Z" fill="#FFFFFF"/>
+  <path d="M29 89C42.4 68.1 59.8 50.7 91 30" fill="none" stroke="url(#arcBlue)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="28" cy="91" r="10" fill="#0A6CFF"/>
+  <circle cx="93" cy="29" r="10" fill="#0A6CFF"/>
+</svg>

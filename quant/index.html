@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Avia Quant · Chile</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <aside class="rail">
+      <a class="brand" href="/" aria-label="Avia Rockets · Quant Chile"
+        ><img
+          src="./assets/avia-rockets-logo.svg"
+          alt="Avia Rockets"
+          width="44"
+          height="44"
+        /><span>AVIA ROCKETS<small>QUANT / CHILE</small></span></a
+      >
+      <nav id="nav"></nav>
+      <div class="rail-bottom">
+        CLP · Santiago<br /><span id="clock"></span>
+        <p>Cuenta privada</p>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header>
+        <div>
+          <span class="eyebrow">TERMINAL DE ACCIONES</span>
+          <h1 id="page-title">Mercado chileno</h1>
+        </div>
+        <div class="top-status">
+          <span class="badge amber">Yahoo · retraso 15 min</span
+          ><button id="refresh-market">Actualizar datos ↻</button>
+        </div>
+      </header>
+      <div id="notice" role="status" hidden></div>
+      <div class="ticker-strip" id="ticker-strip"></div>
+      <main>
+        <div id="api-status" class="panel" role="status" hidden></div>
+        <section id="page-market" class="page">
+          <div class="summary" id="summary"></div>
+          <div class="split">
+            <article class="panel">
+              <div class="panel-title">
+                <h2>Universo Chile</h2>
+                <span id="coverage" class="muted"></span>
+              </div>
+              <div class="filters">
+                <input
+                  id="search"
+                  placeholder="Buscar símbolo o empresa"
+                  aria-label="Buscar acción"
+                /><select id="list-filter" aria-label="Filtrar por lista">
+                  <option value="">Todas las acciones</option></select
+                ><button id="csv-market">Exportar CSV</button>
+              </div>
+              <div class="table-wrap" id="market-table"></div>
+            </article>
+            <article class="panel focus">
+              <span class="eyebrow">EN FOCO</span>
+              <h2 id="focus-name">Selecciona una acción</h2>
+              <div id="focus-price" class="big-number">—</div>
+              <p id="focus-meta" class="muted"></p>
+              <div id="spark"></div>
+              <button id="open-chart">Abrir gráfico completo ↗</button>
+              <div class="note">
+                Cada cotización conserva hora, fuente y estado. Un precio
+                anterior no se etiqueta como tiempo real.
+              </div>
+              <h3>Más allá del precio</h3>
+              <p>
+                Gráficos · balances · noticias · eventos · modelos · órdenes
+              </p>
+            </article>
+          </div>
+        </section>
+        <section id="page-chart" class="page" hidden>
+          <article class="panel">
+            <div class="instrument-header">
+              <div>
+                <span class="eyebrow">ACCIONES / SANTIAGO</span>
+                <h2 id="chart-name">CHILE.SN</h2>
+                <p id="chart-meta" class="muted"></p>
+              </div>
+              <div class="filters">
+                <select id="symbol" aria-label="Acción"></select
+                ><button id="favorite">＋ Añadir a lista</button>
+              </div>
+            </div>
+            <div class="chart-toolbar">
+              <select id="period" aria-label="Período">
+                <option value="1mo">1 mes</option>
+                <option value="3mo">3 meses</option>
+                <option value="6mo">6 meses</option>
+                <option value="1y" selected>1 año</option>
+                <option value="2y">2 años</option>
+                <option value="5y">5 años</option></select
+              ><select id="interval" aria-label="Intervalo">
+                <option value="1d">Diario</option>
+                <option value="15m">15 minutos</option>
+                <option value="60m">1 hora</option>
+                <option value="1wk">Semanal</option>
+                <option value="1mo">Mensual</option></select
+              ><select id="chart-type" aria-label="Tipo de gráfico">
+                <option value="candles">Velas</option>
+                <option value="line">Línea</option></select
+              ><label
+                ><input type="checkbox" id="sma" checked /> SMA 20/50</label
+              ><label><input type="checkbox" id="ema" /> EMA 12/26</label
+              ><label><input type="checkbox" id="bb" /> Bollinger</label
+              ><select id="oscillator" aria-label="Oscilador">
+                <option value="rsi14">RSI 14</option>
+                <option value="macd">MACD</option>
+                <option value="atr14">ATR 14</option>
+                <option value="stoch_k">Estocástico</option>
+                <option value="obv">OBV</option>
+                <option value="roc10">ROC 10</option>
+              </select>
+            </div>
+            <div class="chart-toolbar secondary">
+              <select id="compare" aria-label="Comparar acción">
+                <option value="">Comparar…</option></select
+              ><button id="draw-mode">Dibujar nivel</button
+              ><button id="clear-draw">Borrar niveles</button
+              ><button id="zoom-in">＋</button><button id="zoom-out">−</button
+              ><button id="export-bars">CSV precios</button
+              ><button id="replay-play">▶ Replay</button
+              ><label class="replay"
+                >Sesión
+                <input type="range" id="replay" min="2" max="2" value="2"
+              /></label>
+            </div>
+            <p id="chart-readout" class="readout">Cargando barras…</p>
+            <div id="chart" class="chart"></div>
+            <div id="osc-chart" class="osc-chart"></div>
+            <p id="chart-source" class="muted"></p>
+          </article>
+          <div class="two-cols">
+            <article class="panel">
+              <h3>Indicadores de la última barra visible</h3>
+              <div id="indicator-values" class="metrics"></div>
+            </article>
+            <article class="panel">
+              <h3>Del análisis a la acción</h3>
+              <p>
+                Prueba una hipótesis en Modelos o prepara una orden límite para
+                la futura conexión Zesty.
+              </p>
+              <button data-goto="models">Explorar modelos</button>
+              <button data-goto="orders">Preparar orden</button>
+              <p class="muted">
+                El replay recorta la vista; no certifica un backtest fuera de
+                muestra.
+              </p>
+            </article>
+          </div>
+        </section>
+        <section id="page-screener" class="page" hidden>
+          <article class="panel">
+            <h2>Screener de acciones chilenas</h2>
+            <div class="filters">
+              <label
+                >Variación mínima %<input
+                  type="number"
+                  id="min-change"
+                  placeholder="Sin mínimo" /></label
+              ><label
+                >Volumen mínimo<input
+                  type="number"
+                  id="min-volume"
+                  min="0"
+                  placeholder="0" /></label
+              ><label
+                >P/E máximo<input
+                  type="number"
+                  id="max-pe"
+                  min="0"
+                  placeholder="Sin máximo" /></label
+              ><label
+                >Ordenar<select id="sort">
+                  <option value="change_pct">Variación %</option>
+                  <option value="turnover_estimate">Monto estimado</option>
+                  <option value="market_cap">Capitalización</option>
+                  <option value="volume">Volumen</option>
+                  <option value="pe">P/E</option>
+                </select></label
+              ><label><input type="checkbox" id="sort-asc" /> Ascendente</label>
+            </div>
+            <div id="screen-table" class="table-wrap"></div>
+          </article>
+          <article class="panel">
+            <h2>Mapa de variación</h2>
+            <p class="muted">
+              Screener y mapa incluyen cotizaciones de la última fecha de
+              negociación observada. Las operaciones antiguas siguen disponibles
+              en Mercado.
+            </p>
+            <p class="muted">
+              Una celda por acción con datos. El tamaño no representa
+              capitalización.
+            </p>
+            <div id="heatmap" class="heatmap"></div>
+          </article>
+        </section>
+        <section id="page-research" class="page" hidden>
+          <article class="panel">
+            <div class="panel-title">
+              <h2 id="research-title">Ficha financiera</h2>
+              <select
+                id="research-symbol"
+                aria-label="Acción para fundamentales"
+              ></select
+              ><button id="reload-research">Consultar ficha</button>
+            </div>
+            <p id="research-meta" class="muted"></p>
+            <div id="profile"></div>
+            <div id="fundamentals"></div>
+          </article>
+          <article class="panel">
+            <div class="filters">
+              <label
+                >Frecuencia<select id="financial-frequency">
+                  <option value="annual">Anual</option>
+                  <option value="quarterly">Trimestral</option>
+                </select></label
+              ><label
+                >Buscar partida<input
+                  id="financial-search"
+                  placeholder="Revenue, Assets, EPS…" /></label
+              ><button id="export-financials">Exportar JSON financiero</button>
+            </div>
+            <p class="muted">
+              Importes en unidades de la moneda financiera, excepto EPS (moneda
+              por acción), acciones y ratios. Las fechas son cierres contables,
+              no fechas de publicación. «—» significa no disponible; nunca cero.
+            </p>
+          </article>
+          <div id="statements"></div>
+          <div class="two-cols">
+            <article class="panel">
+              <h2>Noticias del instrumento</h2>
+              <div id="news"></div>
+            </article>
+            <article class="panel">
+              <h2>Dividendos y splits históricos</h2>
+              <div id="events" class="table-wrap"></div>
+            </article>
+          </div>
+          <article class="panel">
+            <h3>Fuentes oficiales y contraste</h3>
+            <div id="research-links" class="filters"></div>
+            <p class="muted">
+              No se dispone aquí de un calendario futuro completo ni de todos
+              los informes premium de analistas.
+            </p>
+          </article>
+        </section>
+        <section id="page-models" class="page" hidden>
+          <div class="panel filters">
+            <button id="show-transactions" aria-pressed="true">
+              Modelos de transacciones</button
+            ><button id="show-portfolios" aria-pressed="false">
+              Modelos de portafolios
+            </button>
+          </div>
+          <div id="transaction-models">
+            <div class="two-cols">
+              <article class="panel">
+                <span class="eyebrow">MOTOR INDEPENDIENTE</span>
+                <h2>Modelos de transacciones</h2>
+                <p>Evalúa el instrumento y las barras cargadas en Gráficos.</p>
+                <div class="form-grid">
+                  <label>Modelo<select id="model"></select></label
+                  ><label
+                    >Capital CLP<input
+                      id="model-capital"
+                      type="number"
+                      value="10000000"
+                      min="1" /></label
+                  ><label
+                    >Comisión por lado %<input
+                      id="model-fee"
+                      type="number"
+                      value="0.1785"
+                      step="0.0001"
+                      min="0"
+                      max="5" /></label
+                  ><label
+                    >Slippage por lado %<input
+                      id="model-slip"
+                      type="number"
+                      value="0.1"
+                      step="0.01"
+                      min="0"
+                      max="10"
+                  /></label>
+                </div>
+                <button id="run-technical">Evaluar modelo</button>
+                <p id="model-context" class="muted"></p>
+              </article>
+              <article class="panel">
+                <h2>Crear mi modelo</h2>
+                <p>
+                  Compra bajo un umbral; vende sobre otro. Reglas versionadas,
+                  sin ejecutar código arbitrario.
+                </p>
+                <form id="custom-form" class="form-grid">
+                  <label
+                    >Nombre<input
+                      name="name"
+                      required
+                      maxlength="80"
+                      placeholder="Mi reversión RSI" /></label
+                  ><label
+                    >Indicador<select
+                      name="indicator"
+                      id="custom-indicator"
+                    ></select></label
+                  ><label
+                    >Comprar bajo<input
+                      type="number"
+                      step="any"
+                      name="buy_below"
+                      value="25"
+                      required /></label
+                  ><label
+                    >Vender sobre<input
+                      type="number"
+                      step="any"
+                      name="sell_above"
+                      value="65"
+                      required /></label
+                  ><button>Guardar modelo</button>
+                </form>
+              </article>
+            </div>
+            <article class="panel">
+              <h2>Resultado exploratorio</h2>
+              <div id="model-metrics" class="metrics"></div>
+              <div id="equity-chart" class="mini-chart"></div>
+              <div id="model-trades" class="table-wrap"></div>
+              <p id="model-limitations" class="note">
+                No hay evaluación todavía. Los modelos clásicos no sustituyen la
+                metodología train / validation / test.
+              </p>
+            </article>
+          </div>
+          <div id="portfolio-models" hidden>
+            <article class="panel">
+              <span class="eyebrow">UN SOLO CAPITAL · VARIAS ACCIONES</span>
+              <h2>Modelos de portafolios</h2>
+              <p>
+                Asignación equiponderada o inversa a volatilidad histórica.
+                Rebalanceo cada 21 sesiones comunes; señal al cierre y ejecución
+                en la apertura siguiente.
+              </p>
+              <form id="portfolio-run" class="form-grid">
+                <label
+                  >Modelo<select name="model">
+                    <option value="EQUAL_WEIGHT">Equiponderado</option>
+                    <option value="INVERSE_VOL">
+                      Inversa volatilidad · 60 sesiones
+                    </option>
+                  </select></label
+                ><label
+                  >Acciones chilenas, separadas por coma<input
+                    name="symbols"
+                    value="CHILE.SN, COPEC.SN, CMPC.SN"
+                    required /></label
+                ><label
+                  >Capital CLP<input
+                    name="capital"
+                    type="number"
+                    min="1"
+                    value="10000000"
+                    required /></label
+                ><label
+                  >Comisión por lado %<input
+                    name="fee"
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.0001"
+                    value="0.1785"
+                    required /></label
+                ><label
+                  >Slippage por lado %<input
+                    name="slippage"
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.01"
+                    value="0.1"
+                    required /></label
+                ><button id="portfolio-submit">
+                  Evaluar portafolio · 2 años diarios
+                </button>
+              </form>
+              <p id="portfolio-status" role="status"></p>
+              <div id="portfolio-metrics" class="metrics"></div>
+              <div id="portfolio-curve" class="mini-chart"></div>
+              <div id="portfolio-weights" class="table-wrap"></div>
+              <details>
+                <summary>Transacciones simuladas</summary>
+                <div id="portfolio-trades" class="table-wrap"></div>
+              </details>
+              <p class="note">
+                E_CARTERA pertenece a esta categoría y se ejecuta en el
+                experimento histórico A–E de abajo. Usa B_RANGO con liquidez y
+                un capital compartido; no es equiponderación.
+              </p>
+            </article>
+          </div>
+          <article class="panel">
+            <h2>Experimento original · transacciones A–D / portafolio E</h2>
+            <p>
+              El experimento original corre todos los modelos y su universo
+              histórico. Guarda resultados en el repositorio del motor.
+            </p>
+            <form id="legacy-run" class="filters">
+              <label
+                >Inicio histórico<input
+                  name="start"
+                  type="date"
+                  value="2022-01-01"
+                  required /></label
+              ><label
+                >Inicio test<input
+                  name="test_start"
+                  type="date"
+                  value="2025-09-22"
+                  required /></label
+              ><label
+                >Fin test<input
+                  name="end"
+                  type="date"
+                  value="2026-09-22"
+                  required /></label
+              ><label
+                >Capital<input
+                  name="capital"
+                  type="number"
+                  value="10000000"
+                  min="1"
+                  required /></label
+              ><button id="legacy-submit">Ejecutar A–E</button>
+            </form>
+            <div id="runs"></div>
+          </article>
+        </section>
+        <section id="page-lists" class="page" hidden>
+          <article class="panel">
+            <h2>Mis listas</h2>
+            <form id="new-list" class="filters">
+              <input
+                name="name"
+                required
+                maxlength="80"
+                placeholder="Nombre de lista"
+                aria-label="Nombre de lista"
+              /><button>Crear lista</button>
+            </form>
+            <div id="lists"></div>
+          </article>
+        </section>
+        <section id="page-wealth" class="page" hidden>
+          <article class="panel"><h2>Patrimonio</h2><div id="wealth-summary" class="metrics"></div>
+            <p id="wealth-note" class="note"></p></article>
+          <article class="panel"><h2>Aportes y retiros</h2>
+            <form id="cashflow-form" class="form-grid">
+              <label>Movimiento<select name="side"><option value="deposit">Aporte</option><option value="withdrawal">Retiro</option></select></label>
+              <label>Importe CLP<input name="amount" type="number" min="0.01" step="any" required></label>
+              <label>Fecha<input name="date" type="date" required></label><button>Registrar movimiento</button>
+            </form><div id="cashflows" class="table-wrap"></div>
+          </article>
+          <article class="panel"><h2>Dividendos cobrados</h2><p>Importe neto efectivamente recibido, una sola vez por pago. Si reinviertes, registra además la compra; no un aporte.</p>
+            <form id="dividend-form" class="form-grid">
+              <label>Acción<select name="symbol" class="symbol-options"></select></label>
+              <label>Total neto CLP<input name="amount" type="number" min="0.01" step="any" required></label>
+              <label>Fecha de cobro<input name="date" type="date" required></label><button>Registrar dividendo</button>
+            </form><div id="dividends" class="table-wrap"></div>
+          </article>
+        </section>
+        <section id="page-signals" class="page" hidden>
+          <article class="panel"><h2>Candidatas de compra y revisión de venta</h2>
+            <p>Hasta 5 por lado, usando los últimos precios disponibles de nuestra API. Cada candidata muestra la fecha del precio y sus fundamentos. Los espacios sin evidencia quedan sin candidato.</p>
+            <button id="refresh-signals">Actualizar análisis</button><p id="signals-status" role="status"></p>
+          </article><div class="two-cols"><article class="panel"><h2>5 candidatas de compra</h2><div id="buy-signals"></div></article>
+          <article class="panel"><h2>5 candidatas de venta / reducción</h2><div id="sell-signals"></div></article></div>
+        </section>
+        <section id="page-portfolio" class="page" hidden>
+          <article class="panel">
+            <div class="panel-title">
+              <h2>Cartera registrada</h2>
+              <span class="badge"
+                >Registro manual · no sincronizado con Zesty</span
+              >
+            </div>
+            <div id="portfolio-summary" class="metrics"></div>
+            <div id="positions" class="table-wrap"></div>
+            <p id="portfolio-warnings" class="note"></p>
+          </article>
+          <article class="panel">
+            <h2>Registrar una operación ya realizada</h2>
+            <p>
+              Este formulario guarda tu historial. No compra ni vende acciones.
+            </p>
+            <form id="ledger-form" class="form-grid">
+              <label
+                >Acción<select
+                  name="symbol"
+                  class="symbol-options"
+                ></select></label
+              ><label
+                >Tipo<select name="side">
+                  <option value="buy">Compra realizada</option>
+                  <option value="sell">Venta realizada</option>
+                </select></label
+              ><label
+                >Cantidad<input
+                  name="quantity"
+                  type="number"
+                  min="1"
+                  step="1"
+                  required /></label
+              ><label
+                >Precio CLP<input
+                  name="price"
+                  type="number"
+                  min="0.0001"
+                  step="any"
+                  required /></label
+              ><label
+                >Comisión total CLP<input
+                  name="fee"
+                  type="number"
+                  value="0"
+                  min="0"
+                  step="any" /></label
+              ><label>Fecha<input name="date" type="date" required /></label
+              ><label>Nota<input name="note" maxlength="300" /></label
+              ><button>Registrar</button>
+            </form>
+            <details><summary>Resultado rápido de compra / venta</summary>
+              <p>Simulación independiente: no registra dividendos ni operaciones. Usa sólo los dividendos atribuibles a la cantidad comparada.</p>
+              <form id="quick-form" class="form-grid">
+                <label>Cantidad<input name="quantity" type="number" min="1" step="1" required></label>
+                <label>Precio de compra CLP<input name="buy_price" type="number" min="0.0001" step="any" required></label>
+                <label>Precio de venta CLP<input name="sell_price" type="number" min="0.0001" step="any" required></label>
+                <label>Comisión de compra CLP<input name="buy_fee" type="number" min="0" step="any" value="0" required></label>
+                <label>Comisión de venta CLP<input name="sell_fee" type="number" min="0" step="any" value="0" required></label>
+                <label>Dividendos acumulados netos CLP<input name="dividends" type="number" min="0" step="any" value="0" required></label>
+                <label><input name="include_dividends" type="checkbox">Incluir dividendos en el resultado</label><button>Calcular</button>
+              </form><p id="quick-result" role="status"></p>
+            </details>
+            <div id="ledger" class="table-wrap"></div>
+            <button id="export-ledger">Exportar registro</button>
+          </article>
+        </section>
+        <section id="page-alerts" class="page" hidden>
+          <article class="panel">
+            <h2>Alertas de precio</h2>
+            <p>
+              Se evalúan cada 10 segundos sobre las últimas cotizaciones
+              descargadas. La fuente tiene retraso y la actualización de mercado
+              es cada 10 minutos. El servidor debe permanecer abierto.
+            </p>
+            <form id="alert-form" class="filters">
+              <select
+                name="symbol"
+                class="symbol-options"
+                aria-label="Acción"
+              ></select
+              ><select name="direction" aria-label="Condición">
+                <option value="above">Precio ≥</option>
+                <option value="below">Precio ≤</option></select
+              ><input
+                name="threshold"
+                type="number"
+                min="0.0001"
+                step="any"
+                required
+                placeholder="Precio CLP"
+                aria-label="Precio umbral"
+              /><button>Crear alerta</button>
+            </form>
+            <p class="muted">
+              Disparo único por condición cumplida; no es una orden. No se
+              evalúan cotizaciones con más de 45 minutos de antigüedad.
+            </p>
+            <div id="alerts"></div>
+          </article>
+        </section>
+        <section id="page-orders" class="page" hidden>
+          <div class="two-cols">
+            <article class="panel">
+              <span class="eyebrow">ZESTY / CHILE</span>
+              <h2>Ticket de compra y venta</h2>
+              <div class="note amber-text">
+                Conexión real pendiente. Los borradores no se envían al mercado.
+              </div>
+              <form id="draft-form" class="form-grid">
+                <label
+                  >Acción<select
+                    name="symbol"
+                    class="symbol-options"
+                  ></select></label
+                ><label
+                  >Lado<select name="side">
+                    <option value="buy">Comprar</option>
+                    <option value="sell">Vender</option>
+                  </select></label
+                ><label
+                  >Cantidad<input
+                    name="quantity"
+                    type="number"
+                    min="1"
+                    step="1"
+                    required /></label
+                ><label
+                  >Precio límite CLP<input
+                    name="price"
+                    type="number"
+                    min="0.0001"
+                    step="any"
+                    required /></label
+                ><label>Orden<input value="Límite" disabled /></label
+                ><label>Duración<input value="DAY" disabled /></label
+                ><button>Guardar borrador</button>
+              </form>
+            </article>
+            <article class="panel">
+              <h2>Integración Zesty</h2>
+              <p>
+                Estado: desconectada. Esta pantalla guarda borradores locales.
+                No envía, cancela ni concilia órdenes reales.
+              </p>
+              <p>
+                No hay feed de profundidad contratado ni credenciales de API
+                oficial de Zesty Chile. La documentación disponible describe
+                órdenes límite DAY.
+              </p>
+              <a
+                href="https://help.zestyfinance.com/es/collections/19689714-invertir-en-zesty"
+                target="_blank"
+                rel="noopener"
+                >Ver documentación de Zesty ↗</a
+              >
+            </article>
+          </div>
+          <article class="panel">
+            <h2>Borradores no enviados</h2>
+            <div id="drafts"></div>
+          </article>
+        </section>
+        <section id="page-map" class="page" hidden>
+          <article class="panel">
+            <span class="eyebrow">ARQUITECTURA / COBERTURA</span>
+            <h2>Mapa de Avia Chile</h2>
+            <div class="flow">
+              <div>
+                Bolsa / proveedores<small>ICE · históricos Yahoo</small>
+              </div>
+              <b>→</b>
+              <div>Backend Avia<small>validación · cache · fecha</small></div>
+              <b>→</b>
+              <div>Visualizador<small>mercado · gráficos · fichas</small></div>
+            </div>
+            <div class="flow">
+              <div>Visualizador</div>
+              <b>↔</b>
+              <div>
+                Avia Quant Models<small>indicadores · reglas · backtests</small>
+              </div>
+              <b>→</b>
+              <div>Ticket límite<small>Zesty pendiente de API</small></div>
+            </div>
+            <p>
+              El frontend y el motor son repositorios independientes. Datos de
+              mercado y órdenes tienen conexiones distintas.
+            </p>
+            <div id="feature-map" class="table-wrap"></div>
+          </article>
+          <div id="sources"></div>
+        </section>
+      </main>
+      <footer>
+        <span id="footer-status">Consultando cobertura…</span
+        ><span>Avia Quant · herramientas propias · sólo acciones chilenas</span>
+      </footer>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

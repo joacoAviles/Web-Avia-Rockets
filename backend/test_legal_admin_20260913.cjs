@@ -19,6 +19,17 @@ test('download control stays inside the available width',()=>{
   assert.match(css,/\.legal-export-row button \{[^}]*max-width:100%/);
 });
 
+test('cause workspace keeps filters, horizontal scroll and pagination visible',()=>{
+  assert.match(app,/legal-filter-grid/);
+  assert.match(app,/legal-toolbar-actions/);
+  assert.match(app,/legal-pagination-top/);
+  assert.match(app,/legal-pagination-bottom/);
+  assert.match(app,/aria-label="Tabla de causas\. Desplázate horizontalmente/);
+  assert.match(css,/\.legal-filter-grid \{[^}]*repeat\(5,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.legal-table-scroll \{[^}]*max-height:[^;}]+;[^}]*overflow: auto/);
+  assert.match(css,/\.legal-pagination \{[^}]*flex-wrap: wrap/);
+});
+
 test('client punishment is reversible and assignment can be removed without deleting cause',()=>{
   assert.match(adminUi,/Revertir castigo/);
   assert.match(adminUi,/Quitar causa del cliente/);

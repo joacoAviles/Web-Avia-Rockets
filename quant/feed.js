@@ -92,7 +92,7 @@ function applyFeedQuotes() {
     const previous=feedState.prices.get(q.symbol);
     if(previous!=null && previous!==live.price)feedState.changed.set(q.symbol,Date.now());
     feedState.prices.set(q.symbol,live.price);
-    q.price=live.price;q.feed_source='zesty';q.feed_observed_at=live.observed_at;
+    q.price=live.price;q.status='ok';q.feed_source='zesty';q.feed_observed_at=live.observed_at;
     // Do not retain a Yahoo percentage or time alongside a Zesty price.
     q.change_pct=null;q.quote_time=null;q.session='Zesty · observación '+new Date(live.observed_at).toLocaleString('es-CL');
   });

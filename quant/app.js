@@ -290,7 +290,7 @@ function renderScreener() {
   let rows = S.quotes.filter(
     (q) =>
       q.status === "ok" &&
-      q.quote_time?.slice(0, 10) === S.latestQuoteDate &&
+      (q.feed_source === "zesty" || q.quote_time?.slice(0, 10) === S.latestQuoteDate) &&
       (min === "" || (q.change_pct != null && q.change_pct >= Number(min))) &&
       (vol === "" || (q.volume != null && q.volume >= Number(vol))) &&
       (pe === "" || (q.pe != null && q.pe <= Number(pe))),

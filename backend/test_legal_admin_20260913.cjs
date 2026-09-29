@@ -26,6 +26,8 @@ test('cause workspace keeps filters, horizontal scroll and pagination visible',(
   assert.match(app,/legal-pagination-bottom/);
   assert.match(app,/aria-label="Tabla de causas\. Desplázate horizontalmente/);
   assert.match(css,/\.legal-filter-grid \{[^}]*repeat\(5,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.is-legal-view #app-product-config \{[^}]*min-width: 0/);
+  assert.match(css,/\.is-legal-view #cause-list-rows \{[^}]*width: 100%[^}]*min-width: 0/);
   assert.match(css,/\.legal-table-scroll \{[^}]*max-height:[^;}]+;[^}]*overflow: auto/);
   assert.match(css,/\.legal-pagination \{[^}]*flex-wrap: wrap/);
 });

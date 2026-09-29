@@ -57,7 +57,7 @@ async function refreshFeed() {
     const latest=result.latest;
     const health=result.health||{};
     const age=health.received_at?(Date.now()-Date.parse(health.received_at))/1000:Infinity;
-    $('feed-status').textContent=`${source==='zesty'?'Zesty · lectura':'SIMULACIÓN · datos propios'} · ${health.status||'sin estado'}${age>180?' · sin healthcheck reciente':''} · ${sym}`;
+    $('feed-status').textContent=`${source==='zesty'?'Zesty · lectura':'SIMULACIÓN · datos propios'} · ${health.schedule==='outside_schedule'?'fuera del horario de captura':health.status||'sin estado'}${age>180&&health.schedule!=='outside_schedule'?' · sin healthcheck reciente':''} · ${sym}`;
     $('feed-metrics').replaceChildren();
     if(!latest) { $('feed-status').textContent+=' · sin capturas'; $('feed-depth').replaceChildren();$('feed-series').replaceChildren();$('feed-book').replaceChildren();$('feed-history').replaceChildren();return; }
     const metrics=[['Último',money(latest.price)],['Mejor bid',money(latest.best_bid)],['Mejor ask',money(latest.best_ask)],['Spread',money(latest.spread)],['Mid',money(latest.mid)],['Profundidad bid',fmt(latest.bid_depth)],['Profundidad ask',fmt(latest.ask_depth)],['Imbalance',fmt(latest.imbalance,4)],['Mercado',latest.marketInfo.isOpen?'Abierto':'Cerrado'],['Cambio observado',new Date(latest.observed_at).toLocaleString('es-CL')]];
@@ -81,6 +81,11 @@ async function refreshFeed() {
   finally {feedState.busy=false;}
 }
 function applyFeedQuotes() {
+  let added=false;
+  for (const [key,value] of feedState.latest) {
+    if (!S.quotes.some(q=>q.symbol===key)) {S.quotes.push({symbol:key,name:value.metadata.name||value.symbol,status:'ok'});added=true;}
+  }
+  if(added)updateSymbols();
   S.quotes.forEach(q=>{
     const live=feedState.latest.get(q.symbol);
     if(!live || live.price==null)return;

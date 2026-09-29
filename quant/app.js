@@ -191,6 +191,7 @@ function updateSymbols() {
 async function loadMarket() {
   const m = await api("/market");
   S.quotes = m.quotes;
+  if (typeof applyFeedQuotes === "function") applyFeedQuotes();
   const old = $("symbol").options.length;
   if (!old) updateSymbols();
   S.latestQuoteDate = S.quotes
@@ -200,7 +201,7 @@ async function loadMarket() {
     .at(-1);
   const ok = S.quotes.filter(
     (q) =>
-      q.status === "ok" && q.quote_time?.slice(0, 10) === S.latestQuoteDate,
+      q.feed_source === "zesty" ? "Zesty · observado " + new Date(q.feed_observed_at).toLocaleString("es-CL") : q.status === "ok" && q.quote_time?.slice(0, 10) === S.latestQuoteDate,
   );
   const sm = clear("summary");
   [
@@ -242,7 +243,7 @@ async function loadMarket() {
 function quoteRows(rows) {
   return rows.map((q) => [
     symbolButton(q),
-    money(q.price),
+    typeof feedPrice === "function" ? feedPrice(q) : money(q.price),
     el("span", pct(q.change_pct), null, { class: cls(q.change_pct) }),
     fmt(q.volume, 0),
     q.quote_time
@@ -304,7 +305,7 @@ function renderScreener() {
     ["Acción", "Precio", "Cambio", "Volumen", "P/E", "Capitalización"],
     rows.map((q) => [
       symbolButton(q),
-      money(q.price),
+      typeof feedPrice === "function" ? feedPrice(q) : money(q.price),
       el("span", pct(q.change_pct), null, { class: cls(q.change_pct) }),
       fmt(q.volume, 0),
       fmt(q.pe),
@@ -330,6 +331,7 @@ function updateFocus() {
 }
 async function choose(symbol) {
   S.symbol = symbol;
+  if (typeof refreshFeed === "function") refreshFeed();
   $("symbol").value = symbol;
   updateFocus();
   goto("chart");

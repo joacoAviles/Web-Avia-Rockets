@@ -764,3 +764,15 @@ a:focus-visible {
 .panel-title {
   flex-wrap: wrap;
 }
+
+.feed-price { color: #0A6CFF; }
+.price-flash { animation: price-flash 1.8s ease-out; }
+@keyframes price-flash { 0%,25% {color:#ff4545;background:#ff454522;} 100% {color:#0A6CFF;background:transparent;} }
+#feed-panel svg {width:100%;max-height:300px;}
+#feed-panel pre {white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;}
+#feed-book {max-height:480px;overflow:auto;}
+@media (prefers-reduced-motion: reduce) { .price-flash {animation-duration:.01s;} }
+#feed-metrics {display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:16px;margin:20px 0;}
+#feed-metrics small,#feed-metrics strong {display:block;}
+#feed-metrics small {color:#a9b8cd;margin-bottom:6px;}
+#feed-metrics > p {grid-column:1/-1;}

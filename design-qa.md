@@ -1,39 +1,46 @@
-# QA visual — Legal / Causas
+# Design QA — Legal / Causas responsive repair
 
-## Fuentes comparadas
+- Source visual truth:
+  - `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-db640abd-74d5-4442-8384-611de6ccf7e1.png` (2815 × 601 px)
+  - `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-7da8825a-1ea0-415e-a601-d6d8ad4e1eff.png` (2797 × 569 px)
+- Implementation: `https://aviarockets.cl/app.html?v=legal-causes-responsive-20260929-2`
+- Browser evidence: Codex in-app browser, authenticated Fhevia session.
+- Validation viewport: 747 CSS px wide at device scale 1; screenshot output 699 px content width after browser chrome.
+- State: Legal → Causas, page 1 and page 2, 25 rows per page.
 
-- Referencia: `C:\Users\keanu\AppData\Local\Temp\codex-clipboard-02ef4131-6a18-4914-92dd-53ed89b61442.png`
-- Implementación local: `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\legal-causas-qa-20260727.png`
-- Comparación conjunta: `C:\Users\keanu\.codex\visualizations\2026\07\19\019f7cc3-afdc-78b1-b428-b1c7afad3b57\legal-causas-comparison-20260727.png`
+## Full-view comparison evidence
 
-## Estado verificado
+The reference showed the filter actions, result count and page-size control extending beyond the right edge. The first implementation pass added responsive groups but retained a 1,680 px min-content width inherited from the table. The second pass constrained every Legal content child to the 666 px content viewport. Measured production result: document width 732 px within a 747 px viewport; toolbar, pagination, table viewport and export card each end at x=699 px with no page-level horizontal overflow.
 
-- Vista: Legal → Causas, sesión de `fhevia@asesoriasnow.cl`.
-- Viewport: 1280 × 720 CSS px, densidad 2.
-- Datos: 286 causas obtenidas desde la API productiva.
-- Primera columna: `Causa / Año / Estado`.
-- Muestras reales verificadas: `448 / 2025 / No publicada`, `2858 / 2023 / Publicada` y `3125 / 2023 / Publicada`.
+## Focused region comparison evidence
 
-## Revisión visual
+- Filters: all five filters, “Limpiar filtros”, result count and page-size control now wrap inside the card.
+- Pagination: “Anterior / Página / Siguiente” is visible above and below the table. Keyboard activation advanced production from page 1 to page 2 (`Mostrando 26–50`).
+- Table: the viewport is 649 px wide and its content is 1,680 px wide, confirming horizontal scrolling is isolated to the table. Its maximum height keeps the horizontal scrollbar reachable.
+- Export: the oversized vertical card is now a compact one-line desktop treatment and a stacked mobile treatment; the primary blue button remains within the viewport.
+- Console: zero browser errors during production validation.
 
-- Se conservan el header, el footer, la paleta oscura, la tipografía, los bordes, los radios y el espaciado existentes.
-- El cambio queda limitado a la primera columna del listado.
-- Número, año y estado de publicación se leen en una sola línea y no desplazan las demás columnas.
-- El estado utiliza una insignia discreta coherente con las etiquetas existentes.
-- No se agregaron acciones ni controles de edición.
-- Al final del listado se agregó una única acción de descarga, separada visualmente de la paginación y alineada con el estilo existente.
-- La descarga fue probada con los 286 registros y produjo un libro `.xlsx` válido con 287 filas (encabezado más datos) y 9 columnas.
-- La vista inicial prioriza las causas publicadas; dentro de cada estado de publicación, los registros quedan ordenados y encabezados por su grupo de correo real.
-- Los grupos con correo aparecen antes de los registros sin grupo, que se identifican explícitamente como `Sin grupo de correo`.
-- El filtro `Estado` presenta únicamente `Todos`, `Publicado` y `No publicado`; se comprobó que ambas opciones devuelven exclusivamente el estado de publicación seleccionado.
-- Consola del navegador sin errores.
+## Required fidelity surfaces
 
-## Historial
+- Fonts and typography: existing AVIA type styles, weights and hierarchy preserved.
+- Spacing and layout rhythm: filters use a five/three/two/one-column responsive grid; actions wrap independently; export padding reduced.
+- Colors and visual tokens: existing navy surfaces, borders and blue primary token preserved.
+- Image quality and assets: no image or brand asset changes.
+- Copy and content: existing labels and database-backed counts preserved; only an accessible table-scroll label was added.
 
-1. La API se amplió para exponer el campo real `publicada` junto al año ya existente.
-2. La primera celda se ajustó para mostrar código, año y estado sin alterar la estructura general.
-3. Se comparó la referencia y la implementación en una misma imagen y no se detectaron desbordes, cortes ni cambios visuales fuera de alcance.
-4. Se verificó visualmente la ubicación del botón junto al footer y se abrió el Excel generado para confirmar encabezados, filas y ausencia de errores.
-5. Se comprobó que la primera página contiene únicamente causas publicadas y que sus encabezados de grupo coinciden con los grupos entregados por la API.
+## Comparison history
+
+1. P1 — page children inherited the table’s 1,680 px minimum width. Fixed by constraining `#app-product-config`, `#cause-list-rows`, toolbar and direct children to `min-width: 0; max-width: 100%`.
+2. P1 — next-page controls were off-screen. Fixed with responsive pagination above and below the table; production navigation to page 2 verified.
+3. P1 — horizontal table access required reaching the bottom of 25 rows. Fixed with a bounded internal scroll area and sticky table header.
+4. P2 — download treatment was visually oversized. Fixed with compact grid layout and a standard primary action.
+
+## Findings
+
+No actionable P0, P1 or P2 findings remain.
+
+## Follow-up polish
+
+None required for this repair.
 
 final result: passed

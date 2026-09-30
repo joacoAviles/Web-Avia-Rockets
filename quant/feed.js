@@ -92,7 +92,8 @@ function applyFeedQuotes() {
   if(added)updateSymbols();
   S.quotes.forEach(q=>{
     const live=feedState.latest.get(q.symbol);
-    if(!live || live.price==null || live.stale)return;
+    if(!live || live.price==null || live.stale || (Date.now()-Date.parse(live.observed_at))/1000>(live.symbol==='PARAUCO'?45:900))return;
+    if(q.feed_source==='zesty' && Date.parse(q.feed_observed_at)>Date.parse(live.observed_at))return;
     const previous=feedState.prices.get(q.symbol);
     if(previous!=null && previous!==live.price)feedState.changed.set(q.symbol,Date.now());
     feedState.prices.set(q.symbol,live.price);

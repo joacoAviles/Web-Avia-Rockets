@@ -208,7 +208,7 @@ async function loadMarket() {
     ["Con datos verificados", `${m.available} / ${m.universe_count}`],
     ["Suben · última sesión", ok.filter((q) => q.change_pct > 0).length],
     ["Bajan · última sesión", ok.filter((q) => q.change_pct < 0).length],
-    ["Fuente", m.refreshing ? "Actualizando…" : "Yahoo / ICE"],
+    ["Fuente", "Zesty · Yahoo histórico/fallback"],
   ].forEach(([a, b]) => {
     const n = el("div", null, sm);
     el("span", a, n);
@@ -218,9 +218,9 @@ async function loadMarket() {
     ? "Consultando instrumentos…"
     : m.available + " acciones con datos";
   $("footer-status").textContent =
-    "Actualización cada 10 min · " +
-    (m.updated_at
-      ? new Date(m.updated_at).toLocaleString("es-CL")
+    "Vista Zesty cada 3 s · último barrido " +
+    (m.health?.last_snapshot_at
+      ? new Date(m.health.last_snapshot_at).toLocaleString("es-CL")
       : "primera descarga en curso");
   clear("ticker-strip");
   ["CHILE.SN", "SQM-B.SN", "COPEC.SN", "LTM.SN", "BSANTANDER.SN"].forEach(

@@ -29,7 +29,7 @@
           <h1 id="page-title">Mercado chileno</h1>
         </div>
         <div class="top-status">
-          <span class="badge amber">Yahoo retrasado · Zesty observado</span
+          <span class="badge amber">Zesty intradía · Yahoo histórico/fallback</span
           ><button id="refresh-market">Actualizar datos ↻</button>
         </div>
       </header>
@@ -88,6 +88,7 @@
               </div>
             </div>
             <div class="chart-toolbar">
+              <select id="chart-data" aria-label="Datos del gráfico"><option value="zesty">Zesty · sesión observada</option><option value="yahoo">Yahoo · histórico OHLC</option></select>
               <select id="period" aria-label="Período">
                 <option value="1mo">1 mes</option>
                 <option value="3mo">3 meses</option>
@@ -139,7 +140,7 @@
           <article class="panel" id="feed-panel">
             <h3>Libro y curvas de mercado</h3>
             <div class="chart-toolbar"><select id="feed-source" aria-label="Fuente"><option value="zesty">Zesty · real</option><option value="synthetic/simulated">Simulación · separada</option></select><select id="feed-period" aria-label="Histórico Zesty"></select><button id="feed-model">Analizar microestructura</button></div>
-            <p id="feed-status" role="status">Conectando captura…</p><div id="feed-metrics" class="metrics"></div>
+            <p id="feed-status" role="status">Conectando captura…</p><p id="feed-telemetry" class="muted"></p><div id="feed-metrics" class="metrics"></div>
             <h4>Precio, bid y ask observados · CLP</h4><div id="feed-series"></div>
             <h4>Profundidad acumulada · cantidad por precio</h4><div id="feed-depth"></div>
             <h4>Histórico disponible · precios, sin OHLC ni libro histórico</h4><div id="feed-history"></div>

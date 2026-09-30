@@ -438,6 +438,12 @@ function seriesPlot(
   );
 }
 async function loadBars() {
+  if ($("chart-data").value === "zesty") {
+    ++S.loadId; S.bars=[]; S.analysis=null; S.meta=null;
+    clear("osc-chart"); clear("indicator-values");
+    $("model-context").textContent="Selecciona histórico OHLC para modelos de velas.";
+    await refreshFeed(); renderLiveChart(); return;
+  }
   const id = ++S.loadId;
   $("chart-readout").textContent = "Consultando precios…";
   S.analysis = null;
@@ -507,6 +513,7 @@ async function loadBars() {
   if ($("compare").value) await loadCompare();
 }
 function renderChart() {
+  if ($("chart-data").value === "zesty") { renderLiveChart(); return; }
   if (!S.bars.length) return;
   const end = Number($("replay").value) || S.bars.length,
     start = Math.max(0, end - S.zoom),
@@ -1611,3 +1618,5 @@ async function loadSignals() {
 }
 on('refresh-signals',async()=>{await api('/signals/refresh',{});await loadSignals();});
 setInterval(()=>{if(S.page==='signals')loadSignals().catch(e=>toast(e.message));},15000);
+
+on("chart-data", () => loadBars(), "change");

@@ -33,7 +33,7 @@ function feedPlot(box, series, xKey, yKey, label) {
   el('p',series.map(s=>s.name).join(' · '),box,{class:'muted'});
 }
 async function feedRequest(query) {
-  const r=await fetch('/api/feed?'+new URLSearchParams(query));
+  const r=await fetch('/api/feed?'+new URLSearchParams(query),{cache:'no-store'});
   if(!r.ok)throw Error(r.status===401?'Inicia sesión en Quant para consultar Zesty.':'El servicio de captura no está disponible.');
   return r.json();
 }
@@ -59,9 +59,11 @@ async function refreshFeed() {
     const health=result.health||{};
     const age=health.received_at?(Date.now()-Date.parse(health.received_at))/1000:Infinity;
     $('feed-status').textContent=`${source==='zesty'?'Zesty · lectura':'SIMULACIÓN · datos propios'} · ${health.schedule==='outside_schedule'?'fuera del horario de captura':health.status||'sin estado'}${age>180&&health.schedule!=='outside_schedule'?' · sin healthcheck reciente':''} · ${sym}`;
+    $('feed-telemetry').textContent=`Observer: ${health.current_symbol||'—'} · ${health.current_url||'—'} · ciclos ${health.cycles??0} · páginas ${health.pages_visited??0} · capturas ${health.snapshots_captured??0} · errores ${health.errors??0} · cola ${health.pending??0} · última captura ${health.last_snapshot_at||'—'}${health.last_error?' · último error '+health.last_error:''}`;
     $('feed-metrics').replaceChildren();
     if(!latest) { $('feed-status').textContent+=' · sin capturas'; $('feed-depth').replaceChildren();$('feed-series').replaceChildren();$('feed-book').replaceChildren();$('feed-history').replaceChildren();return; }
-    const metrics=[['Último',money(latest.price)],['Mejor bid',money(latest.best_bid)],['Mejor ask',money(latest.best_ask)],['Spread',money(latest.spread)],['Mid',money(latest.mid)],['Profundidad bid',fmt(latest.bid_depth)],['Profundidad ask',fmt(latest.ask_depth)],['Imbalance',fmt(latest.imbalance,4)],['Mercado',latest.marketInfo.isOpen?'Abierto':'Cerrado'],['Cambio observado',new Date(latest.observed_at).toLocaleString('es-CL')]];
+    if(latest.stale)$('feed-status').textContent+=' · CAPTURA ANTIGUA';
+    const metrics=[['Último',money(latest.price)],['Mejor bid',money(latest.best_bid)],['Mejor ask',money(latest.best_ask)],['Spread',money(latest.spread)],['Mid',money(latest.mid)],['Profundidad bid',fmt(latest.bid_depth)],['Profundidad ask',fmt(latest.ask_depth)],['Imbalance',fmt(latest.imbalance,4)],['Mercado',latest.marketInfo.isOpen?'Abierto':'Cerrado'],['Captura observada',new Date(latest.observed_at).toLocaleString('es-CL')]];
     metrics.forEach(([name,v])=>{const n=el('div',null,$('feed-metrics'));el('small',name,n);el('strong',v,n);});
     el('p','Hora de observación del collector; Zesty no entrega hora del libro. '+(latest.quality.crossed_book?'Libro cruzado: revisar antes de usar.':''),$('feed-metrics'),{class:'muted'});
     const curves=latest.depth_curves;
@@ -73,6 +75,7 @@ async function refreshFeed() {
     ['bids','asks'].forEach(side=>{const block=el('div',null,book);el('h4',side==='bids'?'Bids completos':'Asks completos',block);const table=el('table',null,block);const head=el('tr',null,table);['Precio CLP','Cantidad','Acumulado'].forEach(t=>el('th',t,head));curves[side].forEach(p=>{const row=el('tr',null,table);[money(p.price),fmt(p.size),fmt(p.cumulative_size)].forEach(v=>el('td',v,row));});});
     $('feed-metadata').textContent=JSON.stringify({metadata:latest.metadata,marketInfo:latest.marketInfo,quality:latest.quality},null,2);
     feedState.current=result;
+    renderLiveChart();
     if(source==='zesty') {
       const all=await feedRequest({source:'zesty'});
       feedState.latest=new Map(all.snapshots.map(v=>[v.symbol+'.SN',v]));
@@ -89,13 +92,13 @@ function applyFeedQuotes() {
   if(added)updateSymbols();
   S.quotes.forEach(q=>{
     const live=feedState.latest.get(q.symbol);
-    if(!live || live.price==null)return;
+    if(!live || live.price==null || live.stale)return;
     const previous=feedState.prices.get(q.symbol);
     if(previous!=null && previous!==live.price)feedState.changed.set(q.symbol,Date.now());
     feedState.prices.set(q.symbol,live.price);
     q.price=live.price;q.status='ok';q.feed_source='zesty';q.feed_observed_at=live.observed_at;
     // Do not retain a Yahoo percentage or time alongside a Zesty price.
-    q.change_pct=null;q.quote_time=null;q.session='Zesty · observación '+new Date(live.observed_at).toLocaleString('es-CL');
+    q.change_pct=null;q.quote_time=null;q.volume=null;q.turnover_estimate=null;q.source='Zesty';q.mode='observed';q.session='Zesty · observación '+new Date(live.observed_at).toLocaleString('es-CL');
   });
   renderMarket();renderScreener();updateFocus();
   const focus=$('focus-price');focus.classList.add('feed-price');
@@ -108,5 +111,25 @@ $('feed-model').onclick=action(async()=>{
   const result=await api('/models/microstructure/analyze',{source:feedState.source,snapshots:feedState.current.snapshots.slice(-200).map(s=>({source:s.source,symbol:s.symbol,observed_at:s.observed_at,orderBook:s.orderBook}))});
   $('feed-model-result').textContent=JSON.stringify(result,null,2);
 });
-setInterval(refreshFeed,10000);
+setInterval(refreshFeed,3000);
 refreshFeed();
+
+function renderLiveChart() {
+  if($('chart-data').value!=='zesty')return;
+  const result=feedState.current;
+  $('chart-name').textContent=S.symbol;
+  $('chart-meta').textContent='Zesty · sesión observada · CLP';
+  $('chart-source').textContent='Precio observado y libro Zesty; consultas periódicas. Sin velas OHLC inventadas.';
+  if(!result?.latest || result.latest.symbol!==S.symbol.replace(/\.SN$/,'') || result.source!=='zesty') {
+    $('chart').replaceChildren();$('chart-readout').textContent='Esperando captura Zesty de este instrumento…';return;
+  }
+  const day=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santiago'});
+  const latest=result.latest;
+  const rows=result.snapshots.filter(s=>day.format(new Date(s.observed_at))===day.format(new Date(latest.observed_at)));
+  feedPlot($('chart'),[
+    {name:'Último Zesty',color:'#fff',points:rows.map(s=>({time:Date.parse(s.observed_at),price:s.price}))},
+    {name:'Best bid',color:'#0A6CFF',points:rows.map(s=>({time:Date.parse(s.observed_at),price:s.best_bid}))},
+    {name:'Best ask',color:'#ffae57',points:rows.map(s=>({time:Date.parse(s.observed_at),price:s.best_ask}))}
+  ],'time','price','Zesty intradía: último precio y mejor bid/ask');
+  $('chart-readout').textContent=`Último ${money(latest.price)} · bid ${money(latest.best_bid)} · ask ${money(latest.best_ask)} · ${new Date(latest.observed_at).toLocaleString('es-CL')} · ${latest.stale?'CAPTURA ANTIGUA':'observado'} · ${rows.length} capturas`;
+}

@@ -42,6 +42,7 @@ async function refreshFeed() {
   feedState.busy=true;
   try {
     const source=$('feed-source').value, sym=S.symbol.replace(/\.SN$/,'');
+    if(feedState.symbol!==sym || feedState.source!==source){feedState.current=null;feedState.symbol=sym;['feed-metrics','feed-depth','feed-series','feed-history','feed-book','feed-model-result'].forEach(id=>$(id).replaceChildren());$('feed-status').textContent='Consultando '+sym+'…';}
     const result=await feedRequest({symbol:sym,source,limit:1000,timeframe:$('feed-period').value});
     if(sym!==S.symbol.replace(/\.SN$/,'') || source!==$('feed-source').value)return;
     feedState.source=source;
@@ -103,7 +104,7 @@ function applyFeedQuotes() {
 $('feed-source').onchange=()=>{feedState.current=null;refreshFeed();};
 $('feed-period').onchange=refreshFeed;
 $('feed-model').onclick=action(async()=>{
-  if(!feedState.current?.latest)throw Error('Aún no hay datos del libro.');
+  if(!feedState.current?.latest || feedState.current.latest.symbol!==S.symbol.replace(/\.SN$/,''))throw Error('Aún no hay datos del libro para este símbolo.');
   const result=await api('/models/microstructure/analyze',{source:feedState.source,snapshots:feedState.current.snapshots.slice(-200).map(s=>({source:s.source,symbol:s.symbol,observed_at:s.observed_at,orderBook:s.orderBook}))});
   $('feed-model-result').textContent=JSON.stringify(result,null,2);
 });

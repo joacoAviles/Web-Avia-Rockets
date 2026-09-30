@@ -438,6 +438,8 @@ function seriesPlot(
   );
 }
 async function loadBars() {
+  const liveMode=$('chart-data').value==='zesty';
+  ['period','interval','chart-type','sma','ema','bb','oscillator','compare','draw-mode','clear-draw','zoom-in','zoom-out','export-bars','replay-play','replay'].forEach(id=>$(id).disabled=liveMode);
   if ($("chart-data").value === "zesty") {
     ++S.loadId; S.bars=[]; S.analysis=null; S.meta=null;
     clear("osc-chart"); clear("indicator-values");

@@ -120,7 +120,7 @@ function renderLiveChart() {
   const result=feedState.current;
   $('chart-name').textContent=S.symbol;
   $('chart-meta').textContent='Zesty · sesión observada · CLP';
-  $('chart-source').textContent='Precio observado y libro Zesty; consultas periódicas. Sin velas OHLC inventadas.';
+  $('chart-source').textContent='Último precio y mejores puntas Zesty · hora de captura · actualización periódica.';
   if(!result?.latest || result.latest.symbol!==S.symbol.replace(/\.SN$/,'') || result.source!=='zesty') {
     $('chart').replaceChildren();$('chart-readout').textContent='Esperando captura Zesty de este instrumento…';return;
   }

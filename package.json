@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "node --watch server/index.js",
     "start": "node server/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "test:identity": "node --test tests/identity-client.test.cjs",
+    "test:identity:browser": "node scripts/test-identity-browser.cjs"
   },
   "engines": {
     "node": ">=20"
@@ -21,5 +23,8 @@
     "nodemailer": "^8.0.10",
     "stripe": "^17.4.0",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
   }
 }

@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname, '../app.html'), 'utf8');
 const source = html.slice(html.indexOf('let pjudControlReportIds ='), html.indexOf('function renderPlaceholderProduct('));
 
-function harness({expected = 118, processed = 97, requeued = 0, contextFails = false, reports} = {}) {
+function harness({expected = 118, processed = 97, requeued = 0, contextFails = false, reports, blockers = 0, noAudit = false} = {}) {
   const nodes = {};
   const calls = [];
   let failPreview = false;
@@ -21,7 +21,7 @@ function harness({expected = 118, processed = 97, requeued = 0, contextFails = f
       }
       if (url.endsWith('send-all')) return {queued: 1, duplicates: 0};
       if (failPreview) throw Error('Preview failed');
-      return {totals: {causas_procesadas: processed}, extraction_recovery: {requeued}, reports: reports || [
+      return {coverage: noAudit ? null : {incluidas: expected, total_publicadas_activas: 134, excluidas: [{rit:'C-164-2026',tribunal:'Test',motivo:'castigada'}], duplicados_posibles: [], bloqueantes: blockers}, totals: {causas_procesadas: processed}, extraction_recovery: {requeued}, reports: reports || [
         {report_id: 'luna', status: 'draft', portfolio_name: 'Portafolio 1', group_label: 'Luna', group_type: 'lawyer', recipients: ['test@example.invalid'], summary: {con_cambios: 1}, text_preview: 'Fixture'}
       ]};
     }
@@ -52,11 +52,19 @@ test('zero is preserved and a pending recovery blocks even matching counts', asy
 });
 
 test('unknown, invalid or inconsistent coverage cannot enable daily sending', async () => {
-  for (const input of [{contextFails: true}, {expected: null}, {expected: ''}, {processed: null}, {processed: -1}, {processed: 119}]) {
+  for (const input of [{contextFails: true, noAudit: true}, {expected: null}, {expected: ''}, {processed: null}, {processed: -1}, {processed: 119}, {processed:118, blockers:1}, {processed:118,noAudit:true}]) {
     const h = harness(input);
     await h.ctx.preparePjudControlEmail();
     assert.equal(h.nodes['pjud-control-send'].disabled, true, JSON.stringify(input));
   }
+});
+
+test('coverage explains exclusions and supplies an authoritative denominator', async () => {
+  const h = harness({contextFails:true, expected:133, processed:97});
+  await h.ctx.preparePjudControlEmail();
+  assert.equal(h.nodes['pjud-control-progress-label'].textContent, '97 de 133 causas');
+  assert.match(h.nodes['pjud-control-preview-text'].textContent, /C-164-2026.*castigada/);
+  assert.equal(h.nodes['pjud-control-send'].disabled,true);
 });
 
 test('only distinct drafts are sent and old IDs are cleared after sending', async () => {

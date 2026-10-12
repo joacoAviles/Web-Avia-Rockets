@@ -680,6 +680,8 @@
             method: "POST",
             body: JSON.stringify({ mode })
           });
+          const auditCoverage = data.coverage;
+          if (Number.isSafeInteger(auditCoverage?.incluidas)) totalCauses = auditCoverage.incluidas;
           const rawProcessed = data.totals?.causas_procesadas;
           const processedCauses = rawProcessed !== null && rawProcessed !== undefined && rawProcessed !== "" && Number.isSafeInteger(Number(rawProcessed)) && Number(rawProcessed) >= 0 ? Number(rawProcessed) : null;
           updatePjudControlProgress(processedCauses, totalCauses);
@@ -698,6 +700,12 @@
           if (previewText) previewText.textContent =
             `COMPARACIÓN: ${reportDate} contra ${baseDate}\n` +
             `MÉTODO: último día disponible vs. penúltimo, sin horas fijas.\n\n` +
+            (auditCoverage ?
+              `CONTROL DE COBERTURA: ${auditCoverage.total_publicadas_activas} registros activos y publicados; ${auditCoverage.incluidas} incluidos; ${auditCoverage.excluidas.length} excluidos; ${auditCoverage.bloqueantes} sin asignación o destinatario.\n` +
+              auditCoverage.excluidas.map(c => `${c.rit} · ${c.tribunal} · ${c.motivo.replaceAll("_", " ")}${c.desasignada_en ? ` · Retirada: ${c.desasignada_en}` : ""}`).join("\n") +
+              `\nPOSIBLES DUPLICADOS (se conservan ambos registros):\n` +
+              auditCoverage.duplicados_posibles.map(group => group.map(c => `${c.rit} · ${c.tribunal} · ${c.destinatarios.join(", ")}`).join(" / ")).join("\n") + "\n\n"
+              : "CONTROL DE COBERTURA NO DISPONIBLE. Vuelve a preparar antes de enviar.\n\n") +
             data.reports.map((report, index) =>
               `CORREO ${index + 1} · ${report.portfolio_name}${report.group_label ? ` · ${report.group_label}` : ""}\n` +
               `Para: ${report.recipients.join(", ")}\n` +
@@ -714,7 +722,7 @@
             : "Conteos de cobertura conciliados";
           // This client-side check complements, but cannot replace, validation by send-all.
           const dailyIncomplete = mode === "daily" && (totalCauses === null || processedCauses === null || totalCauses !== processedCauses);
-          const blocked = dailyIncomplete || recovered > 0;
+          const blocked = dailyIncomplete || recovered > 0 || !auditCoverage || auditCoverage.bloqueantes > 0;
           if (!blocked) pjudControlReportIds = [...new Set(data.reports.filter((report) => report.status === "draft" && report.report_id).map((report) => report.report_id))];
           if (statusNode) {
             statusNode.textContent = `${reportDate} vs ${baseDate} · ${processedCauses ?? "sin dato"} causas procesadas de ${totalCauses ?? "total desconocido"} · ${data.reports.length} correos respaldados · ${coverage} · Cambios por correo: ${changesByReport}${recovered ? ` · ${recovered} extracciones liberadas para reintento` : ""}${blocked ? " · Envío bloqueado: revisa los pendientes y vuelve a preparar." : ` · ${pjudControlReportIds.length} borradores disponibles para envío.`}`;

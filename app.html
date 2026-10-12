@@ -635,9 +635,9 @@
       let pjudControlReportIds = [];
 
       function updatePjudControlProgress(processed, total){
-        const safeTotal = Math.max(1, Number(total) || 1);
+        const safeTotal = Math.max(0, Number(total) || 0);
         const safeProcessed = Math.max(0, Math.min(safeTotal, Number(processed) || 0));
-        const percent = Math.round((safeProcessed / safeTotal) * 100);
+        const percent = safeTotal ? Math.round((safeProcessed / safeTotal) * 100) : 0;
         const wrap = document.getElementById("pjud-control-progress-wrap");
         const bar = document.getElementById("pjud-control-progress");
         const fill = document.getElementById("pjud-control-progress-fill");
@@ -655,6 +655,9 @@
         const previewButton = document.getElementById("pjud-control-preview");
         const weeklyButton = document.getElementById("pjud-control-weekly-preview");
         const sendButton = document.getElementById("pjud-control-send");
+        pjudControlReportIds = [];
+        const oldPreview = document.getElementById("pjud-control-preview-row");
+        if (oldPreview) oldPreview.hidden = true;
         if (previewButton) {
           previewButton.disabled = true;
           previewButton.textContent = "Comparando...";
@@ -662,34 +665,36 @@
         if (weeklyButton) weeklyButton.disabled = true;
         if (statusNode) statusNode.textContent = mode === "weekly" ? "Consolidando la semana anterior..." : "Comparando el último día disponible contra la base válida anterior. Esto puede tardar cerca de un minuto...";
         if (sendButton) sendButton.disabled = true;
-        const publishedCauses = (appState.causes || []).filter((cause) => cause.publicada === true || normalize(cause.status) === "publicada");
-        let totalCauses = publishedCauses.length || (appState.causes || []).length || 1;
+        let totalCauses = null;
         try {
-          const context = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/preparation-context");
-          totalCauses = Number(context?.total_causes || totalCauses);
-        } catch (_) {}
-        let visualProcessed = 0;
-        updatePjudControlProgress(0, totalCauses);
-        const progressTimer = window.setInterval(() => {
-          visualProcessed = Math.min(totalCauses - 1, visualProcessed + Math.max(1, Math.ceil(totalCauses / 40)));
-          updatePjudControlProgress(visualProcessed, totalCauses);
-        }, 900);
-        try {
+          // Only server counts describe the comparison scope; the admin dashboard may be empty.
+          try {
+            const context = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/preparation-context");
+            if (context?.total_causes !== null && context?.total_causes !== undefined && context?.total_causes !== "") {
+              const value = Number(context.total_causes);
+              if (Number.isSafeInteger(value) && value >= 0) totalCauses = value;
+            }
+          } catch (_) { /* The preview remains available when coverage cannot be verified. */ }
+          updatePjudControlProgress(0, totalCauses);
           const data = await appFetch("/api/v1/legal/procurador-reports/pjud-control-email/grouped-preview", {
             method: "POST",
             body: JSON.stringify({ mode })
           });
-          pjudControlReportIds = data.reports.map((report) => report.report_id);
-          const processedCauses = Number(data.totals?.causas_procesadas || totalCauses);
-          updatePjudControlProgress(processedCauses, processedCauses);
+          const rawProcessed = data.totals?.causas_procesadas;
+          const processedCauses = rawProcessed !== null && rawProcessed !== undefined && rawProcessed !== "" && Number.isSafeInteger(Number(rawProcessed)) && Number(rawProcessed) >= 0 ? Number(rawProcessed) : null;
+          updatePjudControlProgress(processedCauses, totalCauses);
+          if (totalCauses === null || processedCauses === null) {
+            const label = document.getElementById("pjud-control-progress-label");
+            const percent = document.getElementById("pjud-control-progress-percent");
+            if (label) label.textContent = "Cobertura sin verificar";
+            if (percent) percent.textContent = "—";
+          }
           const previewRow = document.getElementById("pjud-control-preview-row");
           const previewText = document.getElementById("pjud-control-preview-text");
           const firstSummary = data.reports[0]?.summary || {};
           const reportDate = firstSummary.report_date || data.report_date || "-";
           const baseDate = firstSummary.base_dates?.[0] || "-";
-          const generalChanges = data.reports
-            .filter((report) => report.group_type === "general")
-            .reduce((total, report) => total + Number(report.summary?.con_cambios || 0), 0);
+          const changesByReport = data.reports.map((report) => `${report.group_label || report.portfolio_name}: ${report.summary?.con_cambios ?? "sin dato"}`).join("; ");
           if (previewText) previewText.textContent =
             `COMPARACIÓN: ${reportDate} contra ${baseDate}\n` +
             `MÉTODO: último día disponible vs. penúltimo, sin horas fijas.\n\n` +
@@ -701,13 +706,25 @@
               `Asunto: ${report.subject}\n\n${report.text_preview}`
             ).join("\n\n" + "=".repeat(80) + "\n\n");
           if (previewRow) previewRow.hidden = false;
+          const recovered = Number(data.extraction_recovery?.requeued ?? 0);
+          const coverage = totalCauses === null || processedCauses === null
+            ? "Cobertura sin verificar"
+            : processedCauses < totalCauses ? `${totalCauses - processedCauses} causas fuera de la comparación`
+            : processedCauses > totalCauses ? "Conteos inconsistentes; vuelve a preparar"
+            : "Conteos de cobertura conciliados";
+          // This client-side check complements, but cannot replace, validation by send-all.
+          const dailyIncomplete = mode === "daily" && (totalCauses === null || processedCauses === null || totalCauses !== processedCauses);
+          const blocked = dailyIncomplete || recovered > 0;
+          if (!blocked) pjudControlReportIds = [...new Set(data.reports.filter((report) => report.status === "draft" && report.report_id).map((report) => report.report_id))];
           if (statusNode) {
-            const recovered = Number(data.extraction_recovery?.requeued || 0);
-            statusNode.textContent = `${reportDate} vs ${baseDate} · ${processedCauses} causas procesadas · ${data.totals.emails} correos respaldados · ${generalChanges} cambios${recovered ? ` · ${recovered} extracciones fallidas liberadas para reintento` : ""}.`;
+            statusNode.textContent = `${reportDate} vs ${baseDate} · ${processedCauses ?? "sin dato"} causas procesadas de ${totalCauses ?? "total desconocido"} · ${data.reports.length} correos respaldados · ${coverage} · Cambios por correo: ${changesByReport}${recovered ? ` · ${recovered} extracciones liberadas para reintento` : ""}${blocked ? " · Envío bloqueado: revisa los pendientes y vuelve a preparar." : ` · ${pjudControlReportIds.length} borradores disponibles para envío.`}`;
           }
-          if (sendButton) sendButton.disabled = !pjudControlReportIds.length || data.reports.every((report) => report.status !== "draft");
+          if (sendButton) sendButton.disabled = !pjudControlReportIds.length;
+        } catch (error) {
+          pjudControlReportIds = [];
+          if (sendButton) sendButton.disabled = true;
+          throw error;
         } finally {
-          window.clearInterval(progressTimer);
           if (previewButton) {
             previewButton.disabled = false;
             previewButton.textContent = "Preparar correos diarios";
@@ -718,7 +735,7 @@
 
       async function sendPjudControlEmail(){
         if (!pjudControlReportIds.length) throw new Error("Primero genera y revisa los previews.");
-        const accepted = window.confirm(`¿Confirmas el envío de ${pjudControlReportIds.length} correos legales, separados por portafolio?`);
+        const accepted = window.confirm(`¿Confirmas el envío de ${pjudControlReportIds.length} borradores legales a los destinatarios de la vista previa?`);
         if (!accepted) return;
         const statusNode = document.getElementById("pjud-control-status");
         const sendButton = document.getElementById("pjud-control-send");
@@ -728,6 +745,7 @@
           method: "POST",
           body: JSON.stringify({ confirm: true, report_ids: pjudControlReportIds })
         });
+        pjudControlReportIds = [];
         if (statusNode) statusNode.textContent =
           `${data.queued} correos encolados · ${data.duplicates} duplicados omitidos.`;
       }

@@ -34,6 +34,8 @@
 </div>
 <div class="register-card">
 <div class="register-step is-active" id="step-request">
+<label data-referral-entry hidden>Código de referido (opcional)<input data-referral-input maxlength="12" autocomplete="off"></label>
+<button type="button" class="btn btn-secondary" data-google-login hidden>Continuar con Google</button>
 <form class="register-form" id="request-form" action="javascript:void(0)" onsubmit="return false">
 <label for="register-name">Nombre</label><input id="register-name" name="full_name" type="text" minlength="2" autocomplete="name" required />
 <label for="register-email">Correo</label><input id="register-email" name="email" type="email" autocomplete="email" required />
@@ -61,7 +63,7 @@
 <button class="btn btn-primary" type="submit" id="onboarding-button">Entrar al home</button>
 </form>
 </div>
-<p class="form-status" id="register-status" aria-live="polite" hidden></p>
+<p class="form-status" id="register-status" data-identity-status aria-live="polite" hidden></p>
 </div>
 </div>
 </section>
@@ -70,6 +72,7 @@
 <script src="api-config.js?v=20260616-2"></script>
 <script src="header-standard.js?v=header-rules-20260726-2"></script>
 <script src="footer-standard.js?v=header-rules-20260726-2"></script>
+<script src="identity-client.js"></script>
 <script>
 (function initAviaRegistration(){
   var API_BASE=(window.AVIA_API_BASE_URL_RESOLVED||window.AVIA_API_BASE_URL||'https://api.aviarockets.cl').replace(/\/$/,'');
@@ -106,8 +109,10 @@
     var next=Object.assign(readState(),extra||{}, {
       email: registrationEmail,
       full_name: registrationName,
-      password: registrationPassword
+      // Password remains in memory only.
+      identity_flow: 'common'
     });
+    delete next.password;
     sessionStorage.setItem(STATE_KEY,JSON.stringify(next));
   }
 
@@ -115,7 +120,9 @@
     var state=readState();
     registrationEmail=String(state.email||'');
     registrationName=String(state.full_name||'');
-    registrationPassword=String(state.password||'');
+    registrationPassword='';
+    delete state.password;
+    sessionStorage.setItem(STATE_KEY,JSON.stringify(state));
     var nameInput=document.getElementById('register-name');
     var emailInput=document.getElementById('register-email');
     var passInput=document.getElementById('register-password');
@@ -242,8 +249,10 @@
     try{
       var code=document.getElementById('register-code').value.trim();
       var data=await postJson('/api/register/verify-code',{email:registrationEmail,code:code});
-      localStorage.setItem(TOKEN_KEY,data.token);
+      if (!(data.token || data.access_token)) throw new Error('No se recibió una sesión válida.');
+      localStorage.setItem(TOKEN_KEY,data.token || data.access_token);
       localStorage.setItem(USER_KEY,JSON.stringify(data.user));
+      if ((await AVIAIdentity.ready).google_enabled) { await AVIAIdentity.afterLogin(); return; }
       writeState({step:'onboarding'});
       showStep('step-onboarding');
       setStatus('Correo validado. Completa el perfil.');

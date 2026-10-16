@@ -1,3 +1,8 @@
 node_modules/
 .DS_Store
 npm-debug.log*
+
+# Local identity acceptance artifacts
+.identity-artifacts/
+__pycache__/
+.pytest_cache/

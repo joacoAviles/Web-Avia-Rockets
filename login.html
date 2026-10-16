@@ -34,11 +34,13 @@
 <section class="auth-hero">
   <div class="container auth-grid">
     <div class="auth-card" aria-label="Ingreso AVIA Rockets">
+      <label data-referral-entry hidden>Código de referido (opcional)<input data-referral-input maxlength="12" autocomplete="off"></label>
+<button type="button" class="btn btn-secondary" data-google-login hidden>Continuar con Google</button>
       <form class="auth-form" id="login-form">
         <label for="login-identifier">Correo</label><input id="login-identifier" type="email" autocomplete="username" placeholder="cliente@empresa.cl" required />
         <label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required />
         <div class="auth-row"><label><input type="checkbox" /> Mantener sesión</label></div>
-        <button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" aria-live="polite"></p>
+        <button class="btn btn-primary" id="login-button" type="submit">Ingresar</button><p class="auth-status" id="login-status" data-identity-status aria-live="polite"></p>
       </form>
     </div>
   </div>
@@ -48,6 +50,7 @@
 <script src="api-config.js"></script>
 <script src="header-standard.js?v=header-rules-20260726-2"></script>
 <script src="footer-standard.js?v=header-rules-20260726-2"></script>
+<script src="identity-client.js"></script>
 <script>
 const PRIMARY_API_BASE_URL = (window.AVIA_API_BASE_URL_RESOLVED || window.AVIA_API_BASE_URL || "https://api.aviarockets.cl").replace(/\/$/, "");
 const TOKEN_KEY = "avia_auth_token";
@@ -63,15 +66,9 @@ function setStatus(message, type = "") {
   loginStatus.className = `auth-status ${type}`.trim();
 }
 
-function getRedirectTarget() {
-  const params = new URLSearchParams(window.location.search);
-  const next = params.get("next");
-  return next && !next.startsWith("http") && !next.startsWith("//") ? next.replace("app-beta.html", "app.html") : DEFAULT_AFTER_LOGIN;
-}
 
 function getApiCandidates() {
-  const candidates = [PRIMARY_API_BASE_URL, "https://api.aviarockets.cl", window.location.origin];
-  return [...new Set(candidates.filter(Boolean).map((url) => String(url).replace(/\/$/, "")))];
+  return ["https://api.aviarockets.cl"];
 }
 
 async function apiRequestFrom(baseUrl, path, options = {}) {
@@ -161,7 +158,7 @@ loginForm.addEventListener("submit", async (event) => {
     const data = await loginRequest(identifier, password);
     saveSession(data);
     setStatus("Ingreso correcto. Redirigiendo...", "form-status-ok");
-    window.location.href = getRedirectTarget();
+    await AVIAIdentity.afterLogin();
   } catch (error) {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);

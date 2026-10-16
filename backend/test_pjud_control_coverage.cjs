@@ -30,25 +30,27 @@ function harness({expected = 118, processed = 97, requeued = 0, contextFails = f
   return {ctx, nodes, calls, fail: () => {failPreview = true;}};
 }
 
-test('97/118 remains 82% and incomplete daily reports cannot be submitted', async () => {
+test('97/118 remains 82% and partial daily reports can be sent with a notice', async () => {
   const {ctx, nodes, calls} = harness();
   await ctx.preparePjudControlEmail();
   assert.equal(nodes['pjud-control-progress-label'].textContent, '97 de 118 causas');
   assert.equal(nodes['pjud-control-progress-percent'].textContent, '82%');
   assert.match(nodes['pjud-control-status'].textContent, /21 causas fuera/);
   assert.match(nodes['pjud-control-status'].textContent, /Luna: 1/);
-  assert.equal(nodes['pjud-control-send'].disabled, true);
-  await assert.rejects(ctx.sendPjudControlEmail());
-  assert.equal(calls.filter(c => c.url.endsWith('send-all')).length, 0);
+  assert.match(nodes['pjud-control-status'].textContent, /Informe parcial/);
+  assert.equal(nodes['pjud-control-send'].disabled, false);
+  await ctx.sendPjudControlEmail();
+  assert.equal(calls.filter(c => c.url.endsWith('send-all')).length, 1);
 });
 
-test('zero is preserved and a pending recovery blocks even matching counts', async () => {
+test('zero is preserved and pending recovery does not block sending', async () => {
   const zero = harness({processed: 0});
   await zero.ctx.preparePjudControlEmail();
   assert.equal(zero.nodes['pjud-control-progress-label'].textContent, '0 de 118 causas');
+  assert.equal(zero.nodes['pjud-control-send'].disabled, false);
   const pending = harness({processed: 118, requeued: 1});
   await pending.ctx.preparePjudControlEmail();
-  assert.equal(pending.nodes['pjud-control-send'].disabled, true);
+  assert.equal(pending.nodes['pjud-control-send'].disabled, false);
 });
 
 test('unknown, invalid or inconsistent coverage cannot enable daily sending', async () => {
@@ -64,7 +66,7 @@ test('coverage explains exclusions and supplies an authoritative denominator', a
   await h.ctx.preparePjudControlEmail();
   assert.equal(h.nodes['pjud-control-progress-label'].textContent, '97 de 133 causas');
   assert.match(h.nodes['pjud-control-preview-text'].textContent, /C-164-2026.*castigada/);
-  assert.equal(h.nodes['pjud-control-send'].disabled,true);
+  assert.equal(h.nodes['pjud-control-send'].disabled,false);
 });
 
 test('only distinct drafts are sent and old IDs are cleared after sending', async () => {

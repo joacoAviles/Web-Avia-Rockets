@@ -721,11 +721,12 @@
             : processedCauses > totalCauses ? "Conteos inconsistentes; vuelve a preparar"
             : "Conteos de cobertura conciliados";
           // This client-side check complements, but cannot replace, validation by send-all.
-          const dailyIncomplete = mode === "daily" && (totalCauses === null || processedCauses === null || totalCauses !== processedCauses);
-          const blocked = dailyIncomplete || recovered > 0 || !auditCoverage || auditCoverage.bloqueantes > 0;
+          const dailyInvalid = mode === "daily" && (totalCauses === null || processedCauses === null || processedCauses > totalCauses);
+          const partial = mode === "daily" && totalCauses !== null && processedCauses !== null && processedCauses < totalCauses;
+          const blocked = dailyInvalid || !auditCoverage || auditCoverage.bloqueantes > 0;
           if (!blocked) pjudControlReportIds = [...new Set(data.reports.filter((report) => report.status === "draft" && report.report_id).map((report) => report.report_id))];
           if (statusNode) {
-            statusNode.textContent = `${reportDate} vs ${baseDate} · ${processedCauses ?? "sin dato"} causas procesadas de ${totalCauses ?? "total desconocido"} · ${data.reports.length} correos respaldados · ${coverage} · Cambios por correo: ${changesByReport}${recovered ? ` · ${recovered} extracciones liberadas para reintento` : ""}${blocked ? " · Envío bloqueado: revisa los pendientes y vuelve a preparar." : ` · ${pjudControlReportIds.length} borradores disponibles para envío.`}`;
+            statusNode.textContent = `${reportDate} vs ${baseDate} · ${processedCauses ?? "sin dato"} causas procesadas de ${totalCauses ?? "total desconocido"} · ${data.reports.length} correos respaldados · ${coverage} · Cambios por correo: ${changesByReport}${recovered ? ` · ${recovered} extracciones liberadas para reintento` : ""}${partial ? " · Informe parcial: las causas pendientes se indicarán expresamente en el correo; no equivalen a ausencia de cambios." : ""}${blocked ? " · Envío bloqueado: verifica cobertura y destinatarios y vuelve a preparar." : ` · ${pjudControlReportIds.length} borradores disponibles para envío.`}`;
           }
           if (sendButton) sendButton.disabled = !pjudControlReportIds.length;
         } catch (error) {

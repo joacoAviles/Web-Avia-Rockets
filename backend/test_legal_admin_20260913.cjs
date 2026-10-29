@@ -40,7 +40,7 @@ test('client punishment is reversible and assignment can be removed without dele
   assert.match(adminUi,/Revertir castigo/);
   assert.match(adminUi,/Quitar causa del cliente/);
   assert.match(adminUi,/Agregar causa al cliente/);
-  assert.match(adminUi,/solo el proceso PJUD puede publicarla/);
+  assert.match(adminUi,/Agrega los datos de PJUD/);
   assert.match(adminUi,/method:'POST'/);
   assert.match(api,/current=='castigo' and target==restored/);
   assert.match(api,/case\.unassign/);

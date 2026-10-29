@@ -205,6 +205,8 @@ function appCurrentStats(){
 }
 
 function appRenderStats(){
+  const statsPanel=document.querySelector(".app-stats");
+  if(statsPanel)statsPanel.hidden=appState.view==="settings";
   const cards = document.querySelectorAll(".app-stat");
   const labelsByView = {
     "technical-reviews": ["Autos al día", "Por vencer", "Vencidos"],
@@ -648,8 +650,8 @@ function appAcademyQuestionHtmlOldCard(){
     <div class="academy-card-head"><span>${appEscape(question.tematica || "Tematica")}</span><small>${appEscape(question.subtematica || "")} · ${appEscape(question.nivel || "")}</small></div>
     <h3>${appEscape(question.pregunta)}</h3>
     ${appAcademyOptionsHtml(question)}
-    ${visible ? `<div class="academy-answer"><strong>Respuesta</strong><p>${appEscape(question.respuesta_correcta_texto || question.respuesta_correcta || "-")}</p>${appState.academyMode !== "exam" ? `<strong>Explicacion</strong><p>${appEscape(question.explicacion_corta || "-")}</p>` : ""}${showDeep ? `<strong>Explicacion profunda</strong><p>${appEscape(question.explicacion_profunda || "-")}</p>${concepts.length ? `<strong>Conceptos</strong><p>${concepts.map(appEscape).join(" · ")}</p>` : ""}` : ""}<small>Fuente: ${appEscape(question.fuente?.documento || question.fuente || "No informada")}</small></div>` : `<p class="academy-muted">Intenta responder antes de revelar. En modo examen solo veras la pauta; en estudio e instructor aparece la explicacion.</p>`}
-    <div class="academy-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-reveal">${visible ? "Ocultar respuesta" : "Ver respuesta"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" data-academy-progress="known">La sabia</button><button class="btn btn-secondary" type="button" data-academy-progress="review">Repasar</button><small>${appState.academyQuestionIndex + 1} / ${questions.length} · ${appEscape(appAcademyProgressLabel(question))}</small></div>
+    ${visible ? `<div class="academy-answer"><strong>Respuesta</strong><p>${appEscape(question.respuesta_correcta_texto || question.respuesta_correcta || "-")}</p>${appState.academyMode !== "exam" ? `<strong>Explicación</strong><p>${appEscape(question.explicacion_corta || "-")}</p>` : ""}${showDeep ? `<strong>Explicación profunda</strong><p>${appEscape(question.explicacion_profunda || "-")}</p>${concepts.length ? `<strong>Conceptos</strong><p>${concepts.map(appEscape).join(" · ")}</p>` : ""}` : ""}<small>Fuente: ${appEscape(question.fuente?.documento || question.fuente || "No informada")}</small></div>` : `<p class="academy-muted">Intenta responder antes de revelar. En modo examen solo verás la pauta; en estudio e instructor aparece la explicación.</p>`}
+    <div class="academy-actions"><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-primary" type="button" id="academy-reveal">${visible ? "Ocultar respuesta" : "Ver respuesta"}</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" data-academy-progress="known">La sabía</button><button class="btn btn-secondary" type="button" data-academy-progress="review">Repasar</button><small>${appState.academyQuestionIndex + 1} / ${questions.length} · ${appEscape(appAcademyProgressLabel(question))}</small></div>
   </article>`;
 }
 
@@ -657,7 +659,7 @@ async function appRenderAcademyPanelLegacy(){
   await appEnsureAcademyLoaded();
   appSetText("app-view-label", "Labs · Subproducto Academy");
   appSetText("app-product-title", "AVIA Academy");
-  appSetText("app-product-description", "Espacio de estudio dentro del login: bancos de preguntas, modos examen/estudio/instructor y preparación para progreso por usuario.");
+  appSetText("app-product-description", "Estudia, practica y sigue tu progreso.");
   appSetText("app-product-status", `${appAcademyStats().total_questions ?? 0} preguntas`);
   appSetText("app-product-slug", "labs-academy");
   appRenderStats();
@@ -757,6 +759,7 @@ async function appReload(){
   const stored = appStoredUser();
   appState.user = appState.dashboard?.user || stored || appState.user;
   appState.account = appState.dashboard?.account || null;
+  try { const customer=await appFetch('/api/account'); document.documentElement.setAttribute('data-theme',customer.preferences?.theme||'dark'); } catch (_) {}
   appState.products = Array.isArray(appState.dashboard?.products) ? appState.dashboard.products : (Array.isArray(appState.user?.products) ? appState.user.products : []);
   appState.causes = Array.isArray(appState.dashboard?.causes) ? appState.dashboard.causes : [];
   if (appState.view === "technical-reviews") await appEnsureReviewsLoaded(true);
@@ -877,7 +880,7 @@ async function appEnsureAcademyLoaded(force = false){
         report_types: [
           { value:"enunciado_confuso", label:"Enunciado confuso" },
           { value:"respuesta_incorrecta", label:"Respuesta incorrecta" },
-          { value:"mas_de_una_correcta", label:"Hay mas de una respuesta correcta" },
+          { value:"mas_de_una_correcta", label:"Hay más de una respuesta correcta" },
           { value:"imagen_incorrecta", label:"Imagen incorrecta" },
           { value:"error_fuente", label:"Error en la fuente" },
           { value:"ortografia_redaccion", label:"Ortografia o redaccion" },
@@ -954,7 +957,7 @@ function appAcademySessionPanelsHtml(question, progressStats, questions){
     </section>
     <section class="academy-side-card">
       <div class="academy-side-title"><strong>Preguntas marcadas</strong><b>${progressStats.review}</b></div>
-      <p>Tienes ${progressStats.review} preguntas marcadas para revisar mas tarde.</p>
+      <p>Tienes ${progressStats.review} preguntas marcadas para revisar más tarde.</p>
       <button type="button" class="academy-link-button" id="academy-filter-marked">Ir a marcadas</button>
     </section>
     <section class="academy-side-card">
@@ -1009,7 +1012,7 @@ function appAcademyReportHtml(question){
   const types = appState.academy?.report_types || [
     { value:"enunciado_confuso", label:"Enunciado confuso" },
     { value:"respuesta_incorrecta", label:"Respuesta incorrecta" },
-    { value:"mas_de_una_correcta", label:"Hay mas de una respuesta correcta" },
+    { value:"mas_de_una_correcta", label:"Hay más de una respuesta correcta" },
     { value:"imagen_incorrecta", label:"Imagen incorrecta" },
     { value:"error_fuente", label:"Error en la fuente" },
     { value:"ortografia_redaccion", label:"Ortografia o redaccion" },
@@ -1059,7 +1062,7 @@ function appAcademyQuestionHtml(){
       ${appAcademyMediaHtml(question)}
       <p class="academy-source-line">Fuente: ${appEscape(source)}</p>
       ${appAcademyOptionsHtml(question)}
-      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-primary" type="button" id="academy-submit">${isWrittenQuestion ? "Ver respuesta esperada" : correctKeys.length > 1 ? "Confirmar seleccion" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicacion</button><button class="btn btn-secondary" type="button" id="academy-unknown">No se</button></div>
+      <div class="academy-actions academy-mobile-actions"><button class="btn btn-secondary" type="button" id="academy-bookmark">Marcar</button><button class="btn btn-secondary" type="button" id="academy-report">Reportar error</button><button class="btn btn-secondary" type="button" id="academy-source">Ver fuente</button><button class="btn btn-primary" type="button" id="academy-submit">${isWrittenQuestion ? "Ver respuesta esperada" : correctKeys.length > 1 ? "Confirmar selección" : "Responder"}</button><button class="btn btn-secondary" type="button" id="academy-prev">Anterior</button><button class="btn btn-secondary" type="button" id="academy-next">Siguiente</button><button class="btn btn-secondary" type="button" id="academy-reveal">Ver explicación</button><button class="btn btn-secondary" type="button" id="academy-unknown">No sé</button></div>
       ${answered ? `<div class="academy-answer"><button class="academy-answer-toggle" type="button">${isWrittenQuestion ? "Respuesta esperada" : "Por que esta es la respuesta correcta?"}</button><div><strong>${isWrittenQuestion ? "Pauta esperada" : "Respuesta correcta"}: ${appEscape(isWrittenQuestion ? question.respuesta_correcta_texto || "-" : correctKeys.join(", ") || question.respuesta_correcta_texto || "-")}</strong><p>${appEscape(question.explicacion_corta || question.explicacion_profunda || "-")}</p>${appState.academyMode === "instructor" || appState.academySourceOpen ? `<p>Fuente verificable: ${appEscape(source)}</p>${question.explicacion_profunda ? `<p>${appEscape(question.explicacion_profunda)}</p>` : ""}` : ""}</div></div>` : `<p class="academy-muted">${isWrittenQuestion ? "Escribe o piensa tu respuesta. Luego revisa la pauta esperada desde PostgreSQL." : "Selecciona una alternativa y responde. Las respuestas se guardan en PostgreSQL."}</p>`}
     </section>
     ${appAcademySessionPanelsHtml(question, progressStats, questions)}

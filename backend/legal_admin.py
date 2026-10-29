@@ -66,7 +66,9 @@ class CauseInput(BaseModel):
     version: int = Field(ge=0)
     code: str = Field(min_length=1,max_length=60)
     year: int = Field(ge=1800,le=2200)
-    court: str = Field(min_length=1,max_length=255)
+    court: str = Field(default="",max_length=255)
+    competencia: str | None = None
+    tipo: str | None = None
     portfolio_id: UUID
     lawyer_id: UUID | None = None
     corte: str | None = Field(default=None, max_length=255)
@@ -76,8 +78,10 @@ class CauseAssignInput(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     code: str = Field(min_length=1, max_length=60)
     year: int = Field(ge=1800, le=2200)
-    court: str = Field(min_length=1, max_length=255)
-    corte: str = Field(min_length=1, max_length=255)
+    court: str = Field(default="", max_length=255)
+    competencia: str | None = None
+    tipo: str | None = None
+    corte: str = Field(default="", max_length=255)
     portfolio_id: UUID
     lawyer_id: UUID | None = None
 
@@ -174,7 +178,7 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
           WHERE p.client_id=:c AND p.status='active' AND r.recipient_type='cc' AND r.is_active
           ORDER BY p.display_order,r.display_order,lower(r.email)"""),
         causes=await rows("""SELECT pc.id,pc.case_id,pc.portfolio_id,pc.lawyer_id,
-          CASE WHEN COALESCE(c.pjud_tipo,'C')='C' THEN c.rol ELSE c.pjud_tipo||'-'||c.rol END AS code,c.year,c.court,pc.corte,c.party AS title,c.publicada,
+          CASE WHEN COALESCE(c.pjud_tipo,'C') IN ('C','') THEN c.rol ELSE c.pjud_tipo||'-'||c.rol END AS code,c.year,c.court,pc.corte,pc.competencia,c.pjud_tipo AS tipo,c.party AS title,c.publicada,
           COALESCE(s.castigo,false) AS castigo,COALESCE(s.version,0) AS version,COALESCE(s.fields,'{}'::jsonb) AS fields
           FROM legal.legal_portfolio_cases pc JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id
           JOIN legal.causes c ON c.id=pc.case_id
@@ -236,8 +240,13 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
     validate_transition(settings['castigo'],before['publicada'],payload.publication)
     group=(await db.execute(text("SELECT id FROM legal.legal_portfolios WHERE id=:i AND client_id=:c AND status='active'"),{'i':payload.portfolio_id,'c':client_id})).scalar()
     if not group: raise HTTPException(422,'Grupo ajeno al cliente o inactivo')
+    validate_pjud_form(payload)
     fields=dict(settings['fields']) | {k:getattr(payload,k) for k in ['code','year','court']}
     if payload.corte: fields['corte']=payload.corte
+    if payload.competencia:
+        fields['competencia']=payload.competencia
+        fields['tipo']=payload.tipo
+        fields['code']=((payload.tipo+'-') if payload.tipo and payload.tipo!='C' else '')+payload.code
     lawyer_name=lawyer['name'] if lawyer else None
     lawyer_email=lawyer['email'] if lawyer else None
     try:
@@ -252,9 +261,29 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
         raise HTTPException(409,'La asignación ya existe en ese grupo. No se guardaron cambios.')
     return {'ok':True}
 
+def validate_pjud_form(payload):
+    if not payload.competencia: return
+    from pathlib import Path
+    cat=json.loads(Path(__file__).with_name('pjud-catalog.json').read_text())
+    comp=next((c for c in cat['competencias'] if c['name']==payload.competencia),None)
+    if not comp: raise HTTPException(422,'Selecciona una competencia válida.')
+    branch=cat['branches'][comp['id']]
+    if branch.get('available') is False: raise HTTPException(422,branch['notice'])
+    if comp['id']=='1':
+        payload.corte='Corte Suprema';payload.court='Corte Suprema';payload.tipo=''
+    else:
+        corte=next((c for c in branch['cortes'] if c['name']==payload.corte),None)
+        if not corte: raise HTTPException(422,'Selecciona una corte válida.')
+        if comp['id']=='2': payload.court=payload.corte;payload.tipo=''
+        else:
+            if payload.court not in {t['name'] for t in branch['tribunales'][corte['id']]}: raise HTTPException(422,'El tribunal no corresponde a la competencia y corte seleccionadas.')
+            if payload.tipo not in {t['id'] for t in branch['tipos']}: raise HTTPException(422,'Selecciona un tipo de libro válido.')
+    if not re.fullmatch(r'[0-9]+',payload.code): raise HTTPException(422,'El rol debe contener solo números.')
+
 @router.post('/clients/{client_id}/cases',status_code=201)
 async def assign_case(client_id:UUID,payload:CauseAssignInput,user=Depends(current_user),db=Depends(get_db)):
     """Assign an existing global cause, or create it unpublished when it does not exist."""
+    validate_pjud_form(payload)
     await authorize(db,user,client_id)
     portfolio=(await db.execute(text("SELECT id FROM legal.legal_portfolios WHERE id=:p AND client_id=:c AND status='active' FOR SHARE"),dict(p=payload.portfolio_id,c=client_id))).scalar()
     if not portfolio: raise HTTPException(422,'Grupo ajeno al cliente o inactivo')
@@ -265,33 +294,34 @@ async def assign_case(client_id:UUID,payload:CauseAssignInput,user=Depends(curre
     match=re.fullmatch(r'(?:(C|V)-)?([0-9]+)(?:-([0-9]{4}))?',payload.code.strip().upper())
     if not match or (match[3] and int(match[3])!=payload.year):
         raise HTTPException(422,'Número inválido: indica número o C-/V-número y el año correspondiente')
-    tipo=match[1] or 'C'
+    tipo=payload.tipo if payload.competencia else (match[1] or 'C')
+    competencia=payload.competencia or 'Civil'
     code=str(int(match[2]))
     organization_id=(await db.execute(text('SELECT organization_id FROM legal.legal_clients WHERE id=:c'),{'c':client_id})).scalar_one()
     cause=(await db.execute(text("""SELECT * FROM legal.causes
       WHERE organization_id=:o AND year=:y
         AND regexp_replace(upper(trim(rol)),'^C-','','i')=:r
-        AND lower(trim(court))=lower(trim(:court))
+        AND regexp_replace(lower(trim(court)),'[º°ª]','','g')=regexp_replace(lower(trim(:court)),'[º°ª]','','g')
       ORDER BY created_at LIMIT 1 FOR UPDATE"""),dict(o=organization_id,y=payload.year,r=code,court=payload.court))).mappings().first()
-    if cause and (cause['pjud_tipo'] or 'C')!=tipo:
+    if cause and ((cause['pjud_tipo'] or ('C' if competencia=='Civil' else ''))!=tipo or (cause['pjud_competencia'] or 'Civil')!=competencia):
         raise HTTPException(409,'Existe otro tipo de causa con ese número, año y juzgado; requiere revisión de identidad')
     created=False
     try:
         if not cause:
             cause=(await db.execute(text("""INSERT INTO legal.causes
               (id,organization_id,court,rol,year,status,created_at,updated_at,public_visibility_status,publicada,pjud_tipo,pjud_corte,pjud_competencia)
-              VALUES(gen_random_uuid(),:o,:court,:r,:y,'active',now(),now(),'hidden',false,:tipo,:corte,'Civil')
-              RETURNING *"""),dict(o=organization_id,court=payload.court,r=code,y=payload.year,tipo=tipo,corte=payload.corte))).mappings().one()
+              VALUES(gen_random_uuid(),:o,:court,:r,:y,'active',now(),now(),'hidden',false,:tipo,:corte,:competencia)
+              RETURNING *"""),dict(o=organization_id,court=payload.court,r=code,y=payload.year,tipo=tipo,corte=payload.corte,competencia=competencia))).mappings().one()
             created=True
         flags={'admin_assigned':True,'assigned_lawyer_email':lawyer['email'] if lawyer else None}
         link_id=(await db.execute(text("""INSERT INTO legal.legal_portfolio_cases
-          (portfolio_id,case_id,corte,responsible_name,include_in_batch_email,status,settings,lawyer_id,created_at,updated_at)
-          VALUES(:p,:case,:corte,:name,true,'active',CAST(:settings AS jsonb),:lawyer,now(),now())
+          (portfolio_id,case_id,corte,competencia,responsible_name,include_in_batch_email,status,settings,lawyer_id,created_at,updated_at)
+          VALUES(:p,:case,:corte,:competencia,:name,true,'active',CAST(:settings AS jsonb),:lawyer,now(),now())
           ON CONFLICT(portfolio_id,case_id) DO UPDATE SET status='active',include_in_batch_email=true,
           lawyer_id=EXCLUDED.lawyer_id,responsible_name=EXCLUDED.responsible_name,corte=EXCLUDED.corte,
           settings=legal.legal_portfolio_cases.settings||EXCLUDED.settings,updated_at=now()
           WHERE legal.legal_portfolio_cases.status='archived' RETURNING id"""),dict(
-            p=payload.portfolio_id,case=cause['id'],corte=payload.corte,name=lawyer['name'] if lawyer else None,
+            p=payload.portfolio_id,case=cause['id'],corte=payload.corte,competencia=competencia,name=lawyer['name'] if lawyer else None,
             settings=json.dumps(flags),lawyer=payload.lawyer_id))).scalar_one_or_none()
         if not link_id: raise HTTPException(409,'Esta causa ya está asignada al grupo seleccionado.')
         await db.execute(text('INSERT INTO legal.client_cause_settings(client_id,cause_id,version) VALUES (:c,:i,0) ON CONFLICT DO NOTHING'),dict(c=client_id,i=cause['id']))

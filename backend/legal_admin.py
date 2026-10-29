@@ -1,8 +1,11 @@
 """Individual, client-scoped legal administration. No global publication writes."""
 import json
+import re
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from uuid import UUID
 from typing import Literal
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
@@ -10,6 +13,47 @@ from app.api.deps import current_user
 from app.core.database import get_db
 
 router = APIRouter(prefix='/api/v1/legal/admin', tags=['legal-admin'])
+
+SCRAPPERS_ADMIN_EMAIL = 'admin@aviarockets.cl'
+SCRAPPER_COMMANDS = (
+    {
+        'id': 'assigned-unpublished',
+        'title': 'Asignadas no publicadas',
+        'description': (
+            'Revisa las causas activas asignadas que todavía no están publicadas. '
+            'Varios computadores comparten la misma cola diaria sin repetir causas.'
+        ),
+        'command': (
+            'await(async()=>{const r=await fetch("https://api.aviarockets.cl/api/v1/'
+            'pjud-distributed/bootstrap-asignadas.js?v="+Date.now(),{cache:"no-store"});'
+            'if(!r.ok)throw new Error("Bootstrap asignadas HTTP "+r.status);'
+            'for(const k of["PJUD_ROCKET","PJUD_FORM_SEQUENCER_V5",'
+            '"PJUD_DETAIL_EXTRACTOR_V5","PJUD_RUNNER_ASIGNADAS",'
+            '"PJUD_ROCKET_ASIGNADAS"])window[k]=undefined;(0,eval)(await r.text());'
+            'if(!window.PJUD_ROCKET_ASIGNADAS)throw new Error('
+            '"PJUD_ROCKET_ASIGNADAS no quedó cargado");return await '
+            'window.PJUD_ROCKET_ASIGNADAS.run({maxCausas:0})})()'
+        ),
+    },
+    {
+        'id': 'published-daily',
+        'title': 'Causas publicadas',
+        'description': (
+            'Revisa la cola diaria de causas publicadas y, al terminar, ofrece la '
+            'auditoría de consistencia entre PJUD y la base de AVIA.'
+        ),
+        'command': (
+            'await(async()=>{const r=await fetch("https://api.aviarockets.cl/api/v1/'
+            'pjud-distributed/bootstrap-daily.js?v="+Date.now(),{cache:"no-store"});'
+            'if(!r.ok)throw new Error("Bootstrap diario HTTP "+r.status);'
+            'for(const k of["PJUD_ROCKET","PJUD_FORM_SEQUENCER_V5",'
+            '"PJUD_DETAIL_EXTRACTOR_V5","PJUD_RUNNER_DAILY","PJUD_DAILY"])'
+            'window[k]=undefined;(0,eval)(await r.text());if(!window.PJUD_DAILY)'
+            'throw new Error("PJUD_DAILY no quedó cargado");return await '
+            'window.PJUD_DAILY.run({maxCausas:0,preguntarConsistencia:true})})()'
+        ),
+    },
+)
 
 class LawyerInput(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
@@ -25,6 +69,7 @@ class CauseInput(BaseModel):
     court: str = Field(min_length=1,max_length=255)
     portfolio_id: UUID
     lawyer_id: UUID | None = None
+    corte: str | None = Field(default=None, max_length=255)
     publication: Literal['published','unpublished','castigo']
 
 class CauseAssignInput(BaseModel):
@@ -45,6 +90,33 @@ def require_admin(user):
     access=user.product_access or {}
     if user.role != 'admin' or not user.is_active or not any(access.get(k) in (True,1) for k in ('legal','causes')):
         raise HTTPException(403,'Acceso reservado al administrador de Legal')
+
+
+def require_scrappers_admin(user):
+    email = str(getattr(user, 'email', '') or '').strip().casefold()
+    if (
+        getattr(user, 'role', None) != 'admin'
+        or not getattr(user, 'is_active', False)
+        or email != SCRAPPERS_ADMIN_EMAIL
+    ):
+        raise HTTPException(403, 'Acceso reservado a admin@aviarockets.cl')
+
+
+@router.get('/scrappers')
+async def scrappers(
+    response: Response,
+    user=Depends(current_user),
+):
+    require_scrappers_admin(user)
+    response.headers['Cache-Control'] = 'private, no-store'
+    return {
+        'title': 'Scrappers PJUD',
+        'instructions': (
+            'Abre Consulta Unificada en PJUD, abre DevTools > Console y pega '
+            'el comando correspondiente.'
+        ),
+        'commands': SCRAPPER_COMMANDS,
+    }
 
 async def authorize(db,user,client_id):
     require_admin(user)
@@ -88,7 +160,12 @@ async def clients(user=Depends(current_user),db=Depends(get_db)):
 async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
     await authorize(db,user,client_id)
     async def rows(sql): return [dict(r) for r in (await db.execute(text(sql),{'c':client_id})).mappings()]
+    from app.api.pjud_distributed import _corte_por_tribunal
+    court_rows=await rows("SELECT DISTINCT court FROM legal.causes WHERE court IS NOT NULL ORDER BY court")
+    courts=[{'name':r['court'],'corte':_corte_por_tribunal(r['court'])} for r in court_rows]
     return dict(
+        catalogs={'years':list(range(datetime.now(ZoneInfo('America/Santiago')).year,1899,-1)),
+                  'courts':courts,'cortes':sorted({r['corte'] for r in courts if r['corte']})},
         lawyers=await rows('SELECT * FROM legal.client_lawyers WHERE client_id=:c ORDER BY name'),
         groups=await rows("SELECT id,name FROM legal.legal_portfolios WHERE client_id=:c AND status='active' ORDER BY display_order,name"),
         portfolio_cc=await rows("""SELECT r.id,r.portfolio_id,r.email,r.name,r.display_order
@@ -97,12 +174,12 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
           WHERE p.client_id=:c AND p.status='active' AND r.recipient_type='cc' AND r.is_active
           ORDER BY p.display_order,r.display_order,lower(r.email)"""),
         causes=await rows("""SELECT pc.id,pc.case_id,pc.portfolio_id,pc.lawyer_id,
-          c.rol AS code,c.year,c.court,c.party AS title,c.publicada,
+          CASE WHEN COALESCE(c.pjud_tipo,'C')='C' THEN c.rol ELSE c.pjud_tipo||'-'||c.rol END AS code,c.year,c.court,pc.corte,c.party AS title,c.publicada,
           COALESCE(s.castigo,false) AS castigo,COALESCE(s.version,0) AS version,COALESCE(s.fields,'{}'::jsonb) AS fields
           FROM legal.legal_portfolio_cases pc JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id
           JOIN legal.causes c ON c.id=pc.case_id
           LEFT JOIN legal.client_cause_settings s ON s.client_id=p.client_id AND s.cause_id=c.id
-          WHERE p.client_id=:c ORDER BY c.publicada DESC,c.year DESC,c.rol"""))
+          WHERE p.client_id=:c AND p.status='active' AND pc.status='active' ORDER BY c.publicada DESC,c.year DESC,c.rol"""))
 
 @router.post('/clients/{client_id}/portfolios/{portfolio_id}/cc',status_code=201)
 async def add_portfolio_cc(client_id:UUID,portfolio_id:UUID,payload:PortfolioCcInput,user=Depends(current_user),db=Depends(get_db)):
@@ -160,11 +237,12 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
     group=(await db.execute(text("SELECT id FROM legal.legal_portfolios WHERE id=:i AND client_id=:c AND status='active'"),{'i':payload.portfolio_id,'c':client_id})).scalar()
     if not group: raise HTTPException(422,'Grupo ajeno al cliente o inactivo')
     fields=dict(settings['fields']) | {k:getattr(payload,k) for k in ['code','year','court']}
+    if payload.corte: fields['corte']=payload.corte
     lawyer_name=lawyer['name'] if lawyer else None
     lawyer_email=lawyer['email'] if lawyer else None
     try:
         await db.execute(text('UPDATE legal.client_cause_settings SET fields=CAST(:f AS jsonb),castigo=:s,version=version+1 WHERE client_id=:c AND cause_id=:i'),{'f':json.dumps(fields),'s':payload.publication=='castigo','c':client_id,'i':before['case_id']})
-        await db.execute(text('''UPDATE legal.legal_portfolio_cases SET portfolio_id=:p,lawyer_id=:l,responsible_name=:n,settings=COALESCE(settings,'{}'::jsonb)||CAST(:flags AS jsonb),updated_at=now() WHERE id=:i'''),dict(p=group,l=payload.lawyer_id,n=lawyer_name,i=case_link_id,flags=json.dumps({'admin_lawyer_edited':True,'assigned_lawyer_email':lawyer_email})))
+        await db.execute(text('''UPDATE legal.legal_portfolio_cases SET portfolio_id=:p,lawyer_id=:l,responsible_name=:n,corte=COALESCE(:corte,corte),settings=COALESCE(settings,'{}'::jsonb)||CAST(:flags AS jsonb),updated_at=now() WHERE id=:i'''),dict(p=group,l=payload.lawyer_id,n=lawyer_name,i=case_link_id,corte=payload.corte,flags=json.dumps({'admin_lawyer_edited':True,'assigned_lawyer_email':lawyer_email})))
         await sync_assigned_contact(db,case_link_id,(before['settings'] or {}).get('assigned_lawyer_email'),lawyer_email,lawyer_name)
         await db.execute(text('UPDATE legal.legal_portfolio_cases pc SET include_in_batch_email=:enabled,updated_at=now() FROM legal.legal_portfolios p WHERE pc.portfolio_id=p.id AND p.client_id=:c AND pc.case_id=:i'),{'enabled':payload.publication!='castigo','c':client_id,'i':before['case_id']})
         await audit(db,user,client_id,case_link_id,'case.update',dict(before)|dict(settings),payload.model_dump())
@@ -176,10 +254,7 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
 
 @router.post('/clients/{client_id}/cases',status_code=201)
 async def assign_case(client_id:UUID,payload:CauseAssignInput,user=Depends(current_user),db=Depends(get_db)):
-    """Assign an existing global cause, or create it unpublished when it does not exist.
-
-    Publication remains owned by the PJUD process; this endpoint cannot publish a cause.
-    """
+    """Assign an existing global cause, or create it unpublished when it does not exist."""
     await authorize(db,user,client_id)
     portfolio=(await db.execute(text("SELECT id FROM legal.legal_portfolios WHERE id=:p AND client_id=:c AND status='active' FOR SHARE"),dict(p=payload.portfolio_id,c=client_id))).scalar()
     if not portfolio: raise HTTPException(422,'Grupo ajeno al cliente o inactivo')
@@ -187,28 +262,38 @@ async def assign_case(client_id:UUID,payload:CauseAssignInput,user=Depends(curre
     if payload.lawyer_id:
         lawyer=(await db.execute(text('SELECT id,name,email FROM legal.client_lawyers WHERE id=:i AND client_id=:c FOR SHARE'),dict(i=payload.lawyer_id,c=client_id))).mappings().first()
         if not lawyer: raise HTTPException(422,'Abogado ajeno al cliente')
-    code=payload.code.strip().upper()
-    if code.startswith('C-'): code=code[2:].strip()
+    match=re.fullmatch(r'(?:(C|V)-)?([0-9]+)(?:-([0-9]{4}))?',payload.code.strip().upper())
+    if not match or (match[3] and int(match[3])!=payload.year):
+        raise HTTPException(422,'Número inválido: indica número o C-/V-número y el año correspondiente')
+    tipo=match[1] or 'C'
+    code=str(int(match[2]))
     organization_id=(await db.execute(text('SELECT organization_id FROM legal.legal_clients WHERE id=:c'),{'c':client_id})).scalar_one()
     cause=(await db.execute(text("""SELECT * FROM legal.causes
       WHERE organization_id=:o AND year=:y
         AND regexp_replace(upper(trim(rol)),'^C-','','i')=:r
         AND lower(trim(court))=lower(trim(:court))
       ORDER BY created_at LIMIT 1 FOR UPDATE"""),dict(o=organization_id,y=payload.year,r=code,court=payload.court))).mappings().first()
+    if cause and (cause['pjud_tipo'] or 'C')!=tipo:
+        raise HTTPException(409,'Existe otro tipo de causa con ese número, año y juzgado; requiere revisión de identidad')
     created=False
     try:
         if not cause:
             cause=(await db.execute(text("""INSERT INTO legal.causes
-              (id,organization_id,court,rol,year,status,created_at,updated_at,public_visibility_status,publicada)
-              VALUES(gen_random_uuid(),:o,:court,:r,:y,'active',now(),now(),'hidden',false)
-              RETURNING *"""),dict(o=organization_id,court=payload.court,r=code,y=payload.year))).mappings().one()
+              (id,organization_id,court,rol,year,status,created_at,updated_at,public_visibility_status,publicada,pjud_tipo,pjud_corte,pjud_competencia)
+              VALUES(gen_random_uuid(),:o,:court,:r,:y,'active',now(),now(),'hidden',false,:tipo,:corte,'Civil')
+              RETURNING *"""),dict(o=organization_id,court=payload.court,r=code,y=payload.year,tipo=tipo,corte=payload.corte))).mappings().one()
             created=True
         flags={'admin_assigned':True,'assigned_lawyer_email':lawyer['email'] if lawyer else None}
         link_id=(await db.execute(text("""INSERT INTO legal.legal_portfolio_cases
           (portfolio_id,case_id,corte,responsible_name,include_in_batch_email,status,settings,lawyer_id,created_at,updated_at)
-          VALUES(:p,:case,:corte,:name,true,'active',CAST(:settings AS jsonb),:lawyer,now(),now()) RETURNING id"""),dict(
+          VALUES(:p,:case,:corte,:name,true,'active',CAST(:settings AS jsonb),:lawyer,now(),now())
+          ON CONFLICT(portfolio_id,case_id) DO UPDATE SET status='active',include_in_batch_email=true,
+          lawyer_id=EXCLUDED.lawyer_id,responsible_name=EXCLUDED.responsible_name,corte=EXCLUDED.corte,
+          settings=legal.legal_portfolio_cases.settings||EXCLUDED.settings,updated_at=now()
+          WHERE legal.legal_portfolio_cases.status='archived' RETURNING id"""),dict(
             p=payload.portfolio_id,case=cause['id'],corte=payload.corte,name=lawyer['name'] if lawyer else None,
-            settings=json.dumps(flags),lawyer=payload.lawyer_id))).scalar_one()
+            settings=json.dumps(flags),lawyer=payload.lawyer_id))).scalar_one_or_none()
+        if not link_id: raise HTTPException(409,'Esta causa ya está asignada al grupo seleccionado.')
         await db.execute(text('INSERT INTO legal.client_cause_settings(client_id,cause_id,version) VALUES (:c,:i,0) ON CONFLICT DO NOTHING'),dict(c=client_id,i=cause['id']))
         if lawyer and lawyer['email']:
             await db.execute(text("""INSERT INTO legal.legal_portfolio_case_recipients
@@ -233,7 +318,17 @@ async def unassign_case(client_id:UUID,case_link_id:UUID,user=Depends(current_us
       WHERE pc.id=:i AND p.client_id=:c FOR UPDATE OF pc'''),{'i':case_link_id,'c':client_id})).mappings().first()
     if not old: raise HTTPException(404,'Causa no asignada a este cliente')
     await audit(db,user,client_id,case_link_id,'case.unassign',dict(old),None)
-    await db.execute(text('DELETE FROM legal.legal_portfolio_cases WHERE id=:i'),{'i':case_link_id})
+    await db.execute(text("UPDATE legal.legal_portfolio_cases SET status='archived',include_in_batch_email=false,updated_at=now() WHERE id=:i"),{'i':case_link_id})
+    if str(client_id)=='386e1669-4298-419b-895a-cf67be3edf39':
+        await db.execute(text('''UPDATE legal.cause_assignments a SET assignment_status='inactive',
+          valid_until=CURRENT_DATE-1,updated_at=now()
+          WHERE a.cause_id=:case AND a.assignment_status='active'
+          AND NOT EXISTS(SELECT 1 FROM legal.legal_portfolio_cases pc JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id
+            WHERE pc.case_id=:case AND pc.status='active' AND p.status='active')
+          AND a.procurador_user_id IN (SELECT id FROM platform.users WHERE lower(email) IN
+            (SELECT lower(email) FROM legal.client_lawyers WHERE client_id=:client
+             UNION SELECT 'procurador@asesoriasnow.cl' UNION SELECT 'pasante@asesoriasnow.cl'))'''),
+          {'case':old['case_id'],'client':client_id})
     await db.commit()
     return {'ok':True}
 

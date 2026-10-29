@@ -40,6 +40,6 @@ test('client punishment is reversible and assignment can be removed without dele
   assert.match(adminUi,/method:'POST'/);
   assert.match(api,/current=='castigo' and target==restored/);
   assert.match(api,/case\.unassign/);
-  assert.match(api,/DELETE FROM legal\.legal_portfolio_cases WHERE id=:i/);
+  assert.match(api,/UPDATE legal\.legal_portfolio_cases SET status='archived'/);
   assert.doesNotMatch(api,/DELETE FROM legal\.causes/);
 });

@@ -330,9 +330,11 @@ function appDownloadLegalExcel(){
 
 function appLegalExportCode(cause){
   const year=String(cause?.year ?? '').trim();
-  let code=String(cause?.code ?? '').trim().replace(/^c-/i,'');
+  const raw=String(cause?.code ?? '').trim();
+  const tipo=/^v-/i.test(raw)?'v':'c';
+  let code=raw.replace(/^[cv]-/i,'');
   if(year && code.toLowerCase().endsWith(`-${year.toLowerCase()}`)) code=code.slice(0,-year.length-1);
-  return code && year ? `c-${code}-${year}` : code ? `c-${code}` : '';
+  return code && year ? `${tipo}-${code}-${year}` : code ? `${tipo}-${code}` : '';
 }
 
 function appCatalogOptions(items, selected, label = "Seleccionar"){

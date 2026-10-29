@@ -9,9 +9,13 @@ const css=fs.readFileSync(path.join(root,'app-home.css'),'utf8');
 const adminUi=fs.readFileSync(path.join(root,'legal-admin.js'),'utf8');
 const api=fs.readFileSync(path.join(__dirname,'legal_admin.py'),'utf8');
 
-test('Excel cause identifiers use c-number-year',()=>{
-  assert.match(app,/return code && year \? `c-\$\{code\}-\$\{year\}`/);
-  assert.match(app,/"Causa": appLegalExportCode\(cause\)/);
+test('Excel cause identifiers preserve C and V',()=>{
+  const vm=require('node:vm');
+  const fn=app.slice(app.indexOf('function appLegalExportCode('),app.indexOf('function appCatalogOptions('));
+  const ctx={};vm.createContext(ctx);vm.runInContext(fn,ctx);
+  assert.equal(ctx.appLegalExportCode({code:'V-249',year:2026}),'v-249-2026');
+  assert.equal(ctx.appLegalExportCode({code:'13276',year:2026}),'c-13276-2026');
+  assert.equal(ctx.appLegalExportCode({code:'C-13276-2026',year:2026}),'c-13276-2026');
 });
 
 test('download control stays inside the available width',()=>{

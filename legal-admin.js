@@ -5,6 +5,21 @@ const adminUrl = suffix => `/api/v1/legal/admin/clients/${encodeURIComponent(leg
 function adminOptions(rows,value,empty='Sin asignar') {
   return `<option value="">${empty}</option>`+rows.map(r=>`<option value="${adminEscape(r.id)}" ${r.id===value?'selected':''}>${adminEscape(r.name)}</option>`).join('');
 }
+function adminSelect(key,label,values,value='') {
+  const choices=[...new Set([...(value?[String(value)]:[]),...values.map(String)])];
+  return `<label><span>${label}</span><select name="${key}" required>${adminOptions(choices.map(v=>({id:v,name:v})),String(value),`Seleccionar ${label.toLowerCase()}`)}</select></label>`;
+}
+function adminCaseCatalogs(value={}) {
+  const c=legalAdmin.data.catalogs||{};
+  return adminSelect('year','Año',c.years||[],value.year||'')+
+    adminSelect('corte','Corte de Apelaciones',c.cortes||[],value.corte||'')+
+    adminSelect('court','Juzgado',(c.courts||[]).map(r=>r.name),value.court||'');
+}
+function adminBindCourts(form) {
+  const corte=form.elements.corte,court=form.elements.court;
+  corte.onchange=()=>{const current=court.value;const rows=(legalAdmin.data.catalogs?.courts||[]).filter(r=>r.corte===corte.value);
+    court.innerHTML=adminOptions(rows.map(r=>({id:r.name,name:r.name})),rows.some(r=>r.name===current)?current:'','Seleccionar juzgado');};
+}
 function adminField(key,label,value,type='text',required=false) {
   return `<label><span>${label}</span><input name="${key}" type="${type}" value="${adminEscape(value)}" ${required?'required':''} ${type==='number'?'min="1800" max="2200"':''}></label>`;
 }
@@ -39,14 +54,14 @@ function adminCases(){
   document.getElementById('admin-cases-tab').classList.add('is-active');document.getElementById('admin-lawyers-tab').classList.remove('is-active');document.getElementById('admin-cc-tab').classList.remove('is-active');
   document.getElementById('admin-work').innerHTML=`<section class="legal-admin-add"><div><h3>Agregar causa al cliente</h3><p>Si la causa ya existe, se reutiliza. Si no existe, se crea como no publicada; solo el proceso PJUD puede publicarla.</p></div>
     <form id="admin-add-case-form"><div class="legal-admin-grid">
-      ${adminField('code','Número de causa','','text',true)}${adminField('year','Año','', 'number',true)}${adminField('court','Juzgado','','text',true)}
-      ${adminField('corte','Corte de Apelaciones','','text',true)}
+      ${adminField('code','Número de causa','','text',true)}${adminCaseCatalogs()}
       <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,legalAdmin.data.groups[0]?.id,'Seleccionar grupo')}</select></label>
       <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,'')}</select></label>
     </div><button type="submit" class="btn btn-primary">Agregar causa</button></form></section>
     <div class="legal-admin-existing"><h3>Editar o quitar una causa asignada</h3><label>Buscar causa<input id="admin-search" type="search" placeholder="Número, año o juzgado"></label><label>Causa y asignación<select id="admin-case"></select></label><div id="admin-case-editor"></div></div>`;
   const addForm=document.getElementById('admin-add-case-form');
-  addForm.onsubmit=async e=>{e.preventDefault();const f=new FormData(addForm);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.lawyer_id=payload.lawyer_id||null;if(!confirm(`¿Agregar la causa C-${payload.code}-${payload.year} a este cliente?`))return;await adminSave(addForm,()=>appFetch(adminUrl('/cases'),{method:'POST',body:JSON.stringify(payload)}),'Causa agregada al cliente.');};
+  adminBindCourts(addForm);
+  addForm.onsubmit=async e=>{e.preventDefault();const f=new FormData(addForm);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.lawyer_id=payload.lawyer_id||null;if(!confirm(`¿Agregar la causa ${payload.code}-${payload.year} a este cliente?`))return;await adminSave(addForm,()=>appFetch(adminUrl('/cases'),{method:'POST',body:JSON.stringify(payload)}),'Causa agregada al cliente.');};
   const update=()=>{
     const q=document.getElementById('admin-search').value.toLocaleLowerCase('es');
     const rows=legalAdmin.data.causes.map(c=>({...c,...c.fields})).filter(c=>`${c.code} ${c.year} ${c.court}`.toLocaleLowerCase('es').includes(q));
@@ -65,7 +80,7 @@ function adminCaseEditor(){
   const root=document.getElementById('admin-case-editor');if(!raw){root.innerHTML='';return;}
   const c={...raw,...raw.fields}, state=c.castigo?'castigo':c.publicada?'published':'unpublished';
   root.innerHTML=`<form id="admin-case-form"><div class="legal-admin-grid">
-    ${adminField('code','Número de causa',c.code,'text',true)}${adminField('year','Año',c.year,'number',true)}${adminField('court','Juzgado',c.court,'text',true)}
+    ${adminField('code','Número de causa',c.code,'text',true)}${adminCaseCatalogs(c)}
     <div class="legal-admin-readonly"><span>Carátula</span><strong>${adminEscape(c.title||'Sin carátula registrada')}</strong><small>Solo lectura</small></div>
     <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,c.portfolio_id,'Seleccionar grupo')}</select></label>
     <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,c.lawyer_id)}</select></label>
@@ -73,6 +88,7 @@ function adminCaseEditor(){
     </div>
     <p>Castigo afecta únicamente a este cliente y excluye la causa de sus correos por lote. Puede revertirse sin alterar el estado global de PJUD.</p>
     <div class="legal-admin-actions"><button type="submit" class="btn btn-primary">Guardar esta causa</button><button type="button" id="admin-unassign-case" class="btn btn-secondary">Quitar causa del cliente</button></div></form>`;
+  adminBindCourts(document.getElementById('admin-case-form'));
   document.getElementById('admin-case-form').onsubmit=async e=>{
     e.preventDefault();const f=new FormData(e.currentTarget);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.version=c.version;payload.lawyer_id=payload.lawyer_id||null;
     if(!confirm(payload.publication==='castigo'&&!c.castigo?'¿Guardar los cambios y castigar esta causa solo para este cliente?':'¿Guardar los cambios de esta causa para este cliente?'))return;

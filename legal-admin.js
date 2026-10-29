@@ -9,17 +9,6 @@ function adminSelect(key,label,values,value='') {
   const choices=[...new Set([...(value?[String(value)]:[]),...values.map(String)])];
   return `<label><span>${label}</span><select name="${key}" required>${adminOptions(choices.map(v=>({id:v,name:v})),String(value),`Seleccionar ${label.toLowerCase()}`)}</select></label>`;
 }
-function adminCaseCatalogs(value={}) {
-  const c=legalAdmin.data.catalogs||{};
-  return adminSelect('year','Año',c.years||[],value.year||'')+
-    adminSelect('corte','Corte de Apelaciones',c.cortes||[],value.corte||'')+
-    adminSelect('court','Juzgado',(c.courts||[]).map(r=>r.name),value.court||'');
-}
-function adminBindCourts(form) {
-  const corte=form.elements.corte,court=form.elements.court;
-  corte.onchange=()=>{const current=court.value;const rows=(legalAdmin.data.catalogs?.courts||[]).filter(r=>r.corte===corte.value);
-    court.innerHTML=adminOptions(rows.map(r=>({id:r.name,name:r.name})),rows.some(r=>r.name===current)?current:'','Seleccionar juzgado');};
-}
 function adminField(key,label,value,type='text',required=false) {
   return `<label><span>${label}</span><input name="${key}" type="${type}" value="${adminEscape(value)}" ${required?'required':''} ${type==='number'?'min="1800" max="2200"':''}></label>`;
 }
@@ -39,7 +28,7 @@ async function appLegalAdminOpen(){
 }
 function adminRender(){
   const config=document.getElementById('app-product-config');
-  config.innerHTML=`<div class="legal-admin"><p>Edición individual para el cliente seleccionado. Los cambios no afectan a otros clientes. La identidad corregida se guarda para este cliente; no modifica la identidad global de consulta PJUD.</p>
+  config.innerHTML=`<div class="legal-admin"><p>Administra tus causas, abogados y destinatarios.</p>
     <label>Cliente<select id="admin-client">${adminOptions(legalAdmin.clients,legalAdmin.client,'Seleccionar cliente')}</select></label>
     <div class="legal-tabs"><button type="button" id="admin-cases-tab" class="is-active">Editar causas</button><button type="button" id="admin-lawyers-tab">Abogados</button><button type="button" id="admin-cc-tab">CC por portafolio</button></div>
     <p id="admin-status" role="status" aria-live="polite"></p><div id="admin-work"></div></div>`;
@@ -52,13 +41,13 @@ function adminRender(){
 function adminCases(){
   legalAdmin.section='cases';
   document.getElementById('admin-cases-tab').classList.add('is-active');document.getElementById('admin-lawyers-tab').classList.remove('is-active');document.getElementById('admin-cc-tab').classList.remove('is-active');
-  document.getElementById('admin-work').innerHTML=`<section class="legal-admin-add"><div><h3>Agregar causa al cliente</h3><p>Si la causa ya existe, se reutiliza. Si no existe, se crea como no publicada; solo el proceso PJUD puede publicarla.</p></div>
+  document.getElementById('admin-work').innerHTML=`<section class="legal-admin-add"><div><h3>Agregar causa al cliente</h3><p>Agrega los datos de PJUD y elige su portafolio.</p></div>
     <form id="admin-add-case-form"><div class="legal-admin-grid">
-      ${adminField('code','Número de causa','','text',true)}${adminCaseCatalogs()}
-      <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,legalAdmin.data.groups[0]?.id,'Seleccionar grupo')}</select></label>
+      ${adminCaseCatalogs()}
+      <label>Portafolio<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,legalAdmin.data.groups[0]?.id,'Seleccionar portafolio')}</select></label>
       <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,'')}</select></label>
     </div><button type="submit" class="btn btn-primary">Agregar causa</button></form></section>
-    <div class="legal-admin-existing"><h3>Editar o quitar una causa asignada</h3><label>Buscar causa<input id="admin-search" type="search" placeholder="Número, año o juzgado"></label><label>Causa y asignación<select id="admin-case"></select></label><div id="admin-case-editor"></div></div>`;
+    <div class="legal-admin-existing"><h3>Editar o quitar una causa asignada</h3><label>Buscar causa<input id="admin-search" type="search" placeholder="Rol, año o tribunal"></label><label>Causa y asignación<select id="admin-case"></select></label><div id="admin-case-editor"></div></div>`;
   const addForm=document.getElementById('admin-add-case-form');
   adminBindCourts(addForm);
   addForm.onsubmit=async e=>{e.preventDefault();const f=new FormData(addForm);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.lawyer_id=payload.lawyer_id||null;if(!confirm(`¿Agregar la causa ${payload.code}-${payload.year} a este cliente?`))return;await adminSave(addForm,()=>appFetch(adminUrl('/cases'),{method:'POST',body:JSON.stringify(payload)}),'Causa agregada al cliente.');};
@@ -80,9 +69,9 @@ function adminCaseEditor(){
   const root=document.getElementById('admin-case-editor');if(!raw){root.innerHTML='';return;}
   const c={...raw,...raw.fields}, state=c.castigo?'castigo':c.publicada?'published':'unpublished';
   root.innerHTML=`<form id="admin-case-form"><div class="legal-admin-grid">
-    ${adminField('code','Número de causa',c.code,'text',true)}${adminCaseCatalogs(c)}
+    ${adminCaseCatalogs(c)}
     <div class="legal-admin-readonly"><span>Carátula</span><strong>${adminEscape(c.title||'Sin carátula registrada')}</strong><small>Solo lectura</small></div>
-    <label>Grupo de correo<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,c.portfolio_id,'Seleccionar grupo')}</select></label>
+    <label>Portafolio<select name="portfolio_id" required>${adminOptions(legalAdmin.data.groups,c.portfolio_id,'Seleccionar portafolio')}</select></label>
     <label>Abogado asignado<select name="lawyer_id">${adminOptions(legalAdmin.data.lawyers,c.lawyer_id)}</select></label>
     <label>Estado de este cliente<select name="publication"><option value="${state}">${state==='castigo'?'Castigada':state==='published'?'Publicada':'No publicada'}</option>${state==='published'?'<option value="castigo">Castigar para este cliente</option>':state==='castigo'?`<option value="${c.publicada?'published':'unpublished'}">Revertir castigo</option>`:''}</select></label>
     </div>

@@ -1,0 +1,3551 @@
+{
+  "source": "https://oficinajudicialvirtual.pjud.cl/indexN.php",
+  "captured_at": "2026-10-29T04:47:53.534Z",
+  "competencias": [
+    {
+      "id": "1",
+      "name": "Corte Suprema"
+    },
+    {
+      "id": "2",
+      "name": "Corte Apelaciones"
+    },
+    {
+      "id": "3",
+      "name": "Civil"
+    },
+    {
+      "id": "4",
+      "name": "Laboral"
+    },
+    {
+      "id": "5",
+      "name": "Penal"
+    },
+    {
+      "id": "6",
+      "name": "Cobranza"
+    },
+    {
+      "id": "7",
+      "name": "Familia"
+    }
+  ],
+  "branches": {
+    "1": {
+      "cortes": [],
+      "tipos": [],
+      "tribunales": {},
+      "corte_disabled": true,
+      "tribunal_disabled": true,
+      "tipo_disabled": true
+    },
+    "2": {
+      "cortes": [
+        {
+          "id": "10",
+          "name": "C.A. de Arica"
+        },
+        {
+          "id": "11",
+          "name": "C.A. de Iquique"
+        },
+        {
+          "id": "15",
+          "name": "C.A. de Antofagasta"
+        },
+        {
+          "id": "20",
+          "name": "C.A. de Copiapó"
+        },
+        {
+          "id": "25",
+          "name": "C.A. de La Serena"
+        },
+        {
+          "id": "30",
+          "name": "C.A. de Valparaíso"
+        },
+        {
+          "id": "35",
+          "name": "C.A. de Rancagua"
+        },
+        {
+          "id": "40",
+          "name": "C.A. de Talca"
+        },
+        {
+          "id": "45",
+          "name": "C.A. de Chillan"
+        },
+        {
+          "id": "46",
+          "name": "C.A. de Concepción"
+        },
+        {
+          "id": "50",
+          "name": "C.A. de Temuco"
+        },
+        {
+          "id": "55",
+          "name": "C.A. de Valdivia"
+        },
+        {
+          "id": "56",
+          "name": "C.A. de Puerto Montt"
+        },
+        {
+          "id": "60",
+          "name": "C.A. de Coyhaique"
+        },
+        {
+          "id": "61",
+          "name": "C.A. de Punta Arenas"
+        },
+        {
+          "id": "90",
+          "name": "C.A. de Santiago"
+        },
+        {
+          "id": "91",
+          "name": "C.A. de San Miguel"
+        }
+      ],
+      "tipos": [],
+      "tribunales": {},
+      "tribunal_disabled": true,
+      "tipo_disabled": true
+    },
+    "3": {
+      "cortes": [
+        {
+          "id": "10",
+          "name": "C.A. de Arica"
+        },
+        {
+          "id": "11",
+          "name": "C.A. de Iquique"
+        },
+        {
+          "id": "15",
+          "name": "C.A. de Antofagasta"
+        },
+        {
+          "id": "20",
+          "name": "C.A. de Copiapó"
+        },
+        {
+          "id": "25",
+          "name": "C.A. de La Serena"
+        },
+        {
+          "id": "30",
+          "name": "C.A. de Valparaíso"
+        },
+        {
+          "id": "35",
+          "name": "C.A. de Rancagua"
+        },
+        {
+          "id": "40",
+          "name": "C.A. de Talca"
+        },
+        {
+          "id": "45",
+          "name": "C.A. de Chillan"
+        },
+        {
+          "id": "46",
+          "name": "C.A. de Concepción"
+        },
+        {
+          "id": "50",
+          "name": "C.A. de Temuco"
+        },
+        {
+          "id": "55",
+          "name": "C.A. de Valdivia"
+        },
+        {
+          "id": "56",
+          "name": "C.A. de Puerto Montt"
+        },
+        {
+          "id": "60",
+          "name": "C.A. de Coyhaique"
+        },
+        {
+          "id": "61",
+          "name": "C.A. de Punta Arenas"
+        },
+        {
+          "id": "90",
+          "name": "C.A. de Santiago"
+        },
+        {
+          "id": "91",
+          "name": "C.A. de San Miguel"
+        }
+      ],
+      "tipos": [
+        {
+          "id": "C",
+          "name": "C"
+        },
+        {
+          "id": "V",
+          "name": "V"
+        },
+        {
+          "id": "E",
+          "name": "E"
+        },
+        {
+          "id": "A",
+          "name": "A"
+        },
+        {
+          "id": "F",
+          "name": "F"
+        },
+        {
+          "id": "I",
+          "name": "I"
+        }
+      ],
+      "tribunales": {
+        "10": [
+          {
+            "id": "2",
+            "name": "1º Juzgado de Letras de Arica"
+          },
+          {
+            "id": "1400",
+            "name": "1º Juzgado De Letras de Arica ex 4°"
+          },
+          {
+            "id": "3",
+            "name": "2º Juzgado de Letras de Arica"
+          },
+          {
+            "id": "1401",
+            "name": "2º Juzgado De Letras de Arica ex 4°"
+          },
+          {
+            "id": "4",
+            "name": "3º Juzgado de Letras de Arica"
+          },
+          {
+            "id": "5",
+            "name": "3º Juzgado de Letras de Arica Ex 4º"
+          }
+        ],
+        "11": [
+          {
+            "id": "6",
+            "name": "Juzgado de Letras y Gar. Pozo Almonte"
+          },
+          {
+            "id": "9",
+            "name": "1º Juzgado de Letras de Iquique"
+          },
+          {
+            "id": "10",
+            "name": "2º Juzgado de Letras de Iquique"
+          },
+          {
+            "id": "11",
+            "name": "3º Juzgado de Letras de Iquique"
+          }
+        ],
+        "15": [
+          {
+            "id": "13",
+            "name": "Juzgado de Letras Tocopilla"
+          },
+          {
+            "id": "14",
+            "name": "Juzgado de Letras y Gar.de María Elena"
+          },
+          {
+            "id": "16",
+            "name": "1º Juzgado de Letras de Calama"
+          },
+          {
+            "id": "17",
+            "name": "2º Juzgado de Letras de Calama"
+          },
+          {
+            "id": "658",
+            "name": "3º Juzgado de Letras de Calama"
+          },
+          {
+            "id": "26",
+            "name": "Juzgado de Letras y Gar. de Taltal"
+          },
+          {
+            "id": "1041",
+            "name": "1º Juzgado de Letras Civil de Antofagasta"
+          },
+          {
+            "id": "1042",
+            "name": "2º Juzgado de Letras Civil de Antofagasta"
+          },
+          {
+            "id": "1043",
+            "name": "3º Juzgado de Letras Civil de Antofagasta"
+          },
+          {
+            "id": "1044",
+            "name": "4 ° Juzgado de Letras Civil de Antofagasta"
+          },
+          {
+            "id": "1501",
+            "name": "Juzgado de Letras y Garantía Mejillones"
+          }
+        ],
+        "20": [
+          {
+            "id": "27",
+            "name": "Juzgado de Letras y Gar. de Chañaral"
+          },
+          {
+            "id": "29",
+            "name": "Juzgado de Letras de Diego de Almagro"
+          },
+          {
+            "id": "31",
+            "name": "1º Juzgado de Letras de Copiapó"
+          },
+          {
+            "id": "32",
+            "name": "2º Juzgado de Letras de Copiapó"
+          },
+          {
+            "id": "33",
+            "name": "3º Juzgado de Letras de Copiapó"
+          },
+          {
+            "id": "34",
+            "name": "Juzgado de Letras y Gar.de Freirina"
+          },
+          {
+            "id": "926",
+            "name": "4º Juzgado de Letras de Copiapó"
+          },
+          {
+            "id": "36",
+            "name": "1º Juzgado de Letras de Vallenar"
+          },
+          {
+            "id": "37",
+            "name": "2º Juzgado de Letras de Vallenar"
+          },
+          {
+            "id": "386",
+            "name": "Juzgado de Letras y Gar.de Caldera"
+          }
+        ],
+        "25": [
+          {
+            "id": "40",
+            "name": "1º Juzgado de Letras de la Serena"
+          },
+          {
+            "id": "41",
+            "name": "2º Juzgado de Letras de la Serena"
+          },
+          {
+            "id": "42",
+            "name": "3º Juzgado de Letras de la Serena"
+          },
+          {
+            "id": "43",
+            "name": "1º Juzgado de Letras de Coquimbo"
+          },
+          {
+            "id": "44",
+            "name": "2º Juzgado de Letras de Coquimbo"
+          },
+          {
+            "id": "45",
+            "name": "3º Juzgado de Letras de Coquimbo"
+          },
+          {
+            "id": "46",
+            "name": "Juzgado de Letras de Vicuña"
+          },
+          {
+            "id": "47",
+            "name": "Juzgado de letras y garantía de Andacollo"
+          },
+          {
+            "id": "48",
+            "name": "1º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "49",
+            "name": "2º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "50",
+            "name": "3º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "51",
+            "name": "Juzgado de Letras y Gar.de Combarbalá"
+          },
+          {
+            "id": "52",
+            "name": "Juzgado de Letras de Illapel"
+          },
+          {
+            "id": "53",
+            "name": "Juzgado de Letras y Gar. de los Vilos"
+          }
+        ],
+        "30": [
+          {
+            "id": "56",
+            "name": "1º Juzgado Civil de Valparaíso"
+          },
+          {
+            "id": "55",
+            "name": "2º Juzgado Civil de Valparaíso"
+          },
+          {
+            "id": "54",
+            "name": "3º Juzgado Civil de Valparaíso"
+          },
+          {
+            "id": "59",
+            "name": "4º Juzgado Civil de Valparaíso"
+          },
+          {
+            "id": "60",
+            "name": "5º Juzgado Civil de Valparaíso"
+          },
+          {
+            "id": "57",
+            "name": "1º Juzgado Civil de Viña del Mar"
+          },
+          {
+            "id": "58",
+            "name": "2º Juzgado Civil de Viña del Mar"
+          },
+          {
+            "id": "61",
+            "name": "3º Juzgado Civil de Viña del Mar"
+          },
+          {
+            "id": "83",
+            "name": "1º Juzgado de Letras de Quilpue"
+          },
+          {
+            "id": "84",
+            "name": "2º Juzgado de Letras de Quilpue"
+          },
+          {
+            "id": "85",
+            "name": "Juzgado de Letras de Villa Alemana"
+          },
+          {
+            "id": "86",
+            "name": "Juzgado de Letras de Casablanca"
+          },
+          {
+            "id": "87",
+            "name": "Juzgado de Letras de La Ligua"
+          },
+          {
+            "id": "88",
+            "name": "Juzgado de Letras y Gar. de Petorca"
+          },
+          {
+            "id": "89",
+            "name": "1º Juzgado de Letras de Los Andes"
+          },
+          {
+            "id": "90",
+            "name": "2º Juzgado de Letras de Los Andes"
+          },
+          {
+            "id": "92",
+            "name": "1º Juzgado de Letras de San Felipe"
+          },
+          {
+            "id": "93",
+            "name": "1º Juzgado de Letras de San Felipe Ex 2º"
+          },
+          {
+            "id": "94",
+            "name": "Juzgado de Letras y Gar.de Putaendo"
+          },
+          {
+            "id": "96",
+            "name": "1º Juzgado de Letras de Quillota"
+          },
+          {
+            "id": "97",
+            "name": "2º Juzgado de Letras de Quillota"
+          },
+          {
+            "id": "98",
+            "name": "Juzgado de Letras de La Calera"
+          },
+          {
+            "id": "99",
+            "name": "Juzgado de Letras de Limache"
+          },
+          {
+            "id": "101",
+            "name": "1º Juzgado de Letras de San Antonio"
+          },
+          {
+            "id": "102",
+            "name": "2º Juzgado de Letras de San Antonio"
+          },
+          {
+            "id": "103",
+            "name": "Juzgado de Letras y Gar. de Isla de Pascua"
+          },
+          {
+            "id": "660",
+            "name": "Juzgado de Letras y Gar.de Quintero"
+          }
+        ],
+        "35": [
+          {
+            "id": "110",
+            "name": "1º Juzgado Civil de Rancagua"
+          },
+          {
+            "id": "969",
+            "name": "2º Juzgado Civil de Rancagua"
+          },
+          {
+            "id": "111",
+            "name": "1º Juzgado de Letras de Rengo"
+          },
+          {
+            "id": "113",
+            "name": "Juzgado de Letras de San Vicente de Tagua Tagua"
+          },
+          {
+            "id": "114",
+            "name": "1º Juzgado de Letras y Gar.de Peumo"
+          },
+          {
+            "id": "115",
+            "name": "1º Juzgado de Letras de San Fernando"
+          },
+          {
+            "id": "116",
+            "name": "2º Juzgado de Letras de San Fernando"
+          },
+          {
+            "id": "117",
+            "name": "1º Juzgado de Letras de Santa Cruz"
+          },
+          {
+            "id": "118",
+            "name": "1º Juzgado De Letras De Santa Cruz Ex 2°"
+          },
+          {
+            "id": "119",
+            "name": "Juzgado de Letras y Gar.de Pichilemu"
+          },
+          {
+            "id": "1150",
+            "name": "Juzgado de Letras y Gar.de Litueche"
+          },
+          {
+            "id": "1151",
+            "name": "Juzgado de Letras y Gar.de Peralillo"
+          }
+        ],
+        "40": [
+          {
+            "id": "122",
+            "name": "1º Juzgado de Letras de Talca"
+          },
+          {
+            "id": "123",
+            "name": "2º Juzgado de Letras de Talca"
+          },
+          {
+            "id": "124",
+            "name": "3º Juzgado de Letras de Talca"
+          },
+          {
+            "id": "125",
+            "name": "4º Juzgado de Letras de Talca"
+          },
+          {
+            "id": "126",
+            "name": "Juzgado de Letras de Constitución"
+          },
+          {
+            "id": "127",
+            "name": "Juzgado De Letras Y Gar. de Curepto"
+          },
+          {
+            "id": "129",
+            "name": "1º Juzgado de Letras de Curicó"
+          },
+          {
+            "id": "130",
+            "name": "2º Juzgado de Letras de Curicó"
+          },
+          {
+            "id": "131",
+            "name": "2º Juzgado de Letras de Curicó Ex 3°"
+          },
+          {
+            "id": "132",
+            "name": "Juzgado De Letras Y Gar. de Licantén"
+          },
+          {
+            "id": "133",
+            "name": "Juzgado de Letras de Molina"
+          },
+          {
+            "id": "135",
+            "name": "1º Juzgado de Letras de Linares"
+          },
+          {
+            "id": "136",
+            "name": "2º Juzgado de Letras de Linares"
+          },
+          {
+            "id": "138",
+            "name": "Juzgado de Letras de San Javier"
+          },
+          {
+            "id": "139",
+            "name": "Juzgado de Letras de Cauquenes"
+          },
+          {
+            "id": "140",
+            "name": "Juzgado de Letras y Gar. de Chanco"
+          },
+          {
+            "id": "141",
+            "name": "Juzgado de Letras de Parral"
+          }
+        ],
+        "45": [
+          {
+            "id": "145",
+            "name": "1º Juzgado Civil de Chillán"
+          },
+          {
+            "id": "146",
+            "name": "2º Juzgado Civil de Chillán"
+          },
+          {
+            "id": "147",
+            "name": "1º Juzgado de Letras de San Carlos"
+          },
+          {
+            "id": "149",
+            "name": "Juzgado de Letras de Yungay"
+          },
+          {
+            "id": "150",
+            "name": "Juzgado de Letras y Gar. de Bulnes"
+          },
+          {
+            "id": "151",
+            "name": "Juzgado de Letras y Gar.de Coelemu"
+          },
+          {
+            "id": "152",
+            "name": "Juzgado de Letras y Gar.de Quirihue"
+          }
+        ],
+        "46": [
+          {
+            "id": "154",
+            "name": "1º Juzgado de Letras de Los Angeles"
+          },
+          {
+            "id": "155",
+            "name": "2º Juzgado de Letras de Los Angeles"
+          },
+          {
+            "id": "156",
+            "name": "2° Juzgado de Letras de Los Angeles ex 3°"
+          },
+          {
+            "id": "157",
+            "name": "Juzgado de Letras y Gar. de Mulchen"
+          },
+          {
+            "id": "158",
+            "name": "Juzgado de Letras y Gar.de Nacimiento"
+          },
+          {
+            "id": "159",
+            "name": "Juzgado de Letras y Gar.de Laja"
+          },
+          {
+            "id": "160",
+            "name": "Juzgado de Letras y Gar.de Yumbel"
+          },
+          {
+            "id": "161",
+            "name": "1º Juzgado Civil de Concepción"
+          },
+          {
+            "id": "162",
+            "name": "2º Juzgado Civil de Concepción"
+          },
+          {
+            "id": "163",
+            "name": "3º Juzgado Civil de Concepción"
+          },
+          {
+            "id": "179",
+            "name": "1º Juzgado Civil de Talcahuano"
+          },
+          {
+            "id": "180",
+            "name": "2º Juzgado Civil de Talcahuano"
+          },
+          {
+            "id": "187",
+            "name": "Juzgado de Letras de Tomé"
+          },
+          {
+            "id": "188",
+            "name": "Juzgado de Letras y Gar.de Florida"
+          },
+          {
+            "id": "189",
+            "name": "Juzgado de Letras y Gar.de Santa Juana"
+          },
+          {
+            "id": "190",
+            "name": "Juzgado de Letras y Gar. de Lota"
+          },
+          {
+            "id": "191",
+            "name": "1º Juzgado de Letras de Coronel"
+          },
+          {
+            "id": "192",
+            "name": "2º Juzgado de Letras de Coronel"
+          },
+          {
+            "id": "193",
+            "name": "Juzgado de Letras y Gar.de Lebu"
+          },
+          {
+            "id": "194",
+            "name": "Juzgado de Letras de Arauco"
+          },
+          {
+            "id": "195",
+            "name": "Juzgado de Letras y Gar.de Curanilahue"
+          },
+          {
+            "id": "196",
+            "name": "Juzgado de Letras de Cañete"
+          },
+          {
+            "id": "385",
+            "name": "Juzgado de Letras y Gar. Santa Bárbara"
+          },
+          {
+            "id": "1152",
+            "name": "Juzgado de Letras y Gar.de Cabrero"
+          }
+        ],
+        "50": [
+          {
+            "id": "197",
+            "name": "1º Juzgado Civil de Temuco"
+          },
+          {
+            "id": "198",
+            "name": "2º Juzgado Civil de Temuco"
+          },
+          {
+            "id": "204",
+            "name": "Juzgado de Letras de Angol"
+          },
+          {
+            "id": "206",
+            "name": "Juzgado de Letras y Gar.de Collipulli"
+          },
+          {
+            "id": "207",
+            "name": "Juzgado de Letras y Gar.de Traiguén"
+          },
+          {
+            "id": "208",
+            "name": "Juzgado de Letras de Victoria"
+          },
+          {
+            "id": "209",
+            "name": "Juzgado de Letras y Gar.de Curacautin"
+          },
+          {
+            "id": "210",
+            "name": "Juzgado de Letras Loncoche"
+          },
+          {
+            "id": "211",
+            "name": "Juzgado de Letras de Pitrufquen"
+          },
+          {
+            "id": "212",
+            "name": "Juzgado de Letras de Villarrica"
+          },
+          {
+            "id": "213",
+            "name": "Juzgado de Letras de Nueva Imperial"
+          },
+          {
+            "id": "214",
+            "name": "Juzgado de Letras y Gar.de Pucón"
+          },
+          {
+            "id": "215",
+            "name": "Juzgado de Letras de Lautaro"
+          },
+          {
+            "id": "216",
+            "name": "Juzgado de Letras y Gar.de Carahue"
+          },
+          {
+            "id": "406",
+            "name": "3º Juzgado Civil de Temuco"
+          },
+          {
+            "id": "946",
+            "name": "Juzgado de Letras y Gar.de Tolten"
+          },
+          {
+            "id": "947",
+            "name": "Juzgado de Letras y Gar.de Puren"
+          }
+        ],
+        "55": [
+          {
+            "id": "220",
+            "name": "1º Juzgado Civil de Valdivia"
+          },
+          {
+            "id": "221",
+            "name": "2º Juzgado Civil de Valdivia"
+          },
+          {
+            "id": "222",
+            "name": "Juzgado de Letras de Mariquina"
+          },
+          {
+            "id": "223",
+            "name": "Juzgado de Letras y Gar.de Paillaco"
+          },
+          {
+            "id": "224",
+            "name": "Juzgado de Letras Los Lagos"
+          },
+          {
+            "id": "225",
+            "name": "Juzgado de Letras y Gar. de Panguipulli"
+          },
+          {
+            "id": "226",
+            "name": "Juzgado de Letras y Gar.de la Unión"
+          },
+          {
+            "id": "227",
+            "name": "Juzgado de Letras y Gar.de Río Bueno"
+          },
+          {
+            "id": "229",
+            "name": "1º Juzgado de Letras de Osorno"
+          },
+          {
+            "id": "230",
+            "name": "2º Juzgado de Letras de Osorno"
+          },
+          {
+            "id": "233",
+            "name": "Juzgado de Letras de Rio Negro"
+          }
+        ],
+        "56": [
+          {
+            "id": "237",
+            "name": "1º Juzgado Civil de Puerto Montt"
+          },
+          {
+            "id": "1012",
+            "name": "2º Juzgado Civil de Puerto Montt"
+          },
+          {
+            "id": "238",
+            "name": "Juzgado de Letras de Puerto Varas"
+          },
+          {
+            "id": "240",
+            "name": "Juzgado de Letras y Gar.de Calbuco"
+          },
+          {
+            "id": "241",
+            "name": "Juzgado de Letras y Gar. de Maullin"
+          },
+          {
+            "id": "242",
+            "name": "Juzgado de Letras de Castro"
+          },
+          {
+            "id": "243",
+            "name": "Juzgado de Letras de Ancud"
+          },
+          {
+            "id": "244",
+            "name": "Juzgado de Letras y Garantía de Achao"
+          },
+          {
+            "id": "245",
+            "name": "Juzgado de Letras y Gar. de Chaitén"
+          },
+          {
+            "id": "659",
+            "name": "Juzgado de Letras y Gar. de Los Muermos"
+          },
+          {
+            "id": "662",
+            "name": "Juzgado de Letras y Gar. de Quellón"
+          },
+          {
+            "id": "1013",
+            "name": "Juzgado de Letras y Gar. de Hualaihue"
+          }
+        ],
+        "60": [
+          {
+            "id": "246",
+            "name": "1º Juzgado de Letras de Coyhaique"
+          },
+          {
+            "id": "247",
+            "name": "1º Juzgado de Letras de Coyhaique Ex 2º"
+          },
+          {
+            "id": "248",
+            "name": "Juzgado de Letras y Gar.de pto.Aysen"
+          },
+          {
+            "id": "249",
+            "name": "Juzgado de Letras y Gar.de Chile Chico"
+          },
+          {
+            "id": "250",
+            "name": "Juzgado de Letras y Gar.de Cochrane"
+          },
+          {
+            "id": "996",
+            "name": "Juzgado de Letras y Gar.de Puerto Cisnes"
+          }
+        ],
+        "61": [
+          {
+            "id": "253",
+            "name": "1º Juzgado de Letras de Punta Arenas"
+          },
+          {
+            "id": "254",
+            "name": "2º Juzgado de Letras de Punta Arenas"
+          },
+          {
+            "id": "255",
+            "name": "3º Juzgado de Letras de Punta Arenas"
+          },
+          {
+            "id": "257",
+            "name": "Juzgado de Letras y Gar. de Puerto Natales"
+          },
+          {
+            "id": "258",
+            "name": "Juzgado de Letras y Gar.de Porvenir"
+          },
+          {
+            "id": "1502",
+            "name": "Juzgado de Letras y Garantía de Cabo de Hornos"
+          }
+        ],
+        "90": [
+          {
+            "id": "259",
+            "name": "1º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "260",
+            "name": "2º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "261",
+            "name": "3º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "262",
+            "name": "4º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "263",
+            "name": "5º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "264",
+            "name": "6º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "265",
+            "name": "7º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "266",
+            "name": "8º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "267",
+            "name": "9º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "268",
+            "name": "10º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "269",
+            "name": "11º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "270",
+            "name": "12º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "271",
+            "name": "13º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "272",
+            "name": "14º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "273",
+            "name": "15º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "274",
+            "name": "16º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "275",
+            "name": "17º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "276",
+            "name": "18º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "277",
+            "name": "19º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "278",
+            "name": "20º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "279",
+            "name": "21º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "280",
+            "name": "22º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "281",
+            "name": "23º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "282",
+            "name": "24º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "283",
+            "name": "25º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "284",
+            "name": "26º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "285",
+            "name": "27º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "286",
+            "name": "28º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "287",
+            "name": "29º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "288",
+            "name": "30º Juzgado Civil de Santiago"
+          },
+          {
+            "id": "387",
+            "name": "Juzgado de Letras de Colina"
+          }
+        ],
+        "91": [
+          {
+            "id": "343",
+            "name": "1º Juzgado Civil de San Miguel"
+          },
+          {
+            "id": "344",
+            "name": "2º Juzgado Civil de San Miguel"
+          },
+          {
+            "id": "345",
+            "name": "3º Juzgado Civil de San Miguel"
+          },
+          {
+            "id": "390",
+            "name": "4º Juzgado Civil de San Miguel"
+          },
+          {
+            "id": "364",
+            "name": "1º Juzgado Civil de Puente Alto"
+          },
+          {
+            "id": "373",
+            "name": "1º Juzgado De Letras De Talagante"
+          },
+          {
+            "id": "374",
+            "name": "2º Juzgado De Letras De Talagante"
+          },
+          {
+            "id": "375",
+            "name": "1º Juzgado de Letras de Melipilla"
+          },
+          {
+            "id": "377",
+            "name": "1º Juzgado de Letras de Buin"
+          },
+          {
+            "id": "378",
+            "name": "2º Juzgado de Letras de Buin"
+          },
+          {
+            "id": "388",
+            "name": "Juzgado de Letras de Peñaflor"
+          },
+          {
+            "id": "400",
+            "name": "1º Juzgado de Letras de San Bernardo"
+          },
+          {
+            "id": "1402",
+            "name": "1º Juzgado de Letras de San Bernardo Ex 3°"
+          },
+          {
+            "id": "401",
+            "name": "2º Juzgado de Letras de San Bernardo"
+          },
+          {
+            "id": "1403",
+            "name": "2º Juzgado de Letras de San Bernardo Ex 3°"
+          }
+        ]
+      }
+    },
+    "4": {
+      "cortes": [
+        {
+          "id": "10",
+          "name": "C.A. de Arica"
+        },
+        {
+          "id": "11",
+          "name": "C.A. de Iquique"
+        },
+        {
+          "id": "15",
+          "name": "C.A. de Antofagasta"
+        },
+        {
+          "id": "20",
+          "name": "C.A. de Copiapó"
+        },
+        {
+          "id": "25",
+          "name": "C.A. de La Serena"
+        },
+        {
+          "id": "30",
+          "name": "C.A. de Valparaíso"
+        },
+        {
+          "id": "35",
+          "name": "C.A. de Rancagua"
+        },
+        {
+          "id": "40",
+          "name": "C.A. de Talca"
+        },
+        {
+          "id": "45",
+          "name": "C.A. de Chillan"
+        },
+        {
+          "id": "46",
+          "name": "C.A. de Concepción"
+        },
+        {
+          "id": "50",
+          "name": "C.A. de Temuco"
+        },
+        {
+          "id": "55",
+          "name": "C.A. de Valdivia"
+        },
+        {
+          "id": "56",
+          "name": "C.A. de Puerto Montt"
+        },
+        {
+          "id": "60",
+          "name": "C.A. de Coyhaique"
+        },
+        {
+          "id": "61",
+          "name": "C.A. de Punta Arenas"
+        },
+        {
+          "id": "90",
+          "name": "C.A. de Santiago"
+        },
+        {
+          "id": "91",
+          "name": "C.A. de San Miguel"
+        }
+      ],
+      "tipos": [
+        {
+          "id": "O",
+          "name": "O"
+        },
+        {
+          "id": "T",
+          "name": "T"
+        },
+        {
+          "id": "M",
+          "name": "M"
+        },
+        {
+          "id": "E",
+          "name": "E"
+        },
+        {
+          "id": "S",
+          "name": "S"
+        },
+        {
+          "id": "U",
+          "name": "U"
+        },
+        {
+          "id": "V",
+          "name": "V"
+        },
+        {
+          "id": "I",
+          "name": "I"
+        }
+      ],
+      "tribunales": {
+        "10": [
+          {
+            "id": "1333",
+            "name": "Juzgado de Letras del Trabajo de Arica"
+          }
+        ],
+        "11": [
+          {
+            "id": "6",
+            "name": "Juzgado de Letras y Garantía de Pozo Almonte"
+          },
+          {
+            "id": "1334",
+            "name": "Juzgado de Letras del Trabajo de Iquique"
+          },
+          {
+            "id": "1500",
+            "name": "Juzgado de Letras y Garantía de Alto Hospicio"
+          }
+        ],
+        "15": [
+          {
+            "id": "13",
+            "name": "Juzgado de Letras de Tocopilla"
+          },
+          {
+            "id": "14",
+            "name": "Juzgado de Letras y Garantía de María Elena"
+          },
+          {
+            "id": "26",
+            "name": "Juzgado de Letras y Garantía de Taltal"
+          },
+          {
+            "id": "1335",
+            "name": "Juzgado de Letras del Trabajo de Antofagasta"
+          },
+          {
+            "id": "1357",
+            "name": "Juzgado de Letras del Trabajo de Calama"
+          },
+          {
+            "id": "1501",
+            "name": "Juzgado de Letras de Mejillones"
+          }
+        ],
+        "20": [
+          {
+            "id": "27",
+            "name": "Juzgado de Letras y Garantia de Chañaral"
+          },
+          {
+            "id": "29",
+            "name": "Juzgado de Letras de Diego de Almagro"
+          },
+          {
+            "id": "34",
+            "name": "Juzgado de Letras y Garantía de Freirina"
+          },
+          {
+            "id": "36",
+            "name": "1° Juzgado de Letras de Vallenar"
+          },
+          {
+            "id": "37",
+            "name": "2° Juzgado de Letras de Vallenar"
+          },
+          {
+            "id": "386",
+            "name": "Juzgado de Letras y Garantía de Caldera"
+          },
+          {
+            "id": "1336",
+            "name": "Juzgado de Letras del Trabajo de Copiapó"
+          }
+        ],
+        "25": [
+          {
+            "id": "46",
+            "name": "Juzgado de Letras de Vicuña"
+          },
+          {
+            "id": "47",
+            "name": "Juzgado de Letras y Garantía de Andacollo"
+          },
+          {
+            "id": "48",
+            "name": "1º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "49",
+            "name": "2º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "50",
+            "name": "3° Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "51",
+            "name": "Juzgado de Letras y Garantía de Combarbalá"
+          },
+          {
+            "id": "52",
+            "name": "Juzgado de Letras de Illapel"
+          },
+          {
+            "id": "53",
+            "name": "Juzgado de Letras y Garantía de los Vilos"
+          },
+          {
+            "id": "1337",
+            "name": "Juzgado de Letras del Trabajo de La Serena"
+          }
+        ],
+        "30": [
+          {
+            "id": "83",
+            "name": "1º Juzgado de Letras de Quilpue"
+          },
+          {
+            "id": "84",
+            "name": "2º Juzgado de Letras de Quilpue"
+          },
+          {
+            "id": "85",
+            "name": "Juzgado de Letras de Villa Alemana"
+          },
+          {
+            "id": "86",
+            "name": "Juzgado de Letras de Casablanca"
+          },
+          {
+            "id": "87",
+            "name": "Juzgado de Letras de La Ligua"
+          },
+          {
+            "id": "88",
+            "name": "Juzgado de Letras y Garantía de Petorca"
+          },
+          {
+            "id": "89",
+            "name": "1º Juzgado de Letras de Los Andes"
+          },
+          {
+            "id": "90",
+            "name": "2º Juzgado de Letras de Los Andes"
+          },
+          {
+            "id": "94",
+            "name": "Juzgado de Letras y Garantía de Putaendo"
+          },
+          {
+            "id": "96",
+            "name": "1º Juzgado de Letras de Quillota"
+          },
+          {
+            "id": "97",
+            "name": "2º Juzgado de Letras de Quillota"
+          },
+          {
+            "id": "98",
+            "name": "Juzgado de Letras de La Calera"
+          },
+          {
+            "id": "99",
+            "name": "Juzgado de Letras de Limache"
+          },
+          {
+            "id": "101",
+            "name": "1° Juzgado de Letras de San Antonio"
+          },
+          {
+            "id": "102",
+            "name": "2° Juzgado de Letras de San Antonio"
+          },
+          {
+            "id": "103",
+            "name": "Juzgado de Letras y Garantía de Isla de Pascua"
+          },
+          {
+            "id": "660",
+            "name": "Juzgado de Letras y Garantía de Quintero"
+          },
+          {
+            "id": "1338",
+            "name": "Juzgado de Letras del Trabajo de Valparaíso"
+          },
+          {
+            "id": "1358",
+            "name": "Juzgado de Letras del Trabajo de San Felipe"
+          }
+        ],
+        "35": [
+          {
+            "id": "111",
+            "name": "1º Juzgado de Letras de Rengo"
+          },
+          {
+            "id": "113",
+            "name": "Juzgado de Letras de San Vicente"
+          },
+          {
+            "id": "114",
+            "name": "1º Juzgado de Letras y Garantia de Peumo"
+          },
+          {
+            "id": "115",
+            "name": "1º Juzgado de Letras de San Fernando"
+          },
+          {
+            "id": "116",
+            "name": "2º Juzgado de Letras de San Fernando"
+          },
+          {
+            "id": "117",
+            "name": "1º Juzgado de Letras de Santa Cruz"
+          },
+          {
+            "id": "119",
+            "name": "Juzgado de Letras y Garantia de Pichilemu"
+          },
+          {
+            "id": "1150",
+            "name": "Juzgado de Letras y Garantia de Litueche"
+          },
+          {
+            "id": "1151",
+            "name": "Juzgado de Letras y Garantia de Peralillo"
+          },
+          {
+            "id": "1339",
+            "name": "Juzgado de Letras del Trabajo de Rancagua"
+          }
+        ],
+        "40": [
+          {
+            "id": "126",
+            "name": "Juzgado de Letras de Constitución"
+          },
+          {
+            "id": "127",
+            "name": "Juzgado de Letras y Garantía de Curepto"
+          },
+          {
+            "id": "132",
+            "name": "Juzgado de Letras y Garantía de Licantén"
+          },
+          {
+            "id": "133",
+            "name": "Juzgado de Letras de Molina"
+          },
+          {
+            "id": "135",
+            "name": "1° Juzgado de Letras de Linares"
+          },
+          {
+            "id": "136",
+            "name": "2° Juzgado de Letras de Linares"
+          },
+          {
+            "id": "138",
+            "name": "Juzgado de Letras de San Javier"
+          },
+          {
+            "id": "139",
+            "name": "Juzgado de Letras de Cauquenes"
+          },
+          {
+            "id": "140",
+            "name": "Juzgado de Letras y Garantía de Chanco"
+          },
+          {
+            "id": "141",
+            "name": "Juzgado de Letras de Parral"
+          },
+          {
+            "id": "1340",
+            "name": "Juzgado de Letras del Trabajo de Curicó"
+          },
+          {
+            "id": "1341",
+            "name": "Juzgado de Letras del Trabajo de Talca"
+          }
+        ],
+        "45": [
+          {
+            "id": "147",
+            "name": "1° Juzgado de Letras de San Carlos"
+          },
+          {
+            "id": "149",
+            "name": "Juzgado de Letras de Yungay"
+          },
+          {
+            "id": "150",
+            "name": "Juzgado de Letras y Garantía de Bulnes"
+          },
+          {
+            "id": "151",
+            "name": "Juzgado de Letras y Garantía de Coelemu"
+          },
+          {
+            "id": "152",
+            "name": "Juzgado de Letras y Garantía de Quirihue"
+          },
+          {
+            "id": "1342",
+            "name": "Juzgado de Letras del Trabajo de Chillán"
+          }
+        ],
+        "46": [
+          {
+            "id": "157",
+            "name": "Juzgado de Letras y Garantía de Mulchén"
+          },
+          {
+            "id": "158",
+            "name": "Juzgado de Letras y Garantía de Nacimiento"
+          },
+          {
+            "id": "159",
+            "name": "Juzgado de Letras y Garantía de Laja"
+          },
+          {
+            "id": "160",
+            "name": "Juzgado de Letras y Garantía de Yumbel"
+          },
+          {
+            "id": "187",
+            "name": "Juzgado de Letras de Tomé"
+          },
+          {
+            "id": "188",
+            "name": "Juzgado de Letras y Garantía de Florida"
+          },
+          {
+            "id": "189",
+            "name": "Juzgado de Letras y Garantía de Santa Juana"
+          },
+          {
+            "id": "190",
+            "name": "Juzgado de Letras y Garantía de Lota"
+          },
+          {
+            "id": "191",
+            "name": "1er Juzgado de Letras de Coronel"
+          },
+          {
+            "id": "192",
+            "name": "2do Juzgado de Letras de Coronel"
+          },
+          {
+            "id": "193",
+            "name": "Juzgado de Letras y Garantía de Lebu"
+          },
+          {
+            "id": "194",
+            "name": "Juzgado de Letras de Arauco"
+          },
+          {
+            "id": "195",
+            "name": "Juzgado de Letras y Garantía de Curanilahue"
+          },
+          {
+            "id": "196",
+            "name": "Juzgado de Letras de Cañete"
+          },
+          {
+            "id": "385",
+            "name": "Juzgado de Letras y Garantía de Santa Bárbara"
+          },
+          {
+            "id": "1152",
+            "name": "Juzgado de Letras y Garantía de Cabrero"
+          },
+          {
+            "id": "1343",
+            "name": "Juzgado de Letras del Trabajo de Concepción"
+          },
+          {
+            "id": "1359",
+            "name": "Juzgado de Letras del Trabajo de Los Angeles"
+          }
+        ],
+        "50": [
+          {
+            "id": "204",
+            "name": "1º Juzgado de Letras de Angol"
+          },
+          {
+            "id": "206",
+            "name": "Juzgado de Letras y Garantía de Collipulli"
+          },
+          {
+            "id": "207",
+            "name": "Juzgado de Letras y Garantía de Traiguen"
+          },
+          {
+            "id": "208",
+            "name": "Juzgado de Letras de Victoria"
+          },
+          {
+            "id": "209",
+            "name": "Juzgado de Letras y Garantía de Curacautín"
+          },
+          {
+            "id": "210",
+            "name": "Juzgado de Letras de Loncoche"
+          },
+          {
+            "id": "211",
+            "name": "Juzgado de Letras de Pitrufquén"
+          },
+          {
+            "id": "212",
+            "name": "Juzgado de Letras de Villarrica"
+          },
+          {
+            "id": "213",
+            "name": "Juzgado de Letras de Nueva Imperial"
+          },
+          {
+            "id": "214",
+            "name": "Juzgado de Letras y Garantía de Pucón"
+          },
+          {
+            "id": "215",
+            "name": "Juzgado de Letras de Lautaro"
+          },
+          {
+            "id": "216",
+            "name": "Juzgado de Letras y Garantía de Carahue"
+          },
+          {
+            "id": "946",
+            "name": "Juzgado de Letras y Garantía de Toltén"
+          },
+          {
+            "id": "947",
+            "name": "Juzgado de Letras y Garantía de Purén"
+          },
+          {
+            "id": "1344",
+            "name": "Juzgado de Letras del Trabajo de Temuco"
+          }
+        ],
+        "55": [
+          {
+            "id": "222",
+            "name": "Juzgado de Letras de Mariquina"
+          },
+          {
+            "id": "223",
+            "name": "Juzgado de Letras y Garantía de Paillaco"
+          },
+          {
+            "id": "224",
+            "name": "Juzgado de Letras de Los Lagos"
+          },
+          {
+            "id": "225",
+            "name": "Juzgado de Letras y Garantía de Panguipulli"
+          },
+          {
+            "id": "226",
+            "name": "Juzgado de Letras y Garantía de La Unión"
+          },
+          {
+            "id": "227",
+            "name": "Juzgado de Letras y Garantía de Río Bueno"
+          },
+          {
+            "id": "1345",
+            "name": "Juzgado de Letras del Trabajo de Valdivia"
+          },
+          {
+            "id": "1360",
+            "name": "Juzgado de Letras del Trabajo de Osorno"
+          }
+        ],
+        "56": [
+          {
+            "id": "238",
+            "name": "1º Juzgado de Letras de Puerto Varas"
+          },
+          {
+            "id": "240",
+            "name": "Juzgado de Letras y Garantía de Calbuco"
+          },
+          {
+            "id": "241",
+            "name": "Juzgado de Letras y Garantía de Maullín"
+          },
+          {
+            "id": "243",
+            "name": "Juzgado de Letras de Ancud"
+          },
+          {
+            "id": "244",
+            "name": "Juzgado de Letras y Garantía de Achao"
+          },
+          {
+            "id": "245",
+            "name": "Juzgado de Letras y Garantía de Chaitén"
+          },
+          {
+            "id": "659",
+            "name": "Juzgado de Letras y Garantía de Los Muermos"
+          },
+          {
+            "id": "1013",
+            "name": "Juzgado de Letras y Garantía de Hualaihue"
+          },
+          {
+            "id": "1346",
+            "name": "Juzgado de Letras del Trabajo de Puerto Montt"
+          },
+          {
+            "id": "1361",
+            "name": "Juzgado de Letras del Trabajo de Castro"
+          }
+        ],
+        "60": [
+          {
+            "id": "248",
+            "name": "Juzgado de Letras y Garantía de Aysén"
+          },
+          {
+            "id": "249",
+            "name": "Juzgado de Letras y Garantía de Chile Chico"
+          },
+          {
+            "id": "250",
+            "name": "Juzgado de Letras y Garantía de Cochrane"
+          },
+          {
+            "id": "996",
+            "name": "Juzgado de Letras y Garantía de Puerto Cisnes"
+          },
+          {
+            "id": "1362",
+            "name": "Juzgado de Letras del Trabajo de Coyhaique"
+          }
+        ],
+        "61": [
+          {
+            "id": "257",
+            "name": "Juzgado de Letras y Garantía de Puerto Natales"
+          },
+          {
+            "id": "258",
+            "name": "Juzgado de Letras y Garantía de Porvenir"
+          },
+          {
+            "id": "1347",
+            "name": "Juzgado de Letras del Trabajo de Punta Arenas"
+          },
+          {
+            "id": "1502",
+            "name": "Juzgado de Letras de Cabo de Hornos"
+          }
+        ],
+        "90": [
+          {
+            "id": "387",
+            "name": "Juzgado de Letras de Colina"
+          },
+          {
+            "id": "1348",
+            "name": "1º Juzgado de Letras del Trabajo de Santiago"
+          },
+          {
+            "id": "1349",
+            "name": "2º Juzgado de Letras del Trabajo de Santiago"
+          }
+        ],
+        "91": [
+          {
+            "id": "373",
+            "name": "1° Juzgado de Letras de Talagante"
+          },
+          {
+            "id": "374",
+            "name": "2do Juzgado de Letras de Talagante"
+          },
+          {
+            "id": "375",
+            "name": "1er Juzgado de Letras de Melipilla"
+          },
+          {
+            "id": "377",
+            "name": "1er Juzgado de Letras de Buin"
+          },
+          {
+            "id": "378",
+            "name": "2do Juzgado de Letras de Buin"
+          },
+          {
+            "id": "388",
+            "name": "Juzgado de Letras de Peñaflor"
+          },
+          {
+            "id": "1351",
+            "name": "Juzgado de Letras del Trabajo de San Miguel"
+          },
+          {
+            "id": "1352",
+            "name": "Juzgado de Letras del Trabajo de San Bernardo"
+          },
+          {
+            "id": "1363",
+            "name": "Juzgado de Letras del Trabajo de Puente Alto"
+          }
+        ]
+      }
+    },
+    "5": {
+      "cortes": [
+        {
+          "id": "10",
+          "name": "C.A. de Arica"
+        },
+        {
+          "id": "11",
+          "name": "C.A. de Iquique"
+        },
+        {
+          "id": "15",
+          "name": "C.A. de Antofagasta"
+        },
+        {
+          "id": "20",
+          "name": "C.A. de Copiapó"
+        },
+        {
+          "id": "25",
+          "name": "C.A. de La Serena"
+        },
+        {
+          "id": "30",
+          "name": "C.A. de Valparaíso"
+        },
+        {
+          "id": "35",
+          "name": "C.A. de Rancagua"
+        },
+        {
+          "id": "40",
+          "name": "C.A. de Talca"
+        },
+        {
+          "id": "45",
+          "name": "C.A. de Chillan"
+        },
+        {
+          "id": "46",
+          "name": "C.A. de Concepción"
+        },
+        {
+          "id": "50",
+          "name": "C.A. de Temuco"
+        },
+        {
+          "id": "55",
+          "name": "C.A. de Valdivia"
+        },
+        {
+          "id": "56",
+          "name": "C.A. de Puerto Montt"
+        },
+        {
+          "id": "60",
+          "name": "C.A. de Coyhaique"
+        },
+        {
+          "id": "61",
+          "name": "C.A. de Punta Arenas"
+        },
+        {
+          "id": "90",
+          "name": "C.A. de Santiago"
+        },
+        {
+          "id": "91",
+          "name": "C.A. de San Miguel"
+        }
+      ],
+      "tipos": [
+        {
+          "id": "1",
+          "name": "Ordinaria"
+        },
+        {
+          "id": "2",
+          "name": "Exhorto"
+        },
+        {
+          "id": "3",
+          "name": "Administrativa"
+        },
+        {
+          "id": "4",
+          "name": "Extradición"
+        },
+        {
+          "id": "5",
+          "name": "Militar"
+        }
+      ],
+      "tribunales": {
+        "10": [
+          {
+            "id": "988",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Arica."
+          },
+          {
+            "id": "992",
+            "name": "Juzgado De Garantía De Arica."
+          }
+        ],
+        "11": [
+          {
+            "id": "6",
+            "name": "Juzgado De Letras Y Garantía De Pozo Almonte."
+          },
+          {
+            "id": "989",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Iquique."
+          },
+          {
+            "id": "993",
+            "name": "Juzgado De Garantía De Iquique."
+          },
+          {
+            "id": "1500",
+            "name": "Juzgado De Letras Y Garantia De Alto Hospicio"
+          }
+        ],
+        "15": [
+          {
+            "id": "14",
+            "name": "Juzgado De Letras Y Garantía De María Elena."
+          },
+          {
+            "id": "26",
+            "name": "Juzgado De Letras Y Garantía De Taltal."
+          },
+          {
+            "id": "948",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Calama."
+          },
+          {
+            "id": "949",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Antofagasta."
+          },
+          {
+            "id": "950",
+            "name": "Juzgado De Garantía De Tocopilla."
+          },
+          {
+            "id": "951",
+            "name": "Juzgado De Garantía De Calama."
+          },
+          {
+            "id": "952",
+            "name": "Juzgado De Garantía De Antofagasta."
+          },
+          {
+            "id": "1501",
+            "name": "Juzgado De Letras Y Garantia De Mejillones"
+          }
+        ],
+        "20": [
+          {
+            "id": "27",
+            "name": "Juzgado De Letras Y Garantía De Chañaral."
+          },
+          {
+            "id": "34",
+            "name": "Juzgado De Letras Y Garantía De Freirina."
+          },
+          {
+            "id": "386",
+            "name": "Juzgado De Letras Y Garantía De Caldera."
+          },
+          {
+            "id": "953",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Copiapo."
+          },
+          {
+            "id": "954",
+            "name": "Juzgado De Garantía De Diego De Almagro."
+          },
+          {
+            "id": "955",
+            "name": "Juzgado De Garantía De Copiapo."
+          },
+          {
+            "id": "956",
+            "name": "Juzgado De Garantía De Vallenar."
+          }
+        ],
+        "25": [
+          {
+            "id": "47",
+            "name": "Juzgado De Letras Y Garantía De Andacollo."
+          },
+          {
+            "id": "51",
+            "name": "Juzgado De Letras Y Garantía De Combarbala."
+          },
+          {
+            "id": "53",
+            "name": "Juzgado De Letras Y Garantía De Los Vilos."
+          },
+          {
+            "id": "927",
+            "name": "Tribunal De Juicio Oral En Lo Penal De La Serena."
+          },
+          {
+            "id": "928",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Ovalle."
+          },
+          {
+            "id": "929",
+            "name": "Juzgado De Garantía De La Serena."
+          },
+          {
+            "id": "930",
+            "name": "Juzgado De Garantía De Coquimbo."
+          },
+          {
+            "id": "931",
+            "name": "Juzgado De Garantía De Vicuña."
+          },
+          {
+            "id": "932",
+            "name": "Juzgado De Garantía De Ovalle."
+          },
+          {
+            "id": "933",
+            "name": "Juzgado De Garantía De Illapel."
+          }
+        ],
+        "30": [
+          {
+            "id": "88",
+            "name": "Juzgado De Letras Y Garantía De Petorca."
+          },
+          {
+            "id": "94",
+            "name": "Juzgado De Letras Y Garantía De Putaendo."
+          },
+          {
+            "id": "103",
+            "name": "Juzgado De Letras Y Garantía De Isla De Pascua."
+          },
+          {
+            "id": "660",
+            "name": "Juzgado De Letras Y Garantía De Quintero."
+          },
+          {
+            "id": "1045",
+            "name": "Juzgado De Garantía De Valparaíso."
+          },
+          {
+            "id": "1046",
+            "name": "Juzgado De Garantia De Viña Del Mar."
+          },
+          {
+            "id": "1047",
+            "name": "Juzgado De Garantía De Quilpué."
+          },
+          {
+            "id": "1048",
+            "name": "Tribunal De Juicio Oral En Lo Penal Viña Del Mar."
+          },
+          {
+            "id": "1049",
+            "name": "Juzgado De Garantía De San Antonio."
+          },
+          {
+            "id": "1050",
+            "name": "Juzgado De Garantía De Casablanca."
+          },
+          {
+            "id": "1051",
+            "name": "Juzgado De Garantía De La Ligua."
+          },
+          {
+            "id": "1052",
+            "name": "Juzgado De Garantía De San Felipe."
+          },
+          {
+            "id": "1053",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Quillota."
+          },
+          {
+            "id": "1054",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Valparaíso."
+          },
+          {
+            "id": "1055",
+            "name": "Juzgado De Garantía De Limache."
+          },
+          {
+            "id": "1056",
+            "name": "Juzgado De Garantía De La Calera."
+          },
+          {
+            "id": "1057",
+            "name": "Juzgado De Garantía De Quillota."
+          },
+          {
+            "id": "1058",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Los Andes."
+          },
+          {
+            "id": "1059",
+            "name": "Tribunal De Juicio Oral En Lo Penal De San Felipe."
+          },
+          {
+            "id": "1060",
+            "name": "Juzgado De Garantía De Los Andes."
+          },
+          {
+            "id": "1061",
+            "name": "Juzgado De Garantía De Villa Alemana."
+          },
+          {
+            "id": "1062",
+            "name": "Tribunal De Juicio Oral En Lo Penal San Antonio."
+          }
+        ],
+        "35": [
+          {
+            "id": "114",
+            "name": "1º Juzgado De Letras Y Garantía De Peumo."
+          },
+          {
+            "id": "119",
+            "name": "Juzgado De Letras Y Garantía De Pichilemu."
+          },
+          {
+            "id": "1063",
+            "name": "Juzgado De Garantía De San Fernando."
+          },
+          {
+            "id": "1064",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Santa Cruz."
+          },
+          {
+            "id": "1065",
+            "name": "Juzgado De Garantía De Santa Cruz."
+          },
+          {
+            "id": "1067",
+            "name": "Juzgado De Garantía De Rengo."
+          },
+          {
+            "id": "1068",
+            "name": "Tribunal De Juicio Oral En Lo Penal San Fernando."
+          },
+          {
+            "id": "1069",
+            "name": "Juzgado De Garantía De Graneros."
+          },
+          {
+            "id": "1070",
+            "name": "Juzgado De Garantía De Rancagua."
+          },
+          {
+            "id": "1071",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Rancagua."
+          },
+          {
+            "id": "1097",
+            "name": "Juzgado De Garantía De San Vicente De Tagua-Tagua."
+          },
+          {
+            "id": "1150",
+            "name": "Juzgado De Letras Y Garantía De Litueche."
+          },
+          {
+            "id": "1151",
+            "name": "Juzgado De Letras Y Garantía De Peralillo."
+          }
+        ],
+        "40": [
+          {
+            "id": "127",
+            "name": "Juzgado De Letras Y Garantía De Curepto."
+          },
+          {
+            "id": "132",
+            "name": "Juzgado De Letras Y Garantía De Licanten."
+          },
+          {
+            "id": "140",
+            "name": "Juzgado De Letras Y Garantía De Chanco."
+          },
+          {
+            "id": "957",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Curico."
+          },
+          {
+            "id": "958",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Talca."
+          },
+          {
+            "id": "959",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Linares."
+          },
+          {
+            "id": "960",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Cauquenes."
+          },
+          {
+            "id": "961",
+            "name": "Juzgado De Garantía De Curico."
+          },
+          {
+            "id": "962",
+            "name": "Juzgado De Garantía De Molina."
+          },
+          {
+            "id": "963",
+            "name": "Juzgado De Garantía De Constitución."
+          },
+          {
+            "id": "964",
+            "name": "Juzgado De Garantía De Talca."
+          },
+          {
+            "id": "965",
+            "name": "Juzgado De Garantía De San Javier."
+          },
+          {
+            "id": "966",
+            "name": "Juzgado De Garantía De Cauquenes."
+          },
+          {
+            "id": "967",
+            "name": "Juzgado De Garantía De Linares."
+          },
+          {
+            "id": "968",
+            "name": "Juzgado De Garantía De Parral."
+          }
+        ],
+        "45": [
+          {
+            "id": "150",
+            "name": "Juzgado De Letras Y Garantía De Bulnes."
+          },
+          {
+            "id": "151",
+            "name": "Juzgado De Letras Y Garantía De Coelemu."
+          },
+          {
+            "id": "152",
+            "name": "Juzgado De Letras Y Garantía De Quirihue."
+          },
+          {
+            "id": "1072",
+            "name": "Juzgado De Garantía De Chillán."
+          },
+          {
+            "id": "1073",
+            "name": "Juzgado De Garantía De Yungay."
+          },
+          {
+            "id": "1074",
+            "name": "Juzgado De Garantía De San Carlos."
+          },
+          {
+            "id": "1093",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Chillán."
+          }
+        ],
+        "46": [
+          {
+            "id": "157",
+            "name": "Juzgado De Letras Y Garantía De Mulchen."
+          },
+          {
+            "id": "158",
+            "name": "Juzgado De Letras Y Garantía De Nacimiento."
+          },
+          {
+            "id": "159",
+            "name": "Juzgado De Letras Y Garantía De Laja."
+          },
+          {
+            "id": "160",
+            "name": "Juzgado De Letras Y Garantía De Yumbel."
+          },
+          {
+            "id": "188",
+            "name": "Juzgado De Letras Y Garantía De Florida."
+          },
+          {
+            "id": "189",
+            "name": "Juzgado De Letras Y Garantía De Santa Juana."
+          },
+          {
+            "id": "190",
+            "name": "Juzgado De Letras Y Garantía De Lota."
+          },
+          {
+            "id": "193",
+            "name": "Juzgado De Letras Y Garantía De Lebu."
+          },
+          {
+            "id": "195",
+            "name": "Juzgado De Letras Y Garantía De Curanilahue."
+          },
+          {
+            "id": "385",
+            "name": "Juzgado De Letras Y Garantía De Santa Barbara."
+          },
+          {
+            "id": "1075",
+            "name": "Juzgado De Garantía De San Pedro De La Paz."
+          },
+          {
+            "id": "1076",
+            "name": "Juzgado De Garantía De Cañete."
+          },
+          {
+            "id": "1077",
+            "name": "Juzgado De Garantía De Arauco."
+          },
+          {
+            "id": "1078",
+            "name": "Juzgado De Garantía De Coronel."
+          },
+          {
+            "id": "1079",
+            "name": "Juzgado De Garantía De Tomé."
+          },
+          {
+            "id": "1080",
+            "name": "Juzgado De Garantía De Talcahuano."
+          },
+          {
+            "id": "1081",
+            "name": "Juzgado De Garantía De Chiguayante."
+          },
+          {
+            "id": "1082",
+            "name": "Juzgado De Garantía De Concepción."
+          },
+          {
+            "id": "1083",
+            "name": "Juzgado De Garantía De Los Angeles."
+          },
+          {
+            "id": "1094",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Concepción."
+          },
+          {
+            "id": "1152",
+            "name": "Juzgado De Letras Y Garantía De Cabrero."
+          },
+          {
+            "id": "1325",
+            "name": "Tribunal Oral En Lo Penal De Los Angeles"
+          },
+          {
+            "id": "1326",
+            "name": "Tribunal Oral En Lo Penal De Cañete"
+          }
+        ],
+        "50": [
+          {
+            "id": "206",
+            "name": "Juzgado De Letras Y Garantía De Collipulli."
+          },
+          {
+            "id": "207",
+            "name": "Juzgado De Letras Y Garantía De Traiguen."
+          },
+          {
+            "id": "209",
+            "name": "Juzgado De Letras Y Garantía De Curacautin."
+          },
+          {
+            "id": "214",
+            "name": "Juzgado De Letras Y Garantía De Pucon."
+          },
+          {
+            "id": "216",
+            "name": "Juzgado De Letras Y Garantía De Carahue."
+          },
+          {
+            "id": "934",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Temuco."
+          },
+          {
+            "id": "935",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Angol."
+          },
+          {
+            "id": "936",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Villarrica."
+          },
+          {
+            "id": "937",
+            "name": "Juzgado De Garantía De Temuco."
+          },
+          {
+            "id": "938",
+            "name": "Juzgado De Garantía De Pitrufquen."
+          },
+          {
+            "id": "939",
+            "name": "Juzgado De Garantía De Villarrica."
+          },
+          {
+            "id": "940",
+            "name": "Juzgado De Garantía De Angol."
+          },
+          {
+            "id": "941",
+            "name": "Juzgado De Garantía De Victoria."
+          },
+          {
+            "id": "942",
+            "name": "Juzgado De Garantía De Nueva Imperial."
+          },
+          {
+            "id": "943",
+            "name": "Juzgado De Garantía De Lautaro."
+          },
+          {
+            "id": "944",
+            "name": "Juzgado De Garantía De Loncoche."
+          },
+          {
+            "id": "946",
+            "name": "Juzgado De Letras Y Garantía De Tolten."
+          },
+          {
+            "id": "947",
+            "name": "Juzgado De Letras Y Garantía De Puren."
+          }
+        ],
+        "55": [
+          {
+            "id": "223",
+            "name": "Juzgado De Letras Y Garantía De Paillaco."
+          },
+          {
+            "id": "225",
+            "name": "Juzgado De Letras Y Garantía De Panguipulli."
+          },
+          {
+            "id": "226",
+            "name": "Juzgado De Letras Y Garantia De La Union."
+          },
+          {
+            "id": "227",
+            "name": "Juzgado De Letras Y Garantía De Río Bueno."
+          },
+          {
+            "id": "1084",
+            "name": "Juzgado De Garantía De Valdivia."
+          },
+          {
+            "id": "1085",
+            "name": "Juzgado De Garantía De Mariquina."
+          },
+          {
+            "id": "1086",
+            "name": "Juzgado De Garantía De Los Lagos."
+          },
+          {
+            "id": "1087",
+            "name": "Juzgado De Garantía De Río Negro."
+          },
+          {
+            "id": "1088",
+            "name": "Juzgado De Garantía De Osorno."
+          },
+          {
+            "id": "1095",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Valdivia."
+          },
+          {
+            "id": "1251",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Osorno"
+          }
+        ],
+        "56": [
+          {
+            "id": "240",
+            "name": "Juzgado De Letras Y Garantía De Calbuco."
+          },
+          {
+            "id": "241",
+            "name": "Juzgado De Letras Y Garantía De Maullin."
+          },
+          {
+            "id": "244",
+            "name": "Juzgado De Letras Y Garantía De Achao."
+          },
+          {
+            "id": "245",
+            "name": "Juzgado De Letras Y Garantía De Chaiten."
+          },
+          {
+            "id": "659",
+            "name": "Juzgado De Letras Y Garantía De Los Muermos."
+          },
+          {
+            "id": "662",
+            "name": "Juzgado De Letras Y Garantía De Quellon."
+          },
+          {
+            "id": "1013",
+            "name": "Juzgado De Letras Y Garantía De Hualaihue"
+          },
+          {
+            "id": "1089",
+            "name": "Juzgado De Garantía De Castro."
+          },
+          {
+            "id": "1090",
+            "name": "Juzgado De Garantía De Puerto Montt."
+          },
+          {
+            "id": "1091",
+            "name": "Juzgado De Garantía De Puerto Varas."
+          },
+          {
+            "id": "1092",
+            "name": "Juzgado De Garantía De Ancud."
+          },
+          {
+            "id": "1096",
+            "name": "Tribunal De Juicio Oral En Lo Penal Puerto Montt."
+          },
+          {
+            "id": "1328",
+            "name": "Tribunal Oral En Lo Penal De Castro"
+          }
+        ],
+        "60": [
+          {
+            "id": "248",
+            "name": "Juzgado De Letras Y Garantía De Puerto Aysen."
+          },
+          {
+            "id": "249",
+            "name": "Juzgado De Letras Y Garantía De Chile Chico."
+          },
+          {
+            "id": "250",
+            "name": "Juzgado De Letras Y Garantía De Cochrane."
+          },
+          {
+            "id": "990",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Coyhaique."
+          },
+          {
+            "id": "994",
+            "name": "Juzgado De Garantía De Coyhaique."
+          },
+          {
+            "id": "996",
+            "name": "Juzgado De Letras Y Garantía De Cisnes."
+          }
+        ],
+        "61": [
+          {
+            "id": "257",
+            "name": "Juzgado De Letras Y Garantía De Puerto Natales."
+          },
+          {
+            "id": "258",
+            "name": "Juzgado De Letras Y Garantía De Porvenir."
+          },
+          {
+            "id": "991",
+            "name": "Tribunal De Juicio Oral En Lo Penal Punta Arenas."
+          },
+          {
+            "id": "995",
+            "name": "Juzgado De Garantía De Punta Arenas."
+          },
+          {
+            "id": "1502",
+            "name": "Juzgado De Letras Y Garantia De Cabo De Hornos"
+          }
+        ],
+        "90": [
+          {
+            "id": "1220",
+            "name": "1º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1221",
+            "name": "2º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1222",
+            "name": "3º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1223",
+            "name": "4º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1224",
+            "name": "5º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1225",
+            "name": "6º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1226",
+            "name": "7º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1227",
+            "name": "8º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1228",
+            "name": "9º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1232",
+            "name": "13º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1233",
+            "name": "14º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1235",
+            "name": "Juzgado De Garantía De Colina"
+          },
+          {
+            "id": "1244",
+            "name": "1º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1245",
+            "name": "2º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1246",
+            "name": "3º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1247",
+            "name": "4º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1248",
+            "name": "5º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1503",
+            "name": "Unidad Especializada RPA"
+          },
+          {
+            "id": "1250",
+            "name": "7º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1321",
+            "name": "Tribunal De Juicio Oral En Lo Penal Colina"
+          },
+          {
+            "id": "8010",
+            "name": "Coordinacion"
+          }
+        ],
+        "91": [
+          {
+            "id": "1229",
+            "name": "10º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1230",
+            "name": "11º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1231",
+            "name": "12º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1234",
+            "name": "15º Juzgado De Garantía De Santiago"
+          },
+          {
+            "id": "1236",
+            "name": "Juzgado De Garantía De Puente Alto"
+          },
+          {
+            "id": "1237",
+            "name": "Juzgado De Garantía De San Bernardo"
+          },
+          {
+            "id": "1238",
+            "name": "Juzgado De Garantía De Melipilla"
+          },
+          {
+            "id": "1239",
+            "name": "Juzgado De Garantía De Curacaví"
+          },
+          {
+            "id": "1240",
+            "name": "Juzgado De Garantía De Talagante"
+          },
+          {
+            "id": "1249",
+            "name": "6º Tribunal De Juicio Oral En Lo Penal De Santiago"
+          },
+          {
+            "id": "1320",
+            "name": "Tribunal De Juicio Oral En Lo Penal Talagante"
+          },
+          {
+            "id": "1322",
+            "name": "Tribunal De Juicio Oral En Lo Penal Puente Alto"
+          },
+          {
+            "id": "1323",
+            "name": "Tribunal De Juicio Oral En Lo Penal San Bernardo"
+          },
+          {
+            "id": "1355",
+            "name": "Tribunal De Juicio Oral En Lo Penal De Melipilla"
+          }
+        ]
+      }
+    },
+    "6": {
+      "cortes": [
+        {
+          "id": "10",
+          "name": "C.A. de Arica"
+        },
+        {
+          "id": "11",
+          "name": "C.A. de Iquique"
+        },
+        {
+          "id": "15",
+          "name": "C.A. de Antofagasta"
+        },
+        {
+          "id": "20",
+          "name": "C.A. de Copiapó"
+        },
+        {
+          "id": "25",
+          "name": "C.A. de La Serena"
+        },
+        {
+          "id": "30",
+          "name": "C.A. de Valparaíso"
+        },
+        {
+          "id": "35",
+          "name": "C.A. de Rancagua"
+        },
+        {
+          "id": "40",
+          "name": "C.A. de Talca"
+        },
+        {
+          "id": "45",
+          "name": "C.A. de Chillan"
+        },
+        {
+          "id": "46",
+          "name": "C.A. de Concepción"
+        },
+        {
+          "id": "50",
+          "name": "C.A. de Temuco"
+        },
+        {
+          "id": "55",
+          "name": "C.A. de Valdivia"
+        },
+        {
+          "id": "56",
+          "name": "C.A. de Puerto Montt"
+        },
+        {
+          "id": "60",
+          "name": "C.A. de Coyhaique"
+        },
+        {
+          "id": "61",
+          "name": "C.A. de Punta Arenas"
+        },
+        {
+          "id": "90",
+          "name": "C.A. de Santiago"
+        },
+        {
+          "id": "91",
+          "name": "C.A. de San Miguel"
+        }
+      ],
+      "tipos": [
+        {
+          "id": "A",
+          "name": "A"
+        },
+        {
+          "id": "C",
+          "name": "C"
+        },
+        {
+          "id": "D",
+          "name": "D"
+        },
+        {
+          "id": "E",
+          "name": "E"
+        },
+        {
+          "id": "J",
+          "name": "J"
+        },
+        {
+          "id": "L",
+          "name": "L"
+        },
+        {
+          "id": "P",
+          "name": "P"
+        },
+        {
+          "id": "R",
+          "name": "R"
+        }
+      ],
+      "tribunales": {
+        "10": [
+          {
+            "id": "1333",
+            "name": "Jdo. de Letras del Trabajo de arica"
+          }
+        ],
+        "11": [
+          {
+            "id": "6",
+            "name": "Jdo. de Letras y Garantía de Pozo Almonte"
+          },
+          {
+            "id": "1334",
+            "name": "Jdo. de Letras del Trabajo de Iquique"
+          },
+          {
+            "id": "1500",
+            "name": "Jdo. de Letras de Alto Hospicio"
+          }
+        ],
+        "15": [
+          {
+            "id": "13",
+            "name": "Juzgado de Letras de Tocopilla"
+          },
+          {
+            "id": "14",
+            "name": "Juzgado de Letras y Garantía de Maria Elena"
+          },
+          {
+            "id": "26",
+            "name": "Jdo. de Letras y Garantia de Taltal"
+          },
+          {
+            "id": "1335",
+            "name": "Jdo. de Letras del Trabajo de Antofagasta"
+          },
+          {
+            "id": "1357",
+            "name": "Jdo. de Letras del Trabajo de Calama"
+          },
+          {
+            "id": "1501",
+            "name": "Jdo. de Letras y Garantía de Mejillones"
+          }
+        ],
+        "20": [
+          {
+            "id": "27",
+            "name": "Jdo. de Letras y Garantia de Chañaral"
+          },
+          {
+            "id": "29",
+            "name": "Juzgado de Letras de Diego de Almagro"
+          },
+          {
+            "id": "34",
+            "name": "Juzgado de Letras y Garantia de Freirina"
+          },
+          {
+            "id": "36",
+            "name": "1º Juzgado de Letras de Vallenar"
+          },
+          {
+            "id": "37",
+            "name": "2º Juzgado de Letras de Vallenar"
+          },
+          {
+            "id": "386",
+            "name": "Juzgado de Letras y Garantia de Caldera"
+          },
+          {
+            "id": "1336",
+            "name": "Jdo. de Letras del Trabajo de Copiapo"
+          }
+        ],
+        "25": [
+          {
+            "id": "46",
+            "name": "Juzgado de Letras de Vicuña"
+          },
+          {
+            "id": "47",
+            "name": "Juzgado de Letras y Garantía de Andacollo"
+          },
+          {
+            "id": "48",
+            "name": "1º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "49",
+            "name": "2º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "50",
+            "name": "3º Juzgado de Letras de Ovalle"
+          },
+          {
+            "id": "51",
+            "name": "Juzgado de Letras y Garantía de Combarbalá"
+          },
+          {
+            "id": "52",
+            "name": "Juzgado de Letras de Illapel"
+          },
+          {
+            "id": "53",
+            "name": "Juzgado de Letras y Garantia de los Vilos"
+          },
+          {
+            "id": "1337",
+            "name": "Jdo. de Letras del Trabajo de La Serena"
+          }
+        ],
+        "30": [
+          {
+            "id": "83",
+            "name": "1º Juzgado de Letras de Quilpue"
+          },
+          {
+            "id": "84",
+            "name": "2º Juzgado de Letras de Quilpue"
+          },
+          {
+            "id": "85",
+            "name": "Jdo. de Letras de Villa Alemana"
+          },
+          {
+            "id": "86",
+            "name": "Juzgado de Letras de CasaBlanca"
+          },
+          {
+            "id": "87",
+            "name": "Jdo. de Letras de La Ligua"
+          },
+          {
+            "id": "88",
+            "name": "Juzgado de Letras y Garantía de Petorca"
+          },
+          {
+            "id": "89",
+            "name": "1º Juzgado de Letras de los Andes"
+          },
+          {
+            "id": "90",
+            "name": "2º Juzgado de Letras de los Andes"
+          },
+          {
+            "id": "94",
+            "name": "Juzgado de Letras y Garantia de Putaendo"
+          },
+          {
+            "id": "96",
+            "name": "1º Juzgado de Letras de Quillota"
+          },
+          {
+            "id": "97",
+            "name": "2º Juzgado de Letras de Quillota"
+          },
+          {
+            "id": "98",
+            "name": "Jdo. de Letras de La Calera"
+          },
+          {
+            "id": "99",
+            "name": "Juzgado de Letras de Limache"
+          },
+          {
+            "id": "101",
+            "name": "1º Juzgado de Letras de San Antonio"
+          },
+          {
+            "id": "102",
+            "name": "2º Juzgado de Letras de San Antonio"
+          },
+          {
+            "id": "103",
+            "name": "Juzgado de Letras y Garantía de Isla de Pascua"
+          },
+          {
+            "id": "660",
+            "name": "Juzgado de Letras y Garantia de Quintero"
+          },
+          {
+            "id": "1331",
+            "name": "Jdo. Cob. Laboral y Previsional de Valparaíso"
+          },
+          {
+            "id": "1358",
+            "name": "Jdo. de Letras del Trabajo de San Felipe"
+          }
+        ],
+        "35": [
+          {
+            "id": "111",
+            "name": "Jdo. de Letras de Rengo"
+          },
+          {
+            "id": "113",
+            "name": "Jdo. de Letras de San Vicente"
+          },
+          {
+            "id": "114",
+            "name": "Jdo. de Letras y Garantia de Peumo"
+          },
+          {
+            "id": "115",
+            "name": "1°Jdo. de Letras de San Fernando"
+          },
+          {
+            "id": "116",
+            "name": "2°Jdo. de Letras de San Fernando"
+          },
+          {
+            "id": "117",
+            "name": "Jdo. de Letras de Santa Cruz"
+          },
+          {
+            "id": "119",
+            "name": "Jdo. de Letras y Garantia de Pichilemu"
+          },
+          {
+            "id": "1150",
+            "name": "Jdo. de Letras y Garantia de Litueche"
+          },
+          {
+            "id": "1151",
+            "name": "Jdo. de Letras y Garantia de Peralillo"
+          },
+          {
+            "id": "1339",
+            "name": "Jdo. de Letras del Trabajo de Rancagua"
+          }
+        ],
+        "40": [
+          {
+            "id": "126",
+            "name": "Jdo. de Letras de Constitución"
+          },
+          {
+            "id": "127",
+            "name": "Juzgado de Letras y Garantía de Curepto"
+          },
+          {
+            "id": "132",
+            "name": "Juzgado de Letras y Garantía de Licanten"
+          },
+          {
+            "id": "133",
+            "name": "Juzgado de Letras de Molina"
+          },
+          {
+            "id": "135",
+            "name": "1º Juzgado de Letras de Linares"
+          },
+          {
+            "id": "136",
+            "name": "2º Juzgado de Letras de Linares"
+          },
+          {
+            "id": "138",
+            "name": "Juzgado de Letras de San Javier"
+          },
+          {
+            "id": "139",
+            "name": "Juzgado de Letras de Cauquenes"
+          },
+          {
+            "id": "140",
+            "name": "Juzgado de Letras y Garantía de Chanco"
+          },
+          {
+            "id": "141",
+            "name": "Juzgado de Letras de Parral"
+          },
+          {
+            "id": "1340",
+            "name": "Jdo. de Letras del Trabajo de Curicó"
+          },
+          {
+            "id": "1341",
+            "name": "Jdo. de Letras del Trabajo de Talca"
+          }
+        ],
+        "45": [
+          {
+            "id": "147",
+            "name": "1º Juzgado de Letras de San Carlos"
+          },
+          {
+            "id": "149",
+            "name": "Juzgado de Letras de Yungay"
+          },
+          {
+            "id": "150",
+            "name": "Juzgado de Letras y Garantía de Bulnes"
+          },
+          {
+            "id": "151",
+            "name": "Juzgado de Letras y Garantía de Coelemu"
+          },
+          {
+            "id": "152",
+            "name": "Juzgado de Letras y Garantia de Quirihue"
+          },
+          {
+            "id": "1342",
+            "name": "Juzgado de Letras del Trabajo de Chillan"
+          }
+        ],
+        "46": [
+          {
+            "id": "157",
+            "name": "Juzgado de Letras y Garantía de Mulchen"
+          },
+          {
+            "id": "158",
+            "name": "Juzgado de Letras y Garantía de Nacimiento"
+          },
+          {
+            "id": "159",
+            "name": "Juzgado de Letras y Garantía de Laja"
+          },
+          {
+            "id": "160",
+            "name": "Juzgado de Letras y Garantía de Yumbel"
+          },
+          {
+            "id": "187",
+            "name": "Juzgado de Letras de Tome"
+          },
+          {
+            "id": "188",
+            "name": "Juzgado de Letras y Garantía de Florida"
+          },
+          {
+            "id": "189",
+            "name": "Juzgado de Letras y Garantía de Santa Juana"
+          },
+          {
+            "id": "190",
+            "name": "Juzgado de Letras y Garantía de Lota"
+          },
+          {
+            "id": "191",
+            "name": "1° Juzgado de Letras de Coronel"
+          },
+          {
+            "id": "192",
+            "name": "2° Juzgado de Letras de Coronel"
+          },
+          {
+            "id": "193",
+            "name": "Juzgado de Letras y Garantía de Lebu"
+          },
+          {
+            "id": "194",
+            "name": "Juzgado de Letras de Arauco"
+          },
+          {
+            "id": "195",
+            "name": "Juzgado de Letras y Garantía de Curanilahue"
+          },
+          {
+            "id": "196",
+            "name": "Juzgado de Letras de Cañete"
+          },
+          {
+            "id": "385",
+            "name": "Juzgado de Letras y Garantía de Santa Barbara"
+          },
+          {
+            "id": "1152",
+            "name": "Juzgado de Letras y Garantía de Cabrero"
+          },
+          {
+            "id": "1332",
+            "name": "Jdo. Cob. Laboral y Previsional de Concepción"
+          },
+          {
+            "id": "1359",
+            "name": "Jdo. de Letras del Trabajo de Los Ángeles"
+          }
+        ],
+        "50": [
+          {
+            "id": "204",
+            "name": "1°Jdo. de Letras de angol"
+          },
+          {
+            "id": "206",
+            "name": "Juzgado de Letras y Garantia de Collipulli"
+          },
+          {
+            "id": "207",
+            "name": "Juzgado de Letras y Garantía de Traiguen"
+          },
+          {
+            "id": "208",
+            "name": "Juzgado de Letras de Victoria"
+          },
+          {
+            "id": "209",
+            "name": "Juzgado de Letras y Garantía de Curacautín"
+          },
+          {
+            "id": "210",
+            "name": "Juzgado de Letras de Loncoche"
+          },
+          {
+            "id": "211",
+            "name": "Juzgado de Letras de Pitrufquen"
+          },
+          {
+            "id": "212",
+            "name": "Juzgado de Letras de Villarrica"
+          },
+          {
+            "id": "213",
+            "name": "Juzgado de Letras de Nueva Imperial"
+          },
+          {
+            "id": "214",
+            "name": "Juzgado de Letras y Garantia de Pucón"
+          },
+          {
+            "id": "215",
+            "name": "Juzgado de Letras de Lautaro"
+          },
+          {
+            "id": "216",
+            "name": "Juzgado de Letras y Garantía de Carahue"
+          },
+          {
+            "id": "946",
+            "name": "Juzgado de Letras y Garantia de Tolten"
+          },
+          {
+            "id": "947",
+            "name": "Juzgado de Letras y Garantia de Puren"
+          },
+          {
+            "id": "1344",
+            "name": "Jdo. de Letras del Trabajo de Temuco"
+          }
+        ],
+        "55": [
+          {
+            "id": "222",
+            "name": "Jdo. de Letras de Mariquina"
+          },
+          {
+            "id": "223",
+            "name": "Juzgado de Letras y Garantia de Paillaco"
+          },
+          {
+            "id": "224",
+            "name": "Juzgado de Letras de Los Lagos"
+          },
+          {
+            "id": "225",
+            "name": "Juzgado de Letras y Garantia de Panguipulli"
+          },
+          {
+            "id": "226",
+            "name": "Jdo. de Letras y Garantía de La Unión"
+          },
+          {
+            "id": "227",
+            "name": "Juzgado de Letras y Garantia de Rio Bueno"
+          },
+          {
+            "id": "1345",
+            "name": "Jdo. de Letras del Trabajo de Valdivia"
+          },
+          {
+            "id": "1360",
+            "name": "Jdo. de Letras del Trabajo de Osorno"
+          }
+        ],
+        "56": [
+          {
+            "id": "238",
+            "name": "1º Juzgado de Letras de Puerto Varas"
+          },
+          {
+            "id": "240",
+            "name": "Juzgado de Letras y Garantía de Calbuco"
+          },
+          {
+            "id": "241",
+            "name": "Juzgado de Letras y Garantía de Maullin"
+          },
+          {
+            "id": "243",
+            "name": "Juzgado de Letras de Ancud"
+          },
+          {
+            "id": "244",
+            "name": "Juzgado de Letras y Garantía de Achao"
+          },
+          {
+            "id": "245",
+            "name": "Juzgado de Letras y Garantia de Chaiten"
+          },
+          {
+            "id": "659",
+            "name": "Juzgado de Letras y Garantia de Los Muermo"
+          },
+          {
+            "id": "1013",
+            "name": "Juzgado de Letras y Garantía de Hualaihue"
+          },
+          {
+            "id": "1346",
+            "name": "Jdo. de Letras del Trabajo de Puerto Montt"
+          },
+          {
+            "id": "1361",
+            "name": "Jdo. de Letras del Trabajo de Castro"
+          }
+        ],
+        "60": [
+          {
+            "id": "248",
+            "name": "Jdo. de Letras de Letras y Garantia de Aysen"
+          },
+          {
+            "id": "249",
+            "name": "Juzgado de Letras y Garantia de Chile Chico"
+          },
+          {
+            "id": "250",
+            "name": "Juzgado de Letras y Garantia de Cochrane"
+          },
+          {
+            "id": "996",
+            "name": "Juzgado de Letras y Garantia de Puerto Cisne"
+          },
+          {
+            "id": "1362",
+            "name": "Jdo. de Letras del Trabajo de Coyhaique"
+          }
+        ],
+        "61": [
+          {
+            "id": "257",
+            "name": "Jdo. de Letras y Garantia de Puerto Natales"
+          },
+          {
+            "id": "258",
+            "name": "Juzgado de Letras y Garantia de Porvenir"
+          },
+          {
+            "id": "1347",
+            "name": "Jdo. de Letras del Trabajo Punta arenas"
+          },
+          {
+            "id": "1502",
+            "name": "Jdo. de Letras y Garantía de Puerto Williams"
+          }
+        ],
+        "90": [
+          {
+            "id": "100",
+            "name": "Otros tribunales"
+          },
+          {
+            "id": "387",
+            "name": "Jdo. de Letras de Colina"
+          },
+          {
+            "id": "1329",
+            "name": "Jdo. Cob. Laboral y Previsional de Santiago"
+          }
+        ],
+        "91": [
+          {
+            "id": "373",
+            "name": "1° Juzgado de Letras de Talagante"
+          },
+          {
+            "id": "374",
+            "name": "2° Juzgado de Letras de Talagante"
+          },
+          {
+            "id": "375",
+            "name": "1° Juzgado de Letras de Melipilla"
+          },
+          {
+            "id": "377",
+            "name": "1° Juzgado de Letras de Buin"
+          },
+          {
+            "id": "378",
+            "name": "2° Juzgado de Letras de Buin"
+          },
+          {
+            "id": "388",
+            "name": "Juzgado de Letras de Peñaflor"
+          },
+          {
+            "id": "1330",
+            "name": "Jdo. Cob. Laboral y Previsional de San Miguel"
+          },
+          {
+            "id": "1352",
+            "name": "Jdo. de Letras del Trabajo de San Bernardo"
+          },
+          {
+            "id": "1363",
+            "name": "Jdo. de Letras del Trabajo de Puente Alto"
+          }
+        ]
+      }
+    },
+    "7": {
+      "notice": "Las causas de familia son reservadas. Consúltalas en Mis causas de la Oficina Judicial Virtual.",
+      "cortes": [],
+      "tipos": [],
+      "tribunales": {},
+      "available": false
+    }
+  }
+}

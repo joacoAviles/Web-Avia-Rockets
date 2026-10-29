@@ -90,7 +90,7 @@
   var USE_CASES_COPY = {
     es: {
       eyebrow: 'Sistema AVIA',
-      title: 'Un mismo motor para varias partes de tu operacion',
+      title: 'Un mismo motor para varias partes de tu operación',
       intro: 'No vendemos módulos aislados: diseñamos el sistema que tu operación necesita. Puede ser sólo seguimiento legal, sólo control de flota, sólo dashboards o una integración completa entre varias áreas.',
       cards: [
         {
@@ -109,7 +109,7 @@
           kpis: [['Vehículos registrados', '37'], ['Vencen pronto', '3'], ['Requieren atención', '2'], ['Restricción ambiental', '0']],
           chip: ['Para revisar', '2 revisiones técnicas vencidas'],
           title: 'Flota',
-          text: 'Ordenamos revisiones técnicas, permisos, mantenciones, vencimientos y restricción ambiental para autos familiares, vehículos de reparto o flotas de empresa.',
+          text: 'Ordenamos revisiones técnicas, permisos, mantenciónes, vencimientos y restricción ambiental para autos familiares, vehículos de reparto o flotas de empresa.',
           strong: 'Sabe qué revisar, cuándo hacerlo y qué no puede esperar.'
         },
         {
@@ -348,37 +348,11 @@
     if (!textarea) return;
 
     var oldText = 'Contacto rápido desde home: solicita evaluación inicial.';
-    var newText = 'Cuéntanos en qué podemos ayudarte?';
+    var newText = '¿En qué podemos ayudarte?';
 
     if (textarea.value.trim() === oldText) {
       textarea.value = newText;
     }
-  }
-
-  function setupExitIntent() {
-    var modal = document.getElementById('exit-intent-modal');
-    if (!modal) return;
-    var shown = sessionStorage.getItem('avia_exit_intent_shown') === '1';
-    var closeButtons = modal.querySelectorAll('[data-exit-close]');
-
-    function show() {
-      if (shown) return;
-      shown = true;
-      sessionStorage.setItem('avia_exit_intent_shown', '1');
-      modal.classList.add('is-visible');
-    }
-
-    function hide() {
-      modal.classList.remove('is-visible');
-    }
-
-    document.addEventListener('mouseout', function (event) {
-      if (event.clientY <= 0 && !event.relatedTarget) show();
-    });
-
-    closeButtons.forEach(function (btn) { btn.addEventListener('click', hide); });
-    modal.addEventListener('click', function (event) { if (event.target === modal) hide(); });
-    document.addEventListener('keydown', function (event) { if (event.key === 'Escape') hide(); });
   }
 
   function refreshHomeCopy(lang) {
@@ -393,7 +367,6 @@
     refreshHomeCopy(currentLang());
     updateContactTextareaCopy();
     loadPublicStats();
-    setupExitIntent();
   }
 
   document.addEventListener('avia:language-changed', function (event) {

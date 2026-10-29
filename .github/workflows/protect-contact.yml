@@ -37,8 +37,8 @@ jobs:
           def sha256_block(block: str) -> str:
               return hashlib.sha256((block + '\n').encode('utf-8')).hexdigest()
 
-          contact_expected = '0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0'
-          contact_start = '<!-- CONTACT_LOCK_START sha256:0ef19d4a6549a5bbeb2a74b13a855e5a090663647ecba013c58a3a0bbce174b0 -->'
+          contact_expected = 'cfcbccc67073d3e53abb45bce50fbd0afe4f54769149fd9977fbb9d6d1355f3f'
+          contact_start = '<!-- CONTACT_LOCK_START sha256:cfcbccc67073d3e53abb45bce50fbd0afe4f54769149fd9977fbb9d6d1355f3f -->'
           contact_end = '<!-- CONTACT_LOCK_END -->'
           index_text = Path('index.html').read_text(encoding='utf-8')
 
@@ -76,7 +76,7 @@ jobs:
               print('Do not modify METHOD_COPY in conversion.js.')
               sys.exit(1)
 
-          modules_expected = 'e22c1f9f182c6ffcc1668cfcd875786b1bbaf474e06d6a89b2b4758f9b8c1398'
+          modules_expected = '879a8683181a776effd3bee5aafbc15b0b6ec0cb1ac2146954dac33eba018495'
           modules_start = '  var MODULES_COPY = {'
           modules_end = '\n\n  async function loadPublicStats'
 

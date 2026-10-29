@@ -33,3 +33,11 @@ async function adminBindCourts(form){
     el.competencia.onchange=()=>update(false);el.corte.onchange=()=>updateTribunal(false);update(true);
   }catch(err){form.querySelector('.pjud-form-notice').textContent=err.message;}
 }
+async function pjudCanonicalizeCauses(rows){
+  const cat=await pjudLoadCatalog();
+  const names=new Map();
+  for(const branch of Object.values(cat.branches))for(const tribunals of Object.values(branch.tribunales))for(const tribunal of tribunals){
+    const key=pjudNameKey(tribunal.name);if(!names.has(key))names.set(key,tribunal.name);
+  }
+  return rows.map(c=>({...c,court:names.get(pjudNameKey(c.court))||c.court}));
+}

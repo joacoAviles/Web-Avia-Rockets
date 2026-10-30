@@ -2,6 +2,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 
 const cfg = window.AVIA_SUPABASE_CONFIG;
 if (!cfg?.url || !cfg?.publishableKey) throw new Error('Falta la configuración pública de autenticación.');
+// Capture the action before the SDK consumes and clears the callback fragment.
+const callbackType = new URLSearchParams(location.hash.slice(1)).get('type')
+  || new URLSearchParams(location.search).get('type');
 
 const supabase = createClient(cfg.url, cfg.publishableKey, {
   auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
@@ -220,7 +223,15 @@ document.querySelector('#resend')?.addEventListener('click', async (event) => {
 
 if (page === 'callback') {
   showMessage('Estamos verificando tu acceso…');
-  enterAvia().catch((error) => showMessage(friendly(error), true));
+  if (callbackType === 'invite') {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) throw error;
+      if (!session) throw new Error('NO_INVITATION_SESSION');
+      location.replace('reset.html?invited=1');
+    }).catch((error) => showMessage(friendly(error), true));
+  } else {
+    enterAvia().catch((error) => showMessage(friendly(error), true));
+  }
 }
 
 if (page === 'reset') {

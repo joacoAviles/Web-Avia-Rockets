@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && mkdir -p /profile /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix && chown browser:browser /profile
 WORKDIR /opt/infra
 COPY gateway.py policy.py start.py test_policy.py test_gateway.py ./
+COPY viewer.html /usr/share/novnc/avia.html
 USER browser
 ENV DISPLAY=:99 HOME=/home/browser
 EXPOSE 8080

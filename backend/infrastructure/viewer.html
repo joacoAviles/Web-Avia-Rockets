@@ -1,0 +1,12 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Infraestructura privada</title><style>html,body,#screen{width:100%;height:100%;margin:0;overflow:hidden;background:#0b1119}#notice{position:fixed;inset:0;display:grid;place-content:center;color:#b8c9df;font:14px system-ui;background:#0b1119}#notice[hidden]{display:none}</style><div id="screen"></div><div id="notice" role="status">Conectando con tu escritorio…</div><script type="module">
+import RFB from './core/rfb.js';
+const screen=document.querySelector('#screen'),notice=document.querySelector('#notice');
+let retry;
+function connect(){
+ const rfb=new RFB(screen,`wss://${location.host}/stream`);
+ rfb.scaleViewport=true; rfb.resizeSession=true; rfb.showDotCursor=true;
+ rfb.addEventListener('connect',()=>{notice.hidden=true;parent.postMessage({type:'infra-connection',connected:true},'https://aviarockets.cl')});
+ rfb.addEventListener('disconnect',()=>{notice.hidden=false;notice.textContent='Reconectando con tu escritorio…';parent.postMessage({type:'infra-connection',connected:false},'https://aviarockets.cl');clearTimeout(retry);retry=setTimeout(connect,2500)});
+}
+connect();
+</script></html>

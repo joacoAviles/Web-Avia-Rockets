@@ -17,7 +17,7 @@ function startInfrastructure(base) {
   const panel = document.createElement('section');
   panel.id = 'infrastructure-panel';
   panel.hidden = true;
-  panel.innerHTML = `<div class="infra-heading"><div><p class="eyebrow">Administración privada</p><h1>Infraestructura</h1></div><button type="button" id="infra-close">Volver</button></div><nav id="infra-tabs" aria-label="Servicios de infraestructura"></nav><p id="infra-status" role="status" aria-live="polite"></p><div id="infra-summary"></div><iframe id="infra-screen" title="Navegador remoto privado de Infraestructura" referrerpolicy="no-referrer" hidden></iframe><button type="button" id="infra-retry" hidden>Reconectar</button>`;
+  panel.innerHTML = `<div class="infra-toolbar"><h1>Infraestructura</h1><nav id="infra-tabs" aria-label="Servicios de infraestructura"></nav><div class="infra-actions"><button type="button" id="infra-expand" title="Ampliar área de trabajo">Ampliar</button><button type="button" id="infra-close">Salir</button></div></div><p id="infra-status" role="status" aria-live="polite"></p><div id="infra-summary"></div><iframe id="infra-screen" title="Navegador remoto privado de Infraestructura" referrerpolicy="no-referrer" hidden></iframe><button type="button" id="infra-retry" hidden>Reconectar</button>`;
   layout.after(panel);
   const frame = panel.querySelector('iframe');
   const summary = panel.querySelector('#infra-summary');
@@ -63,10 +63,10 @@ function startInfrastructure(base) {
       summary.hidden = id !== 'general';
       frame.hidden = id === 'general';
       if (id !== 'general' && !frame.hasAttribute('src')) {
-        frame.src = new URL('/remote/vnc.html?autoconnect=true&resize=scale&path=stream&reconnect=true&reconnect_delay=2000', base).href;
+        frame.src = new URL('/remote/avia.html', base).href;
       }
       panel.querySelectorAll('[data-service]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.service === id)));
-      status.textContent = id === 'general' ? 'Servicios configurados. Su disponibilidad se comprueba al abrirlos.' : 'Sesión remota compartida entre tus dispositivos. El servicio puede pedir acceso si su sesión venció.';
+      status.textContent = id === 'general' ? 'Servicios configurados. Su disponibilidad se comprueba al abrirlos.' : 'Abriendo servicio…';
       retry.hidden = true;
     } catch (error) {
       if (error.message === '503' && authorized) {
@@ -99,6 +99,7 @@ function startInfrastructure(base) {
 
   async function open() {
     active = true;
+    document.body.classList.add('infra-active');
     layout.hidden = true;
     panel.hidden = false;
     try {
@@ -112,6 +113,7 @@ function startInfrastructure(base) {
 
   async function close() {
     active = false;
+    document.body.classList.remove('infra-active', 'infra-expanded');
     clearInterval(timer);
     panel.hidden = true;
     layout.hidden = false;
@@ -132,6 +134,16 @@ function startInfrastructure(base) {
     nav.prepend(button);
   }
 
+  panel.querySelector('#infra-expand').addEventListener('click', event => {
+    const expanded = document.body.classList.toggle('infra-expanded');
+    event.currentTarget.textContent = expanded ? 'Restaurar' : 'Ampliar';
+  });
+  window.addEventListener('message', event => {
+    if (event.origin !== base.origin || event.source !== frame.contentWindow) return;
+    if (event.data?.type === 'infra-connection') {
+      status.textContent = event.data.connected ? 'Conectado · Sesión privada' : 'Reconectando con tu escritorio…';
+    }
+  });
   panel.querySelector('#infra-close').addEventListener('click', close);
   retry.addEventListener('click', open);
   // Existing navigation and header remain usable. Close before leaving this view.

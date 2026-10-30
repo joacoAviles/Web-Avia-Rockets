@@ -48,7 +48,7 @@ def wait_port(port):
 signal.signal(signal.SIGTERM, stop)
 signal.signal(signal.SIGINT, stop)
 try:
-    launch(['Xvfb', ':99', '-screen', '0', '1440x900x24', '-nolisten', 'tcp'])
+    launch(['Xvfb', ':99', '-screen', '0', '1280x640x24', '-nolisten', 'tcp'])
     for _ in range(100):
         if os.path.exists('/tmp/.X11-unix/X99'):
             break
@@ -58,7 +58,7 @@ try:
     launch(['openbox'])
     launch(['chromium', '--user-data-dir=/profile', '--remote-debugging-address=127.0.0.1',
             '--remote-debugging-port=9222', '--no-first-run', '--no-default-browser-check',
-            '--start-maximized', 'about:blank'])
+            '--start-fullscreen', 'about:blank'])
     wait_port(9222)
     launch(['x11vnc', '-display', ':99', '-localhost', '-rfbport', '5900', '-forever', '-shared', '-nopw'])
     wait_port(5900)

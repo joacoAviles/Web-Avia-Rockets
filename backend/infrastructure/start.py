@@ -1,9 +1,24 @@
 """Supervise the private desktop; Chromium keeps its normal sandbox enabled."""
 import os
+import fcntl
+from pathlib import Path
 import signal
 import socket
 import subprocess
 import time
+
+# This managed volume must have one supervisor. The OS releases this lock
+# after a crash, allowing stale Chromium singleton symlinks to be archived.
+profile = Path('/profile')
+profile_lock = (profile / '.avia-supervisor.lock').open('a')
+fcntl.flock(profile_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+stale = [profile / name for name in ('SingletonLock', 'SingletonSocket', 'SingletonCookie')
+         if (profile / name).is_symlink()]
+if stale:
+    archive = profile / ('.stale-locks-' + str(time.time_ns()))
+    archive.mkdir(mode=0o700)
+    for path in stale:
+        path.rename(archive / path.name)
 
 children = []
 

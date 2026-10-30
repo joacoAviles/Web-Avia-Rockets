@@ -116,14 +116,14 @@ async def me(user=Depends(current_user)):
 @router.post("/onboarding")
 async def onboarding(payload: Profile, external=Depends(identity), db: AsyncSession = Depends(get_db)):
     subject = uuid.UUID(external["id"])
-    user_id = (await db.execute(text(
-        "SELECT user_id FROM platform.supabase_identities WHERE issuer=:issuer AND subject=:subject"
-    ), {"issuer": URL, "subject": subject})).scalar_one_or_none()
-    if user_id:
-        user = await db.get(User, user_id)
+    mapping = (await db.execute(text(
+        "SELECT user_id, verified_email FROM platform.supabase_identities WHERE issuer=:issuer AND subject=:subject"
+    ), {"issuer": URL, "subject": subject})).mappings().one_or_none()
+    if mapping:
+        user = await db.get(User, mapping["user_id"])
         if not user or not user.is_active:
             raise HTTPException(403, "ACCOUNT_DISABLED")
-        if user.email.strip().lower() != external["email"]:
+        if (mapping["verified_email"] or user.email).strip().lower() != external["email"]:
             raise HTTPException(403, "ACCOUNT_REQUIRES_ADMIN_LINK")
     else:
         existing = (await db.execute(select(User).where(func.lower(User.email) == external["email"]))).scalar_one_or_none()

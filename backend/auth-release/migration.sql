@@ -6,9 +6,15 @@ CREATE TABLE IF NOT EXISTS platform.supabase_identities (
     issuer text NOT NULL,
     subject uuid NOT NULL,
     user_id uuid NOT NULL UNIQUE REFERENCES platform.users(id) ON DELETE CASCADE,
+    verified_email text,
     created_at timestamptz NOT NULL DEFAULT now(),
     PRIMARY KEY (issuer, subject)
 );
+
+-- A verified identity can deliberately use a different login email from an
+-- existing internal account. Set this only after inspecting the actual Auth UID
+-- and confirmed email; never populate it from browser metadata.
+ALTER TABLE platform.supabase_identities ADD COLUMN IF NOT EXISTS verified_email text;
 
 CREATE TABLE IF NOT EXISTS platform.auth_profiles (
     user_id uuid PRIMARY KEY REFERENCES platform.users(id) ON DELETE CASCADE,

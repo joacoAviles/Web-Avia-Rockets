@@ -83,15 +83,17 @@ async def identity(credentials: HTTPAuthorizationCredentials | None = Depends(be
 
 
 async def mapped_user(external, db):
-    user_id = (await db.execute(text(
-        "SELECT user_id FROM platform.supabase_identities WHERE issuer=:issuer AND subject=:subject"
-    ), {"issuer": URL, "subject": uuid.UUID(external["id"])})).scalar_one_or_none()
-    if user_id is None:
+    mapping = (await db.execute(text(
+        "SELECT user_id, verified_email FROM platform.supabase_identities WHERE issuer=:issuer AND subject=:subject"
+    ), {"issuer": URL, "subject": uuid.UUID(external["id"])})).mappings().one_or_none()
+    if mapping is None:
         raise HTTPException(403, "ACCOUNT_PENDING_APPROVAL")
+    user_id = mapping["user_id"]
     user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
     if user is None or not user.is_active:
         raise HTTPException(403, "ACCOUNT_DISABLED")
-    if user.email.strip().lower() != external["email"]:
+    expected_email = mapping["verified_email"] or user.email
+    if expected_email.strip().lower() != external["email"]:
         raise HTTPException(403, "ACCOUNT_REQUIRES_ADMIN_LINK")
     return user
 

@@ -161,7 +161,7 @@ async def capture_preview(service):
             # Resume a frozen background tab without changing the foreground service.
             await socket.send(json.dumps({'id': 0, 'method': 'Page.setWebLifecycleState', 'params': {'state': 'active'}}))
             await socket.send(json.dumps({'id': 1, 'method': 'Page.captureScreenshot', 'params': {
-                'format': 'jpeg', 'quality': 45, 'fromSurface': True, 'captureBeyondViewport': False,
+                'format': 'jpeg', 'quality': 45, 'fromSurface': True, 'captureBeyondViewport': True,
             }}))
             async def result():
                 while True:

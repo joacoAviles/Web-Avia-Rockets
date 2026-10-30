@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    chromium chromium-sandbox xvfb x11vnc openbox novnc websockify ca-certificates fonts-liberation \
+    chromium chromium-sandbox tigervnc-standalone-server openbox novnc websockify ca-certificates fonts-liberation \
     python3 python3-fastapi python3-uvicorn python3-httpx python3-websockets tini \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid 1000 browser \

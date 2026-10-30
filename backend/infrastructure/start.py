@@ -48,7 +48,9 @@ def wait_port(port):
 signal.signal(signal.SIGTERM, stop)
 signal.signal(signal.SIGINT, stop)
 try:
-    launch(['Xvfb', ':99', '-screen', '0', '1280x640x24', '-nolisten', 'tcp'])
+    launch(['Xtigervnc', ':99', '-geometry', '1280x720', '-depth', '24',
+            '-localhost', 'yes', '-rfbport', '5900', '-SecurityTypes', 'None',
+            '-AlwaysShared', '-AcceptSetDesktopSize', '-nolisten', 'tcp'])
     for _ in range(100):
         if os.path.exists('/tmp/.X11-unix/X99'):
             break
@@ -60,7 +62,6 @@ try:
             '--remote-debugging-port=9222', '--no-first-run', '--no-default-browser-check',
             '--start-fullscreen', 'about:blank'])
     wait_port(9222)
-    launch(['x11vnc', '-display', ':99', '-localhost', '-rfbport', '5900', '-forever', '-shared', '-nopw'])
     wait_port(5900)
     launch(['websockify', '127.0.0.1:6080', '127.0.0.1:5900'])
     wait_port(6080)

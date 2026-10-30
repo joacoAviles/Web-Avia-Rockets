@@ -66,7 +66,7 @@ function startInfrastructure(base) {
         frame.src = new URL('/remote/avia.html', base).href;
       }
       panel.querySelectorAll('[data-service]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.service === id)));
-      status.textContent = id === 'general' ? 'Servicios configurados. Su disponibilidad se comprueba al abrirlos.' : 'Abriendo servicio…';
+      status.textContent = id === 'general' ? 'Servicios configurados. Su disponibilidad se comprueba al abrirlos.' : 'Sesión privada · Tu acceso se conserva en este escritorio';
       retry.hidden = true;
     } catch (error) {
       if (error.message === '503' && authorized) {

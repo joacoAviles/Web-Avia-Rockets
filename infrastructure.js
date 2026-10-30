@@ -19,6 +19,10 @@ function startInfrastructure(base) {
   panel.hidden = true;
   panel.innerHTML = `<div class="infra-toolbar"><h1>Infraestructura</h1><nav id="infra-tabs" aria-label="Servicios de infraestructura"></nav><div class="infra-actions"><button type="button" id="infra-expand" title="Ampliar área de trabajo">Ampliar</button><button type="button" id="infra-close">Salir</button></div></div><p id="infra-status" role="status" aria-live="polite"></p><div id="infra-summary"></div><iframe id="infra-screen" title="Navegador remoto privado de Infraestructura" referrerpolicy="no-referrer" hidden></iframe><button type="button" id="infra-retry" hidden>Reconectar</button>`;
   layout.after(panel);
+  const header = document.querySelector('.site-header');
+  const syncHeader = () => panel.style.setProperty('--infra-header-height', `${header.getBoundingClientRect().bottom}px`);
+  new ResizeObserver(syncHeader).observe(header);
+  window.addEventListener('resize', syncHeader);
   const frame = panel.querySelector('iframe');
   const summary = panel.querySelector('#infra-summary');
   const status = panel.querySelector('#infra-status');
@@ -100,6 +104,7 @@ function startInfrastructure(base) {
   async function open() {
     active = true;
     document.body.classList.add('infra-active');
+    syncHeader();
     layout.hidden = true;
     panel.hidden = false;
     try {

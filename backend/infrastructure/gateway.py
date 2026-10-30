@@ -18,7 +18,7 @@ from policy import owner_matches, session_valid, allowed_origin
 OWNER = os.environ.get('INFRA_OWNER_USER_ID', '')
 ORIGIN = os.environ.get('INFRA_APP_ORIGIN', 'https://aviarockets.cl')
 PUBLIC = os.environ.get('INFRA_PUBLIC_ORIGIN', '')
-IDENTITY = 'https://api.aviarockets.cl/api/v1/identity/me'
+IDENTITY = os.environ.get('INFRA_IDENTITY_URL', 'https://api.aviarockets.cl/api/v1/identity/me')
 COOKIE = '__Host-avia-infra'
 ROOT = Path('/usr/share/novnc').resolve()
 LABELS = {'proxmox': 'Proxmox', 'rundeck': 'Rundeck', 'kuma': 'Kuma', 'other1': 'Otro 1', 'other2': 'Otro 2'}

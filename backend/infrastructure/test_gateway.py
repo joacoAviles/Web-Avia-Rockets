@@ -1,7 +1,7 @@
 """Run in the built image: python3 -m unittest -v test_gateway.py."""
 import os
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 
 os.environ['INFRA_OWNER_USER_ID'] = 'af9a76db-393c-45d2-b1e9-3398cefe7ca8'
 os.environ['INFRA_PUBLIC_ORIGIN'] = 'https://infra.aviarockets.cl'
@@ -47,6 +47,25 @@ class GatewayTests(unittest.TestCase):
     def test_unknown_service_does_not_navigate(self):
         self.login()
         self.assertEqual(self.client.post('/services/attacker/activate', headers={'Origin': g.ORIGIN}).status_code, 404)
+
+    def test_preview_requires_owner_and_is_not_cached(self):
+        with patch.dict(g.TARGETS, {'rundeck': 'http://host:4440'}), patch.object(g, 'capture_preview', new_callable=AsyncMock) as capture:
+            capture.return_value = b'jpeg-preview'
+            self.assertEqual(self.client.get('/services/rundeck/preview').status_code, 401)
+            capture.assert_not_awaited()
+            self.login()
+            response = self.client.get('/services/rundeck/preview')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.headers['content-type'], 'image/jpeg')
+            self.assertEqual(response.headers['cache-control'], 'no-store')
+            self.assertEqual(response.content, b'jpeg-preview')
+            self.assertEqual(self.client.get('/services/unknown/preview').status_code, 404)
+
+    def test_unopened_preview_is_empty_and_does_not_navigate(self):
+        with patch.dict(g.TARGETS, {'rundeck': 'http://host:4440'}), patch.object(g, 'capture_preview', new_callable=AsyncMock) as capture:
+            capture.return_value = None
+            self.login()
+            self.assertEqual(self.client.get('/services/rundeck/preview').status_code, 204)
 
     def test_expired_connection_denied(self):
         self.login()

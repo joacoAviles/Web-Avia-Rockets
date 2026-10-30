@@ -1,5 +1,6 @@
 """Private persistent browser. One Uvicorn worker; no credentials on disk."""
 import asyncio
+import base64
 import contextlib
 import json
 import os
@@ -12,7 +13,7 @@ import httpx
 import websockets
 from fastapi import FastAPI, HTTPException, Request, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from policy import owner_matches, session_valid, allowed_origin, reusable_tab
 
 OWNER = os.environ.get('INFRA_OWNER_USER_ID', '')
@@ -34,6 +35,7 @@ app.add_middleware(CORSMiddleware, allow_origins=[ORIGIN], allow_credentials=Tru
 sessions = {}
 tabs = {}
 navigation_lock = asyncio.Lock()
+preview_lock = asyncio.Lock()
 
 
 async def verify(token):
@@ -140,6 +142,45 @@ async def activate(service: str, request: Request):
         except (httpx.HTTPError, ValueError, KeyError):
             raise HTTPException(503, 'BROWSER_UNAVAILABLE')
     return {'ok': True}
+
+
+async def capture_preview(service):
+    # Capture existing pages only: no navigation, focus change, or credentials on disk.
+    async with preview_lock:
+        async with httpx.AsyncClient(timeout=5) as client:
+            response = await client.get('http://127.0.0.1:9222/json/list')
+            response.raise_for_status()
+            tab = reusable_tab(response.json(), tabs.get(service), TARGETS[service])
+        if tab is None:
+            return None
+        endpoint = tab['webSocketDebuggerUrl']
+        parsed = urlsplit(endpoint)
+        if parsed.scheme != 'ws' or parsed.hostname not in ('127.0.0.1', 'localhost') or parsed.port != 9222:
+            raise ValueError('Unexpected debugger endpoint')
+        async with websockets.connect(endpoint, max_size=8*1024*1024) as socket:
+            await socket.send(json.dumps({'id': 1, 'method': 'Page.captureScreenshot', 'params': {
+                'format': 'jpeg', 'quality': 45, 'fromSurface': True, 'captureBeyondViewport': False,
+            }}))
+            async def result():
+                while True:
+                    message = json.loads(await socket.recv())
+                    if message.get('id') == 1:
+                        return base64.b64decode(message['result']['data'], validate=True)
+            return await asyncio.wait_for(result(), timeout=6)
+
+
+@app.get('/services/{service}/preview')
+async def preview(service: str, request: Request):
+    await authenticated(request.cookies.get(COOKIE))
+    if service not in TARGETS:
+        raise HTTPException(404, 'SERVICE_NOT_CONFIGURED')
+    try:
+        content = await capture_preview(service)
+    except Exception:
+        raise HTTPException(503, 'PREVIEW_UNAVAILABLE')
+    if content is None:
+        return Response(status_code=204)
+    return Response(content=content, media_type='image/jpeg')
 
 
 @app.get('/remote/{asset:path}')

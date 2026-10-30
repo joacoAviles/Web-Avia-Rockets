@@ -9,7 +9,8 @@ function startInfrastructure(base) {
   const header = document.querySelector('.site-header');
   if (!layout || !header) return;
   let services = [], authorized = false, active = false, timer, opening;
-  let selected = 'general', renewal;
+  let selected = 'general', renewal, previewTimer, previewRequest;
+  const previewUrls = new Map();
   const panel = document.createElement('section');
   panel.id = 'infrastructure-panel';
   panel.hidden = true;
@@ -23,7 +24,8 @@ function startInfrastructure(base) {
   const retry = panel.querySelector('#infra-retry');
   const menu = document.createElement('div');
   menu.id = 'infra-menu';
-  menu.innerHTML = `<button id="infra-menu-button" class="app-header-trigger" type="button" aria-expanded="false" aria-controls="infra-dropdown">Infraestructura <span aria-hidden="true">⌄</span></button><div id="infra-dropdown" hidden aria-label="Servicios de infraestructura"></div>`;
+  menu.className = 'app-header-menu';
+  menu.innerHTML = `<button id="infra-menu-button" class="app-header-trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="infra-dropdown">Infraestructura</button><div id="infra-dropdown" class="app-header-dropdown" role="menu" hidden aria-label="Servicios de infraestructura"></div>`;
   const trigger = menu.querySelector('button');
   const dropdown = menu.querySelector('#infra-dropdown');
   const syncHeader = () => panel.style.setProperty('--infra-header-height', `${header.getBoundingClientRect().bottom}px`);
@@ -37,6 +39,7 @@ function startInfrastructure(base) {
   }
   function collapse() {
     dropdown.hidden = true;
+    menu.classList.remove('is-open');
     trigger.setAttribute('aria-expanded', 'false');
   }
   async function request(path, method = 'POST', token) {
@@ -66,6 +69,7 @@ function startInfrastructure(base) {
       frame.removeAttribute('src');
       frame.hidden = true;
       clearInterval(timer);
+      stopPreviews(true);
       menu.remove();
       message(error.message === '403' ? 'Tu cuenta no tiene acceso a Infraestructura.' : 'Vuelve a iniciar sesión en Avia Rockets.', true);
     } else message('No se pudo conectar. Intenta reconectar.', true);
@@ -73,8 +77,10 @@ function startInfrastructure(base) {
   async function open(id = selected) {
     if (opening) return;
     opening = true;
+    stopPreviews();
     active = true;
     document.body.classList.add('infra-active');
+    trigger.classList.add('is-active');
     layout.hidden = true;
     panel.hidden = false;
     collapse();
@@ -88,7 +94,11 @@ function startInfrastructure(base) {
       summary.hidden = id !== 'general';
       frame.hidden = id === 'general';
       if (id !== 'general' && !frame.hasAttribute('src')) frame.src = new URL('/remote/avia.html', base).href;
-      dropdown.querySelectorAll('[data-service]').forEach(b => b.setAttribute('aria-current', String(b.dataset.service === id)));
+      dropdown.querySelectorAll('[data-service]').forEach(b => {
+        b.setAttribute('aria-current', String(b.dataset.service === id));
+        b.classList.toggle('is-active', b.dataset.service === id);
+      });
+      if (id === 'general') refreshPreviews();
       message();
       clearInterval(timer);
       timer = setInterval(() => renew().then(() => message()).catch(failure), 45000);
@@ -97,6 +107,8 @@ function startInfrastructure(base) {
   }
   function close() {
     active = false;
+    stopPreviews(true);
+    trigger.classList.remove('is-active');
     clearInterval(timer);
     collapse();
     document.body.classList.remove('infra-active');
@@ -106,26 +118,115 @@ function startInfrastructure(base) {
     // Leaving this view must not revoke the cookie shared with another Avia tab.
     // The short-lived transport still expires unless an active view renews it.
   }
+  function stopPreviews(clear = false) {
+    clearTimeout(previewTimer);
+    previewRequest?.abort();
+    if (clear) {
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+      previewUrls.clear();
+      summary.querySelectorAll('img').forEach(img => { img.removeAttribute('src'); img.hidden = true; });
+    }
+  }
+  async function refreshPreviews() {
+    clearTimeout(previewTimer);
+    if (!active || selected !== 'general' || document.hidden) return;
+    const controller = new AbortController();
+    previewRequest = controller;
+    for (const service of services.filter(s => s.configured)) {
+      if (controller.signal.aborted) break;
+      const card = summary.querySelector(`[data-preview="${service.id}"]`);
+      if (!card) continue;
+      const image = card.querySelector('img');
+      const caption = card.querySelector('small');
+      try {
+        const response = await fetch(new URL(`/services/${encodeURIComponent(service.id)}/preview`, base), {
+          credentials: 'include', cache: 'no-store', signal: controller.signal,
+        });
+        if (response.status === 204) {
+          caption.textContent = 'Abrir para previsualizar';
+          image.hidden = true;
+          continue;
+        }
+        if (!response.ok) throw new Error(String(response.status));
+        const blob = await response.blob();
+        if (controller.signal.aborted) break;
+        const old = previewUrls.get(service.id);
+        const url = URL.createObjectURL(blob);
+        previewUrls.set(service.id, url);
+        image.src = url;
+        image.hidden = false;
+        if (old) URL.revokeObjectURL(old);
+        caption.textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+      } catch (error) {
+        if (error.name === 'AbortError') break;
+        if (['401', '403'].includes(error.message)) { failure(error); return; }
+        caption.textContent = 'Vista previa no disponible · Abrir servicio';
+      }
+    }
+    if (!controller.signal.aborted && active && selected === 'general') previewTimer = setTimeout(refreshPreviews, 20000);
+  }
   function render() {
+    stopPreviews(true);
     dropdown.replaceChildren();
     summary.replaceChildren();
-    for (const service of [{ id: 'general', label: 'General', configured: true }, ...services]) {
+    const heading = document.createElement('div');
+    heading.className = 'infra-overview-heading';
+    const title = document.createElement('h1');
+    title.textContent = 'Resumen';
+    const count = document.createElement('p');
+    count.textContent = `${services.filter(s => s.configured).length} servicios · Vistas previas cada 20 s`;
+    heading.append(title, count);
+    const grid = document.createElement('div');
+    grid.className = 'infra-preview-grid';
+    summary.append(heading, grid);
+    const descriptions = {
+      general: ['RS', 'Todos los servicios'], proxmox: ['PX', 'Máquinas y contenedores'],
+      rundeck: ['RD', 'Trabajos y ejecuciones'], kuma: ['UK', 'Monitoreo de servicios'],
+      other1: ['01', 'Pendiente de configurar'], other2: ['02', 'Pendiente de configurar'],
+    };
+    for (const service of [{ id: 'general', label: 'Resumen', configured: true }, ...services]) {
       const button = document.createElement('button');
       button.type = 'button';
-      button.textContent = service.label;
+      button.className = 'app-header-option';
+      button.setAttribute('role', 'menuitem');
+      const badge = document.createElement('strong');
+      const label = document.createElement('span');
+      const detail = document.createElement('small');
+      badge.textContent = descriptions[service.id][0];
+      label.textContent = service.label;
+      detail.textContent = descriptions[service.id][1];
+      label.append(detail);
+      button.append(badge, label);
       button.dataset.service = service.id;
       button.disabled = !service.configured;
       button.setAttribute('aria-current', String(selected === service.id));
-      if (!service.configured) button.title = 'Pendiente de configurar';
+      button.classList.toggle('is-active', selected === service.id);
       button.addEventListener('click', () => { open(service.id); trigger.focus(); });
       dropdown.append(button);
-      if (service.id !== 'general') {
+      if (service.id !== 'general' && service.configured) {
         const card = document.createElement('button');
         card.type = 'button';
-        card.textContent = service.label;
-        card.disabled = !service.configured;
+        card.className = 'infra-preview';
+        card.dataset.preview = service.id;
+        card.setAttribute('aria-label', `Abrir ${service.label}`);
+        const image = document.createElement('img');
+        image.alt = `Vista previa de ${service.label}`;
+        image.hidden = true;
+        const viewport = document.createElement('div');
+        viewport.className = 'infra-preview-screen';
+        const placeholder = document.createElement('span');
+        placeholder.textContent = service.label;
+        viewport.append(placeholder, image);
+        const footer = document.createElement('div');
+        footer.className = 'infra-preview-caption';
+        const name = document.createElement('strong');
+        name.textContent = service.label;
+        const state = document.createElement('small');
+        state.textContent = 'Cargando vista previa…';
+        footer.append(name, state);
+        card.append(viewport, footer);
         card.addEventListener('click', () => open(service.id));
-        summary.append(card);
+        grid.append(card);
       }
     }
   }
@@ -140,6 +241,7 @@ function startInfrastructure(base) {
       m.querySelector('button')?.setAttribute('aria-expanded', 'false');
     });
     dropdown.hidden = !show;
+    menu.classList.toggle('is-open', show);
     trigger.setAttribute('aria-expanded', String(show));
   });
   menu.addEventListener('keydown', event => {
@@ -147,6 +249,7 @@ function startInfrastructure(base) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       dropdown.hidden = false;
+      menu.classList.add('is-open');
       trigger.setAttribute('aria-expanded', 'true');
       const buttons = [...dropdown.querySelectorAll('button:not(:disabled)')];
       const index = buttons.indexOf(document.activeElement);
@@ -167,7 +270,8 @@ function startInfrastructure(base) {
     }
   });
   document.addEventListener('visibilitychange', () => {
-    if (active && !document.hidden) renew().catch(failure);
+    if (active && !document.hidden) renew().then(() => { if (selected === 'general') refreshPreviews(); }).catch(failure);
+    else stopPreviews();
   });
   auth.auth.onAuthStateChange(event => {
     if (event === 'SIGNED_OUT') {

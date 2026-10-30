@@ -35,7 +35,8 @@ app.add_middleware(CORSMiddleware, allow_origins=[ORIGIN], allow_credentials=Tru
 sessions = {}
 tabs = {}
 navigation_lock = asyncio.Lock()
-preview_lock = asyncio.Lock()
+preview_lock = navigation_lock
+active_tab = None
 
 
 async def verify(token):
@@ -125,6 +126,7 @@ async def disconnect(request: Request):
 
 @app.post('/services/{service}/activate')
 async def activate(service: str, request: Request):
+    global active_tab
     csrf(request)
     await authenticated(request.cookies.get(COOKIE))
     if service not in TARGETS:
@@ -139,36 +141,49 @@ async def activate(service: str, request: Request):
                 tabs[service] = tab['id']
                 result = await client.get('http://127.0.0.1:9222/json/activate/' + quote(tab['id'], safe=''))
                 result.raise_for_status()
+                active_tab = tab['id']
         except (httpx.HTTPError, ValueError, KeyError):
             raise HTTPException(503, 'BROWSER_UNAVAILABLE')
     return {'ok': True}
 
 
 async def capture_preview(service):
-    # Capture existing pages only: no navigation, focus change, or credentials on disk.
+    # Briefly render an existing tab, then restore the selected service.
+    # Share the navigation lock so a service click cannot race with restoration.
     async with preview_lock:
         async with httpx.AsyncClient(timeout=5) as client:
             response = await client.get('http://127.0.0.1:9222/json/list')
             response.raise_for_status()
-            tab = reusable_tab(response.json(), tabs.get(service), TARGETS[service])
+            live = response.json()
+            tab = reusable_tab(live, tabs.get(service), TARGETS[service])
+            restore = active_tab or next((t['id'] for t in live if t.get('type') == 'page'), None)
         if tab is None:
             return None
         endpoint = tab['webSocketDebuggerUrl']
         parsed = urlsplit(endpoint)
         if parsed.scheme != 'ws' or parsed.hostname not in ('127.0.0.1', 'localhost') or parsed.port != 9222:
             raise ValueError('Unexpected debugger endpoint')
-        async with websockets.connect(endpoint, max_size=8*1024*1024) as socket:
-            # Resume a frozen background tab without changing the foreground service.
-            await socket.send(json.dumps({'id': 0, 'method': 'Page.setWebLifecycleState', 'params': {'state': 'active'}}))
-            await socket.send(json.dumps({'id': 1, 'method': 'Page.captureScreenshot', 'params': {
-                'format': 'jpeg', 'quality': 45, 'fromSurface': True, 'captureBeyondViewport': True,
-            }}))
-            async def result():
+        try:
+            async with websockets.connect(endpoint, max_size=8*1024*1024) as socket:
+                await socket.send(json.dumps({'id': 0, 'method': 'Page.bringToFront'}))
                 while True:
-                    message = json.loads(await socket.recv())
-                    if message.get('id') == 1:
-                        return base64.b64decode(message['result']['data'], validate=True)
-            return await asyncio.wait_for(result(), timeout=12)
+                    message = json.loads(await asyncio.wait_for(socket.recv(), timeout=5))
+                    if message.get('id') == 0:
+                        break
+                await socket.send(json.dumps({'id': 1, 'method': 'Page.captureScreenshot', 'params': {
+                    'format': 'jpeg', 'quality': 45, 'fromSurface': True, 'captureBeyondViewport': True,
+                }}))
+                async def result():
+                    while True:
+                        message = json.loads(await socket.recv())
+                        if message.get('id') == 1:
+                            return base64.b64decode(message['result']['data'], validate=True)
+                return await asyncio.wait_for(result(), timeout=12)
+        finally:
+            if restore and restore != tab['id']:
+                async with httpx.AsyncClient(timeout=5) as client:
+                    await client.get('http://127.0.0.1:9222/json/activate/' + quote(restore, safe=''))
+
 
 
 @app.get('/services/{service}/preview')

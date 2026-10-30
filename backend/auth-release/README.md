@@ -1,6 +1,18 @@
 # Avia Rockets Supabase Auth release
 
-This release contains the browser flow, branded email templates, additive PostgreSQL migration, and FastAPI identity bridge. It is source-complete for integration, but it has not been installed on PROD01. It must be built into the existing API image and deployed together with the static site before it can serve traffic.
+This release contains the browser flow, branded email templates, additive PostgreSQL migration, and FastAPI identity bridge. On 2026-10-30 the migration and backend were deployed to PROD01 as `avia_public_api:auth-20261030-e547e13`. The public frontend has not been switched. Administrative secrets, SMTP and Google remain required before completing the release.
+
+## Deployment evidence — 2026-10-30
+
+- Complete PostgreSQL custom-format backup: 2,081,507,971 bytes; `pg_restore -l` exited 0. Separate identity-table backup and original Compose/source archives retained on PROD01.
+- Seven installer tests, five identity-binding regression tests and eighteen transactional API checks passed. The transactional checks use a controlled identity-verification override and roll back every database write; they do not prove real OTP, Google or email delivery.
+- API recreation and a subsequent restart both passed health=200 and identity-without-session=401. The browser-visible public endpoint now returns `MISSING_SESSION` instead of `Not Found`. Python HTTP probes from PROD01 received 403, so their responses are not evidence of browser access.
+- Legacy registration is retired with 410 and the expected Avia CORS origin. Legacy login/refresh remain enabled for migration.
+- Supabase Site URL is Avia; the three exact verify/callback/reset redirect URLs have been saved. Email confirmation is enabled and anonymous sign-in disabled.
+- The platform administrator's verified Auth email differs from the internal legacy email. A verified-email binding was set only after inspecting the actual confirmed UID in the Dashboard. Internal IDs and customer grants are unchanged.
+- `configure_admin_secret.py` supports operator-only entry; `rundeck-configure-secret.json` supplies a masked field. The operator must enter and submit the existing key directly. Never put a key in a command, repository, diagnostic or chat.
+- PROD01 SSH accepts the single `RD_OPTION_SUPABASE_SECRET` environment variable for this job. The key is delivered over the SSH environment, not interpolated into a temporary script. Do not replace this with `@option...@` substitution: the tested remote script file mode is 755. The script itself contains no key. The final entry still requires an operator.
+- SMTP remains disabled in Supabase. Its form is prepared for the existing Zoho sender, port 587; the operator must enter the password and save. Google remains disabled without its client credentials. Branded templates cannot be saved on the current plan until custom SMTP is configured.
 
 ## Request paths
 
@@ -56,11 +68,11 @@ Deploy the tracked `web-auth/` directory, `web-auth/supabase-config.js`, the roo
 
 ## Current production gates
 
-These items cannot be completed from this checkout alone:
+These items remain pending:
 
 - Supabase SMTP, email-template and Google provider settings need to be saved in the actual project dashboard.
 - A Supabase secret key must be injected into PROD01's server-side environment.
-- The production API source checkout and deployment host are not available to this Work runtime; the FastAPI router is not yet mounted in the live service.
+- The API router is mounted in the live service; administrative SDK actions still require the server secret.
 - Existing PROD01 local-auth accounts, background workers and session behavior must be inventoried before disabling legacy routes.
 - Actual confirmation, recovery, Google callback, invitation, and access-management emails must be tested against Avia's verified sender after dashboard configuration.
 

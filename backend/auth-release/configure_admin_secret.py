@@ -32,6 +32,8 @@ except Exception:
 
 def main():
     key = os.environ.get("RD_OPTION_SUPABASE_SECRET", "").strip()
+    if not key and "--stdin" in sys.argv:
+        key = sys.stdin.read().strip()
     if not key:
         if not sys.stdin.isatty():
             raise RuntimeError("Introduce la clave en el campo seguro de Rundeck.")

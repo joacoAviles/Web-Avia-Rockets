@@ -1,5 +1,5 @@
 # Avia Rockets — Identidad y administración
-Estado: release de código integrado en esta rama; todavía no está desplegado ni verificado contra PROD01. No presentar `aviarockets.cl` como actualizado hasta aplicar el overlay FastAPI, ejecutar la migración y configurar Supabase.
+Estado: migración y backend desplegados en PROD01 el 30-10-2026, imagen `avia_public_api:auth-20261030-e547e13`; frontend público todavía sin cambiar. Faltan clave administrativa, SMTP, Google, plantillas y pruebas reales de acceso/correos antes de declarar terminado el release.
 
 ## Implementación incorporada en esta rama
 
@@ -23,7 +23,7 @@ Estado: release de código integrado en esta rama; todavía no está desplegado 
 - `email-templates/supabase-confirm-signup.html`, `supabase-recovery.html` y `supabase-invite.html` mantienen la marca y el formato de los correos Avia, usando los placeholders oficiales de Supabase.
 - El código fuente de la API se integrará en la imagen de FastAPI y el frontend se desplegará desde el mismo commit. La guía operativa está en `backend/auth-release/README.md`.
 
-Falta la aplicación real del release en PROD01, el secreto de Supabase en el entorno servidor, SMTP Avia en Supabase, configuración de Google y pruebas de correo/callback en las cuentas reales. No se ha ejecutado ningún cambio productivo.
+Backend y migración aplicados en PROD01, con respaldo completo validado. Pasaron 18 comprobaciones transaccionales del esquema real y el reinicio conserva health=200 e identity=401 sin sesión. Se corrigió el vínculo de correo distinto del administrador, contrastando su UID confirmado en el Dashboard. Supabase tiene guardadas las tres URLs de retorno. Pendientes: secreto administrativo, SMTP Avia, Google, plantillas, frontend y pruebas reales de correo/callback. Ver `backend/auth-release/README.md` para evidencia y límites.
 
 ## Evidencia y problema
 El código exportado de PROD01 el 30 de octubre deriva Admin y fhevia a Supabase, mantiene contraseñas locales para otros usuarios y un registro local que asigna admin y Legal. El frontend inspeccionado contiene reintentos contra varias API y muestra detalles técnicos al fallar. register.html utiliza endpoints de registro anteriores. La lectura pública del login por el buscador falló; no constituye una revisión visual.

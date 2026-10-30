@@ -1,6 +1,6 @@
 # Avia Rockets Supabase Auth release
 
-This release contains the browser flow, branded email templates, additive PostgreSQL migration, and FastAPI identity bridge. On 2026-10-30 the migration and backend were deployed to PROD01 as `avia_public_api:auth-20261030-e547e13`. The public frontend has not been switched. Administrative secrets, SMTP and Google remain required before completing the release.
+This release contains the browser flow, branded email templates, additive PostgreSQL migration, and FastAPI identity bridge. On 2026-10-30 the migration and backend were deployed to PROD01 as `avia_public_api:auth-20261030-e547e13`. The public frontend was merged through PR #22 (04a9702). SMTP, Google and the three branded templates are now saved. The server administrative key remains pending correction before SDK-based user administration can be declared operational.
 
 ## Deployment evidence — 2026-10-30
 

@@ -1,5 +1,5 @@
 # Avia Rockets — Identidad y administración
-Estado: migración y backend desplegados en PROD01 el 30-10-2026, imagen `avia_public_api:auth-20261030-e547e13`; frontend público todavía sin cambiar. Faltan clave administrativa, SMTP, Google, plantillas y pruebas reales de acceso/correos antes de declarar terminado el release.
+Estado: migración y backend desplegados en PROD01 el 30-10-2026, imagen `avia_public_api:auth-20261030-e547e13`; frontend integrado mediante PR #22 (04a9702). SMTP, Google y plantillas guardados; Google probado con acceso real al panel y recuperación aceptada por Supabase. Falta corregir la clave administrativa y verificar invitaciones/recuperación completa antes de declarar terminado el release.
 
 ## Implementación incorporada en esta rama
 

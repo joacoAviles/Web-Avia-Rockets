@@ -148,7 +148,14 @@ async function appFetch(path, options = {}){
   if (options.body && !(options.body instanceof FormData) && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   const token = appGetToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
-  const response = await fetch(`${AVIA_APP_API}${path}`, { ...options, headers });
+  let response = await fetch(`${AVIA_APP_API}${path}`, { ...options, headers });
+  if (response.status === 401 && typeof window.aviaRefreshApiSession === "function") {
+    try {
+      const renewedToken = await window.aviaRefreshApiSession();
+      headers.set("Authorization", `Bearer ${renewedToken}`);
+      response = await fetch(`${AVIA_APP_API}${path}`, { ...options, headers });
+    } catch (_) { /* The normal expiry handler below returns the user to login. */ }
+  }
   let data = null;
   try { data = await response.json(); } catch (_) { data = null; }
   if (response.status === 401 || (response.status === 404 && data?.error === "USER_NOT_FOUND")) {
@@ -1229,7 +1236,7 @@ function appBindVehicleActions(){
 }
 
 function appSetupSidebarToggle(){ const layout = document.getElementById("app-layout"); const toggle = document.getElementById("app-sidebar-toggle"); if (!layout || !toggle) return; toggle.addEventListener("click", () => { const compact = layout.classList.toggle("is-compact"); toggle.textContent = compact ? "›" : "‹"; }); }
-async function appLogout(){ try { await appFetch("/api/auth/logout", { method:"POST" }); } catch (_) {} appClearSession(); window.location.href = "login.html"; }
+async function appLogout(){ try { await appFetch("/api/auth/logout", { method:"POST" }); } catch (_) {} try { await window.aviaSupabaseSignOut?.(); } catch (_) {} appClearSession(); window.location.href = "login.html"; }
 
 async function appInit(){
   if (!appGetToken()) { window.location.href = "login.html?next=app.html"; return; }

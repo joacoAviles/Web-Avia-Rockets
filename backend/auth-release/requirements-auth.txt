@@ -1,0 +1,3 @@
+# Merge these into the API's pinned requirements before building the image.
+supabase==2.16.0
+email-validator==2.2.0

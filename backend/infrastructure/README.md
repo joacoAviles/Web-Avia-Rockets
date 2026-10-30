@@ -1,7 +1,7 @@
 # Infraestructura privada de Avia Rockets
 
-Implementation candidate, not a production deployment. The frontend is dormant
-until `window.AVIA_INFRA_GATEWAY` is set in api-config.js. It adds Infrastructure
+The private backend is running on PROD01. Public routing and frontend release
+remain pending. api-config.js enables the gateway when this branch is deployed. It adds Infrastructure
 to the existing app.html header only after server-side owner authorization.
 General, Proxmox, Rundeck, Kuma, Otro 1 and Otro 2 share a single persistent
 Chromium desktop. General lists configuration, not fabricated health results.
@@ -81,23 +81,30 @@ then `docker compose stop`. Do not delete the browser-profile volume.
 
 Local syntax and policy checks do not replace the live acceptance tests above.
 
-## PROD01 staging status (2026-10-30)
+## PROD01 deployment status (2026-10-30)
 
-The image built and all nine gateway/policy tests passed. Both live desktop
-startup checks failed; nothing is published or enabled in the frontend.
-The corrected image includes chromium-sandbox. Execution 15924 now fails with
-`Failed to move to new namespace ... Operation not permitted` under Docker's
-default profile. The staged container is stopped.
+Image avia-infrastructure:d865b10 is running with restart=unless-stopped,
+private owner configuration, the persistent avia-infrastructure-profile volume,
+and the approved seccomp profile. Host port 8095 binds only to 127.0.0.1.
+The connector and gateway share avia-api-final_default; the planned tunnel
+upstream is http://avia-infrastructure:8080. No public route has been saved yet.
 
-`compose.userns.yaml` is an opt-in candidate, NOT applied. It selects
-`seccomp-chromium.json`, derived from moby/profiles seccomp/default.json
-(blob 6e5e47e242892aaa290f916ba1045f9213ef0b84, Apache-2.0), adding only
-clone/setns/unshare permissions following Microsoft Playwright's container
-sandbox pattern. It retains the remaining syscall restrictions and does not
-add SYS_ADMIN, privileged mode, or disable Chromium's sandbox. Allowing these
-syscalls increases the kernel interfaces reachable by this container. Approval
-is required before applying through the remote management UI. Startup and live
-acceptance tests must pass before publishing the gateway.
+Rundeck execution 15964 passed all nine tests, verified unauthenticated asset
+rejection, and verified an actual restart. Execution 15972 verified Proxmox,
+Rundeck and Kuma reachability, identity endpoint rejection without a token,
+Chromium renderer namespaces/NoNewPrivs/seccomp, and the upstream RFB stream.
+Idle memory was 280 MiB under the 768 MiB limit. Real service login sessions,
+owner UI, non-owner live accounts and mobile interaction remain unverified.
+
+The supervisor holds an exclusive OS file lock for the managed profile, then
+archives stale Chromium singleton symlinks left by prior container instances.
+Only this supervisor may manage the profile volume.
+
+compose.userns.yaml selects seccomp-chromium.json, derived from moby/profiles
+seccomp/default.json (blob 6e5e47e242892aaa290f916ba1045f9213ef0b84, Apache-2.0).
+The only added allow rule enables clone/setns/unshare following Playwright's
+sandbox pattern. Other syscall restrictions remain; no SYS_ADMIN, privileged
+mode or --no-sandbox is used. User approval was received before applying it.
 
 Sources: https://github.com/moby/profiles/blob/main/seccomp/default.json and
 https://github.com/microsoft/playwright/blob/main/utils/docker/seccomp_profile.json

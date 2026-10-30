@@ -25,13 +25,13 @@ Chromium desktop. General lists configuration, not fabricated health results.
 - Gateway uses one worker; restart clears transport sessions but keeps the
   Chromium profile. Do not scale workers without a shared session store.
 
-## Deployment steps (not executed)
+## Deployment steps
 
 1. Select an always-on Docker host that can reach all target services, including
    the Rundeck Tailscale address. Hosting on PROD01 makes remote recovery depend
    on that VM; use an independent host if shutdown/recovery access is required.
-2. Confirm available memory. Compose caps RAM at 2 GiB and CPU at 1.5, with
-   512 MiB shared memory. Actual consumption must be measured with the panels open.
+2. Confirm available memory. Compose caps RAM at 768 MiB and CPU at 0.75, with
+   256 MiB shared memory and 1 GiB RAM plus swap. Actual consumption must be measured with the panels open.
 3. Copy this directory to a private deployment directory. Copy `.env.example`
    to `.env`, chmod 600, and set `INFRA_OWNER_USER_ID` to the verified internal
    Avia UUID of the requested owner. Do not infer the UUID from email or role.
@@ -80,3 +80,24 @@ then `docker compose stop`. Do not delete the browser-profile volume.
 - Chromium DevTools: https://chromedevtools.github.io/devtools-protocol/
 
 Local syntax and policy checks do not replace the live acceptance tests above.
+
+## PROD01 staging status (2026-10-30)
+
+The image built and all nine gateway/policy tests passed. Both live desktop
+startup checks failed; nothing is published or enabled in the frontend.
+The corrected image includes chromium-sandbox. Execution 15924 now fails with
+`Failed to move to new namespace ... Operation not permitted` under Docker's
+default profile. The staged container is stopped.
+
+`compose.userns.yaml` is an opt-in candidate, NOT applied. It selects
+`seccomp-chromium.json`, derived from moby/profiles seccomp/default.json
+(blob 6e5e47e242892aaa290f916ba1045f9213ef0b84, Apache-2.0), adding only
+clone/setns/unshare permissions following Microsoft Playwright's container
+sandbox pattern. It retains the remaining syscall restrictions and does not
+add SYS_ADMIN, privileged mode, or disable Chromium's sandbox. Allowing these
+syscalls increases the kernel interfaces reachable by this container. Approval
+is required before applying through the remote management UI. Startup and live
+acceptance tests must pass before publishing the gateway.
+
+Sources: https://github.com/moby/profiles/blob/main/seccomp/default.json and
+https://github.com/microsoft/playwright/blob/main/utils/docker/seccomp_profile.json

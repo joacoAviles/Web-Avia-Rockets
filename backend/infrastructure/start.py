@@ -61,7 +61,9 @@ try:
     launch(['openbox'])
     browser_process = launch(['chromium', '--user-data-dir=/profile', '--remote-debugging-address=127.0.0.1',
             '--remote-debugging-port=9222', '--no-first-run', '--no-default-browser-check',
-            '--start-fullscreen', '--restore-last-session'])
+            '--start-fullscreen', '--restore-last-session',
+            '--disable-background-timer-throttling', '--disable-renderer-backgrounding',
+            '--disable-backgrounding-occluded-windows'])
     wait_port(9222)
     wait_port(5900)
     launch(['websockify', '127.0.0.1:6080', '127.0.0.1:5900'])

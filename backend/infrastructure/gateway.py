@@ -158,6 +158,8 @@ async def capture_preview(service):
         if parsed.scheme != 'ws' or parsed.hostname not in ('127.0.0.1', 'localhost') or parsed.port != 9222:
             raise ValueError('Unexpected debugger endpoint')
         async with websockets.connect(endpoint, max_size=8*1024*1024) as socket:
+            # Resume a frozen background tab without changing the foreground service.
+            await socket.send(json.dumps({'id': 0, 'method': 'Page.setWebLifecycleState', 'params': {'state': 'active'}}))
             await socket.send(json.dumps({'id': 1, 'method': 'Page.captureScreenshot', 'params': {
                 'format': 'jpeg', 'quality': 45, 'fromSurface': True, 'captureBeyondViewport': False,
             }}))
@@ -166,7 +168,7 @@ async def capture_preview(service):
                     message = json.loads(await socket.recv())
                     if message.get('id') == 1:
                         return base64.b64decode(message['result']['data'], validate=True)
-            return await asyncio.wait_for(result(), timeout=6)
+            return await asyncio.wait_for(result(), timeout=12)
 
 
 @app.get('/services/{service}/preview')

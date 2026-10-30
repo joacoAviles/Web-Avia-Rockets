@@ -18,6 +18,23 @@ const profileKey = 'avia_signup_profile';
 const tokenKey = 'avia_auth_token';
 const userKey = 'avia_auth_user';
 
+if (page === 'logout') {
+  (async () => {
+    showMessage('Cerrando tu sesión…');
+    const { data: { session } } = await supabase.auth.getSession();
+    const apiToken = localStorage.getItem(tokenKey);
+    if (session && apiToken) {
+      try { await api('/logout', 'POST', { api_access_token: apiToken }); }
+      catch (_) { /* Always close the local session, including during an outage. */ }
+    }
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
+    if (error) throw error;
+    localStorage.removeItem(tokenKey);
+    localStorage.removeItem(userKey);
+    location.replace('login.html?manual=1');
+  })().catch(() => showMessage('No pudimos cerrar la sesión. Inténtalo nuevamente.', true));
+}
+
 const friendlyErrors = {
   invalid_credentials: 'Usuario o contraseña incorrectos.',
   email_not_confirmed: 'Confirma tu correo para ingresar.',

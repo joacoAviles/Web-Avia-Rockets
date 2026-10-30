@@ -1236,7 +1236,7 @@ function appBindVehicleActions(){
 }
 
 function appSetupSidebarToggle(){ const layout = document.getElementById("app-layout"); const toggle = document.getElementById("app-sidebar-toggle"); if (!layout || !toggle) return; toggle.addEventListener("click", () => { const compact = layout.classList.toggle("is-compact"); toggle.textContent = compact ? "›" : "‹"; }); }
-async function appLogout(){ try { await appFetch("/api/auth/logout", { method:"POST" }); } catch (_) {} try { await window.aviaSupabaseSignOut?.(); } catch (_) {} appClearSession(); window.location.href = "login.html"; }
+async function appLogout(){ window.location.href = "web-auth/logout.html"; }
 
 async function appInit(){
   if (!appGetToken()) { window.location.href = "login.html?next=app.html"; return; }

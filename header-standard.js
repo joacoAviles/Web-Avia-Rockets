@@ -436,8 +436,7 @@ function aviaApplyStandardHeader(){
   if (logoutLink) {
     logoutLink.addEventListener('click', function(event){
       event.preventDefault();
-      aviaClearSession();
-      window.location.href = 'login.html';
+      window.location.href = 'web-auth/logout.html';
     });
   }
 

@@ -1,5 +1,5 @@
 import unittest
-from policy import allowed_origin, owner_matches, session_valid
+from policy import allowed_origin, owner_matches, session_valid, reusable_tab
 
 OWNER = 'af9a76db-393c-45d2-b1e9-3398cefe7ca8'
 
@@ -20,6 +20,19 @@ class PolicyTests(unittest.TestCase):
         self.assertFalse(session_valid(None, 10))
         self.assertFalse(session_valid({'expires': 10}, 10))
         self.assertTrue(session_valid({'expires': 11}, 10))
+
+    def test_restored_service_tab_is_reused(self):
+        login = {'id': 'restored', 'type': 'page', 'url': 'http://host:4440/user/login'}
+        self.assertIs(reusable_tab([login], None, 'http://host:4440/project/job'), login)
+        self.assertIsNone(reusable_tab([login], None, 'http://host:3000'))
+        self.assertIsNone(reusable_tab([login], None, 'https://host:4440'))
+
+    def test_remembered_tab_wins_and_external_redirect_is_not_reused(self):
+        tabs = [{'id': 'a', 'type': 'page', 'url': 'https://host/'},
+                {'id': 'b', 'type': 'page', 'url': 'https://host:443/page'},
+                {'id': 'c', 'type': 'page', 'url': 'https://host.attacker.test/'}]
+        self.assertEqual(reusable_tab(tabs, 'b', 'https://host/')['id'], 'b')
+        self.assertEqual(reusable_tab(tabs, 'c', 'https://host/')['id'], 'a')
 
     def test_origin_exact_match(self):
         origin = 'https://aviarockets.cl'

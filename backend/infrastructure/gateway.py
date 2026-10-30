@@ -13,7 +13,7 @@ import websockets
 from fastapi import FastAPI, HTTPException, Request, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from policy import owner_matches, session_valid, allowed_origin
+from policy import owner_matches, session_valid, allowed_origin, reusable_tab
 
 OWNER = os.environ.get('INFRA_OWNER_USER_ID', '')
 ORIGIN = os.environ.get('INFRA_APP_ORIGIN', 'https://aviarockets.cl')
@@ -131,10 +131,10 @@ async def activate(service: str, request: Request):
         try:
             async with httpx.AsyncClient(timeout=8) as client:
                 live = (await client.get('http://127.0.0.1:9222/json/list')).json()
-                tab = next((t for t in live if t.get('id') == tabs.get(service)), None)
+                tab = reusable_tab(live, tabs.get(service), TARGETS[service])
                 if tab is None:
                     tab = (await client.put('http://127.0.0.1:9222/json/new?' + quote(TARGETS[service], safe=''))).json()
-                    tabs[service] = tab['id']
+                tabs[service] = tab['id']
                 result = await client.get('http://127.0.0.1:9222/json/activate/' + quote(tab['id'], safe=''))
                 result.raise_for_status()
         except (httpx.HTTPError, ValueError, KeyError):

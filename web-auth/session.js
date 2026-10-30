@@ -1,6 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 const config = window.AVIA_SUPABASE_CONFIG;
-const supabase = createClient(config.url, config.publishableKey, {
+export const supabase = createClient(config.url, config.publishableKey, {
   auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
 });
 window.aviaSupabaseSignOut = async () => {

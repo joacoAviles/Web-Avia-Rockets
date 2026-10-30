@@ -21,6 +21,7 @@ if stale:
         path.rename(archive / path.name)
 
 children = []
+browser_process = None
 
 
 def launch(argv):
@@ -58,9 +59,9 @@ try:
     else:
         raise RuntimeError('Display unavailable')
     launch(['openbox'])
-    launch(['chromium', '--user-data-dir=/profile', '--remote-debugging-address=127.0.0.1',
+    browser_process = launch(['chromium', '--user-data-dir=/profile', '--remote-debugging-address=127.0.0.1',
             '--remote-debugging-port=9222', '--no-first-run', '--no-default-browser-check',
-            '--start-fullscreen', 'about:blank'])
+            '--start-fullscreen', '--restore-last-session'])
     wait_port(9222)
     wait_port(5900)
     launch(['websockify', '127.0.0.1:6080', '127.0.0.1:5900'])
@@ -71,6 +72,13 @@ try:
         time.sleep(1)
     raise RuntimeError('Infrastructure process exited; container must restart')
 finally:
+    # Let Chromium flush cookies and session data while its display is still alive.
+    if browser_process is not None and browser_process.poll() is None:
+        browser_process.terminate()
+        try:
+            browser_process.wait(timeout=15)
+        except subprocess.TimeoutExpired:
+            browser_process.kill()
     for process in reversed(children):
         if process.poll() is None:
             process.terminate()

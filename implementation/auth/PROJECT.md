@@ -1,9 +1,12 @@
 # Avia Rockets — Identidad y administración
-Estado: migración y backend desplegados en PROD01 el 30-10-2026, imagen `avia_public_api:auth-20261030-e547e13`; frontend integrado mediante PR #22 (04a9702). SMTP, Google y plantillas guardados; Google probado con acceso real al panel y recuperación aceptada por Supabase. Falta corregir la clave administrativa y verificar invitaciones/recuperación completa antes de declarar terminado el release.
+Estado actual — 30-10-2026: backend y migración desplegados en PROD01 (`avia_public_api:auth-20261030-e547e13`), frontend publicado mediante PR #22 y correcciones hasta `1df9a62`. SMTP, Google, plantillas y clave administrativa configurados. Ingreso real con Google al panel existente, tabla administrativa, correo de recuperación recibido en Inbox y cierre de sesión comprobados. SDK administrativo validado en ejecución Rundeck #15712 y comprobación independiente; secreto con permisos 600, API health=200.
+
+Límites de validación: no se ejecutó un alta nueva con OTP real, sus variantes vencido/incorrecto/reutilizado, un cambio real de contraseña ni la entrega de invitación a una cuenta nueva. Las pruebas automáticas cubren permisos, aislamiento y callbacks con las sustituciones documentadas en README. Las secciones históricas siguientes conservan el diagnóstico previo; no describen el estado actual.
+
 
 ## Implementación incorporada en esta rama
 
-## Verificación del 30 de octubre de 2026, segunda revisión
+## Histórico previo al despliegue — segunda revisión del 30 de octubre de 2026
 
 - La API pública `/api/v1/identity/me` responde `{"detail":"Not Found"}`: el router todavía no está instalado.
 - SSH a PROD01 desde esta sesión falla con `Operation not permitted`; Git por Terminal no resuelve github.com.
@@ -21,9 +24,9 @@ Estado: migración y backend desplegados en PROD01 el 30-10-2026, imagen `avia_p
 - `web-auth/admin.html` expone gestión de invitaciones, vinculación de UID verificado, bloqueo y permisos de productos; todas las acciones pasan por autorización de plataforma en FastAPI.
 - `backend/auth-release/` contiene el puente API, revisión de sesión revocada, guard para las rutas públicas locales antiguas, esquema/migración y requisitos del SDK administrativo.
 - `email-templates/supabase-confirm-signup.html`, `supabase-recovery.html` y `supabase-invite.html` mantienen la marca y el formato de los correos Avia, usando los placeholders oficiales de Supabase.
-- El código fuente de la API se integrará en la imagen de FastAPI y el frontend se desplegará desde el mismo commit. La guía operativa está en `backend/auth-release/README.md`.
+- El código fuente de la API está integrado en la imagen de FastAPI y el frontend está publicado. La guía operativa está en `backend/auth-release/README.md`.
 
-Backend y migración aplicados en PROD01, con respaldo completo validado. Pasaron 18 comprobaciones transaccionales del esquema real y el reinicio conserva health=200 e identity=401 sin sesión. Se corrigió el vínculo de correo distinto del administrador, contrastando su UID confirmado en el Dashboard. Supabase tiene guardadas las tres URLs de retorno. Pendientes: secreto administrativo, SMTP Avia, Google, plantillas, frontend y pruebas reales de correo/callback. Ver `backend/auth-release/README.md` para evidencia y límites.
+Backend, configuración y frontend publicados; ver el estado actual al inicio y `backend/auth-release/README.md` para evidencia y límites.
 
 ## Evidencia y problema
 El código exportado de PROD01 el 30 de octubre deriva Admin y fhevia a Supabase, mantiene contraseñas locales para otros usuarios y un registro local que asigna admin y Legal. El frontend inspeccionado contiene reintentos contra varias API y muestra detalles técnicos al fallar. register.html utiliza endpoints de registro anteriores. La lectura pública del login por el buscador falló; no constituye una revisión visual.
@@ -39,8 +42,8 @@ Supabase Auth será la autoridad de identidad: correo/contraseña, confirmación
 5. admin-users.html: búsqueda, paginación, crear/invitar, estado de confirmación, reenviar invitación/recuperación, bloquear/reactivar, asignar organización y productos. Cada operación valida permisos en servidor y genera auditoría sin secretos. No permitir borrar al último administrador ni autoelevar roles.
 6. Sesiones: renovación, expiración, cierre local/global y cuentas bloqueadas verificados también en backend. Eliminar gradualmente fallback de contraseñas locales tras migrar todas las cuentas; inventariar previamente workers que usen credenciales humanas.
 
-## Configuración externa requerida
-- Supabase: Site URL https://aviarockets.cl; redirecciones exactas a auth-callback.html y reset-password.html. Confirm email habilitado; anonymous deshabilitado.
+## Configuración externa aplicada y requisitos operativos
+- Supabase: Site URL https://aviarockets.cl; redirecciones exactas a web-auth/verify.html, web-auth/callback.html y web-auth/reset.html. Confirm email habilitado; anonymous deshabilitado.
 - SMTP personalizado en Supabase con remitente verificado del dominio Avia; SPF/DKIM/DMARC verificados. El SMTP de PROD01 no configura automáticamente Supabase.
 - Plantilla de confirmación con {{ .Token }} para OTP; recuperación con URL de confirmación y retorno correcto. Validar entrega real, expiración, reenvío y carpeta spam.
 - Google Cloud: cliente OAuth Web, consentimiento y audiencia; origen https://aviarockets.cl; redirect autorizado https://mqlwzfsjmhoeiqizzzwk.supabase.co/auth/v1/callback. Client ID y secret en proveedor Google de Supabase; secret nunca en frontend.
@@ -127,4 +130,4 @@ POST /api/v1/admin/users/{id}/block: bloquear y revocar sesiones; rechazar autob
 Autenticación/OTP/recovery/Google usan SDK Supabase. Evitar que endpoints locales heredados permitan saltarse validación Supabase.
 
 ## Puertas de despliegue
-No publicar botones que prometan flujos no habilitados. Mantener release en rama hasta configurar SMTP, secreto administrativo y Google. Probar en staging con remitente/cuentas autorizadas, backup de tablas afectadas e imagen anterior. Tras desplegar comprobar reinicio y acceso real de ambos roles. No declarar terminado con solo health 200 o compilación correcta.
+No publicar botones que prometan flujos no habilitados. SMTP, secreto administrativo y Google ya están configurados; el release está publicado en main. Probar en staging con remitente/cuentas autorizadas, backup de tablas afectadas e imagen anterior. Tras desplegar comprobar reinicio y acceso real de ambos roles. No declarar terminado con solo health 200 o compilación correcta.

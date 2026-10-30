@@ -1,6 +1,6 @@
 # Avia Rockets Supabase Auth release
 
-This release contains the browser flow, branded email templates, additive PostgreSQL migration, and FastAPI identity bridge. On 2026-10-30 the migration and backend were deployed to PROD01 as `avia_public_api:auth-20261030-e547e13`. The public frontend was merged through PR #22 (04a9702). SMTP, Google and the three branded templates are now saved. The server administrative key remains pending correction before SDK-based user administration can be declared operational.
+This release contains the browser flow, branded email templates, additive PostgreSQL migration, and FastAPI identity bridge. On 2026-10-30 the migration and backend were deployed to PROD01 as `avia_public_api:auth-20261030-e547e13`. The public frontend was merged through PR #22 (04a9702). SMTP, Google and the three branded templates are now saved. The existing administrative credential is installed privately on PROD01; the Admin SDK lookup passed in Rundeck execution #15712 and in an independent post-deployment check. Frontend fixes through 1df9a62 include eight-digit OTP input, invitation callback handling and actual server/Supabase logout.
 
 ## Deployment evidence — 2026-10-30
 
@@ -10,9 +10,12 @@ This release contains the browser flow, branded email templates, additive Postgr
 - Legacy registration is retired with 410 and the expected Avia CORS origin. Legacy login/refresh remain enabled for migration.
 - Supabase Site URL is Avia; the three exact verify/callback/reset redirect URLs have been saved. Email confirmation is enabled and anonymous sign-in disabled.
 - The platform administrator's verified Auth email differs from the internal legacy email. A verified-email binding was set only after inspecting the actual confirmed UID in the Dashboard. Internal IDs and customer grants are unchanged.
-- `configure_admin_secret.py` supports operator-only entry; `rundeck-configure-secret.json` supplies a masked field. The operator must enter and submit the existing key directly. Never put a key in a command, repository, diagnostic or chat.
-- PROD01 SSH accepts the single `RD_OPTION_SUPABASE_SECRET` environment variable for this job. The key is delivered over the SSH environment, not interpolated into a temporary script. Do not replace this with `@option...@` substitution: the tested remote script file mode is 755. The script itself contains no key. The final entry still requires an operator.
-- SMTP remains disabled in Supabase. Its form is prepared for the existing Zoho sender, port 587; the operator must enter the password and save. Google remains disabled without its client credentials. Branded templates cannot be saved on the current plan until custom SMTP is configured.
+- `configure_admin_secret.py` supports operator-only entry; `rundeck-configure-secret.json` supplies a masked field. The existing key was supplied through the masked deployment field and validated before storage. Never put a key in a command, repository, diagnostic or chat.
+- PROD01 SSH accepts the single `RD_OPTION_SUPABASE_SECRET` environment variable for this job. The key is delivered over the SSH environment, not interpolated into a temporary script. Do not replace this with `@option...@` substitution: the tested remote script file mode is 755. The script itself contains no key. The successful execution was #15712.
+- Custom SMTP is saved with the existing Zoho sender robot@aviarockets.cl, port 587. Google is enabled and the three branded templates are saved. A real recovery email arrived in the recipient Inbox with Avia branding. Google sign-in reached the existing administrator panel and user administration table.
+- The credential file has mode 600, independent Admin SDK verification passed, API health is 200 and the expected image is active. No key was created or rotated.
+- The normal header logout now revokes the API session, signs out Supabase and clears browser credentials through a dedicated logout page. A real browser logout stayed on the normal login page; the administrator page subsequently required authentication. Four callback/logout regression tests pass.
+- The effective Supabase email OTP length is eight; verify.html matches it. Invitation callback type is captured before SDK fragment cleanup so invited users can define a password.
 
 ## Request paths
 
@@ -66,14 +69,10 @@ Deploy the tracked `web-auth/` directory, `web-auth/supabase-config.js`, the roo
 
 `/web-auth/admin.html` is restricted by the FastAPI `platform_admin` dependency. It can invite users, migrate an unlinked internal user by invitation or verified UID, disable/reactivate users, and assign products. The database stores every admin action. Test the admin allowlist on PROD01 before exposing this URL to operators.
 
-## Current production gates
+## Production status and validation limits
 
-These items remain pending:
+The public login and registration redirects are deployed. Google sign-in, existing administrator permissions, the user administration table, recovery email delivery and logout were exercised in the live browser. Rundeck execution #15712 and an independent SDK lookup verified the server-side administrative credential. Source: https://github.com/joacoAviles/Web-Avia-Rockets/pull/22 ; live entry: https://aviarockets.cl/login.html .
 
-- Supabase SMTP, email-template and Google provider settings need to be saved in the actual project dashboard.
-- A Supabase secret key must be injected into PROD01's server-side environment.
-- The API router is mounted in the live service; administrative SDK actions still require the server secret.
-- Existing PROD01 local-auth accounts, background workers and session behavior must be inventoried before disabling legacy routes.
-- Actual confirmation, recovery, Google callback, invitation, and access-management emails must be tested against Avia's verified sender after dashboard configuration.
+Live new-user OTP confirmation, wrong/expired/reused real OTP, completing a password change, and delivery of a new-user invitation were not manually exercised. The automated callback tests and transactional permission checks do not substitute for those live tests. Password entry/change is left to the account owner.
 
-Until those gates are completed, do not describe the production login as operational.
+Legacy login/refresh remain enabled for unmigrated accounts and workers. Inventory and migrate those clients before setting AUTH_BLOCK_LEGACY_LOGIN=true. Never disable them merely because the browser frontend has migrated.

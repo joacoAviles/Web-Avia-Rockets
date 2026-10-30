@@ -1,0 +1,4 @@
+services:
+  infrastructure:
+    security_opt:
+      - seccomp=./seccomp-chromium.json

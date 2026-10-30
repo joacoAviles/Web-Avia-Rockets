@@ -24,3 +24,6 @@
     };
   }
 })();
+
+// Infrastructure gateway enforces the exact active owner server-side.
+window.AVIA_INFRA_GATEWAY = 'https://infra.aviarockets.cl';

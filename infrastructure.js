@@ -10,6 +10,7 @@ function startInfrastructure(base) {
   if (!layout || !header) return;
   let services = [], authorized = false, active = false, timer, opening;
   let selected = 'general', renewal, previewTimer, previewRequest;
+  let viewerTimer, viewerAttempt = 0, generation = 0;
   const previewUrls = new Map();
   const panel = document.createElement('section');
   panel.id = 'infrastructure-panel';
@@ -44,7 +45,7 @@ function startInfrastructure(base) {
   }
   async function request(path, method = 'POST', token) {
     const result = await fetch(new URL(path, base), {
-      method, credentials: 'include', cache: 'no-store',
+      method, credentials: 'include', cache: 'no-store', signal: AbortSignal.timeout(20000),
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
     if (!result.ok) throw new Error(String(result.status));
@@ -66,13 +67,38 @@ function startInfrastructure(base) {
   function failure(error) {
     if (['401', '403'].includes(error.message)) {
       authorized = false;
-      frame.removeAttribute('src');
+      resetViewer();
       frame.hidden = true;
       clearInterval(timer);
       stopPreviews(true);
       menu.remove();
       message(error.message === '403' ? 'Tu cuenta no tiene acceso a Infraestructura.' : 'Vuelve a iniciar sesión en Avia Rockets.', true);
     } else message('No se pudo conectar. Intenta reconectar.', true);
+  }
+  function resetViewer() {
+    generation++;
+    clearTimeout(viewerTimer);
+    frame.removeAttribute('src');
+    viewerAttempt = 0;
+  }
+  function loadViewer() {
+    const current = ++generation;
+    viewerAttempt++;
+    frame.src = new URL('/remote/avia.html?attempt=' + current, base).href;
+    clearTimeout(viewerTimer);
+    viewerTimer = setTimeout(async () => {
+      if (current !== generation) return;
+      if (viewerAttempt >= 2) {
+        resetViewer();
+        message('El escritorio no respondió. Puedes volver a conectarte.', true);
+        return;
+      }
+      message('Restableciendo la conexión…');
+      try {
+        await renew();
+        if (current === generation) loadViewer();
+      } catch (error) { if (current === generation) failure(error); }
+    }, 20000);
   }
   async function open(id = selected) {
     if (opening) return;
@@ -93,7 +119,8 @@ function startInfrastructure(base) {
       selected = id;
       summary.hidden = id !== 'general';
       frame.hidden = id === 'general';
-      if (id !== 'general' && !frame.hasAttribute('src')) frame.src = new URL('/remote/avia.html', base).href;
+      if (id === 'general') resetViewer();
+      else if (!frame.hasAttribute('src')) loadViewer();
       dropdown.querySelectorAll('[data-service]').forEach(b => {
         b.setAttribute('aria-current', String(b.dataset.service === id));
         b.classList.toggle('is-active', b.dataset.service === id);
@@ -101,7 +128,7 @@ function startInfrastructure(base) {
       if (id === 'general') refreshPreviews();
       message();
       clearInterval(timer);
-      timer = setInterval(() => renew().then(() => message()).catch(failure), 45000);
+      timer = setInterval(() => renew().catch(failure), 45000);
     } catch (error) { failure(error); }
     finally { opening = false; }
   }
@@ -114,7 +141,7 @@ function startInfrastructure(base) {
     document.body.classList.remove('infra-active');
     panel.hidden = true;
     layout.hidden = false;
-    frame.removeAttribute('src');
+    resetViewer();
     // Leaving this view must not revoke the cookie shared with another Avia tab.
     // The short-lived transport still expires unless an active view renews it.
   }
@@ -258,15 +285,16 @@ function startInfrastructure(base) {
   });
   document.addEventListener('click', event => { if (!menu.contains(event.target)) collapse(); });
   menu.addEventListener('focusout', event => { if (!menu.contains(event.relatedTarget)) collapse(); });
-  retry.addEventListener('click', () => open());
+  retry.addEventListener('click', () => { resetViewer(); open(); });
   header.addEventListener('click', event => {
     if (active && !menu.contains(event.target) && event.target.closest('button,a')) close();
   }, true);
   window.addEventListener('message', event => {
     if (!active || event.origin !== base.origin || event.source !== frame.contentWindow) return;
     if (event.data?.type === 'infra-connection') {
-      if (event.data.connected) message();
-      else renew().catch(failure);
+      if (!frame.hasAttribute('src') || selected === 'general') return;
+      if (event.data.connected) { clearTimeout(viewerTimer); viewerAttempt = 0; message(); }
+      else if (!viewerAttempt) loadViewer();
     }
   });
   document.addEventListener('visibilitychange', () => {

@@ -1,3 +1,10 @@
+FROM debian:bookworm-slim AS viewer-build
+RUN apt-get update && apt-get install -y --no-install-recommends novnc esbuild
+WORKDIR /usr/share/novnc
+COPY viewer.html viewer.js ./
+RUN esbuild viewer.js --bundle --minify --format=iife --target=safari15 --outfile=/tmp/viewer.bundle.js
+RUN { cat viewer.html; echo '<script>'; cat /tmp/viewer.bundle.js; echo '</script></html>'; } > avia.html
+
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium chromium-sandbox tigervnc-standalone-server openbox novnc websockify ca-certificates fonts-liberation \
@@ -7,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && mkdir -p /profile /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix && chown browser:browser /profile
 WORKDIR /opt/infra
 COPY gateway.py policy.py start.py test_policy.py test_gateway.py ./
-COPY viewer.html /usr/share/novnc/avia.html
+COPY --from=viewer-build /usr/share/novnc/avia.html /usr/share/novnc/avia.html
 USER browser
 ENV DISPLAY=:99 HOME=/home/browser
 EXPOSE 8080

@@ -10,6 +10,7 @@ function startInfrastructure(base) {
   if (!layout || !header) return;
   let services = [], authorized = false, active = false, timer, opening;
   let selected = 'general', renewal, previewTimer, previewRequest;
+  let userNavigated = false;
   let viewerTimer, viewerAttempt = 0, generation = 0;
   const previewUrls = new Map();
   const panel = document.createElement('section');
@@ -262,7 +263,7 @@ function startInfrastructure(base) {
     if (authorized && nav && !nav.contains(menu)) nav.prepend(menu);
   }
   trigger.addEventListener('click', () => {
-    const show = dropdown.hidden;
+    const show = !menu.classList.contains('is-open');
     header.querySelectorAll('.app-header-menu.is-open').forEach(m => {
       m.classList.remove('is-open');
       m.querySelector('button')?.setAttribute('aria-expanded', 'false');
@@ -287,7 +288,11 @@ function startInfrastructure(base) {
   menu.addEventListener('focusout', event => { if (!menu.contains(event.relatedTarget)) collapse(); });
   retry.addEventListener('click', () => { resetViewer(); open(); });
   header.addEventListener('click', event => {
-    if (active && !menu.contains(event.target) && event.target.closest('button,a')) close();
+    const destination = event.target.closest('[data-header-product], #app-header-settings, #app-header-logout, a[href]');
+    if (destination && !menu.contains(destination)) {
+      userNavigated = true;
+      if (active) close();
+    }
   }, true);
   window.addEventListener('message', event => {
     if (!active || event.origin !== base.origin || event.source !== frame.contentWindow) return;
@@ -311,5 +316,5 @@ function startInfrastructure(base) {
   });
   // Do not delete the shared cookie on reload/pagehide: it races the next page.
   new MutationObserver(installMenu).observe(header, { childList: true, subtree: true });
-  renew().catch(() => {});
+  renew().then(() => { if (!userNavigated && !active) return open('general'); }).catch(() => {});
 }

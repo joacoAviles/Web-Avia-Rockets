@@ -445,13 +445,11 @@ function aviaApplyStandardHeader(){
       var isOpen = navPanel.classList.toggle('is-open');
       navToggle.setAttribute('aria-expanded', String(isOpen));
     });
-    navPanel.querySelectorAll('a, button').forEach(function(item){
-      item.addEventListener('click', function(){
-        if (window.innerWidth <= 760 && !item.matches('[data-app-menu-trigger]')) {
-          navPanel.classList.remove('is-open');
-          navToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
+    navPanel.addEventListener('click', function(event){
+      var item = event.target.closest('a, button');
+      if (!item || item.matches('[data-app-menu-trigger], .app-header-trigger')) return;
+      navPanel.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
     });
   }
 

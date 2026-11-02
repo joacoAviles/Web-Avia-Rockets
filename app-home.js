@@ -139,7 +139,7 @@ function appLegalTabsHtml(){
   return `<nav class="legal-tabs" aria-label="Secciones legales">${available.map((item) => {
     const active = (item.view === "legal-summary" && appState.legalTab === "summary") || (item.view === "causes" && appState.legalTab === "causes") || appState.view === item.view;
     return `<button type="button" data-legal-view="${appEscape(item.view)}" class="${active ? "is-active" : ""}">${appEscape(item.label)}</button>`;
-  }).join("")}${appState.user?.role === 'admin' ? '<button type="button" data-legal-admin>Administración</button>' : ''}</nav>`;
+  }).join("")}<button type="button" data-legal-admin>${appState.user?.role === 'admin' ? 'Administración' : 'Editar mis causas'}</button></nav>`;
 }
 
 async function appFetch(path, options = {}){

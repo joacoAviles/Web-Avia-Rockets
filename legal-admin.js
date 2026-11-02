@@ -13,9 +13,9 @@ function adminField(key,label,value,type='text',required=false) {
   return `<label><span>${label}</span><input name="${key}" type="${type}" value="${adminEscape(value)}" ${required?'required':''} ${type==='number'?'min="1800" max="2200"':''}></label>`;
 }
 async function appLegalAdminOpen(){
-  if(appState.user?.role!=='admin') return;
+  if(!appState.user) return;
   const config=document.getElementById('app-product-config');
-  appSetText('app-config-title','Administración de Legal');
+  appSetText('app-config-title',appState.user.role==='admin'?'Administración de Legal':'Editar mis causas');
   document.querySelectorAll('.legal-tabs button').forEach(b=>b.classList.toggle('is-active',b.hasAttribute('data-legal-admin')));
   config.innerHTML='<p role="status">Cargando permisos y datos del cliente…</p>';
   try {
@@ -28,7 +28,7 @@ async function appLegalAdminOpen(){
 }
 function adminRender(){
   const config=document.getElementById('app-product-config');
-  config.innerHTML=`<div class="legal-admin"><p>Administra tus causas, abogados y destinatarios.</p>
+  config.innerHTML=`<div class="legal-admin"><p>${legalAdmin.data.can_manage_client?'Administra tus causas, abogados y destinatarios.':'Cambia el portafolio y los datos de tus causas.'}</p>
     <label>Cliente<select id="admin-client">${adminOptions(legalAdmin.clients,legalAdmin.client,'Seleccionar cliente')}</select></label>
     <div class="legal-tabs"><button type="button" id="admin-cases-tab" class="is-active">Editar causas</button><button type="button" id="admin-lawyers-tab">Abogados</button><button type="button" id="admin-cc-tab">CC por portafolio</button></div>
     <p id="admin-status" role="status" aria-live="polite"></p><div id="admin-work"></div></div>`;
@@ -36,6 +36,7 @@ function adminRender(){
   document.getElementById('admin-cases-tab').onclick=adminCases;
   document.getElementById('admin-lawyers-tab').onclick=adminLawyers;
   document.getElementById('admin-cc-tab').onclick=adminPortfolioCc;
+  if(!legalAdmin.data.can_manage_client){document.getElementById('admin-lawyers-tab').hidden=true;document.getElementById('admin-cc-tab').hidden=true;legalAdmin.section='cases';}
   if(legalAdmin.section==='lawyers') adminLawyers(); else if(legalAdmin.section==='portfolio-cc') adminPortfolioCc(); else adminCases();
 }
 function adminCases(){
@@ -49,7 +50,8 @@ function adminCases(){
     </div><button type="submit" class="btn btn-primary">Agregar causa</button></form></section>
     <div class="legal-admin-existing"><h3>Editar o quitar una causa asignada</h3><label>Buscar causa<input id="admin-search" type="search" placeholder="Rol, año o tribunal"></label><label>Causa y asignación<select id="admin-case"></select></label><div id="admin-case-editor"></div></div>`;
   const addForm=document.getElementById('admin-add-case-form');
-  adminBindCourts(addForm);
+  if(!legalAdmin.data.can_manage_client)addForm.closest('.legal-admin-add').hidden=true;
+  else adminBindCourts(addForm);
   addForm.onsubmit=async e=>{e.preventDefault();const f=new FormData(addForm);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.lawyer_id=payload.lawyer_id||null;if(!confirm(`¿Agregar la causa ${payload.code}-${payload.year} a este cliente?`))return;await adminSave(addForm,()=>appFetch(adminUrl('/cases'),{method:'POST',body:JSON.stringify(payload)}),'Causa agregada al cliente.');};
   const update=()=>{
     const q=document.getElementById('admin-search').value.toLocaleLowerCase('es');
@@ -77,6 +79,7 @@ function adminCaseEditor(){
     </div>
     <p>Castigo afecta únicamente a este cliente y excluye la causa de sus correos por lote. Puede revertirse sin alterar el estado global de PJUD.</p>
     <div class="legal-admin-actions"><button type="submit" class="btn btn-primary">Guardar esta causa</button><button type="button" id="admin-unassign-case" class="btn btn-secondary">Quitar causa del cliente</button></div></form>`;
+  if(!legalAdmin.data.can_manage_client)document.getElementById('admin-unassign-case').hidden=true;
   adminBindCourts(document.getElementById('admin-case-form'));
   document.getElementById('admin-case-form').onsubmit=async e=>{
     e.preventDefault();const f=new FormData(e.currentTarget);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.version=c.version;payload.lawyer_id=payload.lawyer_id||null;

@@ -9,3 +9,7 @@ test('display uses official spelling while preserving identity and unknown names
  const input=[{id:'a',court:'22° Juzgado Civil de santiago'},{id:'b',court:'3° JUZGADO CIVIL DE CONCEPCION'},{id:'c',court:'Nombre sin correspondencia'}];
  const out=await ctx.pjudCanonicalizeCauses(input);assert.equal(out[0].court,'22º Juzgado Civil de Santiago');assert.equal(out[1].court,'3º Juzgado Civil de Concepción');assert.equal(out[2].court,input[2].court);assert.equal(out[0].id,'a');assert.equal(input[0].court,'22° Juzgado Civil de santiago');
 });
+test('editing preserves numeric rol and removes only book/year decorations',()=>{
+ const ctx={adminField:(key,label,v)=>v,adminSelect:()=>'',legalAdmin:{data:{catalogs:{}}}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'pjud-case-form.js'),'utf8'),ctx);
+ for(const code of ['2036','2036-2019','C-2036-2019','c-2036-2019']) assert.ok(ctx.adminCaseCatalogs({code,year:2019}).includes('2036'));
+});

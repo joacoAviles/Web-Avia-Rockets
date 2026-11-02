@@ -247,19 +247,39 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
         fields['competencia']=payload.competencia
         fields['tipo']=payload.tipo
         fields['code']=((payload.tipo+'-') if payload.tipo and payload.tipo!='C' else '')+payload.code
+    target=(await db.execute(text('''SELECT * FROM legal.legal_portfolio_cases
+      WHERE portfolio_id=:p AND case_id=:c AND id<>:i FOR UPDATE'''),
+      dict(p=group,c=before['case_id'],i=case_link_id))).mappings().first()
+    if target and target['status']=='active':
+        raise HTTPException(409,'La causa ya está activa en ese portafolio. Edita esa asignación.')
     lawyer_name=lawyer['name'] if lawyer else None
     lawyer_email=lawyer['email'] if lawyer else None
+    source_link_id=case_link_id
     try:
+        if target:
+            # Reuse the historical destination without deleting either link or its history.
+            case_link_id=target['id']
+            await db.execute(text("UPDATE legal.legal_portfolio_cases SET status='archived',include_in_batch_email=false,updated_at=now() WHERE id=:i"),dict(i=source_link_id))
+            await db.execute(text('''UPDATE legal.legal_portfolio_cases SET status=:s,
+              settings=CAST(:settings AS jsonb),competencia=:comp,updated_at=now() WHERE id=:i'''),
+              dict(s=before['status'],settings=json.dumps(before['settings'] or {}),comp=before['competencia'],i=case_link_id))
+            await db.execute(text('UPDATE legal.legal_portfolio_case_recipients SET is_active=false,updated_at=now() WHERE portfolio_case_id=:i'),dict(i=case_link_id))
+            await db.execute(text('''INSERT INTO legal.legal_portfolio_case_recipients
+              (id,portfolio_case_id,email,name,recipient_type,is_active,created_at,updated_at)
+              SELECT gen_random_uuid(),:dest,email,name,recipient_type,is_active,now(),now()
+              FROM legal.legal_portfolio_case_recipients WHERE portfolio_case_id=:src
+              ON CONFLICT(portfolio_case_id,email,recipient_type) DO UPDATE
+              SET name=EXCLUDED.name,is_active=EXCLUDED.is_active,updated_at=now()'''),dict(dest=case_link_id,src=source_link_id))
         await db.execute(text('UPDATE legal.client_cause_settings SET fields=CAST(:f AS jsonb),castigo=:s,version=version+1 WHERE client_id=:c AND cause_id=:i'),{'f':json.dumps(fields),'s':payload.publication=='castigo','c':client_id,'i':before['case_id']})
         await db.execute(text('''UPDATE legal.legal_portfolio_cases SET portfolio_id=:p,lawyer_id=:l,responsible_name=:n,corte=COALESCE(:corte,corte),settings=COALESCE(settings,'{}'::jsonb)||CAST(:flags AS jsonb),updated_at=now() WHERE id=:i'''),dict(p=group,l=payload.lawyer_id,n=lawyer_name,i=case_link_id,corte=payload.corte,flags=json.dumps({'admin_lawyer_edited':True,'assigned_lawyer_email':lawyer_email})))
         await sync_assigned_contact(db,case_link_id,(before['settings'] or {}).get('assigned_lawyer_email'),lawyer_email,lawyer_name)
-        await db.execute(text('UPDATE legal.legal_portfolio_cases pc SET include_in_batch_email=:enabled,updated_at=now() FROM legal.legal_portfolios p WHERE pc.portfolio_id=p.id AND p.client_id=:c AND pc.case_id=:i'),{'enabled':payload.publication!='castigo','c':client_id,'i':before['case_id']})
-        await audit(db,user,client_id,case_link_id,'case.update',dict(before)|dict(settings),payload.model_dump())
+        await db.execute(text("UPDATE legal.legal_portfolio_cases pc SET include_in_batch_email=(:enabled AND pc.status='active'),updated_at=now() FROM legal.legal_portfolios p WHERE pc.portfolio_id=p.id AND p.client_id=:c AND pc.case_id=:i"),{'enabled':payload.publication!='castigo','c':client_id,'i':before['case_id']})
+        await audit(db,user,client_id,case_link_id,'case.update',dict(before)|dict(settings),payload.model_dump() | {'source_link_id':str(source_link_id),'destination_link_id':str(case_link_id)})
         await db.commit()
     except IntegrityError:
         await db.rollback()
         raise HTTPException(409,'La asignación ya existe en ese grupo. No se guardaron cambios.')
-    return {'ok':True}
+    return {'ok':True,'id':str(case_link_id)}
 
 def validate_pjud_form(payload):
     if not payload.competencia: return

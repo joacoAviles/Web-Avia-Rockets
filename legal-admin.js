@@ -81,7 +81,7 @@ function adminCaseEditor(){
   document.getElementById('admin-case-form').onsubmit=async e=>{
     e.preventDefault();const f=new FormData(e.currentTarget);const payload=Object.fromEntries(f.entries());payload.year=Number(payload.year);payload.version=c.version;payload.lawyer_id=payload.lawyer_id||null;
     if(!confirm(payload.publication==='castigo'&&!c.castigo?'¿Guardar los cambios y castigar esta causa solo para este cliente?':'¿Guardar los cambios de esta causa para este cliente?'))return;
-    await adminSave(e.currentTarget,()=>appFetch(adminUrl(`/cases/${c.id}`),{method:'PUT',body:JSON.stringify(payload)}),'Causa guardada.');
+    await adminSave(e.currentTarget,async()=>{const saved=await appFetch(adminUrl(`/cases/${c.id}`),{method:'PUT',body:JSON.stringify(payload)});legalAdmin.selected=saved.id||c.id;},'Causa guardada.');
   };
   document.getElementById('admin-unassign-case').onclick=async()=>{const form=document.getElementById('admin-case-form');if(!confirm(`¿Quitar la causa ${c.code} / ${c.year} de este cliente? La causa global y sus movimientos no se borrarán.`))return;await adminSave(form,()=>appFetch(adminUrl(`/cases/${c.id}`),{method:'DELETE'}),'Causa quitada del cliente.');};
 }

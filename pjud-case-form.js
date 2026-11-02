@@ -2,7 +2,7 @@
 let pjudCatalogPromise;
 function pjudLoadCatalog(){return pjudCatalogPromise||(pjudCatalogPromise=fetch('pjud-catalog.json?v=20261029',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('No pudimos cargar los tribunales.');return r.json();}));}
 function adminCaseCatalogs(value={}){
-  return `<label><span>Competencia</span><select name="competencia" required></select></label><label><span>Corte</span><select name="corte" required></select></label><label><span>Tribunal</span><select name="court" required></select></label><label><span>Tipo libro</span><select name="tipo" required></select></label>${adminField('code','Rol',String(value.code||'').replace(/^[^-]+-/,'').replace(/-\d{4}$/,''),'text',true)}${adminSelect('year','Año',(legalAdmin.data.catalogs||{}).years||[],value.year||'')}<p class="pjud-form-notice" role="status"></p>`;
+  return `<label><span>Competencia</span><select name="competencia" required></select></label><label><span>Corte</span><select name="corte" required></select></label><label><span>Tribunal</span><select name="court" required></select></label><label><span>Tipo libro</span><select name="tipo" required></select></label>${adminField('code','Rol',String(value.code||'').replace(/^[A-Za-z]+-/,'').replace(/-\d{4}$/,''),'text',true)}${adminSelect('year','Año',(legalAdmin.data.catalogs||{}).years||[],value.year||'')}<p class="pjud-form-notice" role="status"></p>`;
 }
 function pjudNameKey(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/corte de apelaciones de|c\.a\. de/g,'').replace(/[º°ª]/g,'').replace(/\s+/g,' ').trim();}
 async function adminBindCourts(form){
@@ -21,7 +21,7 @@ async function adminBindCourts(form){
     }
     function update(initial){
       const comp=cat.competencias.find(x=>x.name===el.competencia.value),b=cat.branches[comp?.id];if(!b)return;
-      fill(el.corte,b.cortes.map(x=>({id:x.name,name:x.name})),initial?match(b.cortes,value.corte)?.name||'':'','Seleccionar corte');
+      fill(el.corte,b.cortes.map(x=>({id:x.name,name:x.name})),initial?(match(b.cortes,value.corte)?.name||b.cortes.find(c=>(b.tribunales[c.id]||[]).some(t=>pjudNameKey(t.name)===pjudNameKey(value.court)))?.name||''):'','Seleccionar corte');
       fill(el.tipo,b.tipos.map(x=>({id:x.id,name:x.name})),initial?(value.tipo||(/^[A-Z]+-/.test(value.code||'')?value.code.split('-')[0]:'C')):'','Seleccionar tipo libro');
       el.tipo.disabled=!!b.tipo_disabled;
       if(b.tipo_disabled)el.tipo.innerHTML='<option value="">No corresponde</option>';

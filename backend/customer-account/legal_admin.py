@@ -127,6 +127,17 @@ async def authorize(db,user,client_id):
     ok=(await db.execute(text('SELECT 1 FROM legal.client_administrators WHERE client_id=:c AND user_id=:u'),{'c':client_id,'u':user.id})).scalar()
     if not ok: raise HTTPException(403,'Sin autorización para este cliente')
 
+async def editor_scope(db,user,client_id):
+    if user.role=='admin':
+        await authorize(db,user,client_id)
+        return None
+    access=user.product_access or {}
+    if not user.is_active or not any(access.get(k) in (True,1) for k in ('legal','causes')):
+        raise HTTPException(403,'Sin acceso a Legal')
+    ids=set((await db.execute(text('SELECT id FROM legal.client_lawyers WHERE client_id=:c AND lower(trim(email))=lower(trim(:e))'),dict(c=client_id,e=user.email))).scalars())
+    if not ids: raise HTTPException(403,'Sin causas asignadas para este cliente')
+    return ids
+
 def validate_transition(was_castigo,published,target):
     current='castigo' if was_castigo else ('published' if published else 'unpublished')
     restored='published' if published else 'unpublished'
@@ -157,17 +168,25 @@ async def sync_assigned_contact(db,case_link_id,old_email,new_email,name):
 
 @router.get('/clients')
 async def clients(user=Depends(current_user),db=Depends(get_db)):
+    if user.role!='admin':
+        access=user.product_access or {}
+        if not user.is_active or not any(access.get(k) in (True,1) for k in ('legal','causes')):
+            raise HTTPException(403,'Sin acceso a Legal')
+        return [dict(r) for r in (await db.execute(text('''SELECT DISTINCT c.id,c.name
+          FROM legal.legal_clients c JOIN legal.client_lawyers l ON l.client_id=c.id
+          WHERE lower(trim(l.email))=lower(trim(:e)) ORDER BY c.name'''),dict(e=user.email))).mappings()]
     require_admin(user)
     return [dict(r) for r in (await db.execute(text('SELECT c.id,c.name FROM legal.legal_clients c JOIN legal.client_administrators a ON a.client_id=c.id WHERE a.user_id=:u ORDER BY c.name'),{'u':user.id})).mappings()]
 
 @router.get('/clients/{client_id}')
 async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
-    await authorize(db,user,client_id)
+    scope=await editor_scope(db,user,client_id)
     async def rows(sql): return [dict(r) for r in (await db.execute(text(sql),{'c':client_id})).mappings()]
     from app.api.pjud_distributed import _corte_por_tribunal
     court_rows=await rows("SELECT DISTINCT court FROM legal.causes WHERE court IS NOT NULL ORDER BY court")
     courts=[{'name':r['court'],'corte':_corte_por_tribunal(r['court'])} for r in court_rows]
-    return dict(
+    result=dict(
+        can_manage_client=scope is None,
         catalogs={'years':list(range(datetime.now(ZoneInfo('America/Santiago')).year,1899,-1)),
                   'courts':courts,'cortes':sorted({r['corte'] for r in courts if r['corte']})},
         lawyers=await rows('SELECT * FROM legal.client_lawyers WHERE client_id=:c ORDER BY name'),
@@ -184,6 +203,12 @@ async def context(client_id:UUID,user=Depends(current_user),db=Depends(get_db)):
           JOIN legal.causes c ON c.id=pc.case_id
           LEFT JOIN legal.client_cause_settings s ON s.client_id=p.client_id AND s.cause_id=c.id
           WHERE p.client_id=:c AND p.status='active' AND pc.status='active' ORDER BY c.publicada DESC,c.year DESC,c.rol"""))
+
+    if scope is not None:
+        result['causes']=[c for c in result['causes'] if c['lawyer_id'] in scope]
+        result['lawyers']=[l for l in result['lawyers'] if l['id'] in scope]
+        result['portfolio_cc']=[]
+    return result
 
 @router.post('/clients/{client_id}/portfolios/{portfolio_id}/cc',status_code=201)
 async def add_portfolio_cc(client_id:UUID,portfolio_id:UUID,payload:PortfolioCcInput,user=Depends(current_user),db=Depends(get_db)):
@@ -226,7 +251,7 @@ async def remove_portfolio_cc(client_id:UUID,portfolio_id:UUID,recipient_id:UUID
 
 @router.put('/clients/{client_id}/cases/{case_link_id}')
 async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Depends(current_user),db=Depends(get_db)):
-    await authorize(db,user,client_id)
+    scope=await editor_scope(db,user,client_id)
     # Lock the lawyer before its assignments, matching the lawyer-edit lock order.
     lawyer=None
     if payload.lawyer_id:
@@ -234,6 +259,8 @@ async def edit_case(client_id:UUID,case_link_id:UUID,payload:CauseInput,user=Dep
         if not lawyer: raise HTTPException(422,'Abogado ajeno al cliente')
     before=(await db.execute(text('SELECT pc.*,c.publicada FROM legal.legal_portfolio_cases pc JOIN legal.legal_portfolios p ON p.id=pc.portfolio_id JOIN legal.causes c ON c.id=pc.case_id WHERE pc.id=:i AND p.client_id=:c FOR UPDATE OF pc,c'),{'i':case_link_id,'c':client_id})).mappings().first()
     if not before: raise HTTPException(404,'Causa no asignada al cliente')
+    if scope is not None and (before['lawyer_id'] not in scope or payload.lawyer_id not in scope or before['status']!='active'):
+        raise HTTPException(403,'Solo puedes editar tus causas y mantenerlas a tu nombre')
     await db.execute(text('INSERT INTO legal.client_cause_settings(client_id,cause_id,version) VALUES (:c,:i,0) ON CONFLICT DO NOTHING'),{'c':client_id,'i':before['case_id']})
     settings=(await db.execute(text('SELECT * FROM legal.client_cause_settings WHERE client_id=:c AND cause_id=:i FOR UPDATE'),{'c':client_id,'i':before['case_id']})).mappings().one()
     if settings['version'] != payload.version: raise HTTPException(409,'La causa cambió. Recarga antes de guardar.')
